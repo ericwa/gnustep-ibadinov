@@ -503,7 +503,7 @@ libbase-resources_RESOURCE_FILES = Info-gnustep.plist
 libgnustep-base_NEEDS_GUI = NO
 libgnustep-baseadd_NEEDS_GUI = NO
 
-libgnustep-base_OBJ_FILES = $(GNUSTEP_OBJ_DIR)/NSInvocation.x86_64.s.o
+libgnustep-base_OBJ_FILES = $(GNUSTEP_OBJ_DIR)/NSInvocation.x86_64.S.o
 
 # Rule for building assembly files. 
 # AUXILIARY_CPPFLAGS are used for RUNTIME_DEFINE
