@@ -35,7 +35,7 @@
 
 #import "common.h"
 
-#if !defined (__GNU_LIBOBJC__)
+#if !defined (__GNU_LIBOBJC__) && !defined (NeXT_RUNTIME)
 #  include <objc/encoding.h>
 #endif
 
@@ -849,6 +849,7 @@ static unsigned	encodingVersion;
 
 	      (*_dValImp)(self, dValSel, ftype, (char*)address + offset);
 	    }
+    objc_layout_finish_structure(&layout, NULL, NULL);
 	  return;
 	}
 
@@ -1535,6 +1536,7 @@ static unsigned	encodingVersion;
 
 	      (*_eValImp)(self, eValSel, ftype, (char*)buf + offset);
 	    }
+    objc_layout_finish_structure(&layout, NULL, NULL);
 	}
 	return;
 

@@ -31,7 +31,7 @@
 
 #import "common.h"
 
-#if !defined (__GNU_LIBOBJC__)
+#if !defined (__GNU_LIBOBJC__) && !defined (NeXT_RUNTIME)
 #  include <objc/encoding.h>
 #endif
 
@@ -2023,7 +2023,7 @@ static NSLock	*cached_proxies_gate = nil;
 
       needsResponse = NO;
       flags = objc_get_type_qualifiers(type);
-      if ((flags & _F_ONEWAY) == 0)
+      if ((flags & GSObjCQualifierOneWay) == 0)
 	{
 	  needsResponse = YES;
 	}
@@ -2106,7 +2106,7 @@ static NSLock	*cached_proxies_gate = nil;
       /* Decode the return value and pass-by-reference values, if there
 	 are any.  OUT_PARAMETERS should be the value returned by
 	 cifframe_dissect_call(). */
-      if (outParams || *tmptype != _C_VOID || (flags & _F_ONEWAY) == 0)
+      if (outParams || *tmptype != _C_VOID || (flags & GSObjCQualifierOneWay) == 0)
 	/* xxx What happens with method declared "- (oneway) foo: (out int*)ip;" */
 	/* xxx What happens with method declared "- (in char *) bar;" */
 	/* xxx Is this right?  Do we also have to check _F_ONEWAY? */
@@ -2114,7 +2114,7 @@ static NSLock	*cached_proxies_gate = nil;
 	  id	obj;
 
 	  /* If there is a return value, decode it, and put it in datum. */
-	  if (*tmptype != _C_VOID || (flags & _F_ONEWAY) == 0)
+	  if (*tmptype != _C_VOID || (flags & GSObjCQualifierOneWay) == 0)
 	    {	
 	      switch (*tmptype)
 		{
@@ -2166,7 +2166,7 @@ static NSLock	*cached_proxies_gate = nil;
 		  tmptype = objc_skip_type_qualifiers(tmptype);
 
 		  if (*tmptype == _C_PTR
-		    && ((flags & _F_OUT) || !(flags & _F_IN)))
+		    && ((flags & GSObjCQualifierOut) || !(flags & GSObjCQualifierIn)))
 		    {
 		      /* If the arg was byref, we obtain its address
 		       * and decode the data directly to it.
@@ -2180,7 +2180,7 @@ static NSLock	*cached_proxies_gate = nil;
 			}
 		    }
 		  else if (*tmptype == _C_CHARPTR
-		    && ((flags & _F_OUT) || !(flags & _F_IN)))
+		    && ((flags & GSObjCQualifierOut) || !(flags & GSObjCQualifierIn)))
 		    {
 		      [aRmc decodeValueOfObjCType: tmptype at: &datum];
 		      [inv setArgument: datum atIndex: argnum];
@@ -2641,7 +2641,7 @@ static NSLock	*cached_proxies_gate = nil;
 		   have to get this char* again after the method is run,
 		   because the method may have changed it.  Set
 		   OUT_PARAMETERS accordingly. */
-		if ((flags & _F_OUT) || !(flags & _F_IN))
+		if ((flags & GSObjCQualifierOut) || !(flags & GSObjCQualifierIn))
 		  out_parameters = YES;
 		/* If the char* is qualified as an IN parameter, or not
 		   explicity qualified as an OUT parameter, then decode it.
@@ -2649,7 +2649,7 @@ static NSLock	*cached_proxies_gate = nil;
 		   string, and it is also responsible for making sure that
 		   the memory gets freed eventually, (usually through the
 		   autorelease of NSData object). */
-		if ((flags & _F_IN) || !(flags & _F_OUT))
+		if ((flags & GSObjCQualifierIn) || !(flags & GSObjCQualifierOut))
 		  {
 		    datum = alloca (sizeof(char*));
 		    [decoder decodeValueOfObjCType: tmptype at: datum];
@@ -2663,7 +2663,7 @@ static NSLock	*cached_proxies_gate = nil;
 		   then we will have to get the value pointed to again after
 		   the method is run, because the method may have changed
 		   it.  Set OUT_PARAMETERS accordingly. */
-		if ((flags & _F_OUT) || !(flags & _F_IN))
+		if ((flags & GSObjCQualifierOut) || !(flags & GSObjCQualifierIn))
 		  out_parameters = YES;
 
 		/* Handle an argument that is a pointer to a non-char.  But
@@ -2674,7 +2674,7 @@ static NSLock	*cached_proxies_gate = nil;
 		/* If the pointer's value is qualified as an IN parameter,
 		   or not explicity qualified as an OUT parameter, then
 		   decode it. */
-		if ((flags & _F_IN) || !(flags & _F_OUT))
+		if ((flags & GSObjCQualifierIn) || !(flags & GSObjCQualifierOut))
 		  {
 		    datum = alloca (objc_sizeof_type (tmptype));
 		    [decoder decodeValueOfObjCType: tmptype at: datum];
@@ -2732,7 +2732,7 @@ static NSLock	*cached_proxies_gate = nil;
       /* If this is a oneway void with no out parameters, we don't need to
        * send back any response.
        */
-      if (*tmptype == _C_VOID && (flags & _F_ONEWAY) && !out_parameters)
+      if (*tmptype == _C_VOID && (flags & GSObjCQualifierOneWay) && !out_parameters)
         {
 	  tmp = inv;
 	  inv = nil;
@@ -2752,7 +2752,7 @@ static NSLock	*cached_proxies_gate = nil;
 
       if (*tmptype == _C_VOID)
 	{
-	  if ((flags & _F_ONEWAY) == 0)
+	  if ((flags & GSObjCQualifierOneWay) == 0)
 	    {
 	      int	dummy = 0;
 
@@ -2804,7 +2804,7 @@ static NSLock	*cached_proxies_gate = nil;
 
 	      /* Decide how, (or whether or not), to encode the argument
 		 depending on its FLAGS and TMPTYPE. */
-	      if (((flags & _F_OUT) || !(flags & _F_IN))
+	      if (((flags & GSObjCQualifierOut) || !(flags & GSObjCQualifierIn))
 		&& (*tmptype == _C_PTR || *tmptype == _C_CHARPTR))
 		{
 		  void	*datum;

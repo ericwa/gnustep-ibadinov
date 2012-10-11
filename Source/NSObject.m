@@ -994,12 +994,14 @@ GSGarbageCollectorLog(char *msg, GC_word arg)
 }
 #endif
 
+#ifndef NeXT_RUNTIME
 /**
  * Semi-private function in libobjc2 that initialises the classes used for
  * blocks.
  */
 extern BOOL
 objc_create_block_classes_as_subclasses_of(Class super);
+#endif
 
 #ifdef OBJC_CAP_ARC
 static id gs_weak_load(id obj)
@@ -1013,7 +1015,9 @@ static id gs_weak_load(id obj)
 #ifdef OBJC_CAP_ARC
   _objc_weak_load = gs_weak_load;
 #endif
+#ifndef NeXT_RUNTIME
   objc_create_block_classes_as_subclasses_of(self);
+#endif
 }
 
 + (void) initialize
@@ -1575,15 +1579,8 @@ static id gs_weak_load(id obj)
   if (aSelector == 0)
     [NSException raise: NSInvalidArgumentException
 		format: @"%@ null selector given", NSStringFromSelector(_cmd)];
-  /* The Apple runtime API would do:
-   * return class_getMethodImplementation(object_getClass(self), aSelector);
-   * but this cannot ask self for information about any method reached by
-   * forwarding, so the returned forwarding function would ge a generic one
-   * rather than one aware of hardware issues with returning structures
-   * and floating points.  We therefore prefer the GNU API which is able to
-   * use forwarding callbacks to get better type information.
-   */
-  return objc_msg_lookup(self, aSelector);
+
+  return GSObjCMethodForSelector(self, aSelector);
 }
 
 /**
@@ -1966,15 +1963,7 @@ static id gs_weak_load(id obj)
     [NSException raise: NSInvalidArgumentException
 		format: @"%@ null selector given", NSStringFromSelector(_cmd)];
 
-  /* The Apple runtime API would do:
-   * msg = class_getMethodImplementation(object_getClass(self), aSelector);
-   * but this cannot ask self for information about any method reached by
-   * forwarding, so the returned forwarding function would ge a generic one
-   * rather than one aware of hardware issues with returning structures
-   * and floating points.  We therefore prefer the GNU API which is able to
-   * use forwarding callbacks to get better type information.
-   */
-  msg = objc_msg_lookup(self, aSelector);
+  msg = GSObjCMethodForSelector(self, aSelector);
   if (!msg)
     {
       [NSException raise: NSGenericException
@@ -1999,15 +1988,7 @@ static id gs_weak_load(id obj)
     [NSException raise: NSInvalidArgumentException
 		format: @"%@ null selector given", NSStringFromSelector(_cmd)];
 
-  /* The Apple runtime API would do:
-   * msg = class_getMethodImplementation(object_getClass(self), aSelector);
-   * but this cannot ask self for information about any method reached by
-   * forwarding, so the returned forwarding function would ge a generic one
-   * rather than one aware of hardware issues with returning structures
-   * and floating points.  We therefore prefer the GNU API which is able to
-   * use forwarding callbacks to get better type information.
-   */
-  msg = objc_msg_lookup(self, aSelector);
+  msg = GSObjCMethodForSelector(self, aSelector);
   if (!msg)
     {
       [NSException raise: NSGenericException
@@ -2035,15 +2016,7 @@ static id gs_weak_load(id obj)
     [NSException raise: NSInvalidArgumentException
 		format: @"%@ null selector given", NSStringFromSelector(_cmd)];
 
-  /* The Apple runtime API would do:
-   * msg = class_getMethodImplementation(object_getClass(self), aSelector);
-   * but this cannot ask self for information about any method reached by
-   * forwarding, so the returned forwarding function would ge a generic one
-   * rather than one aware of hardware issues with returning structures
-   * and floating points.  We therefore prefer the GNU API which is able to
-   * use forwarding callbacks to get better type information.
-   */
-  msg = objc_msg_lookup(self, aSelector);
+  msg = GSObjCMethodForSelector(self, aSelector);
   if (!msg)
     {
       [NSException raise: NSGenericException

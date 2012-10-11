@@ -275,6 +275,36 @@
         Fix format of logs produced by two of the three method macros ...
         a bug spotted by Fred.
 
+2012-10-11  Marat Ibadinov <ibadinov@me.com>
+
+        * Headers/GNUstepBase/GSObjCRuntime.h
+        * Source/Additions/GSObjCRuntime.m
+        * Source/NSArchiver.m
+        * Source/NSCoder.m
+        * Source/NSConnection.m
+        * Source/NSData.m
+        * Source/NSMethodSignature.m
+        * Source/NSObjCRuntime.m
+        * Source/NSObject.m
+        * Source/NSPortCoder.m
+        * Source/NSProxy.m
+        * Source/NSUnarchiver.m
+        * Source/cifframe.m
+        Reimplemented type demangling from scratch using single sequential 
+        parser that emits events for it's delegate. Emulated legacy API using
+        it. Made some fixes necessary to work on OSX. Corrected copy-paste
+        error in ChangeLog.
+
+2012-10-11  Marat Ibadinov <ibadinov@me.com>
+
+        * config/config.constant-string-class.m:
+        * configure.ac:
+        * configure:
+        Detects constant string support on Apple's compilers.
+        No unnecessary whining about uncaught exception handler.
+        Undefines __strong and __weak before redefinition.
+        Still does not detect MDNS correctly.
+
 2012-10-03  Richard Frith-Macdonald <rfm@gnu.org>
 
         * Source/GSFormat.m: for C-string formatting, avoid reading to the
@@ -308,16 +338,6 @@
         * Source/GSTLS.m:
         * Source/NSFileHandle.m:
         More TLS reorganisation and adding diagnostics
-
-2012-09-25  Richard Frith-Macdonald <rfm@gnu.org>
-
-        * config/config.constant-string-class.m:
-        * configure.ac:
-        * configure:
-        Detects constant string support on Apple's compilers.
-        No unnecessary whining about uncaught exception handler.
-        Undefines __strong and __weak before redefinition.
-        Still does not detect MDNS correctly.
 
 2012-09-25  Richard Frith-Macdonald <rfm@gnu.org>
 

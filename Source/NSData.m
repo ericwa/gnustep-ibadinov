@@ -69,7 +69,7 @@
 
 #import "common.h"
 
-#if !defined (__GNU_LIBOBJC__)
+#if !defined (__GNU_LIBOBJC__) && !defined (NeXT_RUNTIME)
 #  include <objc/encoding.h>
 #endif
 
@@ -1008,6 +1008,7 @@ failure:
 			     atCursor: cursor
 			      context: callback];
 	    }
+    objc_layout_finish_structure(&layout, NULL, NULL);
 	  return;
         }
       case _C_PTR:
@@ -2224,6 +2225,7 @@ failure:
 			 ofObjCType: ftype
 			    context: callback];
 	    }
+    objc_layout_finish_structure(&layout, NULL, NULL);
 	  return;
         }
       case _C_PTR:
@@ -2681,6 +2683,7 @@ getBytes(void* dst, void* src, unsigned len, unsigned limit, unsigned *pos)
 			     atCursor: cursor
 			      context: callback];
 	    }
+    objc_layout_finish_structure(&layout, NULL, NULL);
 	  return;
         }
       case _C_PTR:
@@ -3524,6 +3527,7 @@ getBytes(void* dst, void* src, unsigned len, unsigned limit, unsigned *pos)
 			 ofObjCType: ftype
 			    context: callback];
 	    }
+    objc_layout_finish_structure(&layout, NULL, NULL);
 	  return;
 	}
       case _C_PTR:

@@ -29,7 +29,7 @@
 
 #import "common.h"
 
-#if !defined (__GNU_LIBOBJC__)
+#if !defined (__GNU_LIBOBJC__) && !defined (NeXT_RUNTIME)
 #  include <objc/encoding.h>
 #endif
 
@@ -92,17 +92,17 @@ next_arg(const char *typePtr, NSArgumentInfo *info, char *outTypes)
     {
       switch (*typePtr)
 	{
-	  case _C_CONST:  info->qual |= _F_CONST; break;
-	  case _C_IN:     info->qual |= _F_IN; break;
-	  case _C_INOUT:  info->qual |= _F_INOUT; break;
-	  case _C_OUT:    info->qual |= _F_OUT; break;
-	  case _C_BYCOPY: info->qual |= _F_BYCOPY; break;
+	  case _C_CONST:  info->qual |= GSObjCQualifierConst; break;
+	  case _C_IN:     info->qual |= GSObjCQualifierIn; break;
+	  case _C_INOUT:  info->qual |= GSObjCQualifierInOut; break;
+	  case _C_OUT:    info->qual |= GSObjCQualifierOut; break;
+	  case _C_BYCOPY: info->qual |= GSObjCQualifierByCopy; break;
 #ifdef	_C_BYREF
-	  case _C_BYREF:  info->qual |= _F_BYREF; break;
+	  case _C_BYREF:  info->qual |= GSObjCQualifierByRef; break;
 #endif
-	  case _C_ONEWAY: info->qual |= _F_ONEWAY; break;
+	  case _C_ONEWAY: info->qual |= GSObjCQualifierOneWay; break;
 #ifdef	_C_GCINVISIBLE
-	  case _C_GCINVISIBLE:  info->qual |= _F_GCINVISIBLE; break;
+	  case _C_GCINVISIBLE:  info->qual |= GSObjCQualifierInvisible; break;
 #endif
 	  default: flag = NO;
 	}
@@ -503,7 +503,7 @@ next_arg(const char *typePtr, NSArgumentInfo *info, char *outTypes)
       [self methodInfo];
       NSAssert(0 != _inf, @"Initialising failed");
     }
-  return (_inf[0].qual & _F_ONEWAY) ? YES : NO;
+  return (_inf[0].qual & GSObjCQualifierOneWay) ? YES : NO;
 }
 
 - (NSUInteger) methodReturnLength

@@ -35,100 +35,318 @@
 
 #include <stdio.h>
 
-#if NeXT_RUNTIME
- #include <objc/objc.h>
- #include <objc/objc-class.h>
- #include <objc/objc-runtime.h>
- #ifndef _C_ATOM
-  #define _C_ATOM '%'
- #endif
- #define _F_CONST    0x01
- #define _F_IN       0x01
- #define _F_OUT      0x02
- #define _F_INOUT    0x03
- #define _F_BYCOPY   0x04
- #define _F_ONEWAY   0x08
- #define _C_CONST    'r'
- #define _C_IN       'n'
- #define _C_INOUT    'N'
- #define _C_OUT      'o'
- #define _C_BYCOPY   'O'
- #define _C_ONEWAY   'V'
-#else				/* GNU Objective C Runtime */
- #include <objc/objc.h>
- #if defined (__GNU_LIBOBJC__)
-  #include <objc/runtime.h>
- #else
-  #include <objc/objc-api.h>
-  #include <objc/encoding.h>
- #endif
+#if defined (__APPLE__) && !defined (NeXT_RUNTIME)
+# define NeXT_RUNTIME
 #endif
+
+#if defined(NeXT_RUNTIME)
+#  include <objc/objc.h>
+#  include <objc/objc-class.h>
+#  include <objc/objc-runtime.h>
+#
+#  ifndef _C_ATOM
+#    define _C_ATOM '%'
+#  endif
+#else /* GNU Objective C Runtime */
+#  include <objc/objc.h>
+#
+#  if defined (__GNU_LIBOBJC__)
+#    include <objc/runtime.h>
+#  else
+#    include <objc/objc-api.h>
+#    include <objc/encoding.h>
+#  endif
+#endif
+
+#if	OBJC2RUNTIME
+#  /* We have a real ObjC2 runtime. */
+#  include <objc/runtime.h>
+#else
+#  /* We emulate an ObjC2 runtime. */
+#  include <ObjectiveC2/objc/runtime.h>
+#endif
+
+#if !defined(GS_INLINE)
+#  if defined(__GNUC__)
+#    define GS_INLINE static __inline__ __attribute__((always_inline))
+#  elif defined(__cplusplus) || defined(__MWERKS__)
+#    define GS_INLINE static inline
+#  elif defined(_MSC_VER)
+#    define GS_INLINE static __inline
+#  else
+#    define GS_INLINE inline
+#  endif
+#endif
+
+#define NS_INLINE GS_INLINE
+
+#ifndef YES
+#  define YES		1
+#endif
+#
+#ifndef NO
+#  define NO		0
+#endif
+#
+#ifndef nil
+#  define nil		0
+#endif
+
 
 /*
  * Hack for older compiler versions that don't have all defines
  * needed in  objc-api.h
  */
 #ifndef	_C_LNG_LNG
-#define	_C_LNG_LNG	'q'
-#endif
-#ifndef	_C_ULNG_LNG
-#define	_C_ULNG_LNG	'Q'
+#  define _C_LNG_LNG	'q'
 #endif
 
-#if	OBJC2RUNTIME
-/* We have a real ObjC2 runtime.
- */
-#include <objc/runtime.h>
-#else
-/* We emulate an ObjC2 runtime.
- */
-#include <ObjectiveC2/objc/runtime.h>
+#ifndef	_C_ULNG_LNG
+#  define _C_ULNG_LNG	'Q'
 #endif
+
+
+#if	!defined(_C_CONST)
+#  define _C_CONST        'r'
+#endif
+#
+#if	!defined(_C_IN)
+#  define _C_IN           'n'
+#endif
+#
+#if	!defined(_C_INOUT)
+#  define _C_INOUT        'N'
+#endif
+#
+#if	!defined(_C_OUT)
+#  define _C_OUT          'o'
+#endif
+#
+#if	!defined(_C_BYCOPY)
+#  define _C_BYCOPY       'O'
+#endif
+#
+#if	!defined(_C_BYREF)
+#  define _C_BYREF        'R'
+#endif
+#
+#if	!defined(_C_ONEWAY)
+#  define _C_ONEWAY       'V'
+#endif
+#
+#if	!defined(_C_GCINVISIBLE)
+#  define _C_GCINVISIBLE  '!'
+#endif
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* type mangling is compiler independent so we can safely this by hand */
+
+typedef enum __GSObjCTypeQualifier
+{
+  GSObjCQualifierConst        = 'r',
+  GSObjCQualifierIn           = 'n',
+  GSObjCQualifierInOut        = 'N',
+  GSObjCQualifierOut          = 'o',
+  GSObjCQualifierByCopy       = 'O',
+  GSObjCQualifierByRef        = 'R',
+  GSObjCQualifierOneWay       = 'V',
+  GSObjCQualifierInvisible    = '!'
+} GSObjCTypeQualifier;
+
+typedef enum __GSObjCType
+{
+  GSObjCTypeId                = '@',
+  GSObjCTypeClass             = '#',
+  GSObjCTypeSelector          = ':',
+  GSObjCTypeChar              = 'c',
+  GSObjCTypeUnsignedChar      = 'C',
+  GSObjCTypeShort             = 's',
+  GSObjCTypeUnsignedShort     = 'S',
+  GSObjCTypeInt               = 'i',
+  GSObjCTypeUnsignedInt       = 'I',
+  GSObjCTypeLong              = 'l',
+  GSObjCTypeUnsignedLong      = 'L',
+  GSObjCTypeLongLong          = 'q',
+  GSObjCTypeUnsignedLongLong  = 'Q',
+  GSObjCTypeFloat             = 'f',
+  GSObjCTypeDouble            = 'd',
+  GSObjCTypeComplex           = 'j',
+  GSObjCTypeBitField          = 'b',
+  GSObjCTypeBool              = 'B',
+  GSObjCTypeVoid              = 'v',
+  GSObjCTypePointer           = '^',
+  GSObjCTypeCharPointer       = '*',
+  GSObjCTypeAtom              = '%',
+  GSObjCTypeArrayBegin        = '[',
+  GSObjCTypeArrayEnd          = ']',
+  GSObjCTypeStructureBegin    = '{',
+  GSObjCTypeStructureEnd      = '}',
+  GSObjCTypeUnionBegin        = '(',
+  GSObjCTypeUnionEnd          = ')',
+  GSObjCTypeUnknown           = '?'
+} GSObjCType;
+
+/* maximum an minimum char values in a type specification */
+typedef enum __GSObjCTypeBound
+{
+  GSObjCTypeMin               = ' ',
+  GSObjCTypeMax               = '~'
+} GSObjCTypeBound;
+
+#if defined (NeXT_RUNTIME)
+  typedef enum __GSObjCTypeQualifierMask
+  {
+    GSObjCQualifierConstMask        = 0x01,
+    GSObjCQualifierInMask           = 0x01,
+    GSObjCQualifierOutMask          = 0x02,
+    GSObjCQualifierInOutMask        = 0x03,
+    GSObjCQualifierByCopyMask       = 0x04,
+    GSObjCQualifierByRefMask        = 0x08,
+    GSObjCQualifierOneWayMask       = 0x10,
+    GSObjCQualifierInvisibleMask    = 0x20
+  } GSObjCTypeQualifierMask;
+#else
+  typedef enum __GSObjCTypeQualifierMask
+  {
+    GSObjCQualifierConstMask        = _F_CONST,
+    GSObjCQualifierInMask           = _F_IN,
+    GSObjCQualifierOutMask          = _F_OUT,
+    GSObjCQualifierInOutMask        = _F_INOUT,
+    GSObjCQualifierByCopyMask       = _F_BYCOPY,
+    GSObjCQualifierByRefMask        = _F_BYREF,
+    GSObjCQualifierOneWayMask       = _F_ONEWAY,
+    GSObjCQualifierInvisibleMask    = _F_GCINVISIBLE
+  } GSObjCTypeQualifierMask;
+#endif
+
+/*
+ * parser-related stuff
+ */
+
+typedef struct __GSObjCTypeInfo {
+  /* store pointer to allow recursive parsing of pointer types, e.g. ^{^[2*]} */
+  const char  *type;
+  size_t      size;
+  uint8_t     alignment;
+  uint8_t     qualifiers;
+} GSObjCTypeInfo;
+
+typedef void (*GSObjCTypeParserDelegate)(void *context, GSObjCTypeInfo type);
+
+typedef enum __GSObjCParserOptions {
+  GSObjCReportArrayOnceMask = 1
+} GSObjCParserOptions;
+
+const char *
+GSObjCParseTypeSpecification (const char *cursor, 
+                              GSObjCTypeParserDelegate delegate,
+                              void *context,
+                              unsigned options);
+
+GS_INLINE size_t
+GSObjCPadSize (size_t size, uint8_t alignment)
+{
+  return alignment * ((size + alignment - 1) / alignment);
+}
+
+GS_INLINE size_t
+GSObjCGetPadding (size_t size, uint8_t alignment)
+{
+  return (alignment - (size & (alignment - 1))) & (alignment - 1);
+}
+
+const char *
+GSGetSizeAndAlignment (const char *type, size_t *sizep, uint8_t *alignp);
+
+
+#if defined(NeXT_RUNTIME)
+    
+  GS_INLINE IMP
+  GSObjCMethodForSelector(id object, SEL selector)
+  {
+    return class_getMethodImplementation (object_getClass(object), 
+                                          selector);
+  }
+
+  /* and then we wrap parser into freaky API */
+  
+  int
+  objc_sizeof_type (const char* type);
+  int
+  objc_alignof_type (const char* type);
+  int
+  objc_aligned_size (const char* type);
+  int
+  objc_promoted_size (const char* type);
+  
+  unsigned
+  objc_get_type_qualifiers (const char* type);
+  
+  const char *
+  objc_skip_typespec (const char* type);
+  const char *
+  objc_skip_offset (const char* type);
+  const char *
+  objc_skip_argspec (const char* type);
+  const char *
+  objc_skip_type_qualifiers (const char* type);
+  
+  struct objc_struct_layout
+  {
+    GSObjCTypeInfo  *info;
+    long            position;
+    unsigned        count;
+    unsigned        allocated;
+    unsigned        depth;
+    unsigned        offset;
+    unsigned        alignment;
+  };
+  
+  void
+  objc_layout_structure (const char *type,
+                         struct objc_struct_layout *layout);
+  
+  BOOL
+  objc_layout_structure_next_member (struct objc_struct_layout *layout);
+  
+  void
+  objc_layout_structure_get_info (struct objc_struct_layout *layout,
+                                  unsigned int *offset,
+                                  unsigned int *align,
+                                  const char **type);
+  
+  void 
+  objc_layout_finish_structure (struct objc_struct_layout *layout,
+                                unsigned int *size,
+                                unsigned int *align);
+  
+#else
+    
+  GS_INLINE IMP
+  GSObjCMethodForSelector(id object, SEL selector)
+  {
+    /* The Apple runtime API would do:
+     * return class_getMethodImplementation(object_getClass(self), aSelector);
+     * but this cannot ask self for information about any method reached by
+     * forwarding, so the returned forwarding function would ge a generic one
+     * rather than one aware of hardware issues with returning structures
+     * and floating points.  We therefore prefer the GNU API which is able to
+     * use forwarding callbacks to get better type information.
+     */
+    return objc_msg_lookup (object, selector);
+  }
+
+#endif /* NeXT_RUNTIME */
 
 @class	NSArray;
 @class	NSDictionary;
 @class	NSObject;
 @class	NSString;
 @class	NSValue;
-
-#ifndef YES
-#define YES		1
-#endif
-#ifndef NO
-#define NO		0
-#endif
-#ifndef nil
-#define nil		0
-#endif
-
-#if	!defined(_C_CONST)
-#define _C_CONST        'r'
-#endif
-#if	!defined(_C_IN)
-#define _C_IN           'n'
-#endif
-#if	!defined(_C_INOUT)
-#define _C_INOUT        'N'
-#endif
-#if	!defined(_C_OUT)
-#define _C_OUT          'o'
-#endif
-#if	!defined(_C_BYCOPY)
-#define _C_BYCOPY       'O'
-#endif
-#if	!defined(_C_BYREF)
-#define _C_BYREF        'R'
-#endif
-#if	!defined(_C_ONEWAY)
-#define _C_ONEWAY       'V'
-#endif
-#if	!defined(_C_GCINVISIBLE)
-#define _C_GCINVISIBLE  '!'
-#endif
 
 /*
  * Functions for accessing instance variables directly -

@@ -406,7 +406,7 @@
 
 - (id) performSelector: (SEL)aSelector
 {
-  IMP msg = objc_msg_lookup(self, aSelector);
+  IMP msg = GSObjCMethodForSelector(self, aSelector);
 
   if (!msg)
     {
@@ -421,7 +421,7 @@
 - (id) performSelector: (SEL)aSelector
 	    withObject: (id)anObject
 {
-  IMP msg = objc_msg_lookup(self, aSelector);
+  IMP msg = GSObjCMethodForSelector(self, aSelector);
 
   if (!msg)
     {
@@ -437,7 +437,7 @@
 	    withObject: (id)anObject
 	    withObject: (id)anotherObject
 {
-  IMP msg = objc_msg_lookup(self, aSelector);
+  IMP msg = GSObjCMethodForSelector(self, aSelector);
 
   if (!msg)
     {
