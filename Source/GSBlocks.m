@@ -22,11 +22,17 @@
 
 #import "Foundation/NSObject.h"
 
+/* 
+ * It conflicts with the NeXT runtime (they use const void*), 
+ * don't know whether it's viable to include <GNUstepBase/GSObjCRuntime.h> 
+ */
+#ifndef NeXT_RUNTIME
 /* Declare the block copy functions ourself so that we don't depend on a
  * specific header location.
  */
 void *_Block_copy(void *);
 void _Block_release(void *);
+#endif
 
 @interface GSBlock : NSObject
 @end

@@ -25,6 +25,8 @@
 
 #import "common.h"
 #import "Foundation/NSInvocation.h"
+#import "Foundation/NSSet.h"
+#import "Foundation/NSKeyValueObserving.h"
 
 @interface NSKeyValueMutableSet : NSMutableSet
 {

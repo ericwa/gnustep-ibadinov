@@ -45,7 +45,12 @@
 #define GSI_ARRAY_RETAIN(A, X)	[(X).obj retain]
 #define GSI_ARRAY_RELEASE(A, X)	[(X).obj release]
 #endif
-#define GSI_ARRAY_TYPES GSUNION_OBJ
+/* 
+ * With Apple's clang: 
+ * nil is void* and -initForReadingWithData: uses it as GSIMapKey,
+ * so there is a need to add GSUNION_PTR
+ */
+#define GSI_ARRAY_TYPES GSUNION_OBJ|GSUNION_PTR
 
 
 #include "GNUstepBase/GSIArray.h"

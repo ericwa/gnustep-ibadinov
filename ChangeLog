@@ -277,6 +277,18 @@
 
 2012-10-11  Marat Ibadinov <ibadinov@me.com>
 
+        * Source/Additions/NSObject+GNUstepBase.m
+        * Source/GSBlocks.m
+        * Source/GSInvocation.h
+        * Source/NSKeyValueMutableSet.m
+        * Source/NSKeyedUnarchiver.m
+        * Source/NSNotificationCenter.m
+        * Source/objc-load.m
+        Introduced some "fixes" necessary to compile on OSX.
+        Currently GSPrivateLoadModule() is no-op when using non-fragile ABI.
+
+2012-10-11  Marat Ibadinov <ibadinov@me.com>
+
         * Headers/GNUstepBase/GSObjCRuntime.h
         * Source/Additions/GSObjCRuntime.m
         * Source/NSArchiver.m

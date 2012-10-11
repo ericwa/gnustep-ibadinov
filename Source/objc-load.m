@@ -41,7 +41,12 @@
 #import "GSPrivate.h"
 
 /* include the interface to the dynamic linker */
-#include "dynamic-load.h"
+#if !defined (__APPLE__)
+#  include "dynamic-load.h"
+#else
+#  /* Sorry, but copying ?-load.h to dynamic-load.h with xCode is a real mess */
+#  include "simple-load.h" 
+#endif
 
 /* dynamic_loaded is YES if the dynamic loader was sucessfully initialized. */
 static BOOL	dynamic_loaded;
@@ -137,11 +142,15 @@ GSPrivateLoadModule(NSString *filename, FILE *errorStream,
   void (*loadCallback)(Class, struct objc_category *),
   void **header, NSString *debugFilename)
 {
-#ifdef NeXT_RUNTIME
+#if defined (NeXT_RUNTIME)
+#ifndef __OBJC2__
   int errcode;
   dynamic_loaded = YES;
   return objc_loadModule([filename fileSystemRepresentation],
     loadCallback, &errcode);
+#else
+#  warning objc-load.m: GSPrivateLoadModule() is currently no-op
+#endif
 #else
   typedef void (*void_fn)();
   dl_handle_t handle;
