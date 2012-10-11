@@ -111,7 +111,7 @@ static Class concreteBrowserClass;
 }
 
 
-#if OS_API_VERSION(100500,GS_API_LATEST) 
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST) 
 /** Not implemented */
 - (NSInteger)port
 {

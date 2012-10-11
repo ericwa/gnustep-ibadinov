@@ -277,6 +277,68 @@
 
 2012-10-11  Marat Ibadinov <ibadinov@me.com>
 
+        * Headers/Foundation/NSArray.h
+        * Headers/Foundation/NSAutoreleasePool.h
+        * Headers/Foundation/NSBundle.h
+        * Headers/Foundation/NSCoder.h
+        * Headers/Foundation/NSComparisonPredicate.h
+        * Headers/Foundation/NSCompoundPredicate.h
+        * Headers/Foundation/NSConnection.h
+        * Headers/Foundation/NSData.h
+        * Headers/Foundation/NSDate.h
+        * Headers/Foundation/NSDictionary.h
+        * Headers/Foundation/NSError.h
+        * Headers/Foundation/NSException.h
+        * Headers/Foundation/NSExpression.h
+        * Headers/Foundation/NSHTTPCookie.h
+        * Headers/Foundation/NSHTTPCookieStorage.h
+        * Headers/Foundation/NSIndexPath.h
+        * Headers/Foundation/NSIndexSet.h
+        * Headers/Foundation/NSInvocation.h
+        * Headers/Foundation/NSKeyValueObserving.h
+        * Headers/Foundation/NSLock.h
+        * Headers/Foundation/NSNetServices.h
+        * Headers/Foundation/NSObjCRuntime.h
+        * Headers/Foundation/NSOperation.h
+        * Headers/Foundation/NSPathUtilities.h
+        * Headers/Foundation/NSPointerArray.h
+        * Headers/Foundation/NSPointerFunctions.h
+        * Headers/Foundation/NSPredicate.h
+        * Headers/Foundation/NSProcessInfo.h
+        * Headers/Foundation/NSPropertyList.h
+        * Headers/Foundation/NSScanner.h
+        * Headers/Foundation/NSSet.h
+        * Headers/Foundation/NSSortDescriptor.h
+        * Headers/Foundation/NSSpellServer.h
+        * Headers/Foundation/NSStream.h
+        * Headers/Foundation/NSString.h
+        * Headers/Foundation/NSThread.h
+        * Headers/Foundation/NSTimeZone.h
+        * Headers/Foundation/NSTimer.h
+        * Headers/Foundation/NSURL.h
+        * Headers/Foundation/NSURLCache.h
+        * Headers/Foundation/NSURLConnection.h
+        * Headers/Foundation/NSURLCredential.h
+        * Headers/Foundation/NSURLCredentialStorage.h
+        * Headers/Foundation/NSURLDownload.h
+        * Headers/Foundation/NSURLError.h
+        * Headers/Foundation/NSURLProtectionSpace.h
+        * Headers/Foundation/NSURLProtocol.h
+        * Headers/Foundation/NSURLRequest.h
+        * Headers/Foundation/NSURLResponse.h
+        * Headers/Foundation/NSValueTransformer.h
+        * Headers/Foundation/NSXMLElement.h
+        * Headers/Foundation/NSXMLParser.h
+        * Headers/GNUstepBase/GSVersionMacros.h
+        * Source/NSNetServices.m
+        Replaced hard-coded API versions with version macros. Commented out 
+        those of them I don't know how to define symbolically (e.g. 11501) and
+        labeled comments "FIXDEF!". This was necessary because of version-number
+        mismatch between OSX and GNUstep. Also made some OSX-related fixes in
+        GSVersionMacros.h.
+
+2012-10-11  Marat Ibadinov <ibadinov@me.com>
+
         * Source/Additions/NSObject+GNUstepBase.m
         * Source/GSBlocks.m
         * Source/GSInvocation.h

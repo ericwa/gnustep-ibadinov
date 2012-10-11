@@ -49,6 +49,10 @@
  * instead of GS_OPENSTEP_V
  */
 
+/*
+ * "For MacOS-X compatibility, we define the MacOS-X version constants"
+ * that are COMPLETELY INCOMPATIBLE with MacOS-X 
+ */
 #ifndef	MAC_OS_X_VERSION_10_0
 #define	MAC_OS_X_VERSION_10_0	100000
 #define	MAC_OS_X_VERSION_10_1	100100
@@ -59,15 +63,39 @@
 #define	MAC_OS_X_VERSION_10_6	100600
 #endif	/* MAC_OS_X_VERSION_10_0 */
 
+#ifndef MAC_OS_X_VERSION_10_7
+# if MAC_OS_X_VERSION_10_6 > 1060
+#   define MAC_OS_X_VERSION_10_7 100700
+# else
+#   define MAC_OS_X_VERSION_10_7 1070
+# endif
+#endif
+
+/*
+ * This library relies on GS_OPENSTEP_V to be not defined at all. Technically, 
+ * it needs MAC_OS_X_VERSION_MIN_ALLOWED and MAC_OS_X_VERSION_MAX_ALLOWED not 
+ * to be defined during the compilation of the library itself, but it's compiled
+ * with "-pthread" and as a consequence system headers are included which in 
+ * their turn include AvailabilityMacros.h and it defines both of them. 
+ * And GS_OPENSTEP_V gets defined and all the OS_API_VERSION(*, GS_API_NONE) 
+ * fail, and the  implementation of the reliabry relies on the functionality 
+ * introduced up to 10.7 API version and everything goes bad.
+ *
+ * So, just disable it.
+ */
+#if 0
+
 #ifndef	GS_OPENSTEP_V
-#ifdef	MAC_OS_X_VERSION_MIN_ALLOWED
-#define	GS_OPENSTEP_V	MAC_OS_X_VERSION_MIN_ALLOWED
-#else
-#ifdef	MAC_OS_X_VERSION_MAX_ALLOWED
-#define	GS_OPENSTEP_V	MAC_OS_X_VERSION_MAX_ALLOWED
-#endif	/* MAC_OS_X_VERSION_MAX_ALLOWED */
-#endif	/* MAC_OS_X_VERSION_MIN_ALLOWED */
+# ifdef	MAC_OS_X_VERSION_MIN_ALLOWED
+#   define	GS_OPENSTEP_V	MAC_OS_X_VERSION_MIN_ALLOWED
+# else
+#   ifdef	MAC_OS_X_VERSION_MAX_ALLOWED
+#     define	GS_OPENSTEP_V	MAC_OS_X_VERSION_MAX_ALLOWED
+#   endif	/* MAC_OS_X_VERSION_MAX_ALLOWED */
+# endif	/* MAC_OS_X_VERSION_MIN_ALLOWED */
 #endif	/* GS_OPENSTEP_V */
+
+#endif /* 0 */
 
 /*
  * NB. The version values below must be integers ... by convention these are
@@ -184,7 +212,7 @@
  * (GS_API_MACOSX, GS_API_LATEST)<br />
  * denotes code present from the initial MacOS-X version onwards.
  */
-#define	GS_API_MACOSX	100000
+#define	GS_API_MACOSX	MAC_OS_X_VERSION_10_0
 
 
 #if	defined(GNUSTEP_BASE_INTERNAL)
@@ -284,7 +312,7 @@ static inline void gs_consumed(id NS_CONSUMED __attribute__ ((unused))o) { retur
  */
 #if __has_feature(blocks)
 #  if	OBJC2RUNTIME
-#    if defined(_APPLE_)
+#    if defined(__APPLE__)
 #      include <Block.h>
 #    else
 #      include <objc/blocks_runtime.h>
