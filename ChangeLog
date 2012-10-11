@@ -311,6 +311,16 @@
 
 2012-09-25  Richard Frith-Macdonald <rfm@gnu.org>
 
+        * config/config.constant-string-class.m:
+        * configure.ac:
+        * configure:
+        Detects constant string support on Apple's compilers.
+        No unnecessary whining about uncaught exception handler.
+        Undefines __strong and __weak before redefinition.
+        Still does not detect MDNS correctly.
+
+2012-09-25  Richard Frith-Macdonald <rfm@gnu.org>
+
         * Source/GNUmakefile:
         * Source/GSSocketStream.m:
         * Source/NSFileHandle.m:

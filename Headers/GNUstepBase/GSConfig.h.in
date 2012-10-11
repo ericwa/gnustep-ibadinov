@@ -237,7 +237,7 @@ typedef	struct {
 #define GS_USE_LIBDISPATCH @HAVE_LIBDISPATCH@
 #define GS_HAVE_OBJC_ROOT_CLASS_ATTR @GS_HAVE_OBJC_ROOT_CLASS_ATTR@
 
-#if     defined(__WIN32__) || defined(_WIN32) || defined(__MS_WIN32__)
+#if defined(__WIN32__) || defined(_WIN32) || defined(__MS_WIN32__)
 #  if	!defined(__WIN32__)
 #    define __WIN32__
 #  endif
@@ -395,6 +395,8 @@ typedef	struct {
 #endif
 
 #if !__has_feature(objc_arc)
+#  undef __strong /* This macros may be defined by clang already */
+#  undef __weak   /* and it displays loads of warnings. Make it silent. */
 #  if __OBJC_GC__
 #    define __strong __attribute__((objc_gc(strong)))
 #    define __weak __attribute__((objc_gc(weak)))

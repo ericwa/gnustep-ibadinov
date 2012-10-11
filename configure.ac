@@ -1222,6 +1222,14 @@ if test "$LIBOBJC" = ""; then
   exit 1
 fi
 
+FOUNDATION_LIB=`echo $LIBRARY_COMBO | tr '-' ' ' | awk '{print $2}'`
+AC_MSG_CHECKING(the Foundation library)
+if test "$FOUNDATION_LIB" = "nx" -o "$FOUNDATION_LIB" = "apple"; then
+  AC_MSG_RESULT(NeXT)
+else
+  AC_MSG_RESULT(GNU)
+fi
+
 #--------------------------------------------------------------------
 # Miscellaneous flags
 #--------------------------------------------------------------------
@@ -1765,12 +1773,16 @@ fi
 # Unless we are building for the apple runtime (ie only building base
 # additions library and not implementing a constant string class).
 #---------------------------------------------------------------------
-if test "$OBJC_RUNTIME_LIB" = "nx" -o "$OBJC_RUNTIME_LIB" = "apple"; then
+if test "$FOUNDATION_LIB" = "nx" -o "$FOUNDATION_LIB" = "apple"; then
   NX_CONST_STRING_OBJCFLAGS=""
   NX_CONST_STRING_CLASS=NXConstantString
 else
   strclass_CPPFLAGS="$CPPFLAGS"
-  CPPFLAGS="$CPPFLAGS -fconstant-string-class=FooConstantString"
+  #-------------------------------------------------------------------
+  # On Apple platforms compiler ignores "-fconstant-string-class="
+  # if "-fno-constant-cfstrings" is not specified
+  #-------------------------------------------------------------------
+  CPPFLAGS="$CPPFLAGS -fno-constant-cfstrings -fconstant-string-class=FooConstantString"
   AC_MSG_CHECKING(if the compiler supports -fconstant-string-class)
   AC_CACHE_VAL(gs_cv_objc_compiler_supports_constant_string_class,
     AC_TRY_RUN([#include "$srcdir/config/config.constant-string-class.m"],
@@ -2592,13 +2604,17 @@ if test "$exceptions" = "yes"; then
   do_broken_libffcall=yes
   do_enable_libffcall=no
 
-  if test "$have_unexpected" = "no"; then
-    echo
-    echo "Your gnustep-make is configured to use native objc exceptions, but"
-    echo "the objc runtime does not appear to support setting an uncaught"
-    echo "exception handler.  This means that any uncaught exception will"
-    echo "cause a program to abort immediately."
-    echo "Consider reconfiguring gnustep-make or updating libobjc to fix this."
+  if test "$have_set_uncaught_exception_handler" = "no"; then
+    if test "$have_set_unexpected" = "no"; then
+      if test "$have_unexpected" = "no"; then
+        echo
+        echo "Your gnustep-make is configured to use native objc exceptions, but"
+        echo "the objc runtime does not appear to support setting an uncaught"
+        echo "exception handler.  This means that any uncaught exception will"
+        echo "cause a program to abort immediately."
+        echo "Consider reconfiguring gnustep-make or updating libobjc to fix this."
+      fi
+    fi
   fi
 fi
 

@@ -448,6 +448,9 @@
 		18528A001613AB940016729B /* GSRunLoopCtxt.m in Sources */ = {isa = PBXBuildFile; fileRef = 189070101610BF3C0003C892 /* GSRunLoopCtxt.m */; };
 		18528A011613AB940016729B /* NSStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 189070121610BF3C0003C892 /* NSStream.m */; };
 		185391931625FD0C0015BDFA /* NSKeyedUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA71610BF3C0003C892 /* NSKeyedUnarchiver.m */; };
+		18FE1E15162716A200389A13 /* ChangeLog in Resources */ = {isa = PBXBuildFile; fileRef = 18FE1E12162716A200389A13 /* ChangeLog */; };
+		18FE1E16162716A200389A13 /* ChangeLog.1 in Resources */ = {isa = PBXBuildFile; fileRef = 18FE1E13162716A200389A13 /* ChangeLog.1 */; };
+		18FE1E17162716A200389A13 /* ChangeLog.2 in Resources */ = {isa = PBXBuildFile; fileRef = 18FE1E14162716A200389A13 /* ChangeLog.2 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -929,6 +932,9 @@
 		1890701B1610BF3C0003C892 /* NSUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUserDefaults.m; sourceTree = "<group>"; };
 		1890701C1610BF3C0003C892 /* win32-def.top */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "win32-def.top"; sourceTree = "<group>"; };
 		1890701D1610BF3C0003C892 /* win32-load.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "win32-load.h"; sourceTree = "<group>"; };
+		18FE1E12162716A200389A13 /* ChangeLog */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog; sourceTree = SOURCE_ROOT; };
+		18FE1E13162716A200389A13 /* ChangeLog.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = ChangeLog.1; sourceTree = SOURCE_ROOT; };
+		18FE1E14162716A200389A13 /* ChangeLog.2 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog.2; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1320,6 +1326,9 @@
 				185289AB1613A06F0016729B /* configure.ac */,
 				18394A9C1610C04600335E85 /* configure */,
 				18906E621610BEC80003C892 /* README */,
+				18FE1E12162716A200389A13 /* ChangeLog */,
+				18FE1E13162716A200389A13 /* ChangeLog.1 */,
+				18FE1E14162716A200389A13 /* ChangeLog.2 */,
 			);
 			name = "Supporting Files";
 			path = base;
@@ -1886,6 +1895,9 @@
 				185289FB1613A1060016729B /* pathxml.m4 in Resources */,
 				185289FC1613A1060016729B /* procfs-exe-link.m4 in Resources */,
 				185289FD1613A1060016729B /* procfs.m4 in Resources */,
+				18FE1E15162716A200389A13 /* ChangeLog in Resources */,
+				18FE1E16162716A200389A13 /* ChangeLog.1 in Resources */,
+				18FE1E17162716A200389A13 /* ChangeLog.2 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
