@@ -71,9 +71,14 @@ static BOOL isByteEncoding(NSStringEncoding enc)
 }
 
 #ifdef NeXT_RUNTIME
-/* Used by the Darwin/NeXT ObjC Runtime
-   until Apple Radar 2870817 is fixed. */
-struct objc_class _NSConstantStringClassReference;
+#ifndef __OBJC2__
+  /* Used by the Darwin/NeXT ObjC Runtime
+   * until Apple Radar 2870817 is fixed. 
+   */
+  struct objc_class _NSConstantStringClassReference;
+#else
+  Class _NSConstantStringClassReference;
+#endif
 #endif
 
 /* Determine the length of the UTF-8 string as a unicode (UTF-16) string.
@@ -5349,6 +5354,22 @@ literalIsEqual(NXConstantString *self, id anObject)
  * (_count). 
  */
 @implementation NXConstantString
+
+#if defined (NeXT_RUNTIME) && NXConstantString == NSConstantString
++ (void) load
+{
+#if defined (__OBJC2__)
+  _NSConstantStringClassReference = objc_getClass("NSConstantString");
+#else
+  /* This memcpy has to be done before the first message is sent to any
+   * constant string object. See Apple Radar 2870817 
+   */
+  memcpy(&_NSConstantStringClassReference,
+         objc_getClass(STRINGIFY(NXConstantString)),
+         sizeof(_NSConstantStringClassReference));
+#endif /* __OBJC2__ */
+}
+#endif /* NeXT_RUNTIME */
 
 + (void) initialize
 {

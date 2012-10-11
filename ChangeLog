@@ -277,6 +277,13 @@
 
 2012-10-11  Marat Ibadinov <ibadinov@me.com>
 
+        * Headers/Foundation/NSString.h
+        * Source/GSString.m
+        * Source/NSProcessInfo.m
+        Constant strings work on OSX again.
+        
+2012-10-11  Marat Ibadinov <ibadinov@me.com>
+
         * Headers/Foundation/NSArray.h
         * Headers/Foundation/NSAutoreleasePool.h
         * Headers/Foundation/NSBundle.h

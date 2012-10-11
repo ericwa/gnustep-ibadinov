@@ -68,6 +68,7 @@
 #ifndef __NSString_h_GNUSTEP_BASE_INCLUDE
 #define __NSString_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
+#import <GNUstepBase/GSObjCRuntime.h>
 
 #import	<Foundation/NSObject.h>
 #import	<Foundation/NSRange.h>
@@ -868,9 +869,15 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 @end
 
 #ifdef NeXT_RUNTIME
-/** For internal use with NeXT runtime;
-    needed, until Apple Radar 2870817 is fixed. */
-extern struct objc_class _NSConstantStringClassReference;
+#ifndef __OBJC2__
+  /** 
+   * For internal use with NeXT runtime;
+   * needed, until Apple Radar 2870817 is fixed. 
+   */
+  extern struct objc_class _NSConstantStringClassReference;
+#else
+  extern Class _NSConstantStringClassReference;
+#endif
 #endif
 
 #if	defined(__cplusplus)
