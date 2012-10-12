@@ -316,7 +316,7 @@ GSPrivateArgZero() GS_ATTRIB_PRIVATE;
 /* get the available string encodings (nul terminated array)
  */
 NSStringEncoding *
-GSPrivateAvailableEncodings() GS_ATTRIB_PRIVATE;
+GSPrivateAvailableEncodings();// GS_ATTRIB_PRIVATE;
 
 /* Initialise constant strings
  */
@@ -331,7 +331,7 @@ GSPrivateCheckTasks(void) GS_ATTRIB_PRIVATE;
 /* get the default C-string encoding.
  */
 NSStringEncoding
-GSPrivateDefaultCStringEncoding() GS_ATTRIB_PRIVATE;
+GSPrivateDefaultCStringEncoding(void);// GS_ATTRIB_PRIVATE;
 
 /* Get default locale quickly (usually from cache).
  * External apps would cache the locale themselves.
@@ -347,7 +347,7 @@ GSPrivateDefaultsFlag(GSUserDefaultFlagType type) GS_ATTRIB_PRIVATE;
 /* get the name of a string encoding as an NSString.
  */
 NSString *
-GSPrivateEncodingName(NSStringEncoding encoding) GS_ATTRIB_PRIVATE;
+GSPrivateEncodingName(NSStringEncoding encoding);// GS_ATTRIB_PRIVATE;
 
 /* get a flag from an environment variable - return def if not defined.
  */
@@ -369,12 +369,12 @@ GSPrivateFormat(GSStr fb, const unichar *fmt, va_list ap, NSDictionary *loc)
  * generally be represented as 8-bit characters including ascii.
  */
 BOOL
-GSPrivateIsByteEncoding(NSStringEncoding encoding) GS_ATTRIB_PRIVATE;
+GSPrivateIsByteEncoding(NSStringEncoding encoding);// GS_ATTRIB_PRIVATE;
 
 /* determine whether encoding is currently supported.
  */
 BOOL
-GSPrivateIsEncodingSupported(NSStringEncoding encoding) GS_ATTRIB_PRIVATE;
+GSPrivateIsEncodingSupported(NSStringEncoding encoding);// GS_ATTRIB_PRIVATE;
 
 /* Hash function to hash up to limit bytes from data of specified length.
  * If the flag is NO then a result of 0 is mapped to 0xffffffff.
@@ -416,7 +416,7 @@ GSPrivateLoadModule(NSString *filename, FILE *errorStream,
  * if the latter has bewen set via an environment variable.
  */
 NSStringEncoding
-GSPrivateNativeCStringEncoding() GS_ATTRIB_PRIVATE;
+GSPrivateNativeCStringEncoding();// GS_ATTRIB_PRIVATE;
 
 /* Function used by the NSRunLoop and friends for processing
  * queued notifications which should be processed at the first safe moment.
@@ -511,7 +511,7 @@ GSPrivateSymbolPath (Class theClass, Category *theCategory) GS_ATTRIB_PRIVATE;
 /* Combining class for composite unichars
  */
 unsigned char
-GSPrivateUniCop(unichar u) GS_ATTRIB_PRIVATE;
+GSPrivateUniCop(unichar u);// GS_ATTRIB_PRIVATE;
 
 /* unload a module from the runtime (not implemented)
  */

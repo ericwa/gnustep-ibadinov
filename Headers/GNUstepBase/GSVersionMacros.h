@@ -78,7 +78,7 @@
  * with "-pthread" and as a consequence system headers are included which in 
  * their turn include AvailabilityMacros.h and it defines both of them. 
  * And GS_OPENSTEP_V gets defined and all the OS_API_VERSION(*, GS_API_NONE) 
- * fail, and the  implementation of the reliabry relies on the functionality 
+ * fail, and the  implementation of the library relies on the functionality 
  * introduced up to 10.7 API version and everything goes bad.
  *
  * So, just disable it.

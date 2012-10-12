@@ -269,6 +269,14 @@
         was annoying when they were called on NSMutableCharacterSet.
         It seems they finally changed to returning id, so we can do the same.
 
+2012-10-12  Marat Ibadinov <ibadinov@me.com>
+
+        * Headers/GNUstepBase/GSVersionMacros.h
+        * Source/GSPrivate.h
+        Commented (visibility("internal")) out of declarations of functions
+        defined in "Additions" subproject. Can't explain in detail, but this
+        doesn't work well with dyld.
+        
 2012-10-12  Richard Frith-Macdonald <rfm@gnu.org>
 
         * Headers/GNUstepBase/NSDebug+GNUstepBase.h:
