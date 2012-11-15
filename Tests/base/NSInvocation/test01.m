@@ -35,10 +35,11 @@ int main()
   tar = [tClass new];
   
   /* 
-    Test if the return value is retained. It is in the Apple OpenStep edition
-    for Windows (YellowBox)
-    matt: this doesn't seem like a valid test as PASS/fail will vary on
-    platforms
+   * Test if the return value is retained. It is in the Apple OpenStep edition
+   * for Windows (YellowBox). Mac version of Apple's Foundation also does not
+   * retain result objects.
+   * matt: this doesn't seem like a valid test as PASS/fail will vary on
+   * platforms
    */
   sig = [tar methodSignatureForSelector:@selector(retObject)];
   inv = [NSInvocation invocationWithMethodSignature: sig];

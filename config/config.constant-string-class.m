@@ -19,7 +19,7 @@
 #include "objc-common.g"
 
 #if defined (NeXT_RUNTIME) && defined (__OBJC2__)
-Class _MyConstantStringClassReference;
+Class _FooConstantStringClassReference;
 
 @interface FooConstantString : Object
 {
@@ -36,7 +36,7 @@ Class _MyConstantStringClassReference;
    * _FooConstantStringClassReference, but it points nowhere.
    * We must set it to compiler-generated class.
    */
-  _MyConstantStringClassReference = objc_getClass("FooConstantString");
+  _FooConstantStringClassReference = objc_getClass("FooConstantString");
 }
 
 - (const char *)cString;

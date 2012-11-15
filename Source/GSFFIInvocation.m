@@ -24,7 +24,7 @@
 
 #import "common.h"
 
-#if !defined (__GNU_LIBOBJC__)
+#if !defined (__GNU_LIBOBJC__) && !defined (NeXT_RUNTIME)
 #  include <objc/encoding.h>
 #endif
 
@@ -113,7 +113,7 @@ gs_find_best_typed_sel (SEL sel)
  */
   return sel_getTypedSelector(sel_getName(sel));
 }
-#elif defined(NeXTRUNTIME)
+#elif defined(NeXT_RUNTIME)
 {
   /* The NeXT runtime does not support typed selectors, so we simply
    * return 0 here.  */
@@ -683,19 +683,17 @@ GSFFIInvocationCallback(ffi_cif *cif, void *retp, void **args, void *user)
       switch (*type)
 	{
 	  case _C_ID:
-	    if (flags & _F_BYCOPY)
+	    if (flags & GSObjCQualifierByCopyMask)
 	      {
-		[coder encodeBycopyObject: *(id*)datum];
+          [coder encodeBycopyObject: *(id*)datum];
 	      }
-#ifdef	_F_BYREF
-	    else if (flags & _F_BYREF)
+	    else if (flags & GSObjCQualifierByRefMask)
 	      {
-		[coder encodeByrefObject: *(id*)datum];
+          [coder encodeByrefObject: *(id*)datum];
 	      }
-#endif
 	    else
 	      {
-		[coder encodeObject: *(id*)datum];
+          [coder encodeObject: *(id*)datum];
 	      }
 	    break;
 	  case _C_CHARPTR:
@@ -707,18 +705,18 @@ GSFFIInvocationCallback(ffi_cif *cif, void *retp, void **args, void *user)
 	     * because the method may have changed it.  Set
 	     * OUT_PARAMETERS accordingly.
 	     */
-	    if ((flags & _F_OUT) || !(flags & _F_IN))
+	    if ((flags & GSObjCQualifierOutMask) || !(flags & GSObjCQualifierInMask))
 	      {
-		out_parameters = YES;
+          out_parameters = YES;
 	      }
 	    /*
 	     * If the char* is qualified as an IN parameter, or not
 	     * explicity qualified as an OUT parameter, then encode
 	     * it.
 	     */
-	    if ((flags & _F_IN) || !(flags & _F_OUT))
+	    if ((flags & GSObjCQualifierInMask) || !(flags & GSObjCQualifierOutMask))
 	      {
-		[coder encodeValueOfObjCType: type at: datum];
+          [coder encodeValueOfObjCType: type at: datum];
 	      }
 	    break;
 
@@ -730,16 +728,16 @@ GSFFIInvocationCallback(ffi_cif *cif, void *retp, void **args, void *user)
 	     * the method is run, because the method may have changed
 	     * it.  Set OUT_PARAMETERS accordingly.
 	     */
-	    if ((flags & _F_OUT) || !(flags & _F_IN))
+	    if ((flags & GSObjCQualifierOutMask) || !(flags & GSObjCQualifierInMask))
 	      {
-		out_parameters = YES;
+          out_parameters = YES;
 	      }
 	    if (passp)
 	      {
-		if ((flags & _F_IN) || !(flags & _F_OUT))
-		  {
-		    [coder encodeValueOfObjCType: type at: datum];
-		  }
+          if ((flags & GSObjCQualifierInMask) || !(flags & GSObjCQualifierOutMask))
+            {
+              [coder encodeValueOfObjCType: type at: datum];
+            }
 	      }
 	    else
 	      {
@@ -755,7 +753,7 @@ GSFFIInvocationCallback(ffi_cif *cif, void *retp, void **args, void *user)
 		 * or not explicity qualified as an OUT parameter, then
 		 * encode it.
 		 */
-		if ((flags & _F_IN) || !(flags & _F_OUT))
+		if ((flags & GSObjCQualifierInMask) || !(flags & GSObjCQualifierOutMask))
 		  {
 		    [coder encodeValueOfObjCType: type at: *(void**)datum];
 		  }

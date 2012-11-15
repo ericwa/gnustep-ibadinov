@@ -108,6 +108,7 @@
 #include <crt_externs.h>
 #endif
 
+#import "config.h" /* for HAVE_LOAD_METHOD */
 #import "GNUstepBase/GSConfig.h"
 #import "Foundation/NSArray.h"
 #import "Foundation/NSSet.h"
@@ -457,7 +458,7 @@ _gnu_process_args(int argc, char *argv[], char *env[])
   [arp drain];
 }
 
-#if !GS_FAKE_MAIN && ((defined(HAVE_PROCFS)  || defined(HAVE_KVM_ENV) || defined(HAVE_PROCFS_PSINFO) || defined(__APPLE__)) && (defined(HAVE_LOAD_METHOD)))
+#if !GS_FAKE_MAIN && ((defined (HAVE_PROCFS)  || defined (HAVE_KVM_ENV) || defined (HAVE_PROCFS_PSINFO) || defined (__APPLE__)) && defined (HAVE_LOAD_METHOD))
 /*
  * We have to save program arguments and environment before main () is
  * executed, because main () could modify their values before we get a
@@ -986,7 +987,12 @@ int main(int argc, char *argv[], char *env[])
   // We can't use NSAssert, which calls NSLog, which calls NSProcessInfo...
   if (!(_gnu_processName && _gnu_arguments && _gnu_environment))
     {
-      _NSLog_printf_handler(_GNU_MISSING_MAIN_FUNCTION_CALL);
+      [NSException raise:@"Process info is missing" format:_GNU_MISSING_MAIN_FUNCTION_CALL];
+      /* If syslog is present _NSLog_printf_handler requests 
+       * GSPrivateDefaultsFlag(GSLogSyslog) and we get into 
+       * the infinite recursion
+       */
+      // _NSLog_printf_handler(_GNU_MISSING_MAIN_FUNCTION_CALL);
       exit(1);
     }
 
@@ -1018,7 +1024,7 @@ int main(int argc, char *argv[], char *env[])
   if (pid > 0)
     {
 #if	defined(__MINGW__)
-      HANDLE        h = OpenProcess(PROCESS_QUERY_INFORMATION,0,pid);
+      HANDLE h = OpenProcess(PROCESS_QUERY_INFORMATION,0,pid);
       if (h == NULL && GetLastError() != ERROR_ACCESS_DENIED)
         {
           return NO;
@@ -1109,7 +1115,7 @@ static void determineOperatingSystem()
        */
       if (uname(&uts) == 0)
 	{
-	  os = [NSString stringWithCString: uts.sysname                                                           encoding: [NSString defaultCStringEncoding]];
+	  os = [NSString stringWithCString: uts.sysname encoding: [NSString defaultCStringEncoding]];
 	  os = [os lowercaseString];
 	  /* Get the operating system version ... usually the version string
 	   * is pretty horrible, and the kernel release string actually

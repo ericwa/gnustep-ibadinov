@@ -9,14 +9,14 @@ extern const char *GSPathHandling(const char *);
 int main()
 {
   NSAutoreleasePool   *arp = [NSAutoreleasePool new];
-  NSURL		*url;
-  NSURL		*rel;
-  NSData	*data;
+  NSURL     *url;
+  NSURL     *rel;
+  NSData    *data;
   NSString	*str;
-  NSNumber      *num;
-  unsigned      i;
-  unichar	u = 163;
-  unichar       buf[256];
+  NSNumber  *num;
+  unsigned  i;
+  unichar   u = 163;
+  unichar   buf[256];
   
   TEST_FOR_CLASS(@"NSURL", [NSURL alloc],
     "NSURL +alloc returns an NSURL");

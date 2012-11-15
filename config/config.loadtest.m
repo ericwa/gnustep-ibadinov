@@ -1,7 +1,7 @@
 
 #include "objc-common.g"
 
-@interface Test : NSObject
+@interface Test : Object
 +(void) load;
 +(int) test_result;
 @end

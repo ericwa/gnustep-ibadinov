@@ -55,6 +55,7 @@ GS_ROOT_CLASS @interface NSProxy <NSObject>
 /** <override-dummy />
  */
 + (void) load;
++ (void) initialize;
 /** <override-dummy />
  */
 + (oneway void) release;

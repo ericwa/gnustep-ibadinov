@@ -137,6 +137,7 @@ objc_load_callback(Class class, struct objc_category * category)
 #define	FSCHAR	char
 #endif
 
+/* returns zero on success */
 long
 GSPrivateLoadModule(NSString *filename, FILE *errorStream,
   void (*loadCallback)(Class, struct objc_category *),
@@ -144,12 +145,46 @@ GSPrivateLoadModule(NSString *filename, FILE *errorStream,
 {
 #if defined (NeXT_RUNTIME)
 #ifndef __OBJC2__
+    
   int errcode;
   dynamic_loaded = YES;
-  return objc_loadModule([filename fileSystemRepresentation],
-    loadCallback, &errcode);
+  return objc_loadModule([filename fileSystemRepresentation], loadCallback, &errcode);
+    
 #else
-#  warning objc-load.m: GSPrivateLoadModule() is currently no-op
+  
+  unsigned initialImageCount, imageCount;
+  const char **names = objc_copyImageNames(&initialImageCount);
+  if (names)
+    {
+      free(names);
+    }
+  
+  /* current NSBundle implementation does not support unloding
+   * and handle is never returned
+   */
+  void *handle = dlopen([filename fileSystemRepresentation], RTLD_NOW);
+  if (!handle && errorStream)
+    {
+      fprintf(errorStream, "%s\n", dlerror());
+    }
+  
+  names = objc_copyImageNames(&imageCount);
+  for (unsigned imageIndex = initialImageCount; imageIndex < imageCount; ++imageIndex)
+    {
+      unsigned classCount;
+      const char **classes = objc_copyClassNamesForImage(names[imageIndex], &classCount);
+      for (unsigned classIndex = 0; classIndex < classCount; ++classIndex)
+        {
+          loadCallback(objc_getClass(classes[classIndex]), NULL);
+        }
+      free(classes);
+    }
+  if (names)
+    {
+      free(names);
+    }
+  return handle == NULL;
+    
 #endif
 #else
   typedef void (*void_fn)();

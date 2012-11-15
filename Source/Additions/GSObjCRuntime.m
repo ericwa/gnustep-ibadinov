@@ -102,6 +102,7 @@ static const int8_t typeInfoTable[] =
   [GSObjCTypeFloat]               = sizeof(float),
   [GSObjCTypeDouble]              = sizeof(double),
   [GSObjCTypeBool]                = sizeof(_Bool),
+  [GSObjCTypeVoid]                = sizeof(void),
   /* here would go Pointer, but in most cases it needs special treatment */
   [GSObjCTypeCharPointer]         = sizeof(char *),
   [GSObjCTypeAtom]                = sizeof(void *),
@@ -116,6 +117,10 @@ static const int8_t typeInfoTable[] =
   /* ensure an appropriate table size */
   [GSObjCTypeMax]                 = 0
 };
+
+/* all substripts of typeInfoTable are of char type */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wchar-subscripts"
 
 GS_INLINE uint8_t
 RoundToThePowerOfTwo (uint8_t value)
@@ -134,6 +139,16 @@ GetNumericValue (const char *cursor, int *value)
   while (*cursor >= '0' && *cursor <= '9')
     {
       *value = 10 * (*value) + (*cursor++ - '0'); 
+    }
+  return cursor;
+}
+
+GS_INLINE const char *
+SkipName (const char *cursor)
+{
+  if (*cursor == '"')
+    {
+    for (++cursor; *cursor++ != '"';);
     }
   return cursor;
 }
@@ -168,7 +183,7 @@ SkipType (const char *cursor)
               break;
           }
       }
-    ++cursor;
+    cursor = SkipName(++cursor);
   } while (depth);
   return cursor;
 }
@@ -246,6 +261,7 @@ GSObjCParseTypeSpecification (const char *cursor,
   do {       
     GSObjCTypeInfo info = {cursor, 0, 1, 0};
     cursor = GetQualifiers(cursor, &info.qualifiers);
+    cursor = SkipName(cursor);
     
     BOOL pushStack = NO, popStack = NO, pushBuffer = YES, suppress = suppressionDepth != 0;
     unsigned parentDepth = state.stackSize;
@@ -254,7 +270,7 @@ GSObjCParseTypeSpecification (const char *cursor,
     if (typeInfoTable[*cursor])
       {
         info.size = info.alignment = typeInfoTable[*cursor];
-        ++cursor;
+        cursor = SkipName(++cursor);
       }
     else
       {
@@ -445,6 +461,8 @@ GSObjCParseTypeSpecification (const char *cursor,
   
   return cursor;
 }
+
+#pragma GCC diagnostic pop
 
 typedef struct __InfoAccumulator
 {

@@ -136,6 +136,11 @@
   /* Do nothing	*/
 }
 
++ (void) initialize
+{
+  /* Do nothing */
+}
+
 - (IMP) methodForSelector: (SEL)aSelector
 {
   if (aSelector == 0)

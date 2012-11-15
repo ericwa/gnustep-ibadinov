@@ -1520,7 +1520,7 @@ static id gs_weak_load(id obj)
  */
 + (BOOL) conformsToProtocol: (Protocol*)aProtocol
 {
-#ifdef __GNU_LIBOBJC__
+#if defined (__GNU_LIBOBJC__) || defined (NeXT_RUNTIME)
   Class c;
 
   /* Iterate over the current class and all the superclasses.  */

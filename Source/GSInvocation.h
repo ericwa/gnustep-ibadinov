@@ -27,8 +27,6 @@
 
 #include <Foundation/NSInvocation.h>
 
-@class	NSMutableData;
-
 typedef struct	{
   int		offset;
   unsigned	size;
@@ -38,6 +36,10 @@ typedef struct	{
   unsigned	qual;
   BOOL		isReg;
 } NSArgumentInfo;
+
+#if !defined (NeXT_RUNTIME)
+
+@class	NSMutableData;
 
 @interface NSInvocation (MacroSetup)
 - (id) initWithMethodSignature: (NSMethodSignature*)aSignature;
@@ -71,16 +73,18 @@ typedef struct	{
 - (BOOL) encodeWithDistantCoder: (NSCoder*)coder passPointers: (BOOL)passp;
 @end
 
-@interface NSMethodSignature (GNUstep)
-- (const char*) methodType;
-- (NSArgumentInfo*) methodInfo;
-@end
-
 extern void
 GSFFCallInvokeWithTargetAndImp(NSInvocation *inv, id anObject, IMP imp);
 
 extern void
 GSFFIInvokeWithTargetAndImp(NSInvocation *inv, id anObject, IMP imp);
+
+#endif /* NeXT_RUNTIME */
+
+@interface NSMethodSignature (GNUstep)
+- (const char*) methodType;
+- (NSArgumentInfo*) methodInfo;
+@end
 
 #define CLEAR_RETURN_VALUE_IF_OBJECT  do { if (_validReturn && *_inf[0].type == _C_ID) \
                                             { \

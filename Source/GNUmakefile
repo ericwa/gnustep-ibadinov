@@ -217,7 +217,8 @@ NSHTTPCookie.m \
 NSHTTPCookieStorage.m \
 NSIndexPath.m \
 NSIndexSet.m \
-NSInvocation.m \
+NSInvocation.ff.m \
+NSInvocation.x86_64.m \
 NSJSONSerialization.m \
 NSKeyedArchiver.m \
 NSKeyedUnarchiver.m \
@@ -501,6 +502,14 @@ libbase-resources_RESOURCE_FILES = Info-gnustep.plist
 
 libgnustep-base_NEEDS_GUI = NO
 libgnustep-baseadd_NEEDS_GUI = NO
+
+libgnustep-base_OBJ_FILES = $(GNUSTEP_OBJ_DIR)/NSInvocation.x86_64.s.o
+
+# Rule for building assembly files. 
+# AUXILIARY_CPPFLAGS are used for RUNTIME_DEFINE
+
+$(GNUSTEP_OBJ_DIR)/%${OEXT}: %
+	$(ECHO_COMPILING)$(CC) $(AUXILIARY_CPPFLAGS) -c $< -o $@$(END_ECHO)
 
 # Build the Additions subproject first.  It can then be used in by
 # both gnustep-base and gnustep-baseadd (otherwise, if we ever build

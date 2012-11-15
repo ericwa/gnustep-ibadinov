@@ -139,6 +139,15 @@
   return self;
 }
 
+/*
+ * Apple's runtime does not support typed selectors, but everything 
+ * can be done the right way.
+ */
+- (NSMethodSignature *) methodSignatureForSelector: (SEL)aSelector
+{
+  return [[obj class] instanceMethodSignatureForSelector:aSelector];
+}
+
 - (void) forwardInvocation: (NSInvocation*)inv
 {
 #if 1

@@ -429,7 +429,8 @@ static NSString *
 bundle_object_name(NSString *path, NSString* executable)
 {
   NSFileManager	*mgr = manager();
-  NSString	*name, *path0, *path1, *path2;
+  NSString      *name;
+  NSArray       *paths;
 
   if (executable)
     {
@@ -438,48 +439,47 @@ bundle_object_name(NSString *path, NSString* executable)
       name = [executable lastPathComponent];
       exepath = [executable stringByDeletingLastPathComponent];
       if ([exepath isEqualToString: @""] == NO)
-	{
-	  if ([exepath isAbsolutePath] == YES)
-	    path = exepath;
-	  else
-	    path = [path stringByAppendingPathComponent: exepath];
-	}
+        {
+          if ([exepath isAbsolutePath] == YES)
+            path = exepath;
+          else
+            path = [path stringByAppendingPathComponent: exepath];
+        }
     }
   else
     {
       name = [[path lastPathComponent] stringByDeletingPathExtension];
       path = [path stringByDeletingLastPathComponent];
     }
-  path0 = [path stringByAppendingPathComponent: name];
-  path = [path stringByAppendingPathComponent: gnustep_target_dir];
-  path1 = [path stringByAppendingPathComponent: name];
-  path = [path stringByAppendingPathComponent: library_combo];
-  path2 = [path stringByAppendingPathComponent: name];
-
-  if ([mgr isReadableFileAtPath: path2] == YES)
-    return path2;
-  else if ([mgr isReadableFileAtPath: path1] == YES)
-    return path1;
-  else if ([mgr isReadableFileAtPath: path0] == YES)
-    return path0;
-#if defined(__MINGW__)
-  /* If we couldn't find the binary, and we are on windows, and the name
-   * has no path extension, then let's try looking for a dll.
-   */
-  if ([name pathExtension] == nil)
-    {
-      if ([mgr isReadableFileAtPath:
-	[path2 stringByAppendingPathExtension: @"dll"]] == YES)
-	return [path2 stringByAppendingPathExtension: @"dll"];
-      else if ([mgr isReadableFileAtPath:
-	[path1 stringByAppendingPathExtension: @"dll"]] == YES)
-	return [path1 stringByAppendingPathExtension: @"dll"];
-      else if ([mgr isReadableFileAtPath:
-	[path0 stringByAppendingPathExtension: @"dll"]] == YES)
-	return [path0 stringByAppendingPathExtension: @"dll"];
+  
+  paths = [NSArray arrayWithObjects:path,
+           [path stringByAppendingPathComponent:@"Contents/MacOS"],
+           (path = [path stringByAppendingPathComponent:gnustep_target_dir]),
+           (path = [path stringByAppendingPathComponent:library_combo]),
+           nil];
+  
+  NSEnumerator *enumerator = [paths reverseObjectEnumerator];
+  while ((path = [enumerator nextObject])) {
+    path = [path stringByAppendingPathComponent:name];
+    if ([mgr isReadableFileAtPath:path]) {
+      return path;
     }
+#if defined(__MINGW__)
+    /* If we couldn't find the binary, and we are on windows, and the name
+     * has no path extension, then let's try looking for a dll.
+     */
+    if ([name pathExtension] == nil)
+      {
+        path = [path stringByAppendingPathExtension: @"dll"];
+        if ([mgr isReadableFileAtPath:path])
+          {
+            return path;
+          }
+      }
 #endif
-  return path0;
+  }
+  
+  return [paths objectAtIndex:0];
 }
 
 /* Construct a path from components */
@@ -2100,48 +2100,39 @@ IF_NO_GC(
   NSArray		*languages;
   NSArray		*contents;
   NSMutableArray	*array;
-  NSEnumerator		*enumerate;
+  NSEnumerator		*enumerator;
 
   array = [NSMutableArray arrayWithCapacity: 8];
   languages = [[NSUserDefaults standardUserDefaults]
     stringArrayForKey: @"NSLanguages"];
-
-  primary = [rootPath stringByAppendingPathComponent: @"Resources"];
-  contents = bundle_directory_readable(primary);
-  addBundlePath(array, contents, primary, subPath, nil);
-  /* If we have been asked for a specific localization, we add it.
-   */
-  if (localization != nil)
-    {
-      addBundlePath(array, contents, primary, subPath, localization);
-    }
-  else
-    {
-      /* This matches OS X behavior, which only searches languages that
-       * are in the user's preference. Don't use -preferredLocalizations -
-       * that would cause a recursive loop.
-       */
-      enumerate = [languages objectEnumerator];
-      while ((language = [enumerate nextObject]))
-	{
-	  addBundlePath(array, contents, primary, subPath, language);
-	}
-    }
-  primary = rootPath;
-  contents = bundle_directory_readable(primary);
-  addBundlePath(array, contents, primary, subPath, nil);
-  if (localization != nil)
-    {
-      addBundlePath(array, contents, primary, subPath, localization);
-    }
-  else
-    {
-      enumerate = [languages objectEnumerator];
-      while ((language = [enumerate nextObject]))
-	{
-	  addBundlePath(array, contents, primary, subPath, language);
-	}
-    }
+  
+  NSArray *pathsToExamine = [NSArray arrayWithObjects:rootPath, 
+                             [rootPath stringByAppendingPathComponent:@"Resources"],
+                             [rootPath stringByAppendingPathComponent:@"Contents"],
+                             [rootPath stringByAppendingPathComponent:@"Contents/Resources"],
+                             nil];
+  
+  for (primary in pathsToExamine) {
+    contents = bundle_directory_readable(primary);
+    addBundlePath(array, contents, primary, subPath, nil);
+    /* If we have been asked for a specific localization, we add it. */
+    if (localization != nil)
+      {
+        addBundlePath(array, contents, primary, subPath, localization);
+      }
+    else
+      {
+        /* This matches OS X behavior, which only searches languages that
+         * are in the user's preference. Don't use -preferredLocalizations -
+         * that would cause a recursive loop.
+         */
+        enumerator = [languages objectEnumerator];
+        while ((language = [enumerator nextObject]))
+          {
+            addBundlePath(array, contents, primary, subPath, language);
+          }
+      }
+  }
   return array;
 }
 

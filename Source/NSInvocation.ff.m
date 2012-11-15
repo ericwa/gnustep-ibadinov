@@ -26,6 +26,10 @@
    $Date$ $Revision$
    */
 
+#import "config.h" /* USE_LIBFFI/USE_FFCALL */
+
+#if defined (USE_LIBFFI) || defined (USE_FFCALL)
+
 #import "common.h"
 #define	EXPOSE_NSInvocation_IVARS	1
 #import "Foundation/NSException.h"
@@ -816,7 +820,9 @@ _arg_addr(NSInvocation *inv, int index)
 
 @end
 
-#if !defined(USE_FFCALL) && !defined(USE_LIBFFI)
+#endif /* USE_LIBFFI || USE_FFCALL */
+
+#if !defined(USE_FFCALL) && !defined(USE_LIBFFI) && !defined (NeXT_RUNTIME)
 #warning Using dummy NSInvocation implementation.  It is strongly recommended that you use libffi.
 @implementation GSDummyInvocation
 
@@ -845,4 +851,3 @@ _arg_addr(NSInvocation *inv, int index)
 
 @end
 #endif
-
