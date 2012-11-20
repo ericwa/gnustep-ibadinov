@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		180878891618537A006EBD74 /* objc-load.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890700B1610BF3C0003C892 /* objc-load.m */; };
+		180DFAEB165BF98C00573635 /* NSInvocation.x86_64.S in Sources */ = {isa = PBXBuildFile; fileRef = 180DFAE9165BF94E00573635 /* NSInvocation.x86_64.S */; };
 		18115CD216513CB300672055 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
 		18115CD316513CB300672055 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
 		18115CD516513CB300672055 /* NSInvocation_general.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 183976AE16318A84008266AA /* NSInvocation_general.1 */; };
@@ -447,36 +448,7 @@
 		185289AC1613A06F0016729B /* configure.ac in Resources */ = {isa = PBXBuildFile; fileRef = 185289AB1613A06F0016729B /* configure.ac */; };
 		185289D61613A1060016729B /* addlibrarypath.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289AE1613A1060016729B /* addlibrarypath.m4 */; };
 		185289D71613A1060016729B /* codeset.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289AF1613A1060016729B /* codeset.m4 */; };
-		185289D81613A1060016729B /* config.align.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289B01613A1060016729B /* config.align.c */; };
-		185289D91613A1060016729B /* config.builtin_apply.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289B11613A1060016729B /* config.builtin_apply.c */; };
-		185289DA1613A1060016729B /* config.constant-string-class.m in Sources */ = {isa = PBXBuildFile; fileRef = 185289B21613A1060016729B /* config.constant-string-class.m */; };
-		185289DB1613A1060016729B /* config.constant-string-encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289B31613A1060016729B /* config.constant-string-encoding.c */; };
-		185289DC1613A1060016729B /* config.ffi.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289B41613A1060016729B /* config.ffi.c */; };
-		185289DD1613A1060016729B /* config.forward.m in Sources */ = {isa = PBXBuildFile; fileRef = 185289B51613A1060016729B /* config.forward.m */; };
-		185289DE1613A1060016729B /* config.forward2.m in Sources */ = {isa = PBXBuildFile; fileRef = 185289B61613A1060016729B /* config.forward2.m */; };
-		185289DF1613A1060016729B /* config.initialize.m in Sources */ = {isa = PBXBuildFile; fileRef = 185289B71613A1060016729B /* config.initialize.m */; };
-		185289E01613A1060016729B /* config.joinable.m in Sources */ = {isa = PBXBuildFile; fileRef = 185289B81613A1060016729B /* config.joinable.m */; };
-		185289E11613A1060016729B /* config.kvmopen.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289B91613A1060016729B /* config.kvmopen.c */; };
-		185289E21613A1060016729B /* config.loadtest.m in Sources */ = {isa = PBXBuildFile; fileRef = 185289BA1613A1060016729B /* config.loadtest.m */; };
-		185289E31613A1060016729B /* config.nested.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289BB1613A1060016729B /* config.nested.c */; };
 		185289E41613A1060016729B /* config.nextcc.h in Headers */ = {isa = PBXBuildFile; fileRef = 185289BC1613A1060016729B /* config.nextcc.h */; };
-		185289E51613A1060016729B /* config.nextrt.m in Sources */ = {isa = PBXBuildFile; fileRef = 185289BD1613A1060016729B /* config.nextrt.m */; };
-		185289E61613A1060016729B /* config.non-fragile-ivars.m in Sources */ = {isa = PBXBuildFile; fileRef = 185289BE1613A1060016729B /* config.non-fragile-ivars.m */; };
-		185289E71613A1060016729B /* config.objc.m in Sources */ = {isa = PBXBuildFile; fileRef = 185289BF1613A1060016729B /* config.objc.m */; };
-		185289E81613A1060016729B /* config.poll-dev.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289C01613A1060016729B /* config.poll-dev.c */; };
-		185289E91613A1060016729B /* config.poll.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289C11613A1060016729B /* config.poll.c */; };
-		185289EA1613A1060016729B /* config.printf.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289C21613A1060016729B /* config.printf.c */; };
-		185289EB1613A1060016729B /* config.proccmd.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289C31613A1060016729B /* config.proccmd.c */; };
-		185289EC1613A1060016729B /* config.psinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289C41613A1060016729B /* config.psinfo.c */; };
-		185289ED1613A1060016729B /* config.retframe.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289C51613A1060016729B /* config.retframe.c */; };
-		185289EE1613A1060016729B /* config.reuseaddr.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289C61613A1060016729B /* config.reuseaddr.c */; };
-		185289EF1613A1060016729B /* config.setUncaughtExceptionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 185289C71613A1060016729B /* config.setUncaughtExceptionHandler.m */; };
-		185289F01613A1060016729B /* config.set_unexpected.m in Sources */ = {isa = PBXBuildFile; fileRef = 185289C81613A1060016729B /* config.set_unexpected.m */; };
-		185289F11613A1060016729B /* config.trampoline.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289C91613A1060016729B /* config.trampoline.c */; };
-		185289F21613A1060016729B /* config.unexpected.m in Sources */ = {isa = PBXBuildFile; fileRef = 185289CA1613A1060016729B /* config.unexpected.m */; };
-		185289F31613A1060016729B /* config.vasprintf.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289CB1613A1060016729B /* config.vasprintf.c */; };
-		185289F41613A1060016729B /* config.vsprintf.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289CC1613A1060016729B /* config.vsprintf.c */; };
-		185289F51613A1060016729B /* config.wprintf.c in Sources */ = {isa = PBXBuildFile; fileRef = 185289CD1613A1060016729B /* config.wprintf.c */; };
 		185289F61613A1060016729B /* icu.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289CE1613A1060016729B /* icu.m4 */; };
 		185289F71613A1060016729B /* objc-common.g in Resources */ = {isa = PBXBuildFile; fileRef = 185289CF1613A1060016729B /* objc-common.g */; };
 		185289F81613A1060016729B /* objc-con-autoload.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289D01613A1060016729B /* objc-con-autoload.m4 */; };
@@ -493,7 +465,6 @@
 		18950A84162888DC009D6FE7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
 		18950A87162888F3009D6FE7 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
 		18D8BEA4164B5FF800942A5D /* NSInvocation.x86_64.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */; };
-		18D8BEA5164B5FF800942A5D /* NSInvocation.x86_64.s in Sources */ = {isa = PBXBuildFile; fileRef = 18D8BEA3164B5FF800942A5D /* NSInvocation.x86_64.s */; };
 		18FE1E15162716A200389A13 /* ChangeLog in Resources */ = {isa = PBXBuildFile; fileRef = 18FE1E12162716A200389A13 /* ChangeLog */; };
 		18FE1E16162716A200389A13 /* ChangeLog.1 in Resources */ = {isa = PBXBuildFile; fileRef = 18FE1E13162716A200389A13 /* ChangeLog.1 */; };
 		18FE1E17162716A200389A13 /* ChangeLog.2 in Resources */ = {isa = PBXBuildFile; fileRef = 18FE1E14162716A200389A13 /* ChangeLog.2 */; };
@@ -722,6 +693,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		180DFAE9165BF94E00573635 /* NSInvocation.x86_64.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = NSInvocation.x86_64.S; sourceTree = "<group>"; };
 		18115CD916513CB300672055 /* NSInvocation_test01 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NSInvocation_test01; sourceTree = BUILT_PRODUCTS_DIR; };
 		18115CF016517EB200672055 /* NSURL_test00 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NSURL_test00; sourceTree = BUILT_PRODUCTS_DIR; };
 		1837D99F1652876E00197E53 /* TestConnection.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestConnection.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1298,7 +1270,6 @@
 		18950A7C1628886A009D6FE7 /* KVC_basic-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KVC_basic-Prefix.pch"; sourceTree = "<group>"; };
 		18950A7D1628886A009D6FE7 /* KVC_basic.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = KVC_basic.1; sourceTree = "<group>"; };
 		18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInvocation.x86_64.m; sourceTree = "<group>"; };
-		18D8BEA3164B5FF800942A5D /* NSInvocation.x86_64.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = NSInvocation.x86_64.s; sourceTree = "<group>"; };
 		18FE1E12162716A200389A13 /* ChangeLog */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog; sourceTree = SOURCE_ROOT; };
 		18FE1E13162716A200389A13 /* ChangeLog.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = ChangeLog.1; sourceTree = SOURCE_ROOT; };
 		18FE1E14162716A200389A13 /* ChangeLog.2 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog.2; sourceTree = SOURCE_ROOT; };
@@ -2200,7 +2171,7 @@
 				18906F9F1610BF3C0003C892 /* NSIndexSet.m */,
 				18906FA01610BF3C0003C892 /* NSInvocation.ff.m */,
 				18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */,
-				18D8BEA3164B5FF800942A5D /* NSInvocation.x86_64.s */,
+				180DFAE9165BF94E00573635 /* NSInvocation.x86_64.S */,
 				18906FA11610BF3C0003C892 /* NSJSONSerialization.m */,
 				18906FA21610BF3C0003C892 /* NSKeyValueCoding.m */,
 				18906FA31610BF3C0003C892 /* NSKeyValueMutableArray.m */,
@@ -4665,35 +4636,6 @@
 				18394BEF1610DB2700335E85 /* GSTLS.m in Sources */,
 				18394BF01610DB2A00335E85 /* GSTimSort.m in Sources */,
 				18394BF11610DB3000335E85 /* GSValue.m in Sources */,
-				185289D81613A1060016729B /* config.align.c in Sources */,
-				185289D91613A1060016729B /* config.builtin_apply.c in Sources */,
-				185289DA1613A1060016729B /* config.constant-string-class.m in Sources */,
-				185289DB1613A1060016729B /* config.constant-string-encoding.c in Sources */,
-				185289DC1613A1060016729B /* config.ffi.c in Sources */,
-				185289DD1613A1060016729B /* config.forward.m in Sources */,
-				185289DE1613A1060016729B /* config.forward2.m in Sources */,
-				185289DF1613A1060016729B /* config.initialize.m in Sources */,
-				185289E01613A1060016729B /* config.joinable.m in Sources */,
-				185289E11613A1060016729B /* config.kvmopen.c in Sources */,
-				185289E21613A1060016729B /* config.loadtest.m in Sources */,
-				185289E31613A1060016729B /* config.nested.c in Sources */,
-				185289E51613A1060016729B /* config.nextrt.m in Sources */,
-				185289E61613A1060016729B /* config.non-fragile-ivars.m in Sources */,
-				185289E71613A1060016729B /* config.objc.m in Sources */,
-				185289E81613A1060016729B /* config.poll-dev.c in Sources */,
-				185289E91613A1060016729B /* config.poll.c in Sources */,
-				185289EA1613A1060016729B /* config.printf.c in Sources */,
-				185289EB1613A1060016729B /* config.proccmd.c in Sources */,
-				185289EC1613A1060016729B /* config.psinfo.c in Sources */,
-				185289ED1613A1060016729B /* config.retframe.c in Sources */,
-				185289EE1613A1060016729B /* config.reuseaddr.c in Sources */,
-				185289EF1613A1060016729B /* config.setUncaughtExceptionHandler.m in Sources */,
-				185289F01613A1060016729B /* config.set_unexpected.m in Sources */,
-				185289F11613A1060016729B /* config.trampoline.c in Sources */,
-				185289F21613A1060016729B /* config.unexpected.m in Sources */,
-				185289F31613A1060016729B /* config.vasprintf.c in Sources */,
-				185289F41613A1060016729B /* config.vsprintf.c in Sources */,
-				185289F51613A1060016729B /* config.wprintf.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4808,7 +4750,7 @@
 				18394C2D1610EB7F00335E85 /* NSIndexSet.m in Sources */,
 				18394C2E1610EB7F00335E85 /* NSInvocation.ff.m in Sources */,
 				18D8BEA4164B5FF800942A5D /* NSInvocation.x86_64.m in Sources */,
-				18D8BEA5164B5FF800942A5D /* NSInvocation.x86_64.s in Sources */,
+				180DFAEB165BF98C00573635 /* NSInvocation.x86_64.S in Sources */,
 				18394C2F1610EB7F00335E85 /* NSJSONSerialization.m in Sources */,
 				18394C301610EB7F00335E85 /* NSKeyValueCoding.m in Sources */,
 				18394C331610EB7F00335E85 /* NSKeyValueObserving.m in Sources */,
