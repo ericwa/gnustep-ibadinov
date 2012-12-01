@@ -372,23 +372,23 @@ static void DNSSD_API
   {
     do
       {
-	if (! [self delegate])
-	  {
-	    err = NSNetServicesInvalidError;
-	    break;
-	  }
-	
-	if (browser->timer)
-	  {
-	    err = NSNetServicesActivityInProgress;
-	    break;
-	  }
-	
-	err = DNSServiceEnumerateDomains((DNSServiceRef *)&_netServiceBrowser,
-	  aFlag,
-	  browser->interfaceIndex,
-	  EnumerationCallback,
-	  self);
+        if (! [self delegate])
+          {
+            err = NSNetServicesInvalidError;
+            break;
+          }
+        
+        if (browser->timer)
+          {
+            err = NSNetServicesActivityInProgress;
+            break;
+          }
+        
+        err = DNSServiceEnumerateDomains((DNSServiceRef *)&_netServiceBrowser,
+                                         (DNSServiceFlags)aFlag,
+                                         browser->interfaceIndex,
+                                         EnumerationCallback,
+                                         self);
       }
     while (0);
   }
@@ -793,8 +793,8 @@ static void DNSSD_API
     {
       Browser	*browser;
       
-      browser = malloc(sizeof (struct _Browser));
-      memset(browser, 0, sizeof browser);
+      browser = malloc(sizeof(struct _Browser));
+      memset(browser, 0, sizeof(struct _Browser));
       
       CREATELOCK(browser);
       
@@ -1481,9 +1481,9 @@ static void DNSSD_API
 + (NSData *) dataFromTXTRecordDictionary: (NSDictionary *) txtDictionary
 {
   NSMutableData	*result = nil;
-  NSArray	*keys = nil;
-  NSArray	*values = nil;
-  int		count = 0;
+  NSArray       *keys   = nil;
+  NSArray       *values = nil;
+  NSUInteger    count   = 0;
   
   INTERNALTRACE;
   
@@ -1495,100 +1495,100 @@ static void DNSSD_API
       values = [txtDictionary allValues];
       
       if (keys && values)
-	{
-	  TXTRecordRef	txt;
-	  int		i = 0;
-	  char		key[256];
-	  
-	  TXTRecordCreate(&txt, 0, NULL);
-	  
-	  for (; i < count; i++)
-	    {
-	      int			length = 0;
-	      int			used = 0;
-	      DNSServiceErrorType err = kDNSServiceErr_Unknown;
-	      
-	      if (! [[keys objectAtIndex: i] isKindOfClass: [NSString class]])
-		{
-		  LOG(@"%@ is not a string", [keys objectAtIndex: i]);
-		  break;
-		}
-	      
-	      length = [[keys objectAtIndex: i] length];
-	      [[keys objectAtIndex: i] getCString: key
-					maxLength: sizeof key];
-	      used = strlen(key);
-	      
-	      if (! length || (used >= sizeof key))
-		{
-		  LOG(@"incorrect length %d - %d - %d",
-		    length, used, sizeof key);
-		  break;
-		}
-	      
-	      if ([[values objectAtIndex: i] isKindOfClass: [NSString class]])
-		{
-		  char	value[256];
-		  
-		  length = [[values objectAtIndex: i] length];
-		  [[values objectAtIndex: i] getCString: value
-					      maxLength: sizeof value];
-		  used = strlen(value);
-		  
-		  if (used >= sizeof value)
-		    {
-		      LOG(@"incorrect length %d - %d - %d",
-			length, used, sizeof value);
-		      break;
-		    }
-		  
-		  err = TXTRecordSetValue(&txt,
-		    (const char *) key,
-		    used,
-		    value);
-		}
-	      else if ([[values objectAtIndex: i] isKindOfClass: [NSData class]]
-		&& [[values objectAtIndex: i] length] < 256
-		&& [[values objectAtIndex: i] length] >= 0)
-		{
-		  err = TXTRecordSetValue(&txt,
-		    (const char *) key,
-		    [[values objectAtIndex: i] length],
-		    [[values objectAtIndex: i] bytes]);
-		}
-	      else if ([values objectAtIndex: i] == [NSNull null])
-		{
-		  err = TXTRecordSetValue(&txt,
-		    (const char *) key,
-		    0,
-		    NULL);
-		}
-	      else
-		{
-		  LOG(@"unknown value type");
-		  break;
-		}
-	      
-	      if (err != kDNSServiceErr_NoError)
-		{
-		  LOG(@"error creating data type");
-		  break;
-		}
-	    }
-	  
-	  if (i == count)
-	    {
-	      result = [NSData dataWithBytes: TXTRecordGetBytesPtr(&txt)
-				      length: TXTRecordGetLength(&txt)];
-	    }
-	  
-	  TXTRecordDeallocate(&txt);
-	}
+        {
+          TXTRecordRef  txt;
+          NSUInteger		i = 0;
+          char          key[256];
+          
+          TXTRecordCreate(&txt, 0, NULL);
+          
+          for (; i < count; i++)
+            {
+              size_t length = 0;
+              size_t used = 0;
+              DNSServiceErrorType err = kDNSServiceErr_Unknown;
+              
+              if (![[keys objectAtIndex: i] isKindOfClass: [NSString class]])
+                {
+                  LOG(@"%@ is not a string", [keys objectAtIndex: i]);
+                  break;
+                }
+              
+                length = [[keys objectAtIndex: i] length];
+                [[keys objectAtIndex: i] getCString: key
+                                          maxLength: sizeof key];
+                used = strlen(key);
+              
+                if (!length || (used >= sizeof key))
+                  {
+                    LOG(@"incorrect length %d - %d - %d",
+                        length, used, sizeof key);
+                    break;
+                  }
+              
+              if ([[values objectAtIndex: i] isKindOfClass: [NSString class]])
+                {
+                  char	value[256];
+                  
+                  length = [[values objectAtIndex: i] length];
+                  [[values objectAtIndex: i] getCString: value
+                                              maxLength: sizeof value];
+                  used = strlen(value);
+                  
+                  if (used >= sizeof value)
+                    {
+                      LOG(@"incorrect length %d - %d - %d",
+                          length, used, sizeof value);
+                      break;
+                    }
+                  
+                  err = TXTRecordSetValue(&txt,
+                                          (const char *) key,
+                                          used,
+                                          value);
+                }
+              else if ([[values objectAtIndex: i] isKindOfClass: [NSData class]]
+                       && [[values objectAtIndex: i] length] < 256
+                       && [[values objectAtIndex: i] length] > 0)
+                {
+                  err = TXTRecordSetValue(&txt,
+                                          (const char *) key,
+                                          [[values objectAtIndex: i] length],
+                                          [[values objectAtIndex: i] bytes]);
+                }
+              else if ([values objectAtIndex: i] == [NSNull null])
+                {
+                  err = TXTRecordSetValue(&txt,
+                                          (const char *) key,
+                                          0,
+                                          NULL);
+                }
+              else
+                {
+                  LOG(@"unknown value type");
+                  break;
+                }
+              
+              if (err != kDNSServiceErr_NoError)
+                {
+                  LOG(@"error creating data type");
+                  break;
+                }
+            }
+          
+          if (i == count)
+            {
+              result = [NSData dataWithBytes: TXTRecordGetBytesPtr(&txt)
+                    length: TXTRecordGetLength(&txt)];
+            }
+          
+          TXTRecordDeallocate(&txt);
+        }
       else
-	{
-	  LOG(@"No keys or values");
-	}
-      
+        {
+          LOG(@"No keys or values");
+        }
+          
       // both are autorelease'd
       keys = nil;
       values = nil;
@@ -1609,8 +1609,8 @@ static void DNSSD_API
 + (NSDictionary *) dictionaryFromTXTRecordData: (NSData *) txtData
 {
   NSMutableDictionary	*result = nil;
-  int			len = 0;
-  const void		*txt = 0;
+  NSUInteger          len   = 0;
+  const void          *txt  = 0;
   
   INTERNALTRACE;
   
@@ -1735,8 +1735,8 @@ static void DNSSD_API
     {
       Service	*service;
       
-      service = malloc(sizeof (struct _Service));
-      memset(service, 0, sizeof service);
+      service = malloc(sizeof(struct _Service));
+      memset(service, 0, sizeof(struct _Service));
       
       CREATELOCK(service);
       
@@ -2478,8 +2478,8 @@ static void DNSSD_API
     {
       Monitor	*monitor;
       
-      monitor = malloc(sizeof (struct _Monitor));
-      memset(monitor, 0, sizeof monitor);
+      monitor = malloc(sizeof(struct _Monitor));
+      memset(monitor, 0, sizeof(struct _Monitor));
       
       CREATELOCK(monitor);
       
