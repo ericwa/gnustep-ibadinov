@@ -424,7 +424,7 @@ static NSStringEncoding	defaultEncoding;
     }
   if (num != NSNotFound && num != [[old fileOwnerAccountID] unsignedLongValue])
     {
-      if (chown(lpath, num, -1) != 0)
+      if (chown(lpath, (uid_t)num, -1) != 0)
 	{
 	  allOk = NO;
 	  str = [NSString stringWithFormat:
@@ -490,7 +490,7 @@ static NSStringEncoding	defaultEncoding;
   if (num != NSNotFound
     && num != [[old fileGroupOwnerAccountID] unsignedLongValue])
     {
-      if (chown(lpath, -1, num) != 0)
+      if (chown(lpath, -1, (uid_t)num) != 0)
 	{
 	  allOk = NO;
 	  str = [NSString stringWithFormat:
@@ -666,8 +666,8 @@ static NSStringEncoding	defaultEncoding;
     {
       NSArray	*a1 = [self directoryContentsAtPath: path1];
       NSArray	*a2 = [self directoryContentsAtPath: path2];
-      unsigned	index, count = [a1 count];
-      BOOL	ok = YES;
+      NSUInteger index, count = [a1 count];
+      BOOL ok = YES;
 
       if ([a1 isEqual: a2] == NO)
 	{
@@ -889,8 +889,8 @@ static NSStringEncoding	defaultEncoding;
 #else
   const char	*lpath;
   int	fd;
-  int	len;
-  int	written;
+  NSUInteger len;
+  NSUInteger written;
 #endif
 
   /* This is consistent with MacOSX - just return NO for an invalid path. */
@@ -1152,8 +1152,8 @@ static NSStringEncoding	defaultEncoding;
   BOOL		sourceIsDir;
   BOOL		fileExists;
   NSString	*destinationParent;
-  unsigned int	sourceDevice;
-  unsigned int	destinationDevice;
+  NSUInteger sourceDevice;
+  NSUInteger destinationDevice;
   const _CHAR	*sourcePath;
   const _CHAR	*destPath;
 
@@ -1435,9 +1435,9 @@ static NSStringEncoding	defaultEncoding;
     }
   else
     {
-      NSArray   *contents = [self directoryContentsAtPath: path];
-      unsigned	count = [contents count];
-      unsigned	i;
+      NSArray     *contents = [self directoryContentsAtPath: path];
+      NSUInteger  count = [contents count];
+      NSUInteger  i;
 
       for (i = 0; i < count; i++)
 	{
@@ -2177,7 +2177,7 @@ static NSStringEncoding	defaultEncoding;
 #ifdef HAVE_READLINK
   char  buf[PATH_MAX];
   const char* lpath = [self fileSystemRepresentationWithPath: path];
-  int   llen = readlink(lpath, buf, PATH_MAX-1);
+  size_t llen = readlink(lpath, buf, PATH_MAX-1);
 
   if (llen > 0)
     {
@@ -2530,7 +2530,7 @@ static inline void gsedRelease(GSEnumeratedDirectory X)
  */
 - (OSType) fileHFSCreatorCode
 {
-  return [[self objectForKey: NSFileHFSCreatorCode] unsignedLongValue];
+  return (OSType)[[self objectForKey: NSFileHFSCreatorCode] unsignedLongValue];
 }
 
 /**
@@ -2538,7 +2538,7 @@ static inline void gsedRelease(GSEnumeratedDirectory X)
  */
 - (OSType) fileHFSTypeCode
 {
-  return [[self objectForKey: NSFileHFSTypeCode] unsignedLongValue];
+  return (OSType)[[self objectForKey: NSFileHFSTypeCode] unsignedLongValue];
 }
 
 /**
@@ -2694,9 +2694,9 @@ static inline void gsedRelease(GSEnumeratedDirectory X)
   int		bufsize = 8096;
   int		sourceFd;
   int		destFd;
-  int		fileMode;
-  int		rbytes;
-  int		wbytes;
+  NSUInteger fileMode;
+  ssize_t  rbytes;
+  ssize_t  wbytes;
   char		buffer[bufsize];
 
   /* Assumes source is a file and exists! */
@@ -3531,15 +3531,15 @@ static NSSet	*fileKeys = nil;
       if (key == NSFileOwnerAccountID)
 	return [self fileOwnerAccountID];
       if (key == NSFilePosixPermissions)
-	return [NSNumber numberWithUnsignedInt: [self filePosixPermissions]];
+	return [NSNumber numberWithUnsignedInteger: [self filePosixPermissions]];
       if (key == NSFileReferenceCount)
 	return [NSNumber numberWithUnsignedInt: statbuf.st_nlink];
       if (key == NSFileSize)
 	return [NSNumber numberWithUnsignedLongLong: [self fileSize]];
       if (key == NSFileSystemFileNumber)
-	return [NSNumber numberWithUnsignedInt: [self fileSystemFileNumber]];
+	return [NSNumber numberWithUnsignedInteger: [self fileSystemFileNumber]];
       if (key == NSFileSystemNumber)
-	return [NSNumber numberWithUnsignedInt: [self fileSystemNumber]];
+	return [NSNumber numberWithUnsignedInteger: [self fileSystemNumber]];
       if (key == NSFileType)
 	return [self fileType];
 

@@ -53,15 +53,15 @@
  */
 - (NSString*) hexadecimalRepresentation
 {
-  static const char	*hexChars = "0123456789ABCDEF";
-  unsigned		slen = [self length];
-  unsigned		dlen = slen * 2;
+  static const char   *hexChars = "0123456789ABCDEF";
+  NSUInteger          slen = [self length];
+  NSUInteger          dlen = slen * 2;
   const unsigned char	*src = (const unsigned char *)[self bytes];
-  char			*dst = (char*)NSZoneMalloc(NSDefaultMallocZone(), dlen);
-  unsigned		spos = 0;
-  unsigned		dpos = 0;
-  NSData		*data;
-  NSString		*string;
+  char                *dst = (char*)NSZoneMalloc(NSDefaultMallocZone(), dlen);
+  NSUInteger          spos = 0;
+  NSUInteger          dpos = 0;
+  NSData              *data;
+  NSString            *string;
 
   while (spos < slen)
     {
@@ -169,7 +169,7 @@ struct MD5Context
 };
 static void MD5Init (struct MD5Context *context);
 static void MD5Update (struct MD5Context *context, unsigned char const *buf,
-unsigned len);
+                       NSUInteger len);
 static void MD5Final (unsigned char digest[16], struct MD5Context *context);
 static void MD5Transform (uint32_t buf[4], uint32_t const in[16]);
 
@@ -238,7 +238,7 @@ static void MD5Init (struct MD5Context *ctx)
  * of bytes.
  */
 static void MD5Update (struct MD5Context *ctx, unsigned char const *buf,
-  unsigned len)
+  NSUInteger len)
 {
   uint32_t t;
 
@@ -468,10 +468,10 @@ static void MD5Transform (uint32_t buf[4], uint32_t const in[16])
 		 mode: (NSInteger*)modePtr
 {
   const unsigned char	*bytes = (const unsigned char*)[self bytes];
-  unsigned		length = [self length];
-  unsigned		decLength = [decoded length];
-  unsigned		pos = 0;
-  NSString		*name = nil;
+  NSUInteger  length = [self length];
+  NSUInteger  decLength = [decoded length];
+  NSUInteger  pos = 0;
+  NSString    *name = nil;
 
   if (namePtr != 0)
     {
@@ -490,8 +490,8 @@ static void MD5Transform (uint32_t buf[4], uint32_t const in[16])
 	{
 	  if (name != nil)
 	    {
-	      unsigned		i = 0;
-	      int		lineLength;
+	      NSUInteger i = 0;
+	      int lineLength;
 	      unsigned char	*decPtr;
 
 	      lineLength = DEC(bytes[i++]);
@@ -561,8 +561,8 @@ static void MD5Transform (uint32_t buf[4], uint32_t const in[16])
 	    }
 	  else if (pos > 6 && strncmp((const char*)bytes, "begin ", 6) == 0)
 	    {
-	      unsigned	off = 6;
-	      unsigned	end = pos;
+	      NSUInteger off = 6;
+	      NSUInteger end = pos;
 	      int	mode = 0;
 	      NSData	*d;
 
@@ -616,9 +616,9 @@ static void MD5Transform (uint32_t buf[4], uint32_t const in[16])
 		 mode: (NSInteger)mode
 {
   const unsigned char	*bytes = (const unsigned char*)[self bytes];
-  int			length = [self length];
+  NSUInteger length = [self length];
   unsigned char		buf[64];
-  unsigned		i;
+  NSUInteger i;
 
   name = [name stringByTrimmingSpaces];
   if ([name length] == 0)
@@ -637,8 +637,8 @@ static void MD5Transform (uint32_t buf[4], uint32_t const in[16])
 
   while (length > 0)
     {
-      int	count;
-      unsigned	pos;
+      NSUInteger count;
+      NSUInteger pos;
 
       /*
        * We want up to 45 bytes in a line ... and we record the
@@ -646,55 +646,56 @@ static void MD5Transform (uint32_t buf[4], uint32_t const in[16])
        */
       count = length;
       if (count > 45)
-	{
-	  count = 45;
-	}
+        {
+          count = 45;
+        }
       i = 0;
       buf[i++] = ENC(count);
 
       /*
        * Now we encode the actual data for the line.
        */
-      for (pos = 0; count > 0; count -= 3)
-	{
-	  unsigned char	tmp[3];
-	  int		c;
+      for (pos = 0; count > 0;)
+      {
+        unsigned char	tmp[3];
+        int		c;
 
-	  /*
-	   * Copy data into a temporary buffer ensuring we don't
-	   * overrun the end of the original buffer risking access
-	   * violation.
-	   */
-	  tmp[0] = bytes[pos++];
-	  if (pos < length)
-	    {
-	      tmp[1] = bytes[pos++];
-	      if (pos < length)
-		{
-		  tmp[2] = bytes[pos++];
-		}
-	      else
-		{
-		  tmp[2] = 0;
-		}
-	    }
-	  else
-	    {
-	      tmp[1] = 0;
-	      tmp[2] = 0;
-	    }
+        /*
+         * Copy data into a temporary buffer ensuring we don't
+         * overrun the end of the original buffer risking access
+         * violation.
+         */
+        tmp[0] = bytes[pos++];
+        if (pos < length)
+          {
+            tmp[1] = bytes[pos++];
+            if (pos < length)
+              {
+                tmp[2] = bytes[pos++];
+              }
+            else
+              {
+                tmp[2] = 0;
+              }
+          }
+        else
+          {
+            tmp[1] = 0;
+            tmp[2] = 0;
+          }
 
-	  c = tmp[0] >> 2;
-	  buf[i++] = ENC(c);
-	  c = ((tmp[0] << 4) & 060) | ((tmp[1] >> 4) & 017);
-	  buf[i++] = ENC(c);
-	  c = ((tmp[1] << 2) & 074) | ((tmp[2] >> 6) & 03);
-	  buf[i++] = ENC(c);
-	  c = tmp[2] & 077;
-	  buf[i++] = ENC(c);
-	}
+        c = tmp[0] >> 2;
+        buf[i++] = ENC(c);
+        c = ((tmp[0] << 4) & 060) | ((tmp[1] >> 4) & 017);
+        buf[i++] = ENC(c);
+        c = ((tmp[1] << 2) & 074) | ((tmp[2] >> 6) & 03);
+        buf[i++] = ENC(c);
+        c = tmp[2] & 077;
+        buf[i++] = ENC(c);
+      }
       bytes += pos;
       length -= pos;
+      count -= pos;
       buf[i++] = '\n';
       [encoded appendBytes: buf length: i];
     }

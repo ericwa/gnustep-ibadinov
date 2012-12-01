@@ -129,8 +129,8 @@ hashObject(const void *item, NSUInteger (*size)(const void *item))
 static NSUInteger
 hashMemory(const void *item, NSUInteger (*size)(const void *item))
 {
-  unsigned	len = (*size)(item);
-  NSUInteger	hash = 0;
+  NSUInteger len = (*size)(item);
+  NSUInteger hash = 0;
 
   while (len-- > 0)
     {

@@ -47,15 +47,15 @@ static GSMimeParser		*mimeParser = nil;
 @implementation NSData(GSHTTPDigest)
 - (NSString*) digestHex
 {
-  static const char	*hexChars = "0123456789abcdef";
-  unsigned		slen = [self length];
-  unsigned		dlen = slen * 2;
+  static const char   *hexChars = "0123456789abcdef";
+  NSUInteger          slen = [self length];
+  NSUInteger          dlen = slen * 2;
   const unsigned char	*src = (const unsigned char *)[self bytes];
-  char			*dst;
-  unsigned		spos = 0;
-  unsigned		dpos = 0;
-  NSData		*data;
-  NSString		*string;
+  char                *dst;
+  NSUInteger          spos = 0;
+  NSUInteger          dpos = 0;
+  NSData              *data;
+  NSString            *string;
 
 #if	GS_WITH_GC
   dst = (char*)NSAllocateCollectable(dlen, 0);
@@ -268,7 +268,7 @@ static GSMimeParser		*mimeParser = nil;
       NSString		*found = nil;
       NSDictionary	*sDict;
       NSArray		*keys;
-      unsigned		count;
+      NSUInteger		count;
       NSString		*path;
 
       sDict = [domainMap objectForKey: server];
@@ -278,7 +278,7 @@ static GSMimeParser		*mimeParser = nil;
       while (count-- > 0)
 	{
 	  NSString	*key = [keys objectAtIndex: count];
-	  unsigned	kl = [key length];
+	  NSUInteger	kl = [key length];
 
 	  if (found == nil || kl > [found length])
 	    {

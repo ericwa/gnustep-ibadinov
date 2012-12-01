@@ -65,19 +65,19 @@ typedef struct objc_category* Category;
 @interface GSArray : NSArray
 {
 @public
-  id		*_contents_array;
-  unsigned	_count;
+  id          *_contents_array;
+  NSUInteger  _count;
 }
 @end
 
 @interface GSMutableArray : NSMutableArray
 {
 @public
-  id		*_contents_array;
-  unsigned	_count;
-  unsigned	_capacity;
-  int		_grow_factor;
-  unsigned long		_version;
+  id              *_contents_array;
+  NSUInteger      _count;
+  NSUInteger      _capacity;
+  NSUInteger      _grow_factor;
+  unsigned long   _version;
 }
 @end
 

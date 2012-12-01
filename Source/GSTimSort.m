@@ -96,7 +96,7 @@ internalBinarySort(id *buffer,
       NSUInteger left = min;
       NSUInteger right = start;
       id pivot = buffer[right];
-      int i = 0;
+      NSUInteger i = 0;
 
       do
         {

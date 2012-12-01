@@ -84,7 +84,7 @@ typedef struct {
 
 @implementation GCDictionary
 
-static unsigned
+static NSUInteger
 _GCHashObject(NSMapTable *table, const GCInfo *objectStruct)
 {
   return [objectStruct->object hash];

@@ -797,7 +797,7 @@ static NSLock	*cached_proxies_gate = nil;
 + (void) _timeout: (NSTimer*)t
 {
   NSArray	*cached_locals;
-  int	i;
+  NSUInteger i;
 
   GS_M_LOCK(cached_proxies_gate);
   cached_locals = NSAllMapTableValues(targetToCached);
@@ -1851,16 +1851,16 @@ static NSLock	*cached_proxies_gate = nil;
   /*
    *	These are GNUstep extras
    */
-  o = [NSNumber numberWithUnsignedInt:
+  o = [NSNumber numberWithUnsignedLong:
     IlocalTargets ? IlocalTargets->nodeCount : 0];
   [d setObject: o forKey: NSConnectionLocalCount];
-  o = [NSNumber numberWithUnsignedInt:
+  o = [NSNumber numberWithUnsignedLong:
     IremoteProxies ? IremoteProxies->nodeCount : 0];
   [d setObject: o forKey: NSConnectionProxyCount];
-  o = [NSNumber numberWithUnsignedInt:
+  o = [NSNumber numberWithUnsignedLong:
     IreplyMap ? IreplyMap->nodeCount : 0];
   [d setObject: o forKey: @"NSConnectionReplyQueue"];
-  o = [NSNumber numberWithUnsignedInt: [IrequestQueue count]];
+  o = [NSNumber numberWithUnsignedLong: [IrequestQueue count]];
   [d setObject: o forKey: @"NSConnectionRequestQueue"];
 
   GSM_UNLOCK(IrefGate);
@@ -2215,9 +2215,9 @@ static NSLock	*cached_proxies_gate = nil;
 
 /* Class-wide stats and collections. */
 
-+ (unsigned) connectionsCount
++ (NSUInteger) connectionsCount
 {
-  unsigned	result;
+  NSUInteger result;
 
   GS_M_LOCK(connection_table_gate);
   result = NSCountHashTable(connection_table);
@@ -2225,11 +2225,11 @@ static NSLock	*cached_proxies_gate = nil;
   return result;
 }
 
-+ (unsigned) connectionsCountWithInPort: (NSPort*)aPort
++ (NSUInteger) connectionsCountWithInPort: (NSPort*)aPort
 {
-  unsigned		count = 0;
-  NSHashEnumerator	enumerator;
-  NSConnection		*o;
+  NSUInteger        count = 0;
+  NSHashEnumerator  enumerator;
+  NSConnection      *o;
 
   GS_M_LOCK(connection_table_gate);
   enumerator = NSEnumerateHashTable(connection_table);

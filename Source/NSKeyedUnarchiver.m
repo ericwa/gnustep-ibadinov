@@ -106,9 +106,9 @@ static NSMapTable	*globalClassMap = 0;
     {
       if ([o isKindOfClass: [NSArray class]] == YES)
 	{
-	  unsigned		c = [o count];
+	  NSUInteger c = [o count];
 	  NSMutableArray	*m = [NSMutableArray arrayWithCapacity: c];
-	  unsigned		i;
+	  NSUInteger i;
 
 	  for (i = 0; i < c; i++)
 	    {
@@ -805,8 +805,8 @@ static NSMapTable	*globalClassMap = 0;
 	}
       else
 	{
-	  unsigned	count;
-	  unsigned	i;
+	  NSUInteger count;
+	  NSUInteger i;
 
 	  IF_NO_GC(RETAIN(_archive);)
 	  _archiverClass = [_archive objectForKey: @"$archiver"];

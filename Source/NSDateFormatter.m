@@ -346,7 +346,7 @@ static NSDateFormatterBehavior _defaultBehavior = 0;
   NSDate *result = nil;
   UDate date;
   UChar *text;
-  int32_t textLength;
+  NSUInteger textLength;
   UErrorCode err = U_ZERO_ERROR;
   int32_t pPos = 0;
   
@@ -357,7 +357,7 @@ static NSDateFormatterBehavior _defaultBehavior = 0;
   
   [string getCharacters: text range: NSMakeRange (0, textLength)];
   
-  date = udat_parse (internal->_formatter, text, textLength, &pPos, &err);
+  date = udat_parse (internal->_formatter, text, (int32_t)textLength, &pPos, &err);
   if (U_SUCCESS(err))
     result =
       [NSDate dateWithTimeIntervalSince1970: (NSTimeInterval)(date / 1000.0)];
@@ -412,13 +412,13 @@ static NSDateFormatterBehavior _defaultBehavior = 0;
 {
 #if GS_USE_ICU == 1
   UChar *pattern;
-  int32_t patternLength;
+  NSUInteger patternLength;
   
   patternLength = [string length];
   pattern = NSZoneMalloc ([self zone], sizeof(UChar) * patternLength);
   [string getCharacters: pattern range: NSMakeRange(0, patternLength)];
   
-  udat_applyPattern (internal->_formatter, 0, pattern, patternLength);
+  udat_applyPattern (internal->_formatter, 0, pattern, (int32_t)patternLength);
   
   NSZoneFree ([self zone], pattern);
 #endif
@@ -925,8 +925,8 @@ static NSDateFormatterBehavior _defaultBehavior = 0;
 #if GS_USE_ICU == 1
   unichar pat[BUFFER_SIZE];
   unichar skel[BUFFER_SIZE];
-  int32_t patLen;
-  int32_t skelLen;
+  NSUInteger  patLen;
+  int32_t     skelLen;
   UDateTimePatternGenerator *datpg;
   UErrorCode err = U_ZERO_ERROR;
   
@@ -938,7 +938,7 @@ static NSDateFormatterBehavior _defaultBehavior = 0;
     patLen = BUFFER_SIZE;
   [aTemplate getCharacters: pat range: NSMakeRange(0, patLen)];
   
-  skelLen = udatpg_getSkeleton (datpg, pat, patLen, skel, BUFFER_SIZE, &err);
+  skelLen = udatpg_getSkeleton (datpg, pat, (int32_t)patLen, skel, BUFFER_SIZE, &err);
   if (U_FAILURE(err))
     return nil;
   
@@ -968,7 +968,7 @@ static NSDateFormatterBehavior _defaultBehavior = 0;
 {
 #if GS_USE_ICU == 1
   UChar *tzID;
-  int32_t tzIDLength;
+  NSUInteger tzIDLength;
   UErrorCode err = U_ZERO_ERROR;
   
   if (internal->_formatter)
@@ -978,11 +978,11 @@ static NSDateFormatterBehavior _defaultBehavior = 0;
   tzID = NSZoneMalloc ([self zone], sizeof(UChar) * tzIDLength);
   [[internal->_tz name] getCharacters: tzID range: NSMakeRange (0, tzIDLength)];
   
-  internal->_formatter = udat_open (NSToUDateFormatStyle(internal->_timeStyle),
-                          NSToUDateFormatStyle(internal->_dateStyle),
+  internal->_formatter = udat_open ((UDateFormatStyle)NSToUDateFormatStyle(internal->_timeStyle),
+                          (UDateFormatStyle)NSToUDateFormatStyle(internal->_dateStyle),
                           [[internal->_locale localeIdentifier] UTF8String],
                           tzID,
-                          tzIDLength,
+                          (int32_t)tzIDLength,
                           NULL,
                           0,
                           &err);
@@ -999,14 +999,14 @@ static NSDateFormatterBehavior _defaultBehavior = 0;
 {
 #if GS_USE_ICU == 1
   int idx = 0;
-  int count = udat_countSymbols (internal->_formatter, symbol);
+  int count = udat_countSymbols (internal->_formatter, (UDateFormatSymbolType)symbol);
   
   if ([array count] != count)
     return;
   
   while (idx < count)
     {
-      int length;
+      NSUInteger length;
       UChar *value;
       UErrorCode err = U_ZERO_ERROR;
       NSString *string = [array objectAtIndex: idx];
@@ -1015,7 +1015,7 @@ static NSDateFormatterBehavior _defaultBehavior = 0;
       value = NSZoneMalloc ([self zone], sizeof(unichar) * length);
       [string getCharacters: value range: NSMakeRange(0, length)];
       
-      udat_setSymbols (internal->_formatter, symbol, idx, value, length, &err);
+      udat_setSymbols (internal->_formatter, (int32_t)symbol, idx, value, (int32_t)length, &err);
       
       NSZoneFree ([self zone], value);
       
@@ -1031,22 +1031,22 @@ static NSDateFormatterBehavior _defaultBehavior = 0;
 #if GS_USE_ICU == 1
   NSMutableArray *mArray;
   int idx = 0;
-  int count = udat_countSymbols (internal->_formatter, symbol);
+  int count = udat_countSymbols (internal->_formatter, (UDateFormatSymbolType)symbol);
   
   mArray = [NSMutableArray arrayWithCapacity: count];
   while (idx < count)
     {
-      int length;
+      int32_t length;
       unichar *value;
       NSString *str;
       NSZone *z = [self zone];
       UErrorCode err = U_ERROR_LIMIT;
       
       length
-	= udat_getSymbols (internal->_formatter, symbol, idx, NULL, 0, &err);
+	= udat_getSymbols (internal->_formatter, (int32_t)symbol, idx, NULL, 0, &err);
       value = NSZoneMalloc (z, sizeof(unichar) * (length + 1));
       err = U_ZERO_ERROR;
-      udat_getSymbols (internal->_formatter, symbol, idx, value, length, &err);
+      udat_getSymbols (internal->_formatter, (int32_t)symbol, idx, value, length, &err);
       if (U_SUCCESS(err))
         {
           str = AUTORELEASE([[NSString allocWithZone: z]

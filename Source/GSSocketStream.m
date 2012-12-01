@@ -1769,7 +1769,7 @@ setNonBlocking(SOCKET fd)
       readLen = read([self _sock], buffer, len);
 #endif
     }
-  if (socketError(readLen))
+  if (socketError((int)readLen))
     {
       if (_closing == YES)
         {
@@ -2016,7 +2016,7 @@ setNonBlocking(SOCKET fd)
   writeLen = write([self _sock], buffer, (socklen_t) len);
 #endif
 
-  if (socketError(writeLen))
+  if (socketError((int)writeLen))
     {
       if (_closing == YES)
         {

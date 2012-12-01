@@ -148,9 +148,9 @@ NSString * const GSTelnetTextKey = @"GSTelnetTextKey";
   unsigned char	*to;
   NSData	*d = [s dataUsingEncoding: enc];
   unsigned char	*from = (unsigned char *)[d bytes];
-  unsigned int	len = [d length];
-  unsigned int	i = 0;
-  unsigned int	count = 0;
+  NSUInteger    len = [d length];
+  NSUInteger    i = 0;
+  NSUInteger    count = 0;
 
   for (i = 0; i < len; i++)
     {
@@ -729,7 +729,7 @@ static NSLock			*urlLock = nil;
 
 	      if (r.length > 0)
 		{
-		  unsigned	pos = NSMaxRange(r);
+		  NSUInteger pos = NSMaxRange(r);
 
 		  r = [line rangeOfString: @")"];
 		  if (r.length > 0 && r.location > pos)

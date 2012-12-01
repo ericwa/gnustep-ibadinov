@@ -2354,7 +2354,7 @@ static NSString	*endMarker = @"At end of incremental parse";
     {
       return;	// Parsing impossible or disabled.
     }
-  xmlParseChunk(lib, [data bytes], [data length], data == nil);
+  xmlParseChunk(lib, [data bytes], (int)[data length], data == nil);
 }
 
 @end
@@ -2389,7 +2389,7 @@ static NSString	*endMarker = @"At end of incremental parse";
 
 - (void) _parseChunk: (NSData*)data
 {
-  htmlParseChunk(lib, [data bytes], [data length], data == nil);
+  htmlParseChunk(lib, [data bytes], (int)[data length], data == nil);
 }
 
 @end

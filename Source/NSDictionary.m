@@ -287,12 +287,12 @@ static SEL	appSel;
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  unsigned	count = [self count];
+  NSUInteger count = [self count];
 
   if ([aCoder allowsKeyedCoding])
     {
       id	key;
-      unsigned	i;
+      NSUInteger i;
 
       if ([aCoder class] == [NSKeyedArchiver class])
 	{
@@ -468,7 +468,7 @@ static SEL	appSel;
  */
 - (id) initWithObjects: (NSArray*)objects forKeys: (NSArray*)keys
 {
-  unsigned	objectCount = [objects count];
+  NSUInteger objectCount = [objects count];
 
   if (objectCount != [keys count])
     {
@@ -481,7 +481,7 @@ static SEL	appSel;
 
       if ([objects isProxy])
 	{
-	  unsigned	i;
+	  NSUInteger i;
 
 	  for (i = 0; i < objectCount; i++)
 	    {
@@ -583,13 +583,13 @@ static SEL	appSel;
 - (id) initWithDictionary: (NSDictionary*)other
 		copyItems: (BOOL)shouldCopy
 {
-  unsigned	c = [other count];
+  NSUInteger c = [other count];
 
   if (c > 0)
     {
       id		k;
-      NSEnumerator	*e = [other keyEnumerator];
-      unsigned		i = 0;
+      NSEnumerator  *e = [other keyEnumerator];
+      NSUInteger    i = 0;
       IMP		nxtObj = [e methodForSelector: nxtSel];
       IMP		otherObj = [other methodForSelector: objSel];
       GS_BEGINIDBUF(o, c*2);
@@ -772,7 +772,7 @@ static SEL	appSel;
  */
 - (BOOL) isEqualToDictionary: (NSDictionary*)other
 {
-  unsigned	count;
+  NSUInteger count;
 
   if (other == self)
     {
@@ -810,7 +810,7 @@ static SEL	appSel;
  */
 - (NSArray*) allKeys
 {
-  unsigned	c = [self count];
+  NSUInteger c = [self count];
 
   if (c == 0)
     {
@@ -818,10 +818,10 @@ static SEL	appSel;
     }
   else
     {
-      NSEnumerator	*e = [self keyEnumerator];
-      IMP		nxtObj = [e methodForSelector: nxtSel];
-      unsigned		i;
-      id		result;
+      NSEnumerator  *e = [self keyEnumerator];
+      IMP           nxtObj = [e methodForSelector: nxtSel];
+      NSUInteger    i;
+      id            result;
       GS_BEGINIDBUF(k, c);
 
       for (i = 0; i < c; i++)
@@ -841,7 +841,7 @@ static SEL	appSel;
  */
 - (NSArray*) allValues
 {
-  unsigned	c = [self count];
+  NSUInteger c = [self count];
 
   if (c == 0)
     {
@@ -849,10 +849,10 @@ static SEL	appSel;
     }
   else
     {
-      NSEnumerator	*e = [self objectEnumerator];
-      IMP		nxtObj = [e methodForSelector: nxtSel];
-      id		result;
-      unsigned		i;
+      NSEnumerator  *e = [self objectEnumerator];
+      IMP           nxtObj = [e methodForSelector: nxtSel];
+      id            result;
+      NSUInteger    i;
       GS_BEGINIDBUF(k, c);
 
       for (i = 0; i < c; i++)
@@ -882,7 +882,7 @@ static SEL	appSel;
  */
 - (NSArray*) allKeysForObject: (id)anObject
 {
-  unsigned	c;
+  NSUInteger c;
 
   if (anObject == nil || (c = [self count]) == 0)
     {
@@ -925,13 +925,13 @@ static SEL	appSel;
 
 struct foo { NSDictionary *d; SEL s; IMP i; };
 
-static int
+static NSComparisonResult
 compareIt(id o1, id o2, void* context)
 {
   struct foo	*f = (struct foo*)context;
   o1 = (*f->i)(f->d, @selector(objectForKey:), o1);
   o2 = (*f->i)(f->d, @selector(objectForKey:), o2);
-  return (NSInteger)(intptr_t)[o1 performSelector: f->s withObject: o2];
+  return (NSComparisonResult)[o1 performSelector: f->s withObject: o2];
 }
 
 /**
@@ -962,7 +962,7 @@ compareIt(id o1, id o2, void* context)
  */
 - (NSArray*) objectsForKeys: (NSArray*)keys notFoundMarker: (id)marker
 {
-  unsigned	c = [keys count];
+  NSUInteger c = [keys count];
 
   if (c == 0)
     {
@@ -970,7 +970,7 @@ compareIt(id o1, id o2, void* context)
     }
   else
     {
-      unsigned	i;
+      NSUInteger i;
       IMP	myObj = [self methodForSelector: objSel];
       id	result;
       GS_BEGINIDBUF(obuf, c);
@@ -1265,9 +1265,9 @@ compareIt(id o1, id o2, void* context)
 - (id) copyWithZone: (NSZone*)z
 {
   /* a deep copy */
-  unsigned	count = [self count];
+  NSUInteger count = [self count];
   NSDictionary	*newDictionary;
-  unsigned	i;
+  NSUInteger i;
   id		key;
   NSEnumerator	*enumerator = [self keyEnumerator];
   IMP		nxtImp = [enumerator methodForSelector: nxtSel];
@@ -1401,7 +1401,7 @@ compareIt(id o1, id o2, void* context)
  */
 - (void) removeObjectsForKeys: (NSArray*)keyArray
 {
-  unsigned	c = [keyArray count];
+  NSUInteger c = [keyArray count];
 
   if (c > 0)
     {
@@ -1410,7 +1410,7 @@ compareIt(id o1, id o2, void* context)
 
       if ([keyArray isProxy])
 	{
-	  unsigned	i;
+	  NSUInteger i;
 
 	  for (i = 0; i < c; i++)
 	    {

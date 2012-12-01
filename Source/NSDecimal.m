@@ -250,11 +250,11 @@ static NSComparisonResult
 NSSimpleCompare(const NSDecimal *leftOperand, const NSDecimal *rightOperand);
 
 static void
-GSDecimalRound(GSDecimal *result, int scale, NSRoundingMode mode)
+GSDecimalRound(GSDecimal *result, NSInteger scale, NSRoundingMode mode)
 {
-  int i;
+  NSInteger i;
   // last valid digit in number
-  int l = scale + result->exponent + result->length;
+  NSInteger l = scale + result->exponent + result->length;
 
   if (NSDecimalNoScale == scale)
       return;
@@ -761,7 +761,7 @@ NSCalculationError
 NSDecimalPower(NSDecimal *result, const NSDecimal *n, NSUInteger power, NSRoundingMode mode)
 {
   NSCalculationError error = NSCalculationNoError;
-  unsigned int e = power;
+  NSUInteger e = power;
   NSDecimal n1;
   BOOL neg = (n->isNegative && (power % 2));
 

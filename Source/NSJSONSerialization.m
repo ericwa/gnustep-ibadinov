@@ -789,7 +789,7 @@ writeObject(id obj, NSMutableString *output, NSInteger tabs)
   else if ([obj isKindOfClass: NSStringClass])
     {
       NSString  *str = (NSString*)obj;
-      unsigned	length = [str length];
+      NSUInteger length = [str length];
 
       if (length == 0)
         {
@@ -797,11 +797,11 @@ writeObject(id obj, NSMutableString *output, NSInteger tabs)
         }
       else
         {
-          unsigned	size = 2;
+          NSUInteger size = 2;
           unichar	*from;
-          unsigned	i = 0;
+          NSUInteger i = 0;
           unichar	*to;
-          unsigned	j = 0;
+          NSUInteger j = 0;
 
           from = NSZoneMalloc (NSDefaultMallocZone(), sizeof(unichar) * length);
           [str getCharacters: from];
