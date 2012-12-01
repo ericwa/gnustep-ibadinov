@@ -37,28 +37,32 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
 #define CTOR_LIST       "__CTOR_LIST__"
 
 #ifndef RTLD_GLOBAL
-#define RTLD_GLOBAL 0
+#  define RTLD_GLOBAL 0
 #endif
+
 #ifndef RTLD_DEFAULT
-#define RTLD_DEFAULT 0
+#  define RTLD_DEFAULT 0
 #endif
 
 /* Types defined appropriately for the dynamic linker */
 typedef void* dl_handle_t;
 typedef void* dl_symbol_t;
 
-/* Do any initialization necessary.  Return 0 on success (or
-   if no initialization needed. 
-*/
+#if !defined (NeXT_RUNTIME)
+/* 
+ * Do any initialization necessary.  Return 0 on success (or
+ * if no initialization needed. 
+ */
 static int 
 __objc_dynamic_init(const char* exec_path)
 {
     return 0;
 }
 
-/* Link in the module given by the name 'module'.  Return a handle which can
-   be used to get information about the loded code.
-*/
+/* 
+ * Link in the module given by the name 'module'.  Return a handle which can
+ * be used to get information about the loded code.
+ */
 static dl_handle_t
 __objc_dynamic_link(const char* module, int mode, const char* debug_file)
 {
@@ -74,10 +78,11 @@ __objc_dynamic_link(const char* module, int mode, const char* debug_file)
 		return handle;
 	}
 #endif
-    return (dl_handle_t)dlopen(module, RTLD_LAZY | RTLD_GLOBAL);
+  return (dl_handle_t)dlopen(module, RTLD_LAZY | RTLD_GLOBAL);
 }
 
-/* Return the address of a symbol given by the name 'symbol' from the module
+/* 
+ * Return the address of a symbol given by the name 'symbol' from the module
  * associated with 'handle'
  * This function is not always used, so we mark it as unused to avoid warnings.
  */ 
@@ -90,23 +95,28 @@ __objc_dynamic_find_symbol(dl_handle_t handle, const char* symbol)
     return dlsym(handle, (char*)symbol);
 }
 
-/* remove the code from memory associated with the module 'handle' */
+/* 
+ * remove the code from memory associated with the module 'handle'
+ */
 static int 
 __objc_dynamic_unlink(dl_handle_t handle)
 {
     return dlclose(handle);
 }
 
-/* Print an error message (prefaced by 'error_string') relevant to the
-   last error encountered
-*/
+/*
+ * Print an error message (prefaced by 'error_string') relevant to the
+ * last error encountered
+ */
 static void 
 __objc_dynamic_error(FILE *error_stream, const char *error_string)
 {
     fprintf(error_stream, "%s:%s\n", error_string, dlerror());
 }
 
-/* Debugging:  define these if they are available */
+/* 
+ * Debugging:  define these if they are available
+ */
 static int 
 __objc_dynamic_undefined_symbol_count(void)
 {
@@ -143,4 +153,5 @@ __objc_dynamic_get_symbol_path(dl_handle_t handle, dl_symbol_t symbol)
 #endif
 }
 
+#endif /* NeXT_RUNTIME */
 #endif /* __simple_load_h_INCLUDE */

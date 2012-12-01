@@ -51,11 +51,13 @@
 /* dynamic_loaded is YES if the dynamic loader was sucessfully initialized. */
 static BOOL	dynamic_loaded;
 
+#if !defined (NeXT_RUNTIME)
 /* Our current callback function */
 static void (*_objc_load_load_callback)(Class, struct objc_category *) = 0;
 
-/* Check to see if there are any undefined symbols. Print them out.
-*/
+/* 
+ * Check to see if there are any undefined symbols. Print them out.
+ */
 static int
 objc_check_undefineds(FILE *errorStream)
 {
@@ -83,7 +85,9 @@ objc_check_undefineds(FILE *errorStream)
   return 0;
 }
 
-/* Initialize for dynamic loading */
+/* 
+ * Initialize for dynamic loading
+ */
 static int
 objc_initialize_loading(FILE *errorStream)
 {
@@ -96,32 +100,33 @@ objc_initialize_loading(FILE *errorStream)
 
   dynamic_loaded = NO;
   path = GSPrivateExecutablePath();
-
+  
   NSDebugFLLog(@"NSBundle",
-    @"Debug (objc-load): initializing dynamic loader for %@", path);
-
+               @"Debug (objc-load): initializing dynamic loader for %@", path);
+  
   fsPath = [[path stringByDeletingLastPathComponent] fileSystemRepresentation];
-
+  
   if (__objc_dynamic_init(fsPath))
     {
       if (errorStream)
-	{
-	  __objc_dynamic_error(errorStream,
-           "Error (objc-load): Cannot initialize dynamic linker");
-	}
+        {
+          __objc_dynamic_error(errorStream,
+                               "Error (objc-load): Cannot initialize dynamic linker");
+        }
       return 1;
     }
   else
     {
       dynamic_loaded = YES;
     }
-
+  
   return 0;
 }
 
-/* A callback received from the Object initializer (_objc_exec_class).
-   Do what we need to do and call our own callback.
-*/
+/* 
+ * A callback received from the Object initializer (_objc_exec_class).
+ * Do what we need to do and call our own callback.
+ */
 static void
 objc_load_callback(Class class, struct objc_category * category)
 {
@@ -130,11 +135,12 @@ objc_load_callback(Class class, struct objc_category * category)
       _objc_load_load_callback(class, category);
     }
 }
+#endif /* NeXT_RUNTIME */
 
 #if	defined(__MINGW__)
-#define	FSCHAR	unichar
+#  define	FSCHAR unichar
 #else
-#define	FSCHAR	char
+#  define	FSCHAR char
 #endif
 
 /* returns zero on success */
@@ -266,7 +272,7 @@ GSPrivateLoadModule(NSString *filename, FILE *errorStream,
 
 long
 GSPrivateUnloadModule(FILE *errorStream,
-  void (*unloadCallback)(Class, struct objc_category *))
+                      void (*unloadCallback)(Class, struct objc_category *))
 {
   if (!dynamic_loaded)
     {
