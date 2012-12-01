@@ -1861,6 +1861,16 @@ static id gs_weak_load(id obj)
   return self;
 }
 
+/*
+ * Any malloc() implementation is required to return pointers aligned suitably
+ * to be used as a pointer to any posible primitive data type (bigest-possible
+ * aligment).
+ */
+#define MALLOC_ALIGNMENT (__alignof__(_Complex long double))
+
+#define uintptr_self ((uintptr_t)self)
+#define uintptr_bits (sizeof(uintptr_t) * 8)
+
 /**
  * Returns the hash of the receiver.  Subclasses should ensure that their
  * implementations of this method obey the rule that if the -isEqual: method
@@ -1871,14 +1881,9 @@ static id gs_weak_load(id obj)
  */
 - (NSUInteger) hash
 {
-  /*
-   * Ideally we would shift left to lose any zero bits produced by the
-   * alignment of the object in memory ... but that depends on the
-   * processor architecture and the memory allocatiion implementation.
-   * In the absence of detailed information, pick a reasonable value
-   * assuming the object will be aligned to an eight byte boundary.
-   */
-  return (NSUInteger)(uintptr_t)self >> 3;
+  static uintptr_t shift = MALLOC_ALIGNMENT == 16 ? 4 : (MALLOC_ALIGNMENT == 8 ? 3 : 2);
+  /* Compiled as "rolq $60, %rdi" or "rol $28, %eax" */
+  return (NSUInteger)((uintptr_self >> shift) | (uintptr_self << (uintptr_bits - shift)));
 }
 
 /**
