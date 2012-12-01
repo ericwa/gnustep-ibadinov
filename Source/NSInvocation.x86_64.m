@@ -450,18 +450,6 @@ NSInvocationForwardHandler_stret();
     }
 }
 
-- (void)setArguments:(void *)arg1, ...
-{
-  va_list args;
-  va_start(args, _cmd);
-  for (uint8_t index = 0; index < argumentCount; ++index)
-    {
-      void *value = va_arg(args, void*);
-      [self setArgument:value atIndex:index];
-    }
-  va_end(args);
-}
-
 - (void)setImplementation:(IMP)anImp
 {
   imp = anImp;

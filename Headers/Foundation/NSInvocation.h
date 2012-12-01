@@ -157,7 +157,6 @@ extern "C" {
 + (NSInvocation *)invocationWithMethodSignature:(NSMethodSignature *)signature
                                       arguments:(void *)arguments;
 - (void)setImplementation:(IMP)imp;
-- (void)setArguments:(void *)arg1, ...;
 - (void)returnResult;
 #endif
 
