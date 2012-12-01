@@ -508,12 +508,12 @@ static inline id parseQuotedString(pldata* pld)
     }
   else
     {
-      unsigned	length;
-      unichar	*chars;
-      unichar	*temp = NULL;
-      unsigned	int temp_length = 0;
-      unsigned	j;
-      unsigned	k;
+      NSUInteger  length;
+      unichar     *chars;
+      unichar     *temp = NULL;
+      NSUInteger  temp_length = 0;
+      NSUInteger  j;
+      NSUInteger  k;
 
       if (!GSToUnicode(&temp, &temp_length, &pld->ptr[start],
 		       pld->pos - start, NSUTF8StringEncoding,

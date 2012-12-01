@@ -190,7 +190,7 @@ typedef union {
 {
 @public
   GSCharPtr _contents;
-  unsigned int	_count;
+  NSUInteger	_count;
   struct {
     unsigned int	wide: 1;	// 16-bit characters in string?
     unsigned int	owned: 1;	// Set if the instance owns the
@@ -209,14 +209,14 @@ typedef union {
 {
 @public
   GSCharPtr _contents;
-  unsigned int	_count;
+  NSUInteger	_count;
   struct {
     unsigned int	wide: 1;
     unsigned int	owned: 1;
     unsigned int	unused: 2;
     unsigned int	hash: 28;
   } _flags;
-  unsigned int	_capacity;
+  NSUInteger	_capacity;
   NSZone	*_zone;
 }
 @end
@@ -316,7 +316,7 @@ GSPrivateArgZero() GS_ATTRIB_PRIVATE;
 /* get the available string encodings (nul terminated array)
  */
 NSStringEncoding *
-GSPrivateAvailableEncodings();// GS_ATTRIB_PRIVATE;
+GSPrivateAvailableEncodings(void);// GS_ATTRIB_PRIVATE;
 
 /* Initialise constant strings
  */
@@ -416,7 +416,7 @@ GSPrivateLoadModule(NSString *filename, FILE *errorStream,
  * if the latter has bewen set via an environment variable.
  */
 NSStringEncoding
-GSPrivateNativeCStringEncoding();// GS_ATTRIB_PRIVATE;
+GSPrivateNativeCStringEncoding(void);// GS_ATTRIB_PRIVATE;
 
 /* Function used by the NSRunLoop and friends for processing
  * queued notifications which should be processed at the first safe moment.

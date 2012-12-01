@@ -78,11 +78,11 @@ static inline void setupCompat()
 #endif
 
 static void
-SetValueForKey(NSObject *self, id anObject, const char *key, unsigned size)
+SetValueForKey(NSObject *self, id anObject, const char *key, size_t size)
 {
-  SEL		sel = 0;
-  const char	*type = 0;
-  int		off = 0;
+  SEL         sel = 0;
+  const char  *type = 0;
+  ptrdiff_t   off = 0;
 
   if (size > 0)
     {
@@ -150,11 +150,11 @@ SetValueForKey(NSObject *self, id anObject, const char *key, unsigned size)
   GSObjCSetVal(self, key, anObject, sel, type, size, off);
 }
 
-static id ValueForKey(NSObject *self, const char *key, unsigned size)
+static id ValueForKey(NSObject *self, const char *key, size_t size)
 {
-  SEL		sel = 0;
-  int		off = 0;
-  const char	*type = NULL;
+  SEL         sel = 0;
+  ptrdiff_t   off = 0;
+  const char  *type = NULL;
 
   if (size > 0)
     {
@@ -592,7 +592,7 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
 
 - (id) storedValueForKey: (NSString*)aKey
 {
-  unsigned	size;
+  size_t size;
 
   if ([[self class] useStoredAccessor] == NO)
     {
@@ -602,14 +602,14 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
   size = [aKey length] * 8;
   if (size > 0)
     {
-      SEL		sel = 0;
-      const char	*type = NULL;
-      int		off = 0;
-      const char	*name;
-      char		key[size + 1];
-      char		buf[size + 5];
-      char		lo;
-      char		hi;
+      SEL         sel = 0;
+      const char  *type = NULL;
+      ptrdiff_t   off = 0;
+      const char  *name;
+      char        key[size + 1];
+      char        buf[size + 5];
+      char        lo;
+      char        hi;
 
       strncpy(buf, "_get", 4);
       [aKey getCString: key
@@ -676,7 +676,7 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
 
 - (void) takeStoredValue: (id)anObject forKey: (NSString*)aKey
 {
-  unsigned	size;
+  size_t size;
 
   if ([[self class] useStoredAccessor] == NO)
     {
@@ -687,14 +687,14 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
   size = [aKey length] * 8;
   if (size > 0)
     {
-      SEL		sel;
-      const char	*type;
-      int		off;
-      const char	*name;
-      char		key[size + 1];
-      char		buf[size + 6];
-      char		lo;
-      char		hi;
+      SEL         sel;
+      const char  *type;
+      ptrdiff_t   off;
+      const char  *name;
+      char        key[size + 1];
+      char        buf[size + 6];
+      char        lo;
+      char        hi;
 
       strncpy(buf, "_set", 4);
       [aKey getCString: key
@@ -801,11 +801,11 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
 
 - (void) takeValue: (id)anObject forKey: (NSString*)aKey
 {
-  SEL		sel = 0;
-  const char	*type = 0;
-  int		off = 0;
-  unsigned	size = [aKey length] * 8;
-  char		key[size + 1];
+  SEL         sel = 0;
+  const char  *type = 0;
+  ptrdiff_t   off = 0;
+  size_t      size = [aKey length] * 8;
+  char        key[size + 1];
 
   GSOnceMLog(@"This method is deprecated, use -setValue:forKey:");
   [aKey getCString: key
@@ -907,9 +907,9 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
 - (NSDictionary*) valuesForKeys: (NSArray*)keys
 {
   NSMutableDictionary	*dict;
-  NSNull		*null = [NSNull null];
-  unsigned		count = [keys count];
-  unsigned		pos;
+  NSNull      *null = [NSNull null];
+  NSUInteger  count = [keys count];
+  NSUInteger  pos;
 
   GSOnceMLog(@"This method is deprecated, use -dictionaryWithValuesForKeys:");
   dict = [NSMutableDictionary dictionaryWithCapacity: count];

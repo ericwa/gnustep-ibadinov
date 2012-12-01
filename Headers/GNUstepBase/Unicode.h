@@ -98,7 +98,7 @@ GS_EXPORT unichar uni_toupper(unichar ch);
 GS_EXPORT unsigned char uni_cop(unichar u);
 GS_EXPORT BOOL uni_isnonsp(unichar u);
 GS_EXPORT unichar *uni_is_decomp(unichar u);
-GS_EXPORT unsigned GSUnicode(const unichar *chars, unsigned length,
+GS_EXPORT NSUInteger GSUnicode(const unichar *chars, NSUInteger length,
   BOOL *isASCII, BOOL *isLatin1);
 #endif
 
@@ -112,11 +112,11 @@ GS_EXPORT unsigned GSUnicode(const unichar *chars, unsigned length,
 #define	GSUniBOM	0x08
 #define	GSUniShortOk	0x10
 
-GS_EXPORT BOOL GSFromUnicode(unsigned char **dst, unsigned int *size,
-  const unichar *src, unsigned int slen, NSStringEncoding enc, NSZone *zone,
+GS_EXPORT BOOL GSFromUnicode(unsigned char **dst, NSUInteger *size,
+  const unichar *src, NSUInteger slen, NSStringEncoding enc, NSZone *zone,
   unsigned int options);
-GS_EXPORT BOOL GSToUnicode(unichar **dst, unsigned int *size,
-  const unsigned char *src, unsigned int slen, NSStringEncoding enc,
+GS_EXPORT BOOL GSToUnicode(unichar **dst, NSUInteger *size,
+  const unsigned char *src, NSUInteger slen, NSStringEncoding enc,
   NSZone *zone, unsigned int options);
 
 #if	defined(__cplusplus)

@@ -79,9 +79,9 @@ static NSStringEncoding internalEncoding = NSISOLatin1StringEncoding;
 
 static inline unichar myGetC(unsigned char c)
 {
-  unsigned int  size = 1;
-  unichar       u = 0;
-  unichar       *dst = &u;
+  NSUInteger  size = 1;
+  unichar     u = 0;
+  unichar     *dst = &u;
 
   GSToUnicode(&dst, &size, &c, 1, internalEncoding, 0, 0);
   return u;
@@ -252,8 +252,8 @@ typedef GSString	*ivars;
  */
 - (BOOL) isAtEnd
 {
-  unsigned int	save__scanLocation;
-  BOOL		ret;
+  NSUInteger  save__scanLocation;
+  BOOL        ret;
 
   if (_scanLocation >= myLength())
     return YES;
@@ -345,7 +345,7 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanInt: (int*)value
 {
-  unsigned int saveScanLocation = _scanLocation;
+  NSUInteger saveScanLocation = _scanLocation;
 
   if (skipToNextField() && [self _scanInt: value])
     return YES;
@@ -361,10 +361,10 @@ typedef GSString	*ivars;
 		    radix: (NSUInteger)radix
 		gotDigits: (BOOL)gotDigits
 {
-  unsigned int	num = 0;
-  unsigned int	numLimit, digitLimit, digitValue;
-  BOOL		overflow = NO;
-  unsigned int	saveScanLocation = _scanLocation;
+  NSUInteger  num = 0;
+  NSUInteger  numLimit, digitLimit, digitValue;
+  BOOL        overflow = NO;
+  NSUInteger  saveScanLocation = _scanLocation;
 
   /* Set limits */
   numLimit = UINT_MAX / radix;
@@ -428,7 +428,7 @@ typedef GSString	*ivars;
       if (overflow)
 	*value = UINT_MAX;
       else
-	*value = num;
+	*value = (unsigned int) num;
     }
   return YES;
 }
@@ -448,9 +448,9 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanRadixUnsignedInt: (unsigned int*)value
 {
-  unsigned int	radix;
-  BOOL		gotDigits = NO;
-  unsigned int	saveScanLocation = _scanLocation;
+  unsigned int  radix;
+  BOOL          gotDigits = NO;
+  NSUInteger    saveScanLocation = _scanLocation;
 
   /* Skip whitespace */
   if (!skipToNextField())
@@ -498,7 +498,7 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanHexInt: (unsigned int*)value
 {
-  unsigned int saveScanLocation = _scanLocation;
+  NSUInteger saveScanLocation = _scanLocation;
 
   /* Skip whitespace */
   if (!skipToNextField())
@@ -554,7 +554,7 @@ typedef GSString	*ivars;
   BOOL				negative = NO;
   BOOL				overflow = NO;
   BOOL				got_digits = NO;
-  unsigned int			saveScanLocation = _scanLocation;
+  NSUInteger  saveScanLocation = _scanLocation;
 
   /* Skip whitespace */
   if (!skipToNextField())
@@ -652,13 +652,13 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanDouble: (double *)value
 {
-  unichar	c = 0;
-  double	num = 0.0;
-  long int	exponent = 0;
-  BOOL		negative = NO;
-  BOOL		got_dot = NO;
-  BOOL		got_digit = NO;
-  unsigned int	saveScanLocation = _scanLocation;
+  unichar     c = 0;
+  double      num = 0.0;
+  long int    exponent = 0;
+  BOOL        negative = NO;
+  BOOL        got_dot = NO;
+  BOOL        got_digit = NO;
+  NSUInteger  saveScanLocation = _scanLocation;
 
   /* Skip whitespace */
   if (!skipToNextField())
@@ -724,7 +724,7 @@ typedef GSString	*ivars;
   /* Check for trailing exponent */
   if ((_scanLocation < myLength()) && ((c == 'e') || (c == 'E')))
     {
-      unsigned int	expScanLocation = _scanLocation;
+      NSUInteger expScanLocation = _scanLocation;
       int expval;
       
 
@@ -796,12 +796,12 @@ typedef GSString	*ivars;
 - (BOOL) scanCharactersFromSet: (NSCharacterSet *)aSet
 		    intoString: (NSString **)value
 {
-  unsigned int	saveScanLocation = _scanLocation;
+  NSUInteger saveScanLocation = _scanLocation;
 
   if (skipToNextField())
     {
-      unsigned int	start;
-      BOOL		(*memImp)(NSCharacterSet*, SEL, unichar);
+      NSUInteger start;
+      BOOL (*memImp)(NSCharacterSet*, SEL, unichar);
 
       if (aSet == _charactersToBeSkipped)
 	memImp = _skipImp;
@@ -855,8 +855,8 @@ typedef GSString	*ivars;
 - (BOOL) scanUpToCharactersFromSet: (NSCharacterSet *)aSet
 		        intoString: (NSString **)value
 {
-  unsigned int	saveScanLocation = _scanLocation;
-  unsigned int	start;
+  NSUInteger saveScanLocation = _scanLocation;
+  NSUInteger start;
   BOOL		(*memImp)(NSCharacterSet*, SEL, unichar);
 
   if (!skipToNextField())
@@ -911,8 +911,8 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanString: (NSString *)string intoString: (NSString **)value
 {
-  NSRange	range;
-  unsigned int	saveScanLocation = _scanLocation;
+  NSRange     range;
+  NSUInteger  saveScanLocation = _scanLocation;
 
   if (skipToNextField() == NO)
     {
@@ -967,9 +967,9 @@ typedef GSString	*ivars;
 - (BOOL) scanUpToString: (NSString *)string
 	     intoString: (NSString **)value
 {
-  NSRange	range;
-  NSRange	found;
-  unsigned int	saveScanLocation = _scanLocation;
+  NSRange     range;
+  NSRange     found;
+  NSUInteger  saveScanLocation = _scanLocation;
 
   if (skipToNextField() == NO)
     {
@@ -1155,14 +1155,14 @@ typedef GSString	*ivars;
  * Some utilities
  */
 BOOL
-GSScanInt(unichar *buf, unsigned length, int *result)
+GSScanInt(unichar *buf, NSUInteger length, int *result)
 {
   unsigned int num = 0;
   const unsigned int limit = UINT_MAX / 10;
   BOOL negative = NO;
   BOOL overflow = NO;
   BOOL got_digits = NO;
-  unsigned int pos = 0;
+  NSUInteger pos = 0;
 
   /* Check for sign */
   if (pos < length)
@@ -1222,18 +1222,18 @@ GSScanInt(unichar *buf, unsigned length, int *result)
  * No value is returned in result if it is a null pointer.
  */
 BOOL
-GSScanDouble(unichar *buf, unsigned length, double *result)
+GSScanDouble(unichar *buf, NSUInteger length, double *result)
 {
-  unichar	c = 0;
-  double	num = 0.0;
-  long int	exponent = 0;
-  BOOL		negative = NO;
-  BOOL		got_dot = NO;
-  BOOL		got_digit = NO;
-  unsigned	pos = 0;
+  unichar     c = 0;
+  double      num = 0.0;
+  long int    exponent = 0;
+  BOOL        negative = NO;
+  BOOL        got_dot = NO;
+  BOOL        got_digit = NO;
+  NSUInteger  pos = 0;
 
   /* Skip whitespace */
-  while (pos < length && isspace((NSInteger)buf[pos]))
+  while (pos < length && isspace((int)buf[pos]))
     {
       pos++;
     }

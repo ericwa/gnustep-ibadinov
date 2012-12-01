@@ -692,19 +692,19 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
 - (BOOL) pollUntil: (int)milliseconds within: (NSArray*)contexts
 {
   GSRunLoopThreadInfo   *threadInfo = GSRunLoopInfoForThread(nil);
-  struct timeval	timeout;
-  void			*select_timeout;
-  int			select_return;
-  int			fdIndex;
-  int			fdFinish;
-  fd_set 		read_fds;	// Mask for read-ready fds.
-  fd_set 		exception_fds;	// Mask for exception fds.
-  fd_set 		write_fds;	// Mask for write-ready fds.
-  int			fd;
-  int			fdEnd = -1;
-  unsigned		count;
-  unsigned		i;
-  BOOL			immediate = NO;
+  struct timeval timeout;
+  void        *select_timeout;
+  int         select_return;
+  int         fdIndex;
+  int         fdFinish;
+  fd_set      read_fds;	// Mask for read-ready fds.
+  fd_set      exception_fds;	// Mask for exception fds.
+  fd_set      write_fds;	// Mask for write-ready fds.
+  int         fd;
+  int         fdEnd = -1;
+  NSUInteger  count;
+  NSUInteger  i;
+  BOOL        immediate = NO;
 
   i = GSIArrayCount(watchers);
 
@@ -719,7 +719,7 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
   else if (milliseconds > 0)
     {
       timeout.tv_sec = milliseconds/1000;
-      timeout.tv_usec = (milliseconds - 1000 * timeout.tv_sec) * 1000;
+      timeout.tv_usec = (suseconds_t) (milliseconds - 1000 * timeout.tv_sec) * 1000;
       select_timeout = &timeout;
     }
   else 
@@ -802,7 +802,7 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
 	      case ET_RPORT: 
 		{
 		  id port = info->receiver;
-                  NSInteger port_fd_size = FDCOUNT;
+      NSInteger port_fd_size = FDCOUNT;
 		  NSInteger port_fd_count = FDCOUNT;
 		  NSInteger port_fd_buffer[FDCOUNT];
 		  NSInteger *port_fd_array = port_fd_buffer;
@@ -820,7 +820,7 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
 		    port_fd_count);
 		  while (port_fd_count--)
 		    {
-		      fd = port_fd_array[port_fd_count];
+		      fd = (int) port_fd_array[port_fd_count];
 		      if (fd > fdEnd)
 			fdEnd = fd;
 		      FD_SET (fd, &read_fds);
@@ -1083,7 +1083,7 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
   memset(&read_fds, '\0', sizeof(read_fds));
   memset(&write_fds, '\0', sizeof(write_fds));
   timeout.tv_sec = milliseconds/1000;
-  timeout.tv_usec = (milliseconds - 1000 * timeout.tv_sec) * 1000;
+  timeout.tv_usec = (suseconds_t) (milliseconds - 1000 * timeout.tv_sec) * 1000;
   FD_SET (threadInfo->inputFd, &read_fds);
   if (select (threadInfo->inputFd, &read_fds, &write_fds,
     &exception_fds, &timeout) > 0)

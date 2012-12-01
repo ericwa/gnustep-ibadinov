@@ -3125,6 +3125,11 @@ if test $enable_zeroconf = yes; then
       if test "$have_mdns" = "yes"; then
         MDNS_LIBS="-ldns_sd"
         HAVE_MDNS=1
+      else
+        AC_CHECK_FUNC(DNSServiceBrowse, have_mdns=yes, have_mdns=no)
+        if test "$have_mdns" = "yes"; then
+          HAVE_MDNS=1
+        fi
       fi
     fi
   fi

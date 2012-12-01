@@ -356,7 +356,7 @@ GSGetSizeAndAlignment (const char *type, size_t *sizep, uint8_t *alignp);
  */
 GS_EXPORT BOOL
 GSObjCFindVariable(id obj, const char *name,
-		   const char **type, unsigned int *size, int *offset);
+		   const char **type, size_t *size, ptrdiff_t *offset);
 
 GS_EXPORT void
 GSObjCGetVariable(id obj, int offset, unsigned int size, void *data);
@@ -459,11 +459,11 @@ GSObjCAddMethods(Class cls, Method *list, BOOL replace);
  */
 GS_EXPORT id
 GSObjCGetVal(NSObject *self, const char *key, SEL sel,
-  const char *type, unsigned size, int offset);
+  const char *type, size_t size, ptrdiff_t offset);
 
 GS_EXPORT void
 GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
-  const char *type, unsigned size, int offset);
+  const char *type, size_t size, ptrdiff_t offset);
 
 /*
  * This section includes runtime functions
@@ -650,7 +650,7 @@ GS_EXPORT int GSObjCVersion(Class cls);
  * Quickly return autoreleased data storage area.
  */
 GS_EXPORT void *
-GSAutoreleasedBuffer(unsigned size);
+GSAutoreleasedBuffer(size_t size);
 
 /**
  * <p>Prints a message to fptr using the format string provided and any

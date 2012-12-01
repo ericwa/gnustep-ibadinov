@@ -910,8 +910,8 @@ static NSString * const GSSOCKSAckConn = @"GSSOCKSAckConn";
 
       if (state == GSSOCKSOfferAuth)
 	{
-	  int		result;
-	  int		want;
+	  NSInteger result;
+	  NSInteger want;
 	  unsigned char	buf[4];
 
 	  /*
@@ -950,7 +950,7 @@ static NSString * const GSSOCKSAckConn = @"GSSOCKSAckConn";
 	}
       else if (state == GSSOCKSRecvAuth)
 	{
-	  int	result;
+	  NSInteger	result;
 
 	  result = [istream _read: rbuffer + roffset maxLength: 2 - roffset];
 	  if (result == 0)
@@ -986,10 +986,10 @@ static NSString * const GSSOCKSAckConn = @"GSSOCKSAckConn";
 	}
       else if (state == GSSOCKSSendAuth)
 	{
-	  NSData	*u = [user dataUsingEncoding: NSUTF8StringEncoding];
-	  unsigned	ul = [u length];
-	  NSData	*p = [pass dataUsingEncoding: NSUTF8StringEncoding];
-	  unsigned	pl = [p length];
+	  NSData *u = [user dataUsingEncoding: NSUTF8StringEncoding];
+	  NSUInteger ul = [u length];
+	  NSData *p = [pass dataUsingEncoding: NSUTF8StringEncoding];
+	  NSUInteger pl = [p length];
 
 	  if (ul < 1 || ul > 255)
 	    {
@@ -1001,9 +1001,9 @@ static NSString * const GSSOCKSAckConn = @"GSSOCKSAckConn";
 	    }
 	  else
 	    {
-	      int		want = ul + pl + 3;
+        NSInteger	result;
+	      NSInteger want = ul + pl + 3;
 	      unsigned char	buf[want];
-	      int		result;
 
 	      buf[0] = 5;
 	      buf[1] = ul;
@@ -1029,7 +1029,7 @@ static NSString * const GSSOCKSAckConn = @"GSSOCKSAckConn";
 	}
       else if (state == GSSOCKSAckAuth)
 	{
-	  int	result;
+	  NSInteger	result;
 
 	  result = [istream _read: rbuffer + roffset maxLength: 2 - roffset];
 	  if (result == 0)
@@ -1061,8 +1061,8 @@ static NSString * const GSSOCKSAckConn = @"GSSOCKSAckConn";
       else if (state == GSSOCKSSendConn)
 	{
 	  unsigned char	buf[10];
-	  int		want = 10;
-	  int		result;
+	  NSInteger		want = 10;
+	  NSInteger		result;
 	  const char	*ptr;
 
 	  /*
@@ -1114,7 +1114,7 @@ static NSString * const GSSOCKSAckConn = @"GSSOCKSAckConn";
 	}
       else if (state == GSSOCKSAckConn)
 	{
-	  int	result;
+	  NSInteger	result;
 
 	  result = [istream _read: rbuffer + roffset
                         maxLength: rwant - roffset];
@@ -1719,9 +1719,9 @@ setNonBlocking(SOCKET fd)
 #else
   // read shutdown is ignored, because the other side may shutdown first.
   if (!_sibling || [_sibling streamStatus] == NSStreamStatusClosed)
-    close((intptr_t)_loopID);
+    close((int)_loopID);
   else
-    shutdown((intptr_t)_loopID, SHUT_RD);
+    shutdown((int)_loopID, SHUT_RD);
   [super close];
   _loopID = (void*)(intptr_t)-1;
 #endif
@@ -1749,7 +1749,7 @@ setNonBlocking(SOCKET fd)
 
 - (NSInteger) _read: (uint8_t *)buffer maxLength: (NSUInteger)len
 {
-  int readLen;
+  NSInteger readLen;
 
   _events &= ~NSStreamEventHasBytesAvailable;
 
@@ -1996,7 +1996,7 @@ setNonBlocking(SOCKET fd)
 
 - (NSInteger) _write: (const uint8_t *)buffer maxLength: (NSUInteger)len
 {
-  int writeLen;
+  NSInteger writeLen;
 
   _events &= ~NSStreamEventHasSpaceAvailable;
 
@@ -2193,9 +2193,9 @@ setNonBlocking(SOCKET fd)
 #else
   // read shutdown is ignored, because the other side may shutdown first.
   if (!_sibling || [_sibling streamStatus] == NSStreamStatusClosed)
-    close((intptr_t)_loopID);
+    close((int)_loopID);
   else
-    shutdown((intptr_t)_loopID, SHUT_WR);
+    shutdown((int)_loopID, SHUT_WR);
   [super close];
   _loopID = (void*)(intptr_t)-1;
 #endif
@@ -2343,7 +2343,7 @@ setNonBlocking(SOCKET fd)
       IF_NO_GC([[self retain] autorelease];)
       [self _schedule];
       result
-	= getsockopt((intptr_t)_loopID, SOL_SOCKET, SO_ERROR, &error, &len);
+	= getsockopt((int)_loopID, SOL_SOCKET, SO_ERROR, &error, &len);
       if (result >= 0 && !error)
         { // finish up the opening
           myEvent = NSStreamEventOpenCompleted;
@@ -2499,7 +2499,7 @@ setNonBlocking(SOCKET fd)
 #else
   if (_loopID != (void*)(intptr_t)-1)
     {
-      close((intptr_t)_loopID);
+      close((int)_loopID);
       [super close];
       _loopID = (void*)(intptr_t)-1;
     }

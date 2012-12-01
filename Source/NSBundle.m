@@ -688,8 +688,8 @@ _find_main_bundle_for_tool(NSString *toolName)
   NSBundle	*bundle = nil;
   NSString	**fmClasses;
   NSString	*bundlePath = nil;
-  unsigned int	len;
-  const char    *frameworkClassName;
+  size_t    len;
+  const char *frameworkClassName;
 
   if (frameworkClass == Nil)
     {
@@ -920,7 +920,7 @@ _find_main_bundle_for_tool(NSString *toolName)
        */
       if (_loadingBundle != nil && _loadingBundle != bundle)
 	{
-	  int i, j;
+	  NSUInteger i, j;
           id b = bundle->_bundleClasses;
           id l = _loadingBundle->_bundleClasses;
 
@@ -1876,8 +1876,8 @@ IF_NO_GC(
 
 - (Class) classNamed: (NSString *)className
 {
-  int     i, j;
-  Class   theClass = Nil;
+  NSUInteger  i, j;
+  Class       theClass = Nil;
 
   if (!_codeLoaded)
     {
@@ -2548,7 +2548,7 @@ IF_NO_GC(
           NSString		*tableContent;
           NSData		*tableData;
           const unsigned char	*bytes;
-          unsigned		length;
+          NSUInteger length;
 
           tableData = [[NSData alloc] initWithContentsOfFile: tablePath];
           bytes = [tableData bytes];

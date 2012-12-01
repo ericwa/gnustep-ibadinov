@@ -184,7 +184,7 @@ unCacheAttributes(NSDictionary *attrs)
 @interface	GSAttrInfo : NSObject
 {
 @public
-  unsigned	loc;
+  NSUInteger    loc;
   NSDictionary	*attrs;
 }
 
@@ -263,11 +263,11 @@ static SEL	oatSel;
 static SEL	remSel;
 
 static IMP	infImp;
-static void	(*addImp)(NSMutableArray*,SEL,id);
-static unsigned (*cntImp)(NSArray*,SEL);
-static void	(*insImp)(NSMutableArray*,SEL,id,unsigned);
+static void	(*addImp)(NSMutableArray*, SEL, id);
+static NSUInteger (*cntImp)(NSArray*, SEL);
+static void	(*insImp)(NSMutableArray*, SEL, id, NSUInteger);
 static IMP	oatImp;
-static void	(*remImp)(NSMutableArray*,SEL,unsigned);
+static void	(*remImp)(NSMutableArray*, SEL, NSUInteger);
 
 #define	NEWINFO(Z,O,L)	((*infImp)(infCls, infSel, (Z), (O), (L)))
 #define	ADDOBJECT(O)	((*addImp)(_infoArray, addSel, (O)))
@@ -304,12 +304,12 @@ static void _setup(void)
 
       a = [NSMutableArray allocWithZone: NSDefaultMallocZone()];
       a = [a initWithCapacity: 1];
-      addImp = (void (*)(NSMutableArray*,SEL,id))[a methodForSelector: addSel];
-      cntImp = (unsigned (*)(NSArray*,SEL))[a methodForSelector: cntSel];
-      insImp = (void (*)(NSMutableArray*,SEL,id,unsigned))
+      addImp = (void (*)(NSMutableArray*, SEL, id))[a methodForSelector: addSel];
+      cntImp = (NSUInteger (*)(NSArray*, SEL))[a methodForSelector: cntSel];
+      insImp = (void (*)(NSMutableArray*, SEL, id, NSUInteger))
 	[a methodForSelector: insSel];
       oatImp = [a methodForSelector: oatSel];
-      remImp = (void (*)(NSMutableArray*,SEL,unsigned))
+      remImp = (void (*)(NSMutableArray*, SEL, NSUInteger))
 	[a methodForSelector: remSel];
       RELEASE(a);
       d = [NSDictionary new];
@@ -328,7 +328,7 @@ _setAttributesFrom(
   NSRange	range;
   NSDictionary	*attr;
   GSAttrInfo	*info;
-  unsigned	loc;
+  NSUInteger	loc;
 
   /*
    * remove any old attributes of the string.
@@ -363,13 +363,13 @@ _setAttributesFrom(
 
 inline static NSDictionary*
 _attributesAtIndexEffectiveRange(
-  unsigned int index,
-  NSRange *aRange,
-  unsigned int tmpLength,
+  NSUInteger  index,
+  NSRange     *aRange,
+  NSUInteger  tmpLength,
   NSMutableArray *_infoArray,
-  unsigned int *foundIndex)
+  NSUInteger  *foundIndex)
 {
-  unsigned	low, high, used, cnt, nextLoc;
+  NSUInteger	low, high, used, cnt, nextLoc;
   GSAttrInfo	*found = nil;
 
   used = (*cntImp)(_infoArray, cntSel);
@@ -476,7 +476,7 @@ _attributesAtIndexEffectiveRange(
   if (aString != nil && [aString isKindOfClass: [NSAttributedString class]])
     {
       NSAttributedString	*as = (NSAttributedString*)aString;
-      unsigned			len;
+      NSUInteger          len;
 
       aString = [as string];
       len = [aString length];
@@ -546,10 +546,10 @@ _attributesAtIndexEffectiveRange(
 - (void) _sanity
 {
   GSAttrInfo	*info;
-  unsigned	i;
-  unsigned	l = 0;
-  unsigned	len = [_textChars length];
-  unsigned	c = (*cntImp)(_infoArray, cntSel);
+  NSUInteger  i;
+  NSUInteger  l = 0;
+  NSUInteger  len = [_textChars length];
+  NSUInteger  c = (*cntImp)(_infoArray, cntSel);
 
   NSAssert(c > 0, NSInternalInconsistencyException);
   info = OBJECTAT(0);
@@ -632,7 +632,7 @@ SANITY();
 - (NSDictionary*) attributesAtIndex: (NSUInteger)index
 		     effectiveRange: (NSRange*)aRange
 {
-  unsigned	dummy;
+  NSUInteger dummy;
   return _attributesAtIndexEffectiveRange(
     index, aRange, [_textChars length], _infoArray, &dummy);
 }
@@ -651,14 +651,14 @@ SANITY();
 - (void) setAttributes: (NSDictionary*)attributes
 		 range: (NSRange)range
 {
-  unsigned	tmpLength;
-  unsigned	arrayIndex = 0;
-  unsigned	arraySize;
-  NSRange	effectiveRange = NSMakeRange(0, NSNotFound);
-  unsigned	afterRangeLoc, beginRangeLoc;
-  NSDictionary	*attrs;
-  NSZone	*z = [self zone];
+  NSUInteger  tmpLength;
+  NSUInteger  arrayIndex = 0;
+  NSUInteger  arraySize;
+  NSRange     effectiveRange = NSMakeRange(0, NSNotFound);
+  NSUInteger  afterRangeLoc, beginRangeLoc;
   GSAttrInfo	*info;
+  NSDictionary *attrs;
+  NSZone *z = [self zone];
 
   if (range.length == 0)
     {
@@ -778,13 +778,13 @@ SANITY();
 - (void) replaceCharactersInRange: (NSRange)range
 		       withString: (NSString*)aString
 {
-  unsigned	tmpLength;
-  unsigned	arrayIndex = 0;
-  unsigned	arraySize;
-  NSRange	effectiveRange = NSMakeRange(0, NSNotFound);
+  NSUInteger  tmpLength;
+  NSUInteger  arrayIndex = 0;
+  NSUInteger  arraySize;
+  NSRange     effectiveRange = NSMakeRange(0, NSNotFound);
   GSAttrInfo	*info;
-  int		moveLocations;
-  unsigned	start;
+  ssize_t     moveLocations;
+  NSUInteger  start;
 
 SANITY();
   if (aString == nil)
@@ -840,7 +840,7 @@ SANITY();
       info = OBJECTAT(arrayIndex);
       if (info->loc < NSMaxRange(range))
 	{
-	  unsigned int	next = arrayIndex + 1;
+	  NSUInteger next = arrayIndex + 1;
 
 	  while (next < arraySize)
 	    {

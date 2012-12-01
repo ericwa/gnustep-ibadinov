@@ -119,7 +119,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
  */
 - (NSInteger) read: (void*)buf length: (NSUInteger)len
 {
-  int	result;
+  ssize_t	result;
 
   do
     {
@@ -149,7 +149,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
  */
 - (NSInteger) write: (const void*)buf length: (NSUInteger)len
 {
-  int	result;
+  ssize_t	result;
 
   do
     {
@@ -1094,12 +1094,12 @@ NSString * const GSSOCKSRecvAddr = @"GSSOCKSRecvAddr";
 
 - (id) initWithNativeHandle: (void*)hdl
 {
-  return [self initWithFileDescriptor: (uintptr_t)hdl closeOnDealloc: NO];
+  return [self initWithFileDescriptor: (int)hdl closeOnDealloc: NO];
 }
 
 - (id) initWithNativeHandle: (void*)hdl closeOnDealloc: (BOOL)flag
 {
-  return [self initWithFileDescriptor: (uintptr_t)hdl closeOnDealloc: flag];
+  return [self initWithFileDescriptor: (int)hdl closeOnDealloc: flag];
 }
 
 - (void) checkAccept
@@ -1211,9 +1211,9 @@ NSString * const GSSOCKSRecvAddr = @"GSSOCKSRecvAddr";
 
 - (NSData*) availableData
 {
-  char			buf[READ_SIZE];
+  char buf[READ_SIZE];
   NSMutableData*	d;
-  int			len;
+  NSInteger       len;
 
   [self checkRead];
   d = [NSMutableData dataWithCapacity: 0];
@@ -1280,9 +1280,9 @@ NSString * const GSSOCKSRecvAddr = @"GSSOCKSRecvAddr";
 
 - (NSData*) readDataToEndOfFile
 {
-  char			buf[READ_SIZE];
+  char buf[READ_SIZE];
   NSMutableData*	d;
-  int			len;
+  NSInteger       len;
 
   [self checkRead];
   if (isNonBlocking == YES)
@@ -1306,8 +1306,8 @@ NSString * const GSSOCKSRecvAddr = @"GSSOCKSRecvAddr";
 - (NSData*) readDataOfLength: (unsigned)len
 {
   NSMutableData	*d;
-  int		got;
-  char		buf[READ_SIZE];
+  NSInteger     got;
+  char buf[READ_SIZE];
 
   [self checkRead];
   if (isNonBlocking == YES)
@@ -1340,10 +1340,10 @@ NSString * const GSSOCKSRecvAddr = @"GSSOCKSRecvAddr";
 
 - (void) writeData: (NSData*)item
 {
-  int		rval = 0;
+  NSInteger   rval = 0;
   const void*	ptr = [item bytes];
-  unsigned int	len = [item length];
-  unsigned int	pos = 0;
+  NSUInteger  len = [item length];
+  NSUInteger  pos = 0;
 
   [self checkWrite];
   if (isNonBlocking == YES)
@@ -1352,7 +1352,7 @@ NSString * const GSSOCKSRecvAddr = @"GSSOCKSRecvAddr";
     }
   while (pos < len)
     {
-      int	toWrite = len - pos;
+      NSUInteger toWrite = len - pos;
 
       if (toWrite > NETBUF_SIZE)
 	{
@@ -1901,9 +1901,9 @@ NSString * const GSSOCKSRecvAddr = @"GSSOCKSRecvAddr";
   else
     {
       NSMutableData	*item;
-      int		length;
-      int		received = 0;
-      char		buf[READ_SIZE];
+      NSInteger     length;
+      NSInteger     received = 0;
+      char buf[READ_SIZE];
 
       item = [readInfo objectForKey: NSFileHandleNotificationDataItem];
       /*
@@ -1992,16 +1992,16 @@ NSString * const GSSOCKSRecvAddr = @"GSSOCKSRecvAddr";
     }
   else
     {
-      NSData	*item;
-      int		length;
-      const void	*ptr;
+      NSData      *item;
+      NSInteger   length;
+      const void  *ptr;
 
       item = [info objectForKey: NSFileHandleNotificationDataItem];
       length = [item length];
       ptr = [item bytes];
       if (writePos < length)
         {
-          int	written;
+          NSInteger	written;
 
           written = [self write: (char*)ptr+writePos
     		     length: length-writePos];

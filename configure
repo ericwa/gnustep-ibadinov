@@ -11519,6 +11519,17 @@ fi
       if test "$have_mdns" = "yes"; then
         MDNS_LIBS="-ldns_sd"
         HAVE_MDNS=1
+      else
+        ac_fn_c_check_func "$LINENO" "DNSServiceBrowse" "ac_cv_func_DNSServiceBrowse"
+if test "x$ac_cv_func_DNSServiceBrowse" = xyes; then :
+  have_mdns=yes
+else
+  have_mdns=no
+fi
+
+        if test "$have_mdns" = "yes"; then
+          HAVE_MDNS=1
+        fi
       fi
     fi
   fi

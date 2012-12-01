@@ -563,13 +563,13 @@
 {
   if ((self = [super initWithKey: aKey  ofObject: anObject]) != nil)
     {
-      unsigned size = [aKey maximumLengthOfBytesUsingEncoding:
+      size_t size = [aKey maximumLengthOfBytesUsingEncoding:
         NSUTF8StringEncoding];
       char cKey[size + 2];
       char *cKeyPtr = &cKey[0];
       const char *type = 0;
 
-      int offset;
+      ptrdiff_t offset;
 
       
       cKey[0] = '_';

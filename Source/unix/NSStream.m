@@ -103,7 +103,7 @@
 
 - (NSInteger) read: (uint8_t *)buffer maxLength: (NSUInteger)len
 {
-  int readLen;
+  ssize_t readLen;
 
   if (buffer == 0)
     {
@@ -123,7 +123,7 @@
       return 0;
     }
 
-  readLen = read((intptr_t)_loopID, buffer, len);
+  readLen = read((int)_loopID, buffer, len);
   if (readLen < 0 && errno != EAGAIN && errno != EINTR)
     {
       [self _recordError];
@@ -155,7 +155,7 @@
       off_t offset = 0;
 
       if ([self _isOpened])
-        offset = lseek((intptr_t)_loopID, 0, SEEK_CUR);
+        offset = lseek((int)_loopID, 0, SEEK_CUR);
       return [NSNumber numberWithLong: offset];
     }
   return [super propertyForKey: key];
@@ -177,7 +177,7 @@
 
 - (void) close
 {
-  int closeReturn = close((intptr_t)_loopID);
+  int closeReturn = close((int)_loopID);
 
   if (closeReturn < 0)
     [self _recordError];
@@ -239,7 +239,7 @@
 
 - (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len
 {
-  int writeLen;
+  ssize_t writeLen;
 
   if (buffer == 0)
     {
@@ -259,7 +259,7 @@
       return 0;
     }
 
-  writeLen = write((intptr_t)_loopID, buffer, len);
+  writeLen = write((int)_loopID, buffer, len);
   if (writeLen < 0 && errno != EAGAIN && errno != EINTR)
     [self _recordError];
   return writeLen;
@@ -294,7 +294,7 @@
 
 - (void) close
 {
-  int closeReturn = close((intptr_t)_loopID);
+  int closeReturn = close((int)_loopID);
   if (closeReturn < 0)
     [self _recordError];
   [super close];
@@ -307,7 +307,7 @@
       off_t offset = 0;
 
       if ([self _isOpened])
-        offset = lseek((intptr_t)_loopID, 0, SEEK_CUR);
+        offset = lseek((int)_loopID, 0, SEEK_CUR);
       return [NSNumber numberWithLong: offset];
     }
   return [super propertyForKey: key];

@@ -132,7 +132,7 @@ UTF8Str(const unsigned char *bytes)
 }
 
 inline static NSString*
-UTF8StrLen(const unsigned char *bytes, unsigned length)
+UTF8StrLen(const unsigned char *bytes, NSUInteger length)
 {
   NSString	*str;
 
@@ -152,8 +152,8 @@ static BOOL cacheDone = NO;
 
 static char * xml_strdup(const char *from)
 {
-  unsigned	len;
-  char		*to;
+  size_t  len;
+  char    *to;
 
   if (0 == from) from = "";
   len = strlen(from) + 1;
@@ -2445,13 +2445,13 @@ static xmlParserInputPtr
 loadEntityFunction(void *ctx,
   const unsigned char *eid, const unsigned char *url)
 {
-  NSString			*file = nil;
-  NSString			*entityId;
-  NSString			*location;
-  NSArray			*components;
-  NSMutableString		*local;
-  unsigned			count;
-  unsigned			index;
+  NSString          *file = nil;
+  NSString          *entityId;
+  NSString          *location;
+  NSArray           *components;
+  NSMutableString   *local;
+  NSUInteger        count;
+  NSUInteger        index;
 
   NSCAssert(ctx, @"No Context");
   if (url == NULL)
@@ -2518,10 +2518,10 @@ loadEntityFunction(void *ctx,
       if ([entityId hasPrefix: @"-//GNUstep//DTD "] == YES)
 	{
 	  NSCharacterSet	*ws = [NSCharacterSet whitespaceCharacterSet];
-	  NSString		*found = nil;
+	  NSString        *found = nil;
 	  NSMutableString	*name;
-	  unsigned		len;
-	  NSRange		r;
+	  NSUInteger      len;
+	  NSRange         r;
 
 	  /*
 	   * Extract the relevent DTD name
@@ -2681,17 +2681,17 @@ endDocumentFunction(void *ctx)
   [HANDLER endDocument];
 }
 
-static int
+static NSInteger
 isStandaloneFunction(void *ctx)
 {
   NSCAssert(ctx,@"No Context");
   return [HANDLER isStandalone];
 }
 
-static int
+static NSInteger
 hasInternalSubsetFunction(void *ctx)
 {
-  int	has;
+  NSInteger	has;
 
   NSCAssert(ctx,@"No Context");
   has = [HANDLER hasInternalSubset];
@@ -2702,10 +2702,10 @@ hasInternalSubsetFunction(void *ctx)
   return has;
 }
 
-static int
+static NSInteger
 hasExternalSubsetFunction(void *ctx)
 {
-  int	has;
+  NSInteger	has;
 
   NSCAssert(ctx,@"No Context");
   has = [HANDLER hasExternalSubset];
@@ -4058,8 +4058,8 @@ static BOOL warned = NO; if (warned == NO) { warned = YES; NSLog(@"WARNING, use 
     {
       xsltStylesheetPtr ss = NULL;
       xmlDocPtr		ssXml = (xmlDocPtr)[xsltStylesheet lib];
-      int		pSize = params == nil ? 1 : ([params count] * 2) + 1;
-      int		pNum = 0;
+      NSUInteger  pSize = params == nil ? 1 : ([params count] * 2) + 1;
+      NSUInteger  pNum = 0;
       const char	*parameters[pSize];
 
       if (params != nil)
@@ -4227,11 +4227,11 @@ static BOOL warned = NO; if (warned == NO) { warned = YES; NSLog(@"WARNING, use 
 @implementation	NSString (GSXML)
 - (NSString*) stringByEscapingXML
 {
-  unsigned	length = [self length];
-  unsigned	output = 0;
-  unichar	*from;
-  unsigned	i = 0;
-  BOOL		escape = NO;
+  NSUInteger  length = [self length];
+  unsigned    output = 0;
+  unichar     *from;
+  NSUInteger  i = 0;
+  BOOL        escape = NO;
 
   from = NSZoneMalloc (NSDefaultMallocZone(), sizeof(unichar) * length);
   [self getCharacters: from];
@@ -4381,8 +4381,8 @@ static BOOL warned = NO; if (warned == NO) { warned = YES; NSLog(@"WARNING, use 
 
 - (NSString*) stringByUnescapingXML
 {
-  unsigned		length = [self length];
-  NSRange		r = NSMakeRange(0, length);
+  NSUInteger  length = [self length];
+  NSRange     r = NSMakeRange(0, length);
 
   r = [self rangeOfString: @"&" options: NSLiteralSearch range: r];
   if (r.length > 0)
@@ -4392,15 +4392,15 @@ static BOOL warned = NO; if (warned == NO) { warned = YES; NSLog(@"WARNING, use 
       while (r.length > 0)
 	{
 	  NSRange	e;
-	  unsigned	s0 = NSMaxRange(r);
+	  NSUInteger s0 = NSMaxRange(r);
 
 	  e = [m rangeOfString: @";"
 		       options: NSLiteralSearch
 			 range: NSMakeRange(s0, length - s0)];
 	  if (e.length > 0)
 	    {
-	      unsigned	s1 = NSMaxRange(e);
-	      NSString	*s = [m substringWithRange: NSMakeRange(s0, s1 - s0)];
+	      NSUInteger  s1 = NSMaxRange(e);
+	      NSString    *s = [m substringWithRange: NSMakeRange(s0, s1 - s0)];
 
 	      if ([s hasPrefix: @"&#"] == YES)
 		{
@@ -4558,7 +4558,7 @@ static NSString	*indentations[] = {
   @"\t\t\t      ",
   @"\t\t\t\t"
 };
-static void indentation(unsigned level, NSMutableString *str)
+static void indentation(NSUInteger level, NSMutableString *str)
 {
   if (level > 0)
     {
@@ -4584,9 +4584,9 @@ static void indentation(unsigned level, NSMutableString *str)
 		 indent: (NSUInteger)indent
 		    for: (GSXMLRPC*)rpc
 {
-  unsigned 		i;
-  unsigned		c = [self count];
-  BOOL			compact = [rpc compact];
+  NSUInteger  i;
+  NSUInteger  c = [self count];
+  BOOL        compact = [rpc compact];
   
   INDENT(indent++);
   [str appendString: @"<array>"];
@@ -4980,8 +4980,8 @@ static void indentation(unsigned level, NSMutableString *str)
                        params: (NSArray*)params
 {
   NSMutableString	*str = [NSMutableString stringWithCapacity: 1024];
-  unsigned		c = [params count];
-  unsigned		i;
+  NSUInteger      c = [params count];
+  NSUInteger      i;
   
   if ([method length] == 0)
     {
@@ -5054,7 +5054,7 @@ static void indentation(unsigned level, NSMutableString *str)
   NSDictionary		*fault;
 
   fault = [NSDictionary dictionaryWithObjectsAndKeys:
-    [NSNumber numberWithInt: code], @"faultCode",
+    [NSNumber numberWithInteger: code], @"faultCode",
     s, @"faultString",
     nil];
 
@@ -5083,8 +5083,8 @@ static void indentation(unsigned level, NSMutableString *str)
 - (NSString*) buildResponseWithParams: (NSArray*)params
 {
   NSMutableString	*str = [NSMutableString stringWithCapacity: 1024];
-  unsigned		c = [params count];
-  unsigned		i;
+  NSUInteger      c = [params count];
+  NSUInteger      i;
   
   [str appendString: @"<?xml version=\"1.0\"?>\n"];
   [str appendString: @"<methodResponse>"];

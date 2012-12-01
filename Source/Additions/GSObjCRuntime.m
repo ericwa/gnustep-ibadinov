@@ -909,7 +909,7 @@ GSObjCVersion(Class cls)
  */
 BOOL
 GSObjCFindVariable(id obj, const char *name,
-  const char **type, unsigned int *size, int *offset)
+  const char **type, size_t *size, ptrdiff_t *offset)
 {
   Class		class = object_getClass(obj);
   Ivar		ivar = class_getInstanceVariable(class, name);
@@ -1112,9 +1112,9 @@ GSObjCMakeClass(NSString *name, NSString *superName, NSDictionary *iVars)
 {
   Class		newClass;
   Class		classSuperClass;
-  const char	*classNameCString;
+  const char *classNameCString;
   char		*tmp;
-  int		len;
+  size_t  len;
 
   NSCAssert(name, @"no name");
   NSCAssert(superName, @"no superName");
@@ -1681,7 +1681,7 @@ GSObjCAddClassOverride(Class receiver, Class override)
  */
 id
 GSObjCGetVal(NSObject *self, const char *key, SEL sel,
-	       const char *type, unsigned size, int offset)
+	       const char *type, size_t size, ptrdiff_t offset)
 {
   NSMethodSignature	*sig = nil;
 
@@ -2098,7 +2098,7 @@ GSObjCGetVal(NSObject *self, const char *key, SEL sel,
  */
 id
 GSObjCGetValue(NSObject *self, NSString *key, SEL sel,
-	       const char *type, unsigned size, int offset)
+	       const char *type, size_t size, ptrdiff_t offset)
 {
   return GSObjCGetVal(self, [key UTF8String], sel, type, size, offset);
 }
@@ -2115,7 +2115,7 @@ GSObjCGetValue(NSObject *self, NSString *key, SEL sel,
  */
 void
 GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
-  const char *type, unsigned size, int offset)
+  const char *type, size_t size, ptrdiff_t offset)
 {
   static NSNull		*null = nil;
   NSMethodSignature	*sig = nil;
@@ -2605,7 +2605,7 @@ NSArray *GSObjCDirectSubclassesOfClass(Class cls)
 @end
 
 void *
-GSAutoreleasedBuffer(unsigned size)
+GSAutoreleasedBuffer(size_t size)
 {
 #if GS_WITH_GC || __OBJC_GC__
   return NSAllocateCollectable(size, NSScannedOption);
@@ -2617,11 +2617,11 @@ GSAutoreleasedBuffer(unsigned size)
 
   static Class	buffer_class = 0;
   static Class	autorelease_class;
-  static SEL	autorelease_sel;
-  static IMP	autorelease_imp;
-  static int	instance_size;
-  static int	offset;
-  NSObject	*o;
+  static SEL    autorelease_sel;
+  static IMP    autorelease_imp;
+  static size_t	instance_size;
+  static size_t	offset;
+  NSObject      *o;
 
   if (buffer_class == 0)
     {
@@ -2681,7 +2681,7 @@ GSPrintf (FILE *fptr, NSString* format, ...)
 
   if (data != nil)
     {
-      unsigned int      length = [data length];
+      NSUInteger length = [data length];
 
       if (length == 0 || fwrite([data bytes], 1, length, fptr) == length)
         {

@@ -141,11 +141,11 @@ decodebase64(unsigned char *dst, const unsigned char *src)
 static char b64[]
   = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-static int
-encodebase64(unsigned char *dst, const unsigned char *src, int length)
+static NSUInteger
+encodebase64(unsigned char *dst, const unsigned char *src, NSUInteger length)
 {
-  int	dIndex = 0;
-  int	sIndex;
+  NSUInteger dIndex = 0;
+  NSUInteger sIndex;
 
   for (sIndex = 0; sIndex < length; sIndex += 3)
     {
@@ -179,13 +179,13 @@ encodebase64(unsigned char *dst, const unsigned char *src, int length)
 
 static void
 encodeQuotedPrintable(NSMutableData *result,
-  const unsigned char *src, unsigned length)
+  const unsigned char *src, NSUInteger length)
 {
   static char	*hex = "0123456789ABCDEF";
-  unsigned	offset;
-  unsigned	column = 0;
-  unsigned	size = 0;
-  unsigned	i;
+  NSUInteger offset;
+  NSUInteger column = 0;
+  NSUInteger size = 0;
+  NSUInteger i;
   unsigned char	*dst;
 
   for (i = 0; i < length; i++)
@@ -519,13 +519,13 @@ wordData(NSString *word)
     }
   else
     {
-      int		len = [charset length];
-      char		buf[len + 1];
+      NSUInteger len = [charset length];
+      char buf[len + 1];
       NSMutableData	*md;
 
       [charset getCString: buf
-		maxLength: len + 1
-		 encoding: NSISOLatin1StringEncoding];
+                maxLength: len + 1
+                 encoding: NSISOLatin1StringEncoding];
       md = [NSMutableData dataWithCapacity: [d length]*4/3 + len + 8];
       d = [documentClass encodeBase64: d];
       [md appendBytes: "=?" length: 2];
@@ -1948,11 +1948,11 @@ NSDebugMLLog(@"GSMime", @"Header parsed - %@", info);
    */
   if ([name isEqualToString: @"http"] == YES)
     {
-      int	loc = [scanner scanLocation];
+      NSUInteger loc = [scanner scanLocation];
       int	major;
       int	minor;
       int	status;
-      NSUInteger	count;
+      NSUInteger count;
       NSArray	*hdrs;
 
       if ([scanner scanInt: &major] == NO || major < 0)
@@ -2073,7 +2073,7 @@ NSDebugMLLog(@"GSMime", @"Header parsed - %@", info);
     }
   else
     {
-      int	loc;
+      NSUInteger loc;
 
       [self scanPastSpace: scanner];
       loc = [scanner scanLocation];
@@ -2202,7 +2202,7 @@ NSDebugMLLog(@"GSMime", @"Header parsed - %@", info);
 	    }
 	  if ([string characterAtIndex: r.location - 1] == '\\')
 	    {
-	      int	p;
+	      NSUInteger p;
 
 	      /*
                * Count number of escape ('\') characters ... if it's odd
@@ -3075,10 +3075,10 @@ unfold(const unsigned char *src, const unsigned char *end, BOOL *folded)
  */
 - (NSRange) _endOfHeaders: (NSData*)newData
 {
-  unsigned int		ol = [data length];
-  unsigned int		nl = [newData length];
-  unsigned int		len = ol + nl;
-  unsigned int		pos = ol;
+  NSUInteger ol = [data length];
+  NSUInteger nl = [newData length];
+  NSUInteger len = ol + nl;
+  NSUInteger pos = ol;
   const unsigned char	*op = (const unsigned char*)[data bytes];
   const unsigned char	*np = (const unsigned char*)[newData bytes];
   char			c;
@@ -4178,8 +4178,8 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
 
 + (NSData*) decodeBase64: (NSData*)source
 {
-  int		length;
-  int		declen;
+  NSUInteger length;
+  NSUInteger declen;
   const unsigned char	*src;
   const unsigned char	*end;
   unsigned char *result;
@@ -4327,8 +4327,8 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
 
 + (NSData*) encodeBase64: (NSData*)source
 {
-  int		length;
-  int		destlen;
+  NSUInteger length;
+  NSUInteger destlen;
   unsigned char *sBuf;
   unsigned char *dBuf;
 
@@ -5570,7 +5570,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
   NSData		*source;
   NSData		*digest;
   int			sequence = ++count;
-  int			length;
+  NSUInteger length;
 
   source = [[[NSProcessInfo processInfo] globallyUniqueString]
     dataUsingEncoding: NSUTF8StringEncoding];
@@ -6902,11 +6902,11 @@ GS_PRIVATE_INTERNAL(GSMimeSMTPClient)
 	  const char	*ibuf;
 	  char		*obuf;
 	  BOOL		sol = YES;
-	  unsigned	ilen;
-	  unsigned	olen;
-	  unsigned	osiz;
-	  unsigned	ipos = 0;
-	  unsigned	opos = 0;
+	  NSUInteger ilen;
+	  NSUInteger olen;
+	  NSUInteger osiz;
+	  NSUInteger ipos = 0;
+	  NSUInteger opos = 0;
 
 	  internal->cState = TP_BODY;
 
@@ -7002,8 +7002,8 @@ GS_PRIVATE_INTERNAL(GSMimeSMTPClient)
        */
       while (internal->readable == YES && internal->cState != TP_OPEN)
         {
-          uint8_t       buf[BUFSIZ];
-          int   	length;
+          uint8_t     buf[BUFSIZ];
+          NSUInteger  length;
 
           /* Try to fill the buffer, then process any data we have.
            */
@@ -7071,21 +7071,21 @@ GS_PRIVATE_INTERNAL(GSMimeSMTPClient)
        */
       while (internal->writable == YES && [internal->pending count] > 0)
         {
-          uint8_t   *wbytes = [internal->wdata mutableBytes];
-          unsigned  wlength = [internal->wdata length];
-          int       result;
+          uint8_t     *wbytes = [internal->wdata mutableBytes];
+          NSUInteger  wlength = [internal->wdata length];
+          NSUInteger  result;
 
           result = [internal->ostream write: wbytes + internal->woffset
 				  maxLength: wlength - internal->woffset];
           if (result > 0)
             {
               NSData    *d = [internal->pending objectAtIndex: 0];
-              unsigned  dlength = [d length];
+              NSUInteger dlength = [d length];
 
               internal->woffset += result;
               if (internal->woffset >= dlength)
                 {
-                  unsigned      total = 0;
+                  NSUInteger total = 0;
 
                   while (internal->woffset >= total + dlength)
                     {

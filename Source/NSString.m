@@ -110,7 +110,7 @@
 
 #import "GSPrivate.h"
 
-extern BOOL GSScanDouble(unichar*, unsigned, double*);
+extern BOOL GSScanDouble(unichar*, NSUInteger, double*);
 
 @class	GSString;
 @class	GSMutableString;
@@ -3510,7 +3510,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
       unichar		*u = buf;
       unsigned int	options;
       unsigned char	*b = 0;
-      unsigned int	l = 0;
+      NSUInteger l = 0;
 
       /* Build a fake object on the stack and copy unicode characters
        * into its buffer from the receiver.
@@ -4840,10 +4840,10 @@ static NSFileManager *fm = nil;
 }
 
 // private methods for Unicode level 3 implementation
-- (int) _baseLength
+- (NSUInteger) _baseLength
 {
-  int		blen = 0;
-  unsigned	len = [self length];
+  NSUInteger blen = 0;
+  NSUInteger len = [self length];
 
   if (len > 0)
     {

@@ -1182,7 +1182,7 @@ appendUIntData(NSMutableData *d, NSUInteger i)
   return [[_owner string] smallestEncoding];
 }
 
-- (int) _baseLength
+- (NSUInteger) _baseLength
 {
   return [[_owner string] _baseLength];
 }

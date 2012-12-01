@@ -1388,8 +1388,8 @@ static void determineOperatingSystem()
 #elif	defined(_SC_PHYS_PAGES)
       availMem = sysconf(_SC_PHYS_PAGES) * NSPageSize();
 #elif	defined(HAVE_SYSCTLBYNAME)
-      long	val;
-      size_t	len = val;
+      long    val = 0;
+      size_t  len = 0;
 
       if (sysctlbyname("hw.physmem", &val, &len, 0, 0) == 0)
         {

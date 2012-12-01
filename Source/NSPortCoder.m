@@ -921,8 +921,8 @@ static unsigned	encodingVersion;
 	    }
 	  else
 	    {
-	      char	*tmp;
-	      int	len;
+	      char  *tmp;
+	      size_t len;
 
 	      if (xref != GSIArrayCount(_ptrAry))
 		{

@@ -1747,8 +1747,8 @@ NSDictionary *locale)
 	  {
 	    /* This is complicated.  We have to transform the multibyte
 	       string into a unicode string.  */
-	    const char		*str = (const char*)string;
-	    unsigned		blen;
+	    const char *str = (const char*)string;
+	    NSUInteger blen;
 	    static NSStringEncoding	enc = GSUndefinedEncoding;
 	    static BOOL			byteEncoding = NO;
 

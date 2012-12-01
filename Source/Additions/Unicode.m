@@ -323,7 +323,7 @@ static void GSSetupEncodingTable(void)
 	      if (entry->iconv != 0 && *(entry->iconv) != 0)
 		{
 		  iconv_t	c;
-		  int		l;
+		  size_t    l;
 		  char	*lossy;
 
 		  /*
@@ -714,12 +714,12 @@ uni_is_decomp(unichar u)
  * be in native byte order.<br />
  * Returns the number of characters which were found valid.
  */
-unsigned
-GSUnicode(const unichar *chars, unsigned length,
+NSUInteger
+GSUnicode(const unichar *chars, NSUInteger length,
   BOOL *isASCII, BOOL *isLatin1)
 {
-  unsigned	i = 0;
-  unichar	c;
+  NSUInteger  i = 0;
+  unichar     c;
 
   if (isASCII) *isASCII = YES;
   if (isLatin1) *isLatin1 = YES;
@@ -847,7 +847,7 @@ else if (zone == 0) \
   } \
 else \
   { \
-    unsigned	grow = slen; \
+    NSUInteger	grow = slen; \
 \
     if (grow < bsize + BUFSIZ) \
       { \
@@ -937,19 +937,19 @@ else \
  * </p>
  */
 BOOL
-GSToUnicode(unichar **dst, unsigned int *size, const unsigned char *src,
-  unsigned int slen, NSStringEncoding enc, NSZone *zone,
+GSToUnicode(unichar **dst, NSUInteger *size, const unsigned char *src,
+  NSUInteger slen, NSStringEncoding enc, NSZone *zone,
   unsigned int options)
 {
-  unichar	buf[BUFSIZ];
-  unichar	*ptr;
-  unsigned	bsize;
-  unsigned	dpos = 0;	// Offset into destination buffer.
-  unsigned	spos = 0;	// Offset into source buffer.
-  unsigned	extra = (options & GSUniTerminate) ? sizeof(unichar) : 0;
-  unichar	base = 0;
-  unichar	*table = 0;
-  BOOL		result = YES;
+  unichar     buf[BUFSIZ];
+  unichar     *ptr;
+  NSUInteger  bsize;
+  NSUInteger  dpos = 0;	// Offset into destination buffer.
+  unsigned    spos = 0;	// Offset into source buffer.
+  unsigned    extra = (options & GSUniTerminate) ? sizeof(unichar) : 0;
+  unichar     base = 0;
+  unichar     *table = 0;
+  BOOL        result = YES;
 
   /*
    * Ensure we have an initial buffer set up to decode data into.
@@ -1101,8 +1101,8 @@ GSToUnicode(unichar **dst, unsigned int *size, const unsigned char *src,
 		  }
 		else
 		  {
-		    unsigned	grow = (dpos + slen) * sizeof(unichar);
-		    unichar	*tmp;
+		    NSUInteger  grow = (dpos + slen) * sizeof(unichar);
+		    unichar     *tmp;
 
 #if	GS_WITH_GC
 		    tmp = NSAllocateCollectable(grow + extra, 0);
@@ -1165,8 +1165,8 @@ GSToUnicode(unichar **dst, unsigned int *size, const unsigned char *src,
 		  }
 		else
 		  {
-		    unsigned	grow = (dpos + slen) * sizeof(unichar);
-		    unichar	*tmp;
+		    NSUInteger  grow = (dpos + slen) * sizeof(unichar);
+		    unichar     *tmp;
 
 #if	GS_WITH_GC
 		    tmp = NSAllocateCollectable(grow + extra, 0);
@@ -1254,8 +1254,8 @@ tables:
 		  }
 		else
 		  {
-		    unsigned	grow = (dpos + slen) * sizeof(unichar);
-		    unichar	*tmp;
+		    NSUInteger  grow = (dpos + slen) * sizeof(unichar);
+		    unichar     *tmp;
 
 #if	GS_WITH_GC
 		    tmp = NSAllocateCollectable(grow + extra, 0);
@@ -1388,7 +1388,7 @@ tables:
 		{
 		  if (errno == E2BIG)
 		    {
-		      unsigned	old = bsize;
+		      NSUInteger old = bsize;
 
 		      GROW();
 		      outbuf = (unsigned char*)&ptr[dpos];
@@ -1423,8 +1423,8 @@ done:
     {
       if (options & GSUniTemporary)
 	{
-	  unsigned	bytes = dpos * sizeof(unichar) + extra;
-	  void		*r;
+	  NSUInteger  bytes = dpos * sizeof(unichar) + extra;
+	  void        *r;
 
 	  /*
 	   * Temporary string was requested ... make one.
@@ -1445,7 +1445,7 @@ done:
 	}
       else if (zone != 0 && (ptr == buf || bsize > dpos))
 	{
-	  unsigned	bytes = dpos * sizeof(unichar) + extra;
+	  NSUInteger bytes = dpos * sizeof(unichar) + extra;
 
 	  /*
 	   * Resizing is permitted, try ensure we return a buffer which
@@ -1579,7 +1579,7 @@ else if (zone == 0) \
   } \
 else \
   { \
-    unsigned	grow = slen; \
+    NSUInteger grow = slen; \
 \
     if (grow < bsize + BUFSIZ) \
       { \
@@ -1695,27 +1695,27 @@ static inline int chop(unichar c, _ucc_ *table, int hi)
  * </p>
  */
 BOOL
-GSFromUnicode(unsigned char **dst, unsigned int *size, const unichar *src,
-  unsigned int slen, NSStringEncoding enc, NSZone *zone,
+GSFromUnicode(unsigned char **dst, NSUInteger *size, const unichar *src,
+  NSUInteger slen, NSStringEncoding enc, NSZone *zone,
   unsigned int options)
 {
   unsigned char	buf[BUFSIZ];
   unsigned char	*ptr;
-  unsigned	bsize;
-  unsigned	dpos = 0;	// Offset into destination buffer.
+  NSUInteger    bsize;
+  NSUInteger    dpos = 0;	// Offset into destination buffer.
   unsigned	spos = 0;	// Offset into source buffer.
   unsigned	extra = (options & GSUniTerminate) ? 1 : 0;
-  BOOL		strict = (options & GSUniStrict) ? YES : NO;
-  unichar	base = 0;
-  _ucc_		*table = 0;
+  BOOL      strict = (options & GSUniStrict) ? YES : NO;
+  unichar   base = 0;
+  _ucc_     *table = 0;
   unsigned	tsize = 0;
   unsigned char	escape = 0;
-  _ucc_		*etable = 0;
+  _ucc_     *etable = 0;
   unsigned	etsize = 0;
-  _ucc_		*ltable = 0;
+  _ucc_     *ltable = 0;
   unsigned	ltsize = 0;
-  BOOL		swapped = NO;
-  BOOL		result = YES;
+  BOOL      swapped = NO;
+  BOOL      result = YES;
 
   if (options & GSUniBOM)
     {
@@ -2353,7 +2353,7 @@ iconv_start:
 		    {
 		      if (errno == E2BIG)
 			{
-			  unsigned	old = bsize;
+			  NSUInteger old = bsize;
 
 			  GROW();
 			  outbuf = (unsigned char*)&ptr[dpos];
@@ -2419,8 +2419,8 @@ iconv_start:
     {
       if (options & GSUniTemporary)
 	{
-	  unsigned	bytes = dpos + extra;
-	  void		*r;
+	  NSUInteger  bytes = dpos + extra;
+	  void        *r;
 
 	  /*
 	   * Temporary string was requested ... make one.
@@ -2441,7 +2441,7 @@ iconv_start:
 	}
       else if (zone != 0 && (ptr == buf || bsize > dpos))
 	{
-	  unsigned	bytes = dpos + extra;
+	  NSUInteger bytes = dpos + extra;
 
 	  /*
 	   * Resizing is permitted - try ensure we return a buffer

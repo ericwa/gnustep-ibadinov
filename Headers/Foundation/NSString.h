@@ -682,7 +682,7 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 
 
 // for methods working with decomposed strings
-- (int) _baseLength;
+- (NSUInteger) _baseLength;
 
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 /**
