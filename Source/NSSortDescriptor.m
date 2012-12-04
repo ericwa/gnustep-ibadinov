@@ -152,6 +152,19 @@ static BOOL     initialized = NO;
     }
 }
 
++ (id) sortDescriptorWithKey: (NSString *)key
+                   ascending: (BOOL)ascending
+{
+  return AUTORELEASE([[self alloc] initWithKey:key ascending:ascending]);
+}
+
++ (id) sortDescriptorWithKey: (NSString *)key
+                   ascending: (BOOL)ascending
+                    selector: (SEL)selector
+{
+  return AUTORELEASE([[self alloc] initWithKey:key ascending:ascending selector:selector]);
+}
+
 - (BOOL) isEqual: (id)other
 {
   if (other == self)

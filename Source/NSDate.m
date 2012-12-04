@@ -85,16 +85,18 @@ static id _distantFuture = nil;
 static NSString*
 findInArray(NSArray *array, unsigned pos, NSString *str)
 {
-  unsigned	index;
-  unsigned	limit = [array count];
+  NSUInteger index;
+  NSUInteger limit = [array count];
 
   for (index = pos; index < limit; index++)
     {
       NSString	*item;
-
+      
       item = [array objectAtIndex: index];
       if ([str caseInsensitiveCompare: item] == NSOrderedSame)
-	return item;
+        {
+          return item;
+        }
     }
   return nil;
 }
@@ -232,16 +234,16 @@ otherTime(NSDate* other)
 + (id) dateWithNaturalLanguageString: (NSString*)string
                               locale: (NSDictionary*)locale
 {
-  NSCharacterSet	*ws;
-  NSCharacterSet	*digits;
-  NSScanner		*scanner;
-  NSString		*tmp;
-  NSString		*dto;
-  NSArray		*ymw;
-  NSMutableArray	*words;
-  unsigned		index;
-  unsigned		length;
-  NSCalendarDate	*theDate;
+  NSCharacterSet  *ws;
+  NSCharacterSet  *digits;
+  NSScanner       *scanner;
+  NSString        *tmp;
+  NSString        *dto;
+  NSArray         *ymw;
+  NSMutableArray  *words;
+  NSUInteger      index;
+  NSUInteger      length;
+  NSCalendarDate  *theDate;
   BOOL			hadHour = NO;
   BOOL			hadMinute = NO;
   BOOL			hadSecond = NO;
@@ -394,7 +396,7 @@ otherTime(NSDate* other)
   ymw = [locale objectForKey: NSYearMonthWeekDesignations];
   if (ymw != nil && [ymw count] > 0)
     {
-      unsigned	c = [ymw count];
+      NSUInteger c = [ymw count];
       NSString	*yname = [ymw objectAtIndex: 0];
       NSString	*mname = c > 1 ? [ymw objectAtIndex: 1] : nil;
       NSArray	*early = [locale objectForKey: NSEarlierTimeDesignations];
@@ -497,8 +499,8 @@ otherTime(NSDate* other)
   if (hadHour == NO)
     {
       NSArray	*hours = [locale objectForKey: NSHourNameDesignations];
-      unsigned	hLimit = [hours count];
-      unsigned	hIndex;
+      NSUInteger hLimit = [hours count];
+      NSUInteger hIndex;
 
       for (index = 0; hadHour == NO && index < [words count]; index++)
 	{
@@ -955,6 +957,12 @@ otherTime(NSDate* other)
   return AUTORELEASE([[self alloc] initWithTimeIntervalSinceNow: seconds]);
 }
 
++ (id) dateWithTimeInterval:(NSTimeInterval)seconds sinceDate:(NSDate *)date
+{
+    return AUTORELEASE([[self allocWithZone:NSDefaultMallocZone()] 
+                                initWithTimeInterval:seconds sinceDate:date]);
+}
+
 /**
  * Returns an autoreleased instance with the offset from the unix system
  * reference date of 1 January 1970, GMT.
@@ -1089,7 +1097,7 @@ otherTime(NSDate* other)
  * Returns an instance with the given offset from anotherDate.
  */
 - (id) initWithTimeInterval: (NSTimeInterval)secsToBeAdded
-		  sinceDate: (NSDate*)anotherDate
+                  sinceDate: (NSDate*)anotherDate
 {
   if (anotherDate == nil)
     {

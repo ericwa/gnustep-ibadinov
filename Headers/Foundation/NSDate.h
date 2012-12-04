@@ -66,17 +66,29 @@ GS_EXPORT const NSTimeInterval NSTimeIntervalSince1970;
 
 + (id) date;
 + (id) dateWithString: (NSString*)description;
+
 + (id) dateWithTimeIntervalSinceNow: (NSTimeInterval)seconds;
-+ (id) dateWithTimeIntervalSince1970: (NSTimeInterval)seconds;
++ (id) dateWithTimeInterval: (NSTimeInterval)seconds sinceDate: (NSDate *)date;
 + (id) dateWithTimeIntervalSinceReferenceDate: (NSTimeInterval)seconds;
++ (id) dateWithTimeIntervalSince1970: (NSTimeInterval)seconds;
+
 + (id) distantFuture;
 + (id) distantPast;
 
+- (id) init;
 - (id) initWithString: (NSString*)description;
-- (id) initWithTimeInterval: (NSTimeInterval)secsToBeAdded
-		  sinceDate: (NSDate*)anotherDate;
-- (id) initWithTimeIntervalSinceNow: (NSTimeInterval)secsToBeAdded;
-- (id) initWithTimeIntervalSinceReferenceDate: (NSTimeInterval)secs;
+
+- (id) initWithTimeInterval: (NSTimeInterval)seconds 
+                  sinceDate: (NSDate *)refDate;
+- (id) initWithTimeIntervalSinceNow: (NSTimeInterval)seconds;
+- (id) initWithTimeIntervalSinceReferenceDate: (NSTimeInterval)seconds;
+
+#if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
++ (id) dateWithNaturalLanguageString: (NSString *)string;
++ (id) dateWithNaturalLanguageString: (NSString *)string
+                              locale: (id)localeDictionary;
+- (id) initWithTimeIntervalSince1970: (NSTimeInterval)seconds;
+#endif
 
 // Converting to NSCalendar
 
@@ -112,13 +124,6 @@ GS_EXPORT const NSTimeInterval NSTimeIntervalSince1970;
  * that of the receiver by the specified interval.
  */
 - (id) dateByAddingTimeInterval: (NSTimeInterval)ti;
-#endif
-
-#if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
-+ (id) dateWithNaturalLanguageString: (NSString*)string;
-+ (id) dateWithNaturalLanguageString: (NSString*)string
-                              locale: (NSDictionary*)locale;
-- (id) initWithTimeIntervalSince1970: (NSTimeInterval)seconds;
 #endif
 
 @end

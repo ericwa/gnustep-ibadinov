@@ -199,8 +199,8 @@ serializeToInfo(id object, _NSSerializerInfo* info)
 	node = 0;
       if (node == 0)
 	{
-	  unsigned	slen;
-	  unsigned	dlen;
+	  NSUInteger slen;
+	  NSUInteger dlen;
 
 	  slen = [object length] + 1;
 	  (*info->appImp)(info->data, appSel, &st_cstring, 1);

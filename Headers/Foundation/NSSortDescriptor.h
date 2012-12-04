@@ -52,7 +52,8 @@ extern "C" {
 #endif
 #if     GS_NONFRAGILE
 #else
-  /* Pointer to private additional data used to avoid breaking ABI
+  /* 
+   * Pointer to private additional data used to avoid breaking ABI
    * when we don't have the non-fragile ABI available.
    * Use this mechanism rather than changing the instance variable
    * layout (see Source/GSInternal.h for details).
@@ -61,26 +62,14 @@ extern "C" {
 #endif
 }
 
-/** Returns a flag indicating whether the sort descriptor sorts objects
- * in ascending order (YES) or descending order (NO).
- */
-- (BOOL) ascending;
-
-/** Returns the result of comparing object1 to object2 using the property
- * whose key is defined in the receiver and using the selector of the
- * receiver.  If the receiver performs a descending order sort, the
- * result of this comparison is the opposite of that prroduced by
- * applying the selector.
- */
-- (NSComparisonResult) compareObject: (id)object1 toObject: (id)object2;
-
-/** Initialises the receiver for comparisons using the 'compare:' selector
+/**
+ * Initialises the receiver for comparisons using the 'compare:' selector
  * and the specified key and ordering.
  */
 - (id) initWithKey: (NSString *)key
-	 ascending: (BOOL)ascending;
+         ascending: (BOOL)ascending;
 
-/** <init />
+/** 
  * Initialises the receiver to perform comparisons in the specified order
  * using selector to compar the property key of each object.
  */
@@ -88,18 +77,45 @@ extern "C" {
          ascending: (BOOL)ascending
           selector: (SEL)selector;
 
-/** Returns the key used to obtain the property on which comparisons are based.
+
++ (id) sortDescriptorWithKey: (NSString *)key
+                   ascending: (BOOL)ascending;
+
++ (id) sortDescriptorWithKey: (NSString *)key
+                   ascending: (BOOL)ascending
+                    selector: (SEL)selector;
+
+/** 
+ * Returns a flag indicating whether the sort descriptor sorts objects
+ * in ascending order (YES) or descending order (NO).
+ */
+- (BOOL) ascending;
+
+/** 
+ * Returns the key used to obtain the property on which comparisons are based.
  */
 - (NSString *) key;
 
-/** Returns the selector used to compare the properties of objects.
+/**
+ * Returns the selector used to compare the properties of objects.
  */
 - (SEL) selector;
 
-/** Returns a copy of the receiver which compares and sorts in reversed
+/** 
+ * Returns the result of comparing object1 to object2 using the property
+ * whose key is defined in the receiver and using the selector of the
+ * receiver.  If the receiver performs a descending order sort, the
+ * result of this comparison is the opposite of that prroduced by
+ * applying the selector.
+ */
+- (NSComparisonResult) compareObject: (id)object1 toObject: (id)object2;
+
+/** 
+ * Returns a copy of the receiver which compares and sorts in reversed
  * order.
  */
 - (id) reversedSortDescriptor;
+
 @end
 
 @interface NSArray (NSSortDescriptorSorting)
