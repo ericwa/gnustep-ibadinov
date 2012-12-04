@@ -586,7 +586,7 @@ NSString * const NSFileHandleOperationException
 /**
  * Call -readDataInBackgroundAndNotifyLength:forModes: with nil modes.
  */
-- (void) readDataInBackgroundAndNotifyLength: (unsigned)len
+- (void) readDataInBackgroundAndNotifyLength: (NSUInteger)len
 {
   [self readDataInBackgroundAndNotifyLength: len forModes: nil];
 }
@@ -595,7 +595,7 @@ NSString * const NSFileHandleOperationException
  * Set up an asynchronous read operation which will cause a notification to
  * be sent when the specified amount of data (or end of file) is read.
  */
-- (void) readDataInBackgroundAndNotifyLength: (unsigned)len
+- (void) readDataInBackgroundAndNotifyLength: (NSUInteger)len
 				    forModes: (NSArray*)modes
 {
   [self subclassResponsibility: _cmd];

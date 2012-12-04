@@ -184,22 +184,25 @@ GS_EXPORT NSString * const NSFileHandleOperationException;
 // GNUstep class extensions
 
 @interface NSFileHandle (GNUstepExtensions)
+
 + (id) fileHandleAsServerAtAddress: (NSString*)address
-			   service: (NSString*)service
-			  protocol: (NSString*)protocol;
+                           service: (NSString*)service
+                          protocol: (NSString*)protocol;
 + (id) fileHandleAsClientAtAddress: (NSString*)address
-			   service: (NSString*)service
-			  protocol: (NSString*)protocol;
+                           service: (NSString*)service
+                          protocol: (NSString*)protocol;
+
 + (id) fileHandleAsClientInBackgroundAtAddress: (NSString*)address
-				       service: (NSString*)service
-				      protocol: (NSString*)protocol;
+                                       service: (NSString*)service
+                                      protocol: (NSString*)protocol;
 + (id) fileHandleAsClientInBackgroundAtAddress: (NSString*)address
-				       service: (NSString*)service
-				      protocol: (NSString*)protocol
-				      forModes: (NSArray*)modes;
-- (void) readDataInBackgroundAndNotifyLength: (unsigned)len;
-- (void) readDataInBackgroundAndNotifyLength: (unsigned)len
-				    forModes: (NSArray*)modes;
+                                       service: (NSString*)service
+                                      protocol: (NSString*)protocol
+                                      forModes: (NSArray*)modes;
+
+- (void) readDataInBackgroundAndNotifyLength: (NSUInteger)len;
+- (void) readDataInBackgroundAndNotifyLength: (NSUInteger)len
+                                    forModes: (NSArray*)modes;
 - (BOOL) readInProgress;
 - (NSString*) socketAddress;
 - (NSString*) socketLocalAddress;
@@ -210,6 +213,7 @@ GS_EXPORT NSString * const NSFileHandleOperationException;
 - (void) writeInBackgroundAndNotify: (NSData*)item forModes: (NSArray*)modes;
 - (void) writeInBackgroundAndNotify: (NSData*)item;
 - (BOOL) writeInProgress;
+
 @end
 
 /**

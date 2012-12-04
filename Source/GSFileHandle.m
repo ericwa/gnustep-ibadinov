@@ -1394,8 +1394,8 @@ NSString * const GSSOCKSRecvAddr = @"GSSOCKSRecvAddr";
   [self watchReadDescriptorForModes: modes];
 }
 
-- (void) readDataInBackgroundAndNotifyLength: (unsigned)len
-				    forModes: (NSArray*)modes
+- (void) readDataInBackgroundAndNotifyLength: (NSUInteger)len
+                                    forModes: (NSArray*)modes
 {
   NSMutableData	*d;
 
