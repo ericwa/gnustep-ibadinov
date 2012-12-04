@@ -113,7 +113,8 @@ static const int8_t typeInfoTable[] =
   [GSObjCQualifierOut]            = -GSObjCQualifierOutMask,
   [GSObjCQualifierByCopy]         = -GSObjCQualifierByCopyMask,
   [GSObjCQualifierByRef]          = -GSObjCQualifierByRefMask,
-  [GSObjCQualifierInvisible]      = -GSObjCQualifierOneWayMask,
+  [GSObjCQualifierOneWay]         = -GSObjCQualifierOneWayMask,
+  [GSObjCQualifierInvisible]      = -GSObjCQualifierInvisible,
   /* ensure an appropriate table size */
   [GSObjCTypeMax]                 = 0
 };
