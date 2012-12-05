@@ -64,11 +64,6 @@ typedef struct	{
 }
 @end
 
-@interface GSDummyInvocation : NSInvocation
-{
-}
-@end
-
 @interface NSInvocation (DistantCoding)
 - (BOOL) encodeWithDistantCoder: (NSCoder*)coder passPointers: (BOOL)passp;
 @end

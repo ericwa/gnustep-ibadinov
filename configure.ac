@@ -2754,37 +2754,39 @@ if test $enable_ffcall = yes -a $ffi_ok = yes; then
   AC_MSG_RESULT($have_working_trampoline)
 fi
 
-if test $ffi_ok = no; then
-  AC_MSG_RESULT(none)
-  echo
-  if test $have_forward_hook = no; then
-    echo "You do not have an up-to-date libobjc library installed"
-  elif test "$have_working_trampoline" = no; then
-    echo "You have ffcall, but it does not work properly. Most likely because"
-    echo "your system's security policy is blocking some parts of ffcall"
-    echo "we recommend installing libffi instead."
-  else
-    echo "You do not have either ffcall or libffi installed/enabled, or configure needs"
-    echo "--with-ffi-include and/or --with-ffi-library flags so GNUstep can find them,"
-    echo "or you have ffcall but gnustep-make is configured to use native exceptions"
-    echo "(native exceptions are not compatible with ffcall)."
-  fi
-  echo "GNUstep requires libffi (or ffcall) and proper libobjc hooks to do"
-  echo "invocations and DO."
-  echo "(This does not apply on apple-apple-apple systems where DO is"
-  echo "not compatible with other GNUstep systems.)"
-  if test $enable_invocations = yes; then
-    echo
-    echo "You most likely do not want to build base without invocation support."
-    echo "Many things (including Distributed Objects and undo/redo), won't work"
-    echo "at all without invocations."
-    echo "If you really want to build -base without invocation support,"
-    echo "add --disable-invocations to the configure arguments."
-    echo "For more information, read the GNUstep build guide, ffcall section:"
-    echo "http://gnustep.made-it.com/BuildGuide/index.html"
-    AC_MSG_ERROR([Incomplete support for ffi functionality.])
-  fi
-  AC_MSG_WARN([Incomplete support for ffi funtionality.])
+AC_MSG_RESULT($ffi_ok)
+if test "$OBJC_RUNTIME_LIB" != "nx" -a "$OBJC_RUNTIME_LIB" != "apple"; then
+    if test $ffi_ok = no; then
+      echo
+      if test $have_forward_hook = no; then
+        echo "You do not have an up-to-date libobjc library installed"
+      elif test "$have_working_trampoline" = no; then
+        echo "You have ffcall, but it does not work properly. Most likely because"
+        echo "your system's security policy is blocking some parts of ffcall"
+        echo "we recommend installing libffi instead."
+      else
+        echo "You do not have either ffcall or libffi installed/enabled, or configure needs"
+        echo "--with-ffi-include and/or --with-ffi-library flags so GNUstep can find them,"
+        echo "or you have ffcall but gnustep-make is configured to use native exceptions"
+        echo "(native exceptions are not compatible with ffcall)."
+      fi
+      echo "GNUstep requires libffi (or ffcall) and proper libobjc hooks to do"
+      echo "invocations and DO."
+      echo "(This does not apply on apple-apple-apple systems where DO is"
+      echo "not compatible with other GNUstep systems.)"
+      if test $enable_invocations = yes; then
+        echo
+        echo "You most likely do not want to build base without invocation support."
+        echo "Many things (including Distributed Objects and undo/redo), won't work"
+        echo "at all without invocations."
+        echo "If you really want to build -base without invocation support,"
+        echo "add --disable-invocations to the configure arguments."
+        echo "For more information, read the GNUstep build guide, ffcall section:"
+        echo "http://gnustep.made-it.com/BuildGuide/index.html"
+        AC_MSG_ERROR([Incomplete support for ffi functionality.])
+      fi
+      AC_MSG_WARN([Incomplete support for ffi funtionality.])
+    fi
 fi
 AC_SUBST(WITH_FFI)
 
