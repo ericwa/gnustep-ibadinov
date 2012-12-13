@@ -30,6 +30,9 @@ typedef enum GSSocks5ResponseStatus {
     GSSocks5ResponseStatusAddressTypeNotSupported   = 0x8,
 } GSSocks5ResponseStatus;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-align"
+
 @implementation GSSocks5Parser
 
 + (void)load
@@ -206,3 +209,5 @@ typedef enum GSSocks5ResponseStatus {
 }
 
 @end
+
+#pragma GCC diagnostic pop

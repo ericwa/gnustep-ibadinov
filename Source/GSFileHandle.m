@@ -120,66 +120,82 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
 - (void) receivedEventWrite;
 @end
 
+#if !defined (__GNUC__)
+#  define __builtin_expect(expression, value) expression
+#endif
+
 @implementation GSFileHandle
 
 /**
  * Encapsulates low level read operation to get data from the operating
  * system.
  */
-- (NSInteger) read: (void*)buf length: (NSUInteger)len
+- (NSInteger)read:(void *)buf length:(NSUInteger)len
 {
-  ssize_t	result;
-
-  do
+    ssize_t	result;
+    
+#if NSUIntegerMax > UINT_MAX
+    if (__builtin_expect(gzDescriptor && len > UINT_MAX, NO)) {
+        [NSException raise:NSRangeException format:@"Maximum read size with gzip is %u", UINT_MAX];
+    }
+#endif
+    
+    do
     {
 #if	USE_ZLIB
-      if (gzDescriptor != 0)
-	{
-	  result = gzread(gzDescriptor, buf, len);
-	}
-      else
+        if (gzDescriptor)
+        {
+            result = gzread(gzDescriptor, buf, (unsigned)len);
+        }
+        else
 #endif
-      if (isSocket)
-	{
-	  result = recv(descriptor, buf, len, 0);
-	}
-      else
-	{
-	  result = read(descriptor, buf, len);
-	}
+            if (isSocket)
+            {
+                result = recv(descriptor, buf, len, 0);
+            }
+            else
+            {
+                result = read(descriptor, buf, len);
+            }
     }
-  while (result < 0 && EINTR == errno);
-  return result;
+    while (result < 0 && EINTR == errno);
+    return result;
 }
 
 /**
  * Encapsulates low level write operation to send data to the operating
  * system.
  */
-- (NSInteger) write: (const void*)buf length: (NSUInteger)len
+- (NSInteger)write:(const void *)buf length:(NSUInteger)len
 {
-  ssize_t	result;
-
-  do
+    ssize_t	result;
+    
+#if NSUIntegerMax > UINT_MAX
+    if (__builtin_expect(gzDescriptor && len > UINT_MAX, NO)) {
+        [NSException raise:NSRangeException format:@"Maximum write size with gzip is %u", UINT_MAX];
+    }
+#endif
+    
+    do
     {
 #if	USE_ZLIB
-    if (gzDescriptor != 0)
-      {
-	result = gzwrite(gzDescriptor, (char*)buf, len);
-      }
-    else
+        if (gzDescriptor != 0)
+        {
+            result = gzwrite(gzDescriptor, (char *)buf, (unsigned)len);
+        }
+        else
 #endif
-      if (isSocket)
-	{
-	  result = send(descriptor, buf, len, 0);
-	}
-      else
-	{
-	  result = write(descriptor, buf, len);
-	}
+            if (isSocket)
+            {
+                result = send(descriptor, buf, len, 0);
+            }
+            else
+            {
+                result = write(descriptor, buf, len);
+            }
     }
-  while (result < 0 && EINTR == errno);
-  return result;
+    while (result < 0 && EINTR == errno);
+    return result;
 }
 
 + (id) allocWithZone: (NSZone*)z

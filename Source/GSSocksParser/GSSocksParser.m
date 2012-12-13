@@ -3,11 +3,9 @@
 
 static NSMutableDictionary *GSSocksParserSubclasses;
 
-#if !defined (GNUSTEP) && defined (__OBJC2__)
-@interface NSObject (Objc2Missing)
+@interface NSObject (SubclassResponsibility)
 - subclassResponsibility:(SEL)aSelector;
 @end
-#endif
 
 @implementation GSSocksParser
 

@@ -12,6 +12,9 @@ typedef enum GSSocks4ResponseStatus {
     GSSocks4ResponseStatusUserNotConfirmed  = 0x5d,
 } GSSocks4ResponseStatus;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-align"
+
 @implementation GSSocks4Parser
 
 - (id)initWithConfiguration:(NSDictionary *)aConfiguration
@@ -107,3 +110,5 @@ typedef enum GSSocks4ResponseStatus {
 }
 
 @end
+
+#pragma GCC diagnostic pop

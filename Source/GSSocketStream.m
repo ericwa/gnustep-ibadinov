@@ -742,7 +742,7 @@ static NSArray  *keys = nil;
     }
     
     NSDictionary    *configuration = [istream propertyForKey:NSStreamSOCKSProxyConfigurationKey];
-    struct sockaddr	*socketAddress = [istream _address];
+    struct sockaddr *socketAddress = [istream _address];
     
     NSString        *address;
     NSUInteger      port;
@@ -762,7 +762,7 @@ static NSArray  *keys = nil;
         return nil;
     }
     address = [NSString stringWithUTF8String:buffer];
-    port = ntohs(((struct sockaddr_in *)socketAddress)->sin_port);
+    port = GSPrivateSockaddrPort(socketAddress);
     
     parser = [[GSSocksParser alloc] initWithConfiguration:configuration
                                                   address:address
@@ -2380,7 +2380,7 @@ setNonBlocking(SOCKET fd)
 
 - (id) initToAddr: (NSString*)addr port: (NSInteger)port
 {
-  if ([super init] != nil)
+  if ((self = [super init]))
     {
       if ([addr length] == 0)
         {
