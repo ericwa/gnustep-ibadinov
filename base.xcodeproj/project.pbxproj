@@ -461,6 +461,14 @@
 		18528A001613AB940016729B /* GSRunLoopCtxt.m in Sources */ = {isa = PBXBuildFile; fileRef = 189070101610BF3C0003C892 /* GSRunLoopCtxt.m */; };
 		18528A011613AB940016729B /* NSStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 189070121610BF3C0003C892 /* NSStream.m */; };
 		185391931625FD0C0015BDFA /* NSKeyedUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA71610BF3C0003C892 /* NSKeyedUnarchiver.m */; };
+		18641D161678AD04003C6E11 /* GSSocks4Parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 18641D0E1678AD04003C6E11 /* GSSocks4Parser.h */; };
+		18641D181678AD04003C6E11 /* GSSocks5Parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 18641D101678AD04003C6E11 /* GSSocks5Parser.h */; };
+		18641D1A1678AD04003C6E11 /* GSSocksParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 18641D121678AD04003C6E11 /* GSSocksParser.h */; };
+		18641D1C1678AD04003C6E11 /* GSSocksParserPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 18641D141678AD04003C6E11 /* GSSocksParserPrivate.h */; };
+		18641D1F1678AD34003C6E11 /* GSSocks4Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D0F1678AD04003C6E11 /* GSSocks4Parser.m */; };
+		18641D201678AD39003C6E11 /* GSSocks5Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D111678AD04003C6E11 /* GSSocks5Parser.m */; };
+		18641D211678AD41003C6E11 /* GSSocksParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D131678AD04003C6E11 /* GSSocksParser.m */; };
+		18641D221678AD46003C6E11 /* GSSocksParserPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D151678AD04003C6E11 /* GSSocksParserPrivate.m */; };
 		18950A7E1628886A009D6FE7 /* KVC_basic.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18950A7D1628886A009D6FE7 /* KVC_basic.1 */; };
 		18950A84162888DC009D6FE7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
 		18950A87162888F3009D6FE7 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
@@ -850,6 +858,14 @@
 		185289D31613A1060016729B /* pathxml.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = pathxml.m4; sourceTree = "<group>"; };
 		185289D41613A1060016729B /* procfs-exe-link.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "procfs-exe-link.m4"; sourceTree = "<group>"; };
 		185289D51613A1060016729B /* procfs.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = procfs.m4; sourceTree = "<group>"; };
+		18641D0E1678AD04003C6E11 /* GSSocks4Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSocks4Parser.h; sourceTree = "<group>"; };
+		18641D0F1678AD04003C6E11 /* GSSocks4Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSocks4Parser.m; sourceTree = "<group>"; };
+		18641D101678AD04003C6E11 /* GSSocks5Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSocks5Parser.h; sourceTree = "<group>"; };
+		18641D111678AD04003C6E11 /* GSSocks5Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSocks5Parser.m; sourceTree = "<group>"; };
+		18641D121678AD04003C6E11 /* GSSocksParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSocksParser.h; sourceTree = "<group>"; };
+		18641D131678AD04003C6E11 /* GSSocksParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSocksParser.m; sourceTree = "<group>"; };
+		18641D141678AD04003C6E11 /* GSSocksParserPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSocksParserPrivate.h; sourceTree = "<group>"; };
+		18641D151678AD04003C6E11 /* GSSocksParserPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSocksParserPrivate.m; sourceTree = "<group>"; };
 		18906E621610BEC80003C892 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = SOURCE_ROOT; };
 		18906E681610BF3C0003C892 /* Foundation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Foundation.h; sourceTree = "<group>"; };
 		18906E691610BF3C0003C892 /* FoundationErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoundationErrors.h; sourceTree = "<group>"; };
@@ -2047,6 +2063,7 @@
 		18394BF21610DC0B00335E85 /* GNUstepBase */ = {
 			isa = PBXGroup;
 			children = (
+				18641D0D1678AD04003C6E11 /* GSSocksParser */,
 				18906F391610BF3C0003C892 /* GSArray.m */,
 				18906F3A1610BF3C0003C892 /* GSAttributedString.m */,
 				18906F351610BF3C0003C892 /* CXXException.m */,
@@ -2389,6 +2406,21 @@
 			);
 			path = config;
 			sourceTree = SOURCE_ROOT;
+		};
+		18641D0D1678AD04003C6E11 /* GSSocksParser */ = {
+			isa = PBXGroup;
+			children = (
+				18641D0E1678AD04003C6E11 /* GSSocks4Parser.h */,
+				18641D0F1678AD04003C6E11 /* GSSocks4Parser.m */,
+				18641D101678AD04003C6E11 /* GSSocks5Parser.h */,
+				18641D111678AD04003C6E11 /* GSSocks5Parser.m */,
+				18641D121678AD04003C6E11 /* GSSocksParser.h */,
+				18641D131678AD04003C6E11 /* GSSocksParser.m */,
+				18641D141678AD04003C6E11 /* GSSocksParserPrivate.h */,
+				18641D151678AD04003C6E11 /* GSSocksParserPrivate.m */,
+			);
+			path = GSSocksParser;
+			sourceTree = "<group>";
 		};
 		18906E351610BC4C0003C892 = {
 			isa = PBXGroup;
@@ -4029,6 +4061,10 @@
 				18394BD11610DA8C00335E85 /* GSeq.h in Headers */,
 				18394B021610D7F800335E85 /* GNUstepBase-Prefix.pch in Headers */,
 				185289E41613A1060016729B /* config.nextcc.h in Headers */,
+				18641D161678AD04003C6E11 /* GSSocks4Parser.h in Headers */,
+				18641D181678AD04003C6E11 /* GSSocks5Parser.h in Headers */,
+				18641D1A1678AD04003C6E11 /* GSSocksParser.h in Headers */,
+				18641D1C1678AD04003C6E11 /* GSSocksParserPrivate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4673,6 +4709,10 @@
 				1852897C161396450016729B /* GSTLS.m in Sources */,
 				1852897D161396450016729B /* GSTimSort.m in Sources */,
 				1852897E161396450016729B /* GSValue.m in Sources */,
+				18641D211678AD41003C6E11 /* GSSocksParser.m in Sources */,
+				18641D221678AD46003C6E11 /* GSSocksParserPrivate.m in Sources */,
+				18641D1F1678AD34003C6E11 /* GSSocks4Parser.m in Sources */,
+				18641D201678AD39003C6E11 /* GSSocks5Parser.m in Sources */,
 				18528957161396130016729B /* GCArray.m in Sources */,
 				18528958161396160016729B /* GCDictionary.m in Sources */,
 				185289591613961A0016729B /* GCObject.m in Sources */,

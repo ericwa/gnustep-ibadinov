@@ -682,593 +682,267 @@ static NSArray  *keys = nil;
 #endif   /* HAVE_GNUTLS */
 
 
+#import "GSSocksParser/GSSocksParser.h"
 
-/*
- * States for socks connection negotiation
- */
-static NSString * const GSSOCKSOfferAuth = @"GSSOCKSOfferAuth";
-static NSString * const GSSOCKSRecvAuth = @"GSSOCKSRecvAuth";
-static NSString * const GSSOCKSSendAuth = @"GSSOCKSSendAuth";
-static NSString * const GSSOCKSAckAuth = @"GSSOCKSAckAuth";
-static NSString * const GSSOCKSSendConn = @"GSSOCKSSendConn";
-static NSString * const GSSOCKSAckConn = @"GSSOCKSAckConn";
-
-@interface	GSSOCKS : GSStreamHandler
-{
-  NSString		*state;		/* Not retained */
-  NSString		*address;
-  NSString		*port;
-  int			roffset;
-  int			woffset;
-  int			rwant;
-  unsigned char		rbuffer[128];
+@interface	GSSOCKS : GSStreamHandler<GSSocksParserDelegate> {
+    GSSocksParser   *parser;
+    NSData          *request;
+    NSMutableData   *response;
+    NSUInteger      bytesRequired;
 }
-- (void) stream: (NSStream*)stream handleEvent: (NSStreamEvent)event;
+
+- (void)stream:(NSStream *)stream handleEvent:(NSStreamEvent)event;
+
 @end
 
 @implementation	GSSOCKS
-+ (void) tryInput: (GSSocketInputStream*)i output: (GSSocketOutputStream*)o
+
++ (void)tryInput:(GSSocketInputStream *)input output:(GSSocketOutputStream *)output
 {
-  NSDictionary          *conf;
-
-  conf = [i propertyForKey: NSStreamSOCKSProxyConfigurationKey];
-  if (conf == nil)
-    {
-      conf = [o propertyForKey: NSStreamSOCKSProxyConfigurationKey];
-      if (conf != nil)
-        {
-          [i setProperty: conf forKey: NSStreamSOCKSProxyConfigurationKey];
+    NSDictionary *configuration;
+    
+    configuration = [input propertyForKey:NSStreamSOCKSProxyConfigurationKey];
+    if (configuration == nil) {
+        configuration = [output propertyForKey:NSStreamSOCKSProxyConfigurationKey];
+        if (configuration != nil) {
+            [input setProperty:configuration forKey:NSStreamSOCKSProxyConfigurationKey];
         }
+    } else {
+        [output setProperty:configuration forKey:NSStreamSOCKSProxyConfigurationKey];
     }
-  else
-    {
-      [o setProperty: conf forKey: NSStreamSOCKSProxyConfigurationKey];
+    
+    if (configuration == nil) {
+        return;
     }
+    
+    id handler = [[self alloc] initWithInput:input output:output];
+    [input _setHandler:handler];
+    [output _setHandler:handler];
+    RELEASE(handler);
+}
 
-  if (conf != nil)
-    {
-      GSSOCKS           *h;
-      struct sockaddr   *sa = [i _address];
-      NSString          *v;
-      BOOL              i6 = NO;
+- (void)reconfigureStreamsForAddress:(NSString *)anAddress port:(NSUInteger)aPort
+{
+    anAddress = [[NSHost hostWithName:anAddress] address];
+    NSInteger family = [anAddress rangeOfString:@":"].location == NSNotFound ? AF_INET : AF_INET6;
+    [istream _setSocketAddress:anAddress port:aPort family:family];
+    [ostream _setSocketAddress:anAddress port:aPort family:family];    
+}
 
-      v = [conf objectForKey: NSStreamSOCKSProxyVersionKey];
-      if ([v isEqualToString: NSStreamSOCKSProxyVersion4] == YES)
-        {
-          v = NSStreamSOCKSProxyVersion4;
-        }
-      else
-        {
-          v = NSStreamSOCKSProxyVersion5;
-        }
-
-#if     defined(AF_INET6)
-      if (sa->sa_family == AF_INET6)
-        {
-          i6 = YES;
-        }
-      else
+- (id)initWithInput:(GSSocketInputStream *)input
+             output:(GSSocketOutputStream *)output
+{
+    if (!(self = [super initWithInput:input output:output])) {
+        return nil;
+    }
+    if (![istream isKindOfClass:[GSInetInputStream class]] && ![istream isKindOfClass: [GSInet6InputStream class]]) {
+        NSLog(@"Attempt to use SOCKS with non-INET stream will be ignored");
+        DESTROY(self);
+        return nil;
+    }
+    
+    NSDictionary    *configuration = [istream propertyForKey:NSStreamSOCKSProxyConfigurationKey];
+    struct sockaddr	*socketAddress = [istream _address];
+    
+    NSString        *address;
+    NSUInteger      port;
+    /*
+     * Record the host and port that the streams are supposed to be
+     * connecting to.
+     */
+#if defined(AF_INET6)
+    static NSUInteger const bufferSize = INET6_ADDRSTRLEN;
+#else
+    static NSUInteger const bufferSize = INET_ADDRSTRLEN;
 #endif
-      if (sa->sa_family != AF_INET)
-        {
-          GSOnceMLog(@"SOCKS not supported for socket type %d", sa->sa_family);
-          return;
-        }
-
-      if (v == NSStreamSOCKSProxyVersion5)
-        {
-          GSOnceMLog(@"SOCKS 5 not supported yet");
-          return;
-        }
-      else if (i6 == YES)
-        {
-          GSOnceMLog(@"INET6 not supported with SOCKS 4");
-          return;
-        }
-
-      h = [[GSSOCKS alloc] initWithInput: i output: o];
-      [i _setHandler: h];
-      [o _setHandler: h];
-      RELEASE(h);
+    char buffer[bufferSize];
+    if (!inet_ntop(socketAddress->sa_family, socketAddress, buffer, bufferSize)) {
+        NSLog(@"Failed to obtain string representation of upstream address, error: %@", [NSError _last]);
+        DESTROY(self);
+        return nil;
     }
+    address = [NSString stringWithUTF8String:buffer];
+    port = ntohs(((struct sockaddr_in *)socketAddress)->sin_port);
+    
+    parser = [[GSSocksParser alloc] initWithConfiguration:configuration
+                                                  address:address
+                                                     port:port];
+    [parser setDelegate:self];
+    request = nil;
+    response = [[NSMutableData alloc] init];
+    bytesRequired = 0;
+    
+    /*
+     * Now reconfigure the streams so they will actually connect
+     * to the socks proxy server.
+     */
+    address = [configuration objectForKey:NSStreamSOCKSProxyHostKey];
+    port = [[configuration objectForKey:NSStreamSOCKSProxyPortKey] integerValue];
+    [self reconfigureStreamsForAddress:address port:port];
+    return self;
 }
 
-- (void) bye
+- (void)dealloc
 {
-  if (handshake == YES)
+    RELEASE(response);
+    RELEASE(request);
+    [parser setDelegate:nil];
+    RELEASE(parser);
+    [super dealloc];
+}
+
+- (void)hello
+{
+    if (handshake) {
+        return;
+    }
+    handshake = YES;
+    /*
+     * Now send self an event to say we can write, to kick off the
+     * handshake with the SOCKS server.
+     */
+    [self stream:ostream handleEvent:NSStreamEventHasSpaceAvailable];
+}
+
+- (void)bye
+{
+    if (!handshake)
     {
-      GSSocketInputStream	*is = RETAIN(istream);
-      GSSocketOutputStream	*os = RETAIN(ostream);
+        return;
+    }
+    GSSocketInputStream     *input = RETAIN(istream);
+    GSSocketOutputStream    *output = RETAIN(ostream);
+    
+    handshake = NO;
+    
+    [input _setHandler: nil];
+    [output _setHandler: nil];
+    [GSTLSHandler tryInput:input output:output];
+    if ([input streamStatus] == NSStreamStatusOpen) {
+        [input _resetEvents:NSStreamEventOpenCompleted];
+        [input _sendEvent:NSStreamEventOpenCompleted];
+    } else {
+        [input _resetEvents:NSStreamEventErrorOccurred];
+        [input _sendEvent:NSStreamEventErrorOccurred];
+    }
+    if ([output streamStatus] == NSStreamStatusOpen)
+    {
+        [output _resetEvents:NSStreamEventOpenCompleted | NSStreamEventHasSpaceAvailable];
+        [output _sendEvent:NSStreamEventOpenCompleted];
+        [output _sendEvent:NSStreamEventHasSpaceAvailable];
+    } else {
+        [output _resetEvents:NSStreamEventErrorOccurred];
+        [output _sendEvent:NSStreamEventErrorOccurred];
+    }
+    RELEASE(input);
+    RELEASE(output);
+}
 
-      handshake = NO;
+- (NSInteger)read:(uint8_t *)buffer maxLength:(NSUInteger)len
+{
+  return [istream _read:buffer maxLength:len];
+}
 
-      [is _setHandler: nil];
-      [os _setHandler: nil];
-      [GSTLSHandler tryInput: is output: os];
-      if ([is streamStatus] == NSStreamStatusOpen)
+- (NSInteger)write:(const uint8_t *)buffer maxLength:(NSUInteger)len
+{
+    return [ostream _write: buffer maxLength: len];
+}
+
+- (void)stream:(NSStream*)stream handleEvent:(NSStreamEvent)event
+{
+    if (event == NSStreamEventErrorOccurred || [stream streamStatus] == NSStreamStatusError || [stream streamStatus] == NSStreamStatusClosed) {
+        [self bye];
+        return;
+    }
+    switch (event) {
+        case NSStreamEventOpenCompleted:
         {
-	  [is _resetEvents: NSStreamEventOpenCompleted];
-          [is _sendEvent: NSStreamEventOpenCompleted];
+            [parser start];
+            break;
         }
-      else
+        case NSStreamEventHasSpaceAvailable:
         {
-	  [is _resetEvents: NSStreamEventErrorOccurred];
-          [is _sendEvent: NSStreamEventErrorOccurred];
+            NSUInteger requestLength = [request length];
+            NSInteger bytesWritten = [self write:[request bytes] maxLength:requestLength];
+            if (bytesWritten < 0) {
+                [self bye];
+                return;
+            }
+            NSData *requestTail = nil;
+            if (bytesWritten < requestLength) {
+                requestTail = [[NSData alloc] initWithBytes:[request bytes] + bytesWritten
+                                                     length:requestLength - bytesWritten];
+            }
+            [request release];
+            request = requestTail;
+            break;
         }
-      if ([os streamStatus]  == NSStreamStatusOpen)
+        case NSStreamEventHasBytesAvailable:
         {
-	  [os _resetEvents: NSStreamEventOpenCompleted
-	    | NSStreamEventHasSpaceAvailable];
-          [os _sendEvent: NSStreamEventOpenCompleted];
-          [os _sendEvent: NSStreamEventHasSpaceAvailable];
+            if (!bytesRequired) {
+                break;
+            }
+            static NSUInteger const bufferSize = 1024;
+            uint8_t buffer[bufferSize];
+            NSUInteger length = MIN(bufferSize, bytesRequired);
+            
+            NSInteger bytesRead = [self read:buffer maxLength:length];
+            if (bytesRead < 0) {
+                [self bye];
+                return;
+            }
+            [response appendBytes:buffer length:bytesRead];
+            if (!(bytesRequired -= bytesRead)) {
+                [parser parseNextChunk:response];
+                [response setLength:0];
+            }
+            break;
         }
-      else
+        case NSStreamEventErrorOccurred:
+        case NSStreamEventEndEncountered:
         {
-	  [os _resetEvents: NSStreamEventErrorOccurred];
-          [os _sendEvent: NSStreamEventErrorOccurred];
+            [self bye];
+            return;
         }
-      RELEASE(is);
-      RELEASE(os);
-    }
+        default:
+            break;
+    } 
 }
 
-- (void) dealloc
+- (void)parser:(GSSocksParser *)aParser encounteredError:(NSError *)anError
 {
-  RELEASE(address);
-  RELEASE(port);
-  [super dealloc];
+    [istream _recordError:anError];
+    [self bye];
 }
 
-- (void) hello
+- (void)parser:(GSSocksParser *)aParser formedRequest:(NSData *)aRequest
 {
-  if (handshake == NO)
-    {
-      handshake = YES;
-      /* Now send self an event to say we can write, to kick off the
-       * handshake with the SOCKS server.
-       */
-      [self stream: ostream handleEvent: NSStreamEventHasSpaceAvailable];
-    }
+    request = [aRequest retain];
 }
 
-- (id) initWithInput: (GSSocketInputStream*)i
-              output: (GSSocketOutputStream*)o
+- (void)parser:(GSSocksParser *)aParser needsMoreBytes:(NSUInteger)aLength
 {
-  if ((self = [super initWithInput: i output: o]) != nil)
-    {
-      if ([istream isKindOfClass: [GSInetInputStream class]] == NO)
-	{
-	  NSLog(@"Attempt to use SOCKS with non-INET stream ignored");
-	  DESTROY(self);
-	}
-#if	defined(AF_INET6)
-      else if ([istream isKindOfClass: [GSInet6InputStream class]] == YES)
-	{
-          GSOnceMLog(@"INET6 not supported with SOCKS yet...");
-	  DESTROY(self);
-	}
-#endif	/* AF_INET6 */
-      else
-	{
-	  struct sockaddr_in	*addr;
-          NSDictionary          *conf;
-          NSString              *host;
-          int                   pnum;
-
-          /* Record the host and port that the streams are supposed to be
-           * connecting to.
-           */
-	  addr = (struct sockaddr_in*)(void*)[istream _address];
-	  address = [[NSString alloc] initWithUTF8String:
-	    (char*)inet_ntoa(addr->sin_addr)];
-	  port = [[NSString alloc] initWithFormat: @"%d",
-	    (NSInteger)GSSwapBigI16ToHost(addr->sin_port)];
-
-          /* Now reconfigure the streams so they will actually connect
-           * to the socks proxy server.
-           */
-          conf = [istream propertyForKey: NSStreamSOCKSProxyConfigurationKey];
-          host = [conf objectForKey: NSStreamSOCKSProxyHostKey];
-          pnum = [[conf objectForKey: NSStreamSOCKSProxyPortKey] intValue];
-          [istream _setSocketAddress: host port: pnum family: AF_INET];
-          [ostream _setSocketAddress: host port: pnum family: AF_INET];
-	}
-    }
-  return self;
+    bytesRequired += aLength;
 }
 
-- (NSInteger) read: (uint8_t *)buffer maxLength: (NSUInteger)len
+- (void)parser:(GSSocksParser *)aParser finishedWithAddress:(NSString *)anAddress port:(NSUInteger)aPort
 {
-  return [istream _read: buffer maxLength: len];
-}
-
-- (void) stream: (NSStream*)stream handleEvent: (NSStreamEvent)event
-{
-  NSString		*error = nil;
-  NSDictionary		*conf;
-  NSString		*user;
-  NSString		*pass;
-
-  if (event == NSStreamEventErrorOccurred
-    || [stream streamStatus] == NSStreamStatusError
-    || [stream streamStatus] == NSStreamStatusClosed)
-    {
-      [self bye];
-      return;
+    BOOL reconnect = NO;
+    void *socketAddress = [istream _address];
+    if (aPort == GSPrivateSockaddrPort(socketAddress)) {
+        anAddress = [[NSHost hostWithName:anAddress] address];
+        reconnect = ![anAddress isEqualToString:GSPrivateSockaddrHost(socketAddress)];
+    } else
+        reconnect = YES;
+    
+    if (reconnect) {
+        [istream close];
+        [ostream close];
+        [self reconfigureStreamsForAddress:anAddress port:aPort];
+        [istream open];
+        [ostream open];
     }
-
-  conf = [stream propertyForKey: NSStreamSOCKSProxyConfigurationKey];
-  user = [conf objectForKey: NSStreamSOCKSProxyUserKey];
-  pass = [conf objectForKey: NSStreamSOCKSProxyPasswordKey];
-  if ([[conf objectForKey: NSStreamSOCKSProxyVersionKey]
-    isEqual: NSStreamSOCKSProxyVersion4] == YES)
-    {
-    }
-  else
-    {
-      again:
-
-      if (state == GSSOCKSOfferAuth)
-	{
-	  NSInteger result;
-	  NSInteger want;
-	  unsigned char	buf[4];
-
-	  /*
-	   * Authorisation record is at least three bytes -
-	   *   socks version (5)
-	   *   authorisation method bytes to follow (1)
-	   *   say we do no authorisation (0)
-	   *   say we do user/pass authorisation (2)
-	   */
-	  buf[0] = 5;
-	  if (user && pass)
-	    {
-	      buf[1] = 2;
-	      buf[2] = 2;
-	      buf[3] = 0;
-	      want = 4;
-	    }
-	  else
-	    {
-	      buf[1] = 1;
-	      buf[2] = 0;
-	      want = 3;
-	    }
-
-	  result = [ostream _write: buf + woffset maxLength: 4 - woffset];
-	  if (result > 0)
-	    {
-	      woffset += result;
-	      if (woffset == want)
-		{
-		  woffset = 0;
-		  state = GSSOCKSRecvAuth;
-		  goto again;
-		}
-	    }
-	}
-      else if (state == GSSOCKSRecvAuth)
-	{
-	  NSInteger	result;
-
-	  result = [istream _read: rbuffer + roffset maxLength: 2 - roffset];
-	  if (result == 0)
-	    {
-	      error = @"SOCKS end-of-file during negotiation";
-	    }
-	  else if (result > 0)
-	    {
-	      roffset += result;
-	      if (roffset == 2)
-		{
-		  roffset = 0;
-		  if (rbuffer[0] != 5)
-		    {
-		      error = @"SOCKS authorisation response had wrong version";
-		    }
-		  else if (rbuffer[1] == 0)
-		    {
-		      state = GSSOCKSSendConn;
-		      goto again;
-		    }
-		  else if (rbuffer[1] == 2)
-		    {
-		      state = GSSOCKSSendAuth;
-		      goto again;
-		    }
-		  else
-		    {
-		      error = @"SOCKS authorisation response had wrong method";
-		    }
-		}
-	    }
-	}
-      else if (state == GSSOCKSSendAuth)
-	{
-	  NSData *u = [user dataUsingEncoding: NSUTF8StringEncoding];
-	  NSUInteger ul = [u length];
-	  NSData *p = [pass dataUsingEncoding: NSUTF8StringEncoding];
-	  NSUInteger pl = [p length];
-
-	  if (ul < 1 || ul > 255)
-	    {
-	      error = @"NSStreamSOCKSProxyUserKey value too long";
-	    }
-	  else if (ul < 1 || ul > 255)
-	    {
-	      error = @"NSStreamSOCKSProxyPasswordKey value too long";
-	    }
-	  else
-	    {
-        NSInteger	result;
-	      NSInteger want = ul + pl + 3;
-	      unsigned char	buf[want];
-
-	      buf[0] = 5;
-	      buf[1] = ul;
-	      memcpy(buf + 2, [u bytes], ul);
-	      buf[ul + 2] = pl;
-	      memcpy(buf + ul + 3, [p bytes], pl);
-	      result = [ostream _write: buf + woffset
-			     maxLength: want - woffset];
-	      if (result == 0)
-		{
-		  error = @"SOCKS end-of-file during negotiation";
-		}
-	      else if (result > 0)
-		{
-		  woffset += result;
-		  if (woffset == want)
-		    {
-		      state = GSSOCKSAckAuth;
-		      goto again;
-		    }
-		}
-	    }
-	}
-      else if (state == GSSOCKSAckAuth)
-	{
-	  NSInteger	result;
-
-	  result = [istream _read: rbuffer + roffset maxLength: 2 - roffset];
-	  if (result == 0)
-	    {
-	      error = @"SOCKS end-of-file during negotiation";
-	    }
-	  else if (result > 0)
-	    {
-	      roffset += result;
-	      if (roffset == 2)
-		{
-		  roffset = 0;
-		  if (rbuffer[0] != 5)
-		    {
-		      error = @"SOCKS authorisation response had wrong version";
-		    }
-		  else if (rbuffer[1] == 0)
-		    {
-		      state = GSSOCKSSendConn;
-		      goto again;
-		    }
-		  else if (rbuffer[1] == 2)
-		    {
-		      error = @"SOCKS authorisation failed";
-		    }
-		}
-	    }
-	}
-      else if (state == GSSOCKSSendConn)
-	{
-	  unsigned char	buf[10];
-	  NSInteger		want = 10;
-	  NSInteger		result;
-	  const char	*ptr;
-
-	  /*
-	   * Connect command is ten bytes -
-	   *   socks version
-	   *   connect command
-	   *   reserved byte
-	   *   address type
-	   *   address 4 bytes (big endian)
-	   *   port 2 bytes (big endian)
-	   */
-	  buf[0] = 5;	// Socks version number
-	  buf[1] = 1;	// Connect command
-	  buf[2] = 0;	// Reserved
-	  buf[3] = 1;	// Address type (IPV4)
-	  ptr = [address UTF8String];
-	  buf[4] = atoi(ptr);
-	  while (isdigit(*ptr))
-	    ptr++;
-	  ptr++;
-	  buf[5] = atoi(ptr);
-	  while (isdigit(*ptr))
-	    ptr++;
-	  ptr++;
-	  buf[6] = atoi(ptr);
-	  while (isdigit(*ptr))
-	    ptr++;
-	  ptr++;
-	  buf[7] = atoi(ptr);
-	  result = [port intValue];
-	  buf[8] = ((result & 0xff00) >> 8);
-	  buf[9] = (result & 0xff);
-
-	  result = [ostream _write: buf + woffset maxLength: want - woffset];
-	  if (result == 0)
-	    {
-	      error = @"SOCKS end-of-file during negotiation";
-	    }
-	  else if (result > 0)
-	    {
-	      woffset += result;
-	      if (woffset == want)
-		{
-		  rwant = 5;
-		  state = GSSOCKSAckConn;
-		  goto again;
-		}
-	    }
-	}
-      else if (state == GSSOCKSAckConn)
-	{
-	  NSInteger	result;
-
-	  result = [istream _read: rbuffer + roffset
-                        maxLength: rwant - roffset];
-	  if (result == 0)
-	    {
-	      error = @"SOCKS end-of-file during negotiation";
-	    }
-	  else if (result > 0)
-	    {
-	      roffset += result;
-	      if (roffset == rwant)
-		{
-		  if (rbuffer[0] != 5)
-		    {
-		      error = @"connect response from SOCKS had wrong version";
-		    }
-		  else if (rbuffer[1] != 0)
-		    {
-		      switch (rbuffer[1])
-			{
-			  case 1:
-			    error = @"SOCKS server general failure";
-			    break;
-			  case 2:
-			    error = @"SOCKS server says permission denied";
-			    break;
-			  case 3:
-			    error = @"SOCKS server says network unreachable";
-			    break;
-			  case 4:
-			    error = @"SOCKS server says host unreachable";
-			    break;
-			  case 5:
-			    error = @"SOCKS server says connection refused";
-			    break;
-			  case 6:
-			    error = @"SOCKS server says connection timed out";
-			    break;
-			  case 7:
-			    error = @"SOCKS server says command not supported";
-			    break;
-			  case 8:
-			    error = @"SOCKS server says address not supported";
-			    break;
-			  default:
-			    error = @"connect response from SOCKS was failure";
-			    break;
-			}
-		    }
-		  else if (rbuffer[3] == 1)
-		    {
-		      rwant = 10;		// Fixed size (IPV4) address
-		    }
-		  else if (rbuffer[3] == 3)
-		    {
-		      rwant = 7 + rbuffer[4];	// Domain name leading length
-		    }
-		  else if (rbuffer[3] == 4)
-		    {
-		      rwant = 22;		// Fixed size (IPV6) address
-		    }
-		  else
-		    {
-		      error = @"SOCKS server returned unknown address type";
-		    }
-		  if (error == nil)
-		    {
-		      if (roffset < rwant)
-			{
-			  goto again;	// Need address/port bytes
-			}
-		      else
-			{
-			  NSString	*a;
-
-			  if (rbuffer[3] == 1)
-			    {
-			      a = [NSString stringWithFormat: @"%d.%d.%d.%d",
-			        rbuffer[4], rbuffer[5], rbuffer[6], rbuffer[7]];
-			    }
-			  else if (rbuffer[3] == 3)
-			    {
-			      rbuffer[rwant] = '\0';
-			      a = [NSString stringWithUTF8String:
-			        (const char*)rbuffer];
-			    }
-			  else
-			    {
-			      unsigned char	buf[40];
-			      int		i = 4;
-			      int		j = 0;
-
-			      while (i < rwant)
-			        {
-				  int	val;
-
-				  val = rbuffer[i++];
-				  val = val * 256 + rbuffer[i++];
-				  if (i > 4)
-				    {
-				      buf[j++] = ':';
-				    }
-				  snprintf((char*)&buf[j], 5, "%04x", val);
-				  j += 4;
-				}
-			      a = [NSString stringWithUTF8String:
-			        (const char*)buf];
-			    }
-
-			  [istream setProperty: a
-					forKey: GSStreamRemoteAddressKey];
-			  [ostream setProperty: a
-					forKey: GSStreamRemoteAddressKey];
-			  a = [NSString stringWithFormat: @"%d",
-			    rbuffer[rwant-1] * 256 * rbuffer[rwant-2]];
-			  [istream setProperty: a
-					forKey: GSStreamRemotePortKey];
-			  [ostream setProperty: a
-					forKey: GSStreamRemotePortKey];
-			  /* Return immediately after calling -bye as it
-			   * will cause this instance to be deallocated.
-			   */
-			  [self bye];
-			  return;
-			}
-		    }
-		}
-	    }
-	}
-    }
-
-  if ([error length] > 0)
-    {
-      NSError *theError;
-
-      theError = [NSError errorWithDomain: NSCocoaErrorDomain
-	code: 0
-	userInfo: [NSDictionary dictionaryWithObject: error
-	  forKey: NSLocalizedDescriptionKey]];
-      if ([istream streamStatus] != NSStreamStatusError)
-	{
-	  [istream _recordError: theError];
-	}
-      if ([ostream streamStatus] != NSStreamStatusError)
-	{
-	  [ostream _recordError: theError];
-	}
-      [self bye];
-    }
-}
-
-- (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len
-{
-  return [ostream _write: buffer maxLength: len];
+    [self bye];
 }
 
 @end
