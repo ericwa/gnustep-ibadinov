@@ -30,6 +30,9 @@
 - (id<GSSocksParserDelegate>)delegate;
 - (void)setDelegate:(id<GSSocksParserDelegate>)aDelegate;
 
+- (NSString *)address;
+- (NSUInteger)port;
+
 + (void)registerSubclass:(Class)aClass forProtocolVersion:(NSString *)aVersion;
 
 - (void)start;

@@ -159,11 +159,17 @@ typedef enum GSSocks5ResponseStatus {
         GSSocks5ParserStateRequest:
         case GSSocks5ParserStateRequest:
         {
+            GSSocksAddressType type = [self addressType];
             uint8_t request[4] = {
-                0x5, 0x1, 0x0, [self addressType]
+                0x5, 0x1, 0x0, type
             };
             NSMutableData *data = [NSMutableData dataWithBytes:request length:4];
-            [data appendData:[self addressData]];
+            NSData *addressData = [self addressData];
+            if (type == GSSocksAddressTypeDomain) {
+                uint8_t length = (uint8_t)[addressData length];
+                [data appendBytes:&length length:1];
+            }
+            [data appendData:addressData];
             uint16_t portWithNetworkEndianness = htons((uint16_t)port);
             [data appendBytes:&portWithNetworkEndianness length:2];
             

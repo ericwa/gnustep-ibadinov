@@ -54,6 +54,16 @@ static NSMutableDictionary *GSSocksParserSubclasses;
     [previous release];
 }
 
+- (NSString *)address
+{
+    return address;
+}
+
+- (NSUInteger)port
+{
+    return port;
+}
+
 + (void)registerSubclass:(Class)aClass forProtocolVersion:(NSString *)aVersion
 {
     if ([GSSocksParserSubclasses objectForKey:aVersion]) {

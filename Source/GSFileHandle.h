@@ -31,6 +31,7 @@
 #import <Foundation/NSRunLoop.h>
 
 #import <GNUstepBase/GSConfig.h>
+#import "GSSocksParser/GSSocksParser.h"
 
 #if	USE_ZLIB
 #include <zlib.h>
@@ -43,7 +44,7 @@ struct sockaddr_in;
  * and is not intended to be used by anyone else ... it is subject to
  * change or removal without warning.
  */
-@interface GSFileHandle : NSFileHandle <RunLoopEvents>
+@interface GSFileHandle : NSFileHandle <RunLoopEvents, GSSocksParserDelegate>
 {
 #if	GS_EXPOSE(GSFileHandle)
   int			descriptor;
@@ -71,6 +72,7 @@ struct sockaddr_in;
   WSAEVENT  		event;
 #endif
 #endif
+  GSSocksParser *parser;
 }
 
 - (id) initAsClientAtAddress: (NSString*)address

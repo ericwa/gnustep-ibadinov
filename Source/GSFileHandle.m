@@ -42,7 +42,6 @@
 #import "GSNetwork.h"
 #import "GNUstepBase/NSObject+GNUstepBase.h"
 #import "GSFileHandle.h"
-#import "GSSocksParser/GSSocksParser.h"
 
 #import "../Tools/gdomap.h"
 
@@ -106,9 +105,7 @@ static GSFileHandle*	fh_stderr = nil;
 
 static NSString *const SocksConnectNotification = @"SocksConnectNotification";
 static NSString *const SocksReadNotification    = @"SocksReadNotification";
-static NSString *const SocksWriteNotification   = @"SocksReadNotification";
-
-static NSString *const SocksParserKey = @"SocksParserKey";
+static NSString *const SocksWriteNotification   = @"SocksWriteNotification";
 
 static NSString *gsSocks = nil;
 
@@ -205,15 +202,16 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
 
 - (void) dealloc
 {
-  DESTROY(address);
-  DESTROY(service);
-  DESTROY(protocol);
-
-  [self finalize];
-
-  DESTROY(readInfo);
-  DESTROY(writeInfo);
-  [super dealloc];
+    DESTROY(address);
+    DESTROY(service);
+    DESTROY(protocol);
+    
+    [self finalize];
+    
+    DESTROY(readInfo);
+    DESTROY(writeInfo);
+    DESTROY(parser);
+    [super dealloc];
 }
 
 - (void) finalize
@@ -308,6 +306,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
     if (self = [super init]) {
         [self _setupDescriptor:desc];
         closeOnDealloc = flag;
+        parser = nil;
     } else if (flag == YES) {
         close(desc);
     }
@@ -477,7 +476,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
             socksPort = @"1080";
         aProtocol = @"tcp";
         
-        NSHost *host = [NSHost hostWithName:socksHost];
+        NSHost *host = [NSHost hostWithName:anAddress];
         if ([host isEqualToHost:[NSHost currentHost]] || [host isEqualToHost:[NSHost localHost]]) {
             socksHost = socksPort = nil;
         }
@@ -498,12 +497,26 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
         aProtocol = @"tcp";
     }
     
-    address = [anAddress retain];
-    service = [aService retain];
-    
-    NSString *dstHost = socksHost ? socksHost : anAddress;
-    NSString *dstService = socksPort ? socksPort : aService;
-    NSString *notification = socksHost ? SocksConnectNotification : GSFileHandleConnectCompletionNotification;
+    NSString *dstHost, *dstService, *notification;
+    if (socksHost) {
+        dstHost = socksHost;
+        dstService = socksPort;
+        notification = SocksConnectNotification;
+        
+        NSDictionary *configuration = [NSDictionary dictionaryWithObject:NSStreamSOCKSProxyVersion5 forKey:NSStreamSOCKSProxyVersionKey];
+        parser = [[GSSocksParser alloc] initWithConfiguration:configuration
+                                                      address:anAddress
+                                                         port:[aService integerValue]];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(_handleSocksNotification:)
+                                                     name:SocksConnectNotification
+                                                   object:self];
+    } else {
+        dstHost = anAddress;
+        dstService = aService;
+        notification = GSFileHandleConnectCompletionNotification;
+    }
     
     BOOL connected = [self _connectToService:dstService
                                       atHost:dstHost
@@ -560,14 +573,8 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
     }
     
     if (notificationName == SocksConnectNotification) { 
-        NSDictionary *configuration = [NSDictionary dictionaryWithObject:NSStreamSOCKSProxyVersion5 forKey:NSStreamSOCKSProxyVersionKey];
-        GSSocksParser *parser = [[GSSocksParser alloc] initWithConfiguration:configuration
-                                                                     address:address
-                                                                        port:[service integerValue]];
-        [readInfo setObject:parser forKey:SocksParserKey];
-        
+        [parser setDelegate:self];
         [parser start];
-        RELEASE(parser);
     } else if (notificationName == SocksReadNotification) {
         NSData *chunk = [userInfo objectForKey:NSFileHandleNotificationDataItem];
         if (![chunk length]) {
@@ -575,7 +582,6 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
                                          userInfo:userInfo];
             return;
         }
-        GSSocksParser *parser = [readInfo objectForKey:SocksParserKey];
         [parser parseNextChunk:chunk];
     }
 }
@@ -584,6 +590,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
 {
     [self readDataInBackgroundAndNotifyLength:aLength];
     [readInfo setObject:SocksReadNotification forKey:NotificationKey];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_handleSocksNotification:)
                                                  name:SocksReadNotification
@@ -593,8 +600,8 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
 - (void)parser:(GSSocksParser *)aParser formedRequest:(NSData *)aRequest
 {
     [self writeInBackgroundAndNotify:aRequest];
-    
     [[writeInfo lastObject] setObject:SocksWriteNotification forKey:NotificationKey];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_handleSocksNotification:)
                                                  name:SocksWriteNotification
@@ -603,14 +610,18 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
 
 - (void)parser:(GSSocksParser *)aParser finishedWithAddress:(NSString *)anAddress port:(NSUInteger)aPort
 {
-    [[readInfo objectForKey:SocksParserKey] setDelegate:nil];
-    [readInfo removeObjectForKey:SocksParserKey];
-    if (anAddress == address && aPort == [service integerValue]) {
+    [parser setDelegate:nil];
+    [parser release];
+    parser = nil;
+    if ([anAddress isEqualToString:address] && aPort == [service integerValue]) {
         /* Success. Notify everybody */
-        NSMutableDictionary *info = [readInfo mutableCopy];
+        NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:4];
+        [info setObject:self forKey:NSFileHandleNotificationFileHandleItem];
+        [info setObject:address forKey:NSFileHandleNotificationDataItem];
         [info setObject:GSFileHandleConnectCompletionNotification forKey:NotificationKey];
         
-        [self _postNotificationWithInfo:info];
+        [writeInfo addObject:info];
+        [self postWriteNotification];
         RELEASE(info);
     } else {
         BOOL connected = [self _connectToService:[NSString stringWithFormat:@"ld", (long)aPort]
