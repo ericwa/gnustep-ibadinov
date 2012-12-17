@@ -40,6 +40,7 @@
 #import "GSPrivate.h"
 #import "GSStream.h"
 #import "GSSocketStream.h"
+#import "GSSocksParser/GSSocksParser.h"
 #import "GNUstepBase/NSObject+GNUstepBase.h"
 
 #import "GSTLS.h"
@@ -682,8 +683,6 @@ static NSArray  *keys = nil;
 #endif   /* HAVE_GNUTLS */
 
 
-#import "GSSocksParser/GSSocksParser.h"
-
 @interface	GSSOCKS : GSStreamHandler<GSSocksParserDelegate> {
     GSSocksParser   *parser;
     NSData          *request;
@@ -750,18 +749,7 @@ static NSArray  *keys = nil;
      * Record the host and port that the streams are supposed to be
      * connecting to.
      */
-#if defined(AF_INET6)
-    static NSUInteger const bufferSize = INET6_ADDRSTRLEN;
-#else
-    static NSUInteger const bufferSize = INET_ADDRSTRLEN;
-#endif
-    char buffer[bufferSize];
-    if (!inet_ntop(socketAddress->sa_family, socketAddress, buffer, bufferSize)) {
-        NSLog(@"Failed to obtain string representation of upstream address, error: %@", [NSError _last]);
-        DESTROY(self);
-        return nil;
-    }
-    address = [NSString stringWithUTF8String:buffer];
+    address = GSPrivateSockaddrHost(socketAddress);
     port = GSPrivateSockaddrPort(socketAddress);
     
     parser = [[GSSocksParser alloc] initWithConfiguration:configuration
@@ -848,16 +836,27 @@ static NSArray  *keys = nil;
     return [ostream _write: buffer maxLength: len];
 }
 
+- (void)closeAndBye {
+    [istream close];
+    [ostream close];
+    [self bye];
+}
+
 - (void)stream:(NSStream*)stream handleEvent:(NSStreamEvent)event
 {
+    if (!handshake) {
+        return;
+    }
     if (event == NSStreamEventErrorOccurred || [stream streamStatus] == NSStreamStatusError || [stream streamStatus] == NSStreamStatusClosed) {
-        [self bye];
+        [self closeAndBye];
         return;
     }
     switch (event) {
         case NSStreamEventOpenCompleted:
         {
-            [parser start];
+            if (stream == istream) {
+                [parser start];
+            }
             break;
         }
         case NSStreamEventHasSpaceAvailable:
@@ -865,7 +864,7 @@ static NSArray  *keys = nil;
             NSUInteger requestLength = [request length];
             NSInteger bytesWritten = [self write:[request bytes] maxLength:requestLength];
             if (bytesWritten < 0) {
-                [self bye];
+                [self closeAndBye];
                 return;
             }
             NSData *requestTail = nil;
@@ -888,7 +887,7 @@ static NSArray  *keys = nil;
             
             NSInteger bytesRead = [self read:buffer maxLength:length];
             if (bytesRead < 0) {
-                [self bye];
+                [self closeAndBye];
                 return;
             }
             [response appendBytes:buffer length:bytesRead];
@@ -901,7 +900,7 @@ static NSArray  *keys = nil;
         case NSStreamEventErrorOccurred:
         case NSStreamEventEndEncountered:
         {
-            [self bye];
+            [self closeAndBye];
             return;
         }
         default:
@@ -912,12 +911,14 @@ static NSArray  *keys = nil;
 - (void)parser:(GSSocksParser *)aParser encounteredError:(NSError *)anError
 {
     [istream _recordError:anError];
-    [self bye];
+    [self closeAndBye];
 }
 
 - (void)parser:(GSSocksParser *)aParser formedRequest:(NSData *)aRequest
 {
+    id previous = request;
     request = [aRequest retain];
+    [previous release];
 }
 
 - (void)parser:(GSSocksParser *)aParser needsMoreBytes:(NSUInteger)aLength

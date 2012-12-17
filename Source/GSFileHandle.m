@@ -624,7 +624,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
         [self postWriteNotification];
         RELEASE(info);
     } else {
-        BOOL connected = [self _connectToService:[NSString stringWithFormat:@"ld", (long)aPort]
+        BOOL connected = [self _connectToService:[NSString stringWithFormat:@"%ld", (long)aPort]
                                           atHost:anAddress
                                    usingProtocol:@"tcp"
                                      fromAddress:[self socketLocalAddress]
