@@ -462,13 +462,25 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
     
     NSString *socksHost = nil;
     NSString *socksPort = nil;
+    NSString *socksUser = nil;
+    NSString *socksPass = nil;
     if ([aProtocol hasPrefix:@"socks-"]) {
         socksHost = [aProtocol substringFromIndex:6];
     } else if (gsSocks) {
         socksHost = gsSocks;
     }
     if (socksHost && [socksHost length]) {
-        NSRange range = [socksHost rangeOfString:@":"];
+        NSRange range = [socksHost rangeOfString:@"@"];
+        if (range.location != NSNotFound) {
+            socksUser = [socksHost substringToIndex:range.location];
+            socksHost = [socksHost substringFromIndex:NSMaxRange(range)];
+            range = [socksUser rangeOfString:@":"];
+            if (range.location != NSNotFound) {
+                socksPass = [socksUser substringFromIndex:NSMaxRange(range)];
+                socksUser = [socksUser substringToIndex:range.location];
+            }
+        }
+        range = [socksHost rangeOfString:@":"];
         if (range.location != NSNotFound) {
             socksPort = [socksHost substringFromIndex:NSMaxRange(range)];
             socksHost = [socksHost substringToIndex:range.location];
@@ -503,7 +515,14 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
         dstService = socksPort;
         notification = SocksConnectNotification;
         
-        NSDictionary *configuration = [NSDictionary dictionaryWithObject:NSStreamSOCKSProxyVersion5 forKey:NSStreamSOCKSProxyVersionKey];
+        NSMutableDictionary *configuration = [NSMutableDictionary dictionaryWithObject:NSStreamSOCKSProxyVersion5
+                                                                                forKey:NSStreamSOCKSProxyVersionKey];
+        if (socksUser) {
+            [configuration setObject:socksUser forKey:NSStreamSOCKSProxyUserKey];
+            if (socksPass) {
+                [configuration setObject:socksPass forKey:NSStreamSOCKSProxyPasswordKey];
+            }
+        }
         parser = [[GSSocksParser alloc] initWithConfiguration:configuration
                                                       address:anAddress
                                                          port:[aService integerValue]];
