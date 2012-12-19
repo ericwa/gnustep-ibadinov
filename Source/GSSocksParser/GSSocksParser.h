@@ -33,8 +33,6 @@
 - (NSString *)address;
 - (NSUInteger)port;
 
-+ (void)registerSubclass:(Class)aClass forProtocolVersion:(NSString *)aVersion;
-
 - (void)start;
 - (void)parseNextChunk:(NSData *)aChunk;
 

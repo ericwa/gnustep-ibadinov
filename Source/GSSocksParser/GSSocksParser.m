@@ -1,7 +1,7 @@
 #import "GSSocksParser.h"
+#import "GSSocks4Parser.h"
+#import "GSSocks5Parser.h"
 #import <Foundation/NSException.h>
-
-static NSMutableDictionary *GSSocksParserSubclasses;
 
 @interface NSObject (SubclassResponsibility)
 - subclassResponsibility:(SEL)aSelector;
@@ -24,14 +24,22 @@ static NSMutableDictionary *GSSocksParserSubclasses;
                     address:(NSString *)anAddress
                        port:(NSUInteger)aPort
 {
-    NSString *version = NSStreamSOCKSProxyVersion5;
-    if ([aConfiguration objectForKey:NSStreamSOCKSProxyVersionKey]) {
-        version = [aConfiguration objectForKey:NSStreamSOCKSProxyVersionKey];
-    }
+    NSString *version = [aConfiguration objectForKey:NSStreamSOCKSProxyVersionKey];
+    version = version ? version : NSStreamSOCKSProxyVersion5;
+    
     [self release];
-    return [[[GSSocksParserSubclasses objectForKey:version] alloc] initWithConfiguration:aConfiguration
-                                                                                 address:anAddress 
-                                                                                    port:aPort];
+    
+    Class concreteClass;
+    if ([version isEqualToString:NSStreamSOCKSProxyVersion5]) {
+        concreteClass = [GSSocks5Parser class];
+    } else if ([version isEqualToString:NSStreamSOCKSProxyVersion4]) {
+        concreteClass = [GSSocks4Parser class];
+    } else {
+        [NSException raise:NSInternalInconsistencyException format:@"Unsupported socks verion: %@", version];
+    }
+    return [[concreteClass alloc] initWithConfiguration:aConfiguration
+                                                address:anAddress 
+                                                   port:aPort];
 }
 
 - (void)dealloc
@@ -62,20 +70,6 @@ static NSMutableDictionary *GSSocksParserSubclasses;
 - (NSUInteger)port
 {
     return port;
-}
-
-+ (void)registerSubclass:(Class)aClass forProtocolVersion:(NSString *)aVersion
-{
-    if ([GSSocksParserSubclasses objectForKey:aVersion]) {
-        [NSException raise:NSInternalInconsistencyException
-                    format:@"More than one subclass for SOCKS protocol version: %@", aVersion];
-    }
-    [GSSocksParserSubclasses setObject:aClass forKey:aVersion];
-}
-
-+ (void)load
-{
-    GSSocksParserSubclasses = [[NSMutableDictionary alloc] initWithCapacity:2];
 }
 
 - (void)start

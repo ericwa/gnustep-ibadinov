@@ -1,5 +1,6 @@
 #import "GSSocks4Parser.h"
 #import "GSSocksParserPrivate.h"
+#import <arpa/inet.h>
 
 typedef enum GSSocks4InternalError {
     GSSocks4InternalErrorIPv6 = 0x4a
@@ -27,11 +28,6 @@ typedef enum GSSocks4ResponseStatus {
         port = aPort;
     }
     return self;
-}
-
-+ (void)load
-{
-    [self registerSubclass:self forProtocolVersion:NSStreamSOCKSProxyVersion4];
 }
 
 - (void)start

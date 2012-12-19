@@ -1,5 +1,6 @@
 #import "GSSocks5Parser.h"
 #import "GSSocksParserPrivate.h"
+#import <arpa/inet.h>
 
 typedef enum GSSocks5ParserState {
     GSSocks5ParserStateHandshake,
@@ -34,11 +35,6 @@ typedef enum GSSocks5ResponseStatus {
 #pragma GCC diagnostic ignored "-Wcast-align"
 
 @implementation GSSocks5Parser
-
-+ (void)load
-{
-    [self registerSubclass:self forProtocolVersion:NSStreamSOCKSProxyVersion5];
-}
 
 - (id)initWithConfiguration:(NSDictionary *)aConfiguration
                     address:(NSString *)anAddress
