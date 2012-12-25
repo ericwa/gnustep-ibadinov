@@ -84,7 +84,7 @@ static NSDate	*theFuture = nil;
   SEL		selector;
   id		target;
   id		argument;
-  unsigned	order;
+  NSUInteger	order;
 }
 
 - (void) fire;
@@ -269,7 +269,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 + (void) cancelPreviousPerformRequestsWithTarget: (id)target
 {
   NSMutableArray	*perf = [[NSRunLoop currentRunLoop] _timedPerformers];
-  unsigned		count = [perf count];
+  NSUInteger		count = [perf count];
 
   if (count > 0)
     {
@@ -303,7 +303,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 					  object: (id)arg
 {
   NSMutableArray	*perf = [[NSRunLoop currentRunLoop] _timedPerformers];
-  unsigned		count = [perf count];
+  NSUInteger		count = [perf count];
 
   if (count > 0)
     {
@@ -349,14 +349,14 @@ static inline BOOL timerInvalidated(NSTimer *t)
 	      afterDelay: (NSTimeInterval)seconds
 		 inModes: (NSArray*)modes
 {
-  unsigned	count = [modes count];
+  NSUInteger	count = [modes count];
 
   if (count > 0)
     {
       NSRunLoop		*loop = [NSRunLoop currentRunLoop];
       NSString		*marray[count];
       GSTimedPerformer	*item;
-      unsigned		i;
+      NSUInteger		i;
 
       item = [[GSTimedPerformer alloc] initWithSelector: aSelector
 						 target: self
@@ -409,7 +409,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 {
   GSRunLoopCtxt	*context;
   GSIArray	watchers;
-  unsigned	i;
+  NSUInteger	i;
 
   context = NSMapGet(_contextMap, mode);
   if (context == nil)
@@ -424,8 +424,8 @@ static inline BOOL timerInvalidated(NSTimer *t)
   if (i % 1000 == 0 && i > context->maxWatchers)
     {
       context->maxWatchers = i;
-      NSLog(@"WARNING ... there are %u watchers scheduled in mode %@ of %@",
-	i, mode, self);
+      NSLog(@"WARNING ... there are %lu watchers scheduled in mode %@ of %@",
+	(unsigned long)i, mode, self);
     }
 }
 
@@ -436,7 +436,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
   if (context != nil)
     {
       GSIArray	performers = context->performers;
-      unsigned	count = GSIArrayCount(performers);
+      NSUInteger	count = GSIArrayCount(performers);
 
       if (count > 0)
 	{
@@ -444,7 +444,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 	  NSMapEnumerator	enumerator;
 	  GSRunLoopCtxt		*context;
 	  void			*mode;
-	  unsigned		i;
+	  NSUInteger		i;
 
 	  /*
 	   * Copy the array - because we have to cancel the requests
@@ -464,7 +464,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 	      if (context != nil)
 		{
 		  GSIArray	performers = context->performers;
-		  unsigned	tmpCount = GSIArrayCount(performers);
+		  NSUInteger	tmpCount = GSIArrayCount(performers);
 
 		  while (tmpCount--)
 		    {
@@ -521,7 +521,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
   if (context != nil)
     {
       GSIArray	watchers = context->watchers;
-      unsigned	i = GSIArrayCount(watchers);
+      NSUInteger	i = GSIArrayCount(watchers);
 
       while (i-- > 0)
 	{
@@ -582,7 +582,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
   if (context != nil)
     {
       GSIArray	watchers = context->watchers;
-      unsigned	i = GSIArrayCount(watchers);
+      NSUInteger	i = GSIArrayCount(watchers);
 
       while (i-- > 0)
 	{
@@ -816,7 +816,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 {
   GSRunLoopCtxt	*context;
   GSIArray	timers;
-  unsigned      i;
+  NSUInteger      i;
 
   if ([timer isKindOfClass: [NSTimer class]] == NO
     || [timer isProxy] == YES)
@@ -871,8 +871,8 @@ static inline BOOL timerInvalidated(NSTimer *t)
   if (i % 1000 == 0 && i > context->maxTimers)
     {
       context->maxTimers = i;
-      NSLog(@"WARNING ... there are %u timers scheduled in mode %@ of %@",
-	i, mode, self);
+      NSLog(@"WARNING ... there are %lu timers scheduled in mode %@ of %@",
+	(unsigned long)i, mode, self);
     }
 }
 
@@ -962,8 +962,8 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
 	  NSTimer		*t;
 	  NSTimeInterval	ti;
 	  NSTimeInterval	ei;
-          unsigned              c;
-          unsigned              i;
+          NSUInteger              c;
+          NSUInteger              i;
 
 	  ei = 0.0;	// Only needed to avoid compiler warning
 
@@ -1082,7 +1082,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
       if (when == nil)
         {
 	  GSIArray		watchers = context->watchers;
-	  unsigned		i = GSIArrayCount(watchers);
+	  NSInteger		i = GSIArrayCount(watchers);
 
 	  while (i-- > 0)
 	    {
@@ -1346,7 +1346,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
       if (context != nil)
 	{
 	  GSIArray	performers = context->performers;
-	  unsigned	count = GSIArrayCount(performers);
+	  NSUInteger	count = GSIArrayCount(performers);
 
 	  while (count--)
 	    {
@@ -1385,7 +1385,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
       if (context != nil)
 	{
 	  GSIArray	performers = context->performers;
-	  unsigned	count = GSIArrayCount(performers);
+	  NSUInteger	count = GSIArrayCount(performers);
 
 	  while (count--)
 	    {
@@ -1428,7 +1428,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
 		   order: (NSUInteger)order
 		   modes: (NSArray*)modes
 {
-  unsigned		count = [modes count];
+  NSUInteger		count = [modes count];
 
   if (count > 0)
     {
@@ -1442,7 +1442,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
 
       if ([modes isProxy])
 	{
-	  unsigned	i;
+	  NSUInteger	i;
 
 	  for (i = 0; i < count; i++)
 	    {
@@ -1456,8 +1456,8 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
       while (count-- > 0)
 	{
 	  NSString	*mode = array[count];
-	  unsigned	end;
-	  unsigned	i;
+	  NSUInteger	end;
+	  NSUInteger	i;
 	  GSRunLoopCtxt	*context;
 	  GSIArray	performers;
 
@@ -1491,8 +1491,8 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
 	  if (i % 1000 == 0 && i > context->maxPerformers)
 	    {
 	      context->maxPerformers = i;
-	      NSLog(@"WARNING ... there are %u performers scheduled"
-		@" in mode %@ of %@", i, mode, self);
+	      NSLog(@"WARNING ... there are %lu performers scheduled"
+		@" in mode %@ of %@", (unsigned long)i, mode, self);
 	    }
 	}
       RELEASE(item);

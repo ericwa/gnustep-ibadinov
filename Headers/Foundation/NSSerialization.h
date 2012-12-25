@@ -51,7 +51,7 @@ extern "C" {
 - (void) deserializeObjectAt: (id*)object
 		  ofObjCType: (const char *)type
 		    fromData: (NSData*)data
-		    atCursor: (unsigned*)cursor;
+		    atCursor: (NSUInteger*)cursor;
 
 /**
  *  Encode the given object of given type into data, using a string not a
@@ -139,7 +139,7 @@ extern "C" {
  *  +propertyListFromData:mutabilityOption:format:errorDescription:].</em>
  */
 + (id) deserializePropertyListFromData: (NSData*)data
-			      atCursor: (unsigned int*)cursor
+			      atCursor: (NSUInteger*)cursor
 		     mutableContainers: (BOOL)flag;
 
 /**
@@ -162,8 +162,8 @@ extern "C" {
  *  +propertyListFromData:mutabilityOption:format:errorDescription:].</em>
  */
 + (id) deserializePropertyListLazilyFromData: (NSData*)data
-				    atCursor: (unsigned*)cursor
-				      length: (unsigned)length
+				    atCursor: (NSUInteger*)cursor
+				      length: (NSUInteger)length
 			   mutableContainers: (BOOL)flag;
 
 @end

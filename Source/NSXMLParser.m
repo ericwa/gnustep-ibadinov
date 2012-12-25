@@ -603,7 +603,7 @@ static  NSNull  *null = nil;
 @end
 
 static inline NSString *
-NewUTF8STR(const void *ptr, int len)
+NewUTF8STR(const void *ptr, NSUInteger len)
 {
   NSString	*s;
 
@@ -611,7 +611,7 @@ NewUTF8STR(const void *ptr, int len)
 			       length: len
 			     encoding: NSUTF8StringEncoding];
   if (s == nil)
-    NSLog(@"could not convert to UTF8 string! bytes=%p len=%d", ptr, len);
+    NSLog(@"could not convert to UTF8 string! bytes=%p len=%lu", ptr, (unsigned long)len);
   return s;
 }
 
@@ -924,7 +924,7 @@ static SEL	foundIgnorableSel;
  */
 - (NSString*) _uriForPrefix: (NSString*)p
 {
-  unsigned      i = [this->namespaces count];
+  NSUInteger      i = [this->namespaces count];
   NSString      *uri = nil;
 
   while (uri == nil && i-- > 0)
@@ -1366,7 +1366,7 @@ NSLog(@"_processTag <%@%@ %@>", flag?@"/": @"", tag, attributes);
 {
   int c;
   const unsigned char *ep = this->cp;  // should be position behind &
-  int len;
+  NSInteger len;
   unsigned int val;
   NSString *entity;
 

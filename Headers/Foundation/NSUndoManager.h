@@ -95,8 +95,8 @@ GS_EXPORT NSString* const NSUndoManagerWillUndoChangeNotification;
   BOOL			_isUndoing;
   BOOL			_groupsByEvent;
   BOOL			_runLoopGroupingPending;
-  unsigned		_disableCount;
-  unsigned		_levelsOfUndo;
+  NSUInteger		_disableCount;
+  NSUInteger		_levelsOfUndo;
 #endif
 #if     GS_NONFRAGILE
 #else

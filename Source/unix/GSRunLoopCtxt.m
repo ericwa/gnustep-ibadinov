@@ -114,7 +114,7 @@ static const NSMapTableValueCallBacks WatcherMapValueCallBacks =
 {
   if (completed == NO)
     {
-      unsigned i = GSIArrayCount(_trigger);
+      NSUInteger i = GSIArrayCount(_trigger);
 
       while (i-- > 0)
 	{

@@ -189,7 +189,7 @@ newDataWithEncodedPort(NSMessagePort *port)
   unsigned		plen;
   const unsigned char	*name = [port _name];
 
-  plen = 2 + strlen((char*)name);
+  plen = (unsigned)strlen((char*)name) + 2;
 
   data = [[NSMutableData alloc] initWithLength: sizeof(GSPortItemHeader)+plen];
   pih = (GSPortItemHeader*)[data mutableBytes];
@@ -201,6 +201,13 @@ newDataWithEncodedPort(NSMessagePort *port)
   NSDebugFLLog(@"NSMessagePort", @"Encoded port as '%s'", pi->addr);
 
   return data;
+}
+
+NS_INLINE uint32_t
+SwapHostLengthToBig(NSUInteger length)
+{
+    NSCParameterAssert(length <= UINT32_MAX);
+    return GSSwapHostI32ToBig((uint32_t)length);
 }
 
 /* Older systems (Solaris) compatibility */
@@ -388,7 +395,7 @@ static Class	runLoopClass;
   sockAddr.sun_family = AF_LOCAL;
   strncpy(sockAddr.sun_path, (char*)name, sizeof(sockAddr.sun_path));
 
-  if (connect(desc, (struct sockaddr*)&sockAddr, SUN_LEN(&sockAddr)) < 0)
+  if (connect(desc, (struct sockaddr*)&sockAddr, (socklen_t)SUN_LEN(&sockAddr)) < 0)
     {
       if (!GSWOULDBLOCK)
 	{
@@ -548,9 +555,9 @@ static Class	runLoopClass;
 
   if (type != ET_WDESC)
     {
-      unsigned	want;
+      NSUInteger	want;
       void	*bytes;
-      int	res;
+      ssize_t	res;
 
       /*
        * Make sure we have a buffer big enough to hold all the data we are
@@ -905,7 +912,7 @@ static Class	runLoopClass;
 	    {
 	      NSData	*d = newDataWithEncodedPort([self recvPort]);
 
-	      len = write(desc, [d bytes], [d length]);
+	      ssize_t len = write(desc, [d bytes], [d length]);
 	      if (len == (int)[d length])
 		{
 		  NSDebugMLLog(@"NSMessagePort_details",
@@ -923,8 +930,8 @@ static Class	runLoopClass;
 	}
       else
 	{
-	  int		res;
-	  unsigned	l;
+	  ssize_t		res;
+	  NSUInteger	l;
 	  const void	*b;
 
 	  if (wData == nil)
@@ -1281,11 +1288,9 @@ typedef	struct {
 	      NSLog(@"unable to create socket - %@", [NSError _last]);
 	      desc = -1;
 	    }
-	  else if (bind(desc, (struct sockaddr *)&sockAddr,
-	    SUN_LEN(&sockAddr)) < 0)
+	  else if (bind(desc, (struct sockaddr *)&sockAddr, (socklen_t)SUN_LEN(&sockAddr)) < 0)
 	    {
-	      if (connect(desc, (struct sockaddr*)&sockAddr,
-		SUN_LEN(&sockAddr)) < 0)
+	      if (connect(desc, (struct sockaddr*)&sockAddr, (socklen_t)SUN_LEN(&sockAddr)) < 0)
 		{
 		  NSDebugLLog(@"NSMessagePort", @"not live, reseting");
 		  unlink((const char*)socketName);
@@ -1296,8 +1301,7 @@ typedef	struct {
 			[NSError _last]);
 		      desc = -1;
 		    }
-		  else if (bind(desc, (struct sockaddr *)&sockAddr,
-		    SUN_LEN(&sockAddr)) < 0)
+		  else if (bind(desc, (struct sockaddr *)&sockAddr, (socklen_t)SUN_LEN(&sockAddr)) < 0)
 		    {
 		      NSLog(@"unable to bind to %s - %@",
 			sockAddr.sun_path, [NSError _last]);
@@ -1608,7 +1612,7 @@ typedef	struct {
       if ([self isValid] == YES)
 	{
 	  NSArray	*handleArray;
-	  unsigned	i;
+	  NSUInteger	i;
 
 	  M_LOCK(messagePortLock);
 	  NSMapRemove(messagePortMap, (void*)name);
@@ -1788,7 +1792,7 @@ typedef	struct {
 {
   BOOL		sent = NO;
   GSMessageHandle	*h;
-  unsigned	rl;
+  NSUInteger	rl;
 
   if ([self isValid] == NO)
     {
@@ -1820,12 +1824,12 @@ typedef	struct {
   if (h != nil)
     {
       NSMutableData	*header;
-      unsigned		hLength;
-      unsigned		l;
+      NSUInteger		hLength;
+      NSUInteger		l;
       GSPortItemHeader	*pih;
       GSPortMsgHeader	*pmh;
-      unsigned		c = [components count];
-      unsigned		i;
+      NSUInteger		c = [components count];
+      NSUInteger		i;
       BOOL		pack = YES;
 
       /*
@@ -1849,7 +1853,7 @@ typedef	struct {
       l = hLength - sizeof(GSPortItemHeader);
       pih = (GSPortItemHeader*)[header mutableBytes];
       pih->type = GSSwapHostI32ToBig(GSP_HEAD);
-      pih->length = GSSwapHostI32ToBig(l);
+      pih->length = SwapHostLengthToBig(l);
 
       /*
        * The message header contains the message Id and the original count
@@ -1857,8 +1861,8 @@ typedef	struct {
        * simply to hold the header).
        */
       pmh = (GSPortMsgHeader*)&pih[1];
-      pmh->mId = GSSwapHostI32ToBig(msgId);
-      pmh->nItems = GSSwapHostI32ToBig(c);
+      pmh->mId = SwapHostLengthToBig(msgId);
+      pmh->nItems = SwapHostLengthToBig(c);
 
       /*
        * Now insert item header information as required.
@@ -1874,8 +1878,8 @@ typedef	struct {
 	  if ([o isKindOfClass: [NSData class]])
 	    {
 	      GSPortItemHeader	*pih;
-	      unsigned		h = sizeof(GSPortItemHeader);
-	      unsigned		l = [o length];
+	      NSUInteger		h = sizeof(GSPortItemHeader);
+	      NSUInteger		l = [o length];
 	      void		*b;
 
 	      if (pack == YES && hLength + l + h <= NETBLOCK)
@@ -1907,7 +1911,7 @@ typedef	struct {
 #else
 		  pih = (GSPortItemHeader*)b;
 		  pih->type = GSSwapHostI32ToBig(GSP_DATA);
-		  pih->length = GSSwapHostI32ToBig(l);
+		  pih->length = SwapHostLengthToBig(l);
 #endif
 		  memcpy(b+h, [o bytes], l);
 		  [components removeObjectAtIndex: i--];
@@ -1924,7 +1928,7 @@ typedef	struct {
 		  pih = (GSPortItemHeader*)b;
 		  memcpy(b+h, [o bytes], l);
 		  pih->type = GSSwapHostI32ToBig(GSP_DATA);
-		  pih->length = GSSwapHostI32ToBig(l);
+		  pih->length = SwapHostLengthToBig(l);
 		  [components replaceObjectAtIndex: i
 					withObject: d];
 		  RELEASE(d);
@@ -1933,7 +1937,7 @@ typedef	struct {
 	  else if ([o isKindOfClass: messagePortClass])
 	    {
 	      NSData	*d = newDataWithEncodedPort(o);
-	      unsigned	dLength = [d length];
+	      NSUInteger	dLength = [d length];
 
 	      if (pack == YES && hLength + dLength <= NETBLOCK)
 		{

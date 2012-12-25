@@ -54,24 +54,21 @@
  */
 #define	MAX_SUPPORTED_SYSTEM_VERSION	1000000
 
-static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
+static unsigned systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 
 + (void) initialize
 {
-  if (self == [NSCoder class])
+    if (self == [NSCoder class])
     {
-      unsigned	sv;
-
-      /* The GSCoderSystemVersion user default is provided for testing
-       * and to allow new code to communicate (via Distributed Objects)
-       * with systems running older versions.
-       */
-      sv = [[NSUserDefaults standardUserDefaults]
-	integerForKey: @"GSCoderSystemVersion"];
-      if (sv > 0 && sv <= MAX_SUPPORTED_SYSTEM_VERSION)
-	{
-	  systemVersion = sv;
-	} 
+        /* The GSCoderSystemVersion user default is provided for testing
+         * and to allow new code to communicate (via Distributed Objects)
+         * with systems running older versions.
+         */
+        NSInteger sv = [[NSUserDefaults standardUserDefaults] integerForKey: @"GSCoderSystemVersion"];
+        if (sv > 0 && sv <= MAX_SUPPORTED_SYSTEM_VERSION)
+        {
+            systemVersion = (unsigned)sv;
+        } 
     }
 }
 
@@ -512,9 +509,9 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 {
   int	i;
 
-  [aCoder encodeInt: _c forKey: @"NS.count"];
+  [aCoder encodeInteger: _c forKey: @"NS.count"];
   [aCoder encodeInt: *_t forKey: @"NS.type"];
-  [aCoder encodeInt: _s forKey: @"NS.size"];
+  [aCoder encodeInteger: _s forKey: @"NS.size"];
   for (i = 0; i < _c; i++)
     {
       [aCoder encodeValueOfObjCType: _t at: _a];

@@ -214,7 +214,7 @@ static NSRange GSRangeOfCookie(NSString *string);
 
 + (NSDictionary *) requestHeaderFieldsWithCookies: (NSArray *)cookies
 {
-  int version;
+  NSUInteger version;
   NSString *field;
   NSHTTPCookie *ck;
   NSEnumerator *ckenum = [cookies objectEnumerator];
@@ -392,9 +392,9 @@ inrange(ch,'0','9') \
 
 typedef	struct	{
   const unsigned char	*ptr;
-  unsigned	end;
-  unsigned	pos;
-  unsigned	lin;
+  NSUInteger	end;
+  NSUInteger	pos;
+  NSUInteger	lin;
   NSString	*err;
   int           opt;
   BOOL		key;
@@ -428,9 +428,9 @@ static BOOL skipSpace(pldata *pld)
 
 static inline id parseQuotedString(pldata* pld)
 {
-  unsigned	start = ++pld->pos;
-  unsigned	escaped = 0;
-  unsigned	shrink = 0;
+  NSUInteger	start = ++pld->pos;
+  NSUInteger	escaped = 0;
+  NSUInteger	shrink = 0;
   BOOL		hex = NO;
   NSString	*obj;
 
@@ -622,9 +622,9 @@ static inline id parseQuotedString(pldata* pld)
    or and EOL */
 static inline id parseUnquotedString(pldata *pld, char endChar)
 {
-  unsigned	start = pld->pos;
-  unsigned	i;
-  unsigned	length;
+  NSUInteger	start = pld->pos;
+  NSUInteger	i;
+  NSUInteger	length;
   id		obj;
   unichar	*chars;
 
@@ -863,7 +863,7 @@ GSRangeOfCookie(NSString *string)
 	{
 	  /* Look ahead for something that will tell us if this is a
 	     separate cookie or not */
-          unsigned saved_pos = pld->pos;
+          NSUInteger saved_pos = pld->pos;
 	  while (pld->ptr[pld->pos] != '=' && pld->ptr[pld->pos] != ';'
 		&& pld->ptr[pld->pos] != ',' && pld->pos < pld->end )
 	    pld->pos++;

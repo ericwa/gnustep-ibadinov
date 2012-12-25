@@ -1009,7 +1009,7 @@ static NSRecursiveLock *classLock = nil;
   
   cLocaleId = [_localeId UTF8String];
   localeData = ulocdata_open (cLocaleId, &err);
-  strLen = ulocdata_getDelimiter (localeData, delimiterType, result, 32, &err);
+  strLen = ulocdata_getDelimiter (localeData, (ULocaleDataDelimiterType)delimiterType, result, 32, &err);
   ulocdata_close (localeData);
   if (U_SUCCESS(err))
     return [NSString stringWithCharacters: (unichar *)result length: strLen];

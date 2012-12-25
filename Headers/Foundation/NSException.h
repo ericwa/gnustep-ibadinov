@@ -288,7 +288,7 @@ typedef void NSUncaughtExceptionHandler(NSException *exception);
  *  calling NSSetUncaughtExceptionHandler().
  */
 GS_EXPORT NSUncaughtExceptionHandler *
-NSGetUncaughtExceptionHandler();
+NSGetUncaughtExceptionHandler(void);
 
 /**
  *  <p>Sets the exception handler called when an exception is generated and
@@ -397,32 +397,36 @@ GS_EXPORT void _NSRemoveHandler( NSHandler *handler );
 
 @end
 extern NSString *const NSAssertionHandlerKey;
+    
+#if !defined (__GNUC__)
+#  define __builtin_expect(expression, value) expression
+#endif
 
 #ifdef	NS_BLOCK_ASSERTIONS
 #define _NSAssertArgs(condition, desc, args...)		
 #define _NSCAssertArgs(condition, desc, args...)	
 #else
-#define _NSAssertArgs(condition, desc, args...)			\
-    do {							\
-	if (!(condition)) {					\
-	    [[NSAssertionHandler currentHandler] 		\
-	    	handleFailureInMethod: _cmd 			\
-		object: self 					\
-		file: [NSString stringWithUTF8String: __FILE__] 	\
-		lineNumber: __LINE__ 				\
-		description: (desc) , ## args]; 			\
-	}							\
+#define _NSAssertArgs(condition, desc, args...)             \
+    do {                                                    \
+	if (__builtin_expect(!(condition), NO)) {               \
+	    [[NSAssertionHandler currentHandler]                \
+	    	handleFailureInMethod: _cmd                     \
+		object: self                                        \
+		file: [NSString stringWithUTF8String: __FILE__]     \
+		lineNumber: __LINE__                                \
+		description: (desc) , ## args];                     \
+	}                                                       \
     } while(0)
 
-#define _NSCAssertArgs(condition, desc, args...)		\
-    do {							\
-	if (!(condition)) {					\
-	    [[NSAssertionHandler currentHandler] 		\
-	    handleFailureInFunction: [NSString stringWithUTF8String: __PRETTY_FUNCTION__] 				\
-	    file: [NSString stringWithUTF8String: __FILE__] 		\
-	    lineNumber: __LINE__ 				\
-	    description: (desc) , ## args]; 			\
-	}							\
+#define _NSCAssertArgs(condition, desc, args...)                                        \
+    do {                                                                                \
+	if (__builtin_expect(!(condition), NO)) {                                           \
+	    [[NSAssertionHandler currentHandler]                                            \
+	    handleFailureInFunction: [NSString stringWithUTF8String: __PRETTY_FUNCTION__]   \
+	    file: [NSString stringWithUTF8String: __FILE__]                                 \
+	    lineNumber: __LINE__                                                            \
+	    description: (desc) , ## args];                                                 \
+	}                                                                                   \
     } while(0)
 #endif
 

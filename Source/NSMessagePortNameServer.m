@@ -360,7 +360,7 @@ static void clean_up_names(void)
 	    @"couldn't create socket, assuming not live (%m)");
 	  return NO;
 	}
-      if (connect(desc, (struct sockaddr*)&sockAddr, SUN_LEN(&sockAddr)) < 0)
+      if (connect(desc, (struct sockaddr*)&sockAddr, (socklen_t)SUN_LEN(&sockAddr)) < 0)
 	{
 	  unlink([path fileSystemRepresentation]);
 	  unlink(socket_path);

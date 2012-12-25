@@ -110,8 +110,6 @@
 
 #import "GSPrivate.h"
 
-extern BOOL GSScanDouble(unichar*, NSUInteger, double*);
-
 @class	GSString;
 @class	GSMutableString;
 @class	GSPlaceholderString;
@@ -389,9 +387,9 @@ pathSepString()
  * 2. On windows, a root consisting of a single path separator indicates
  * a drive-relative path with no drive ... so the path is relative.
  */
-static unsigned rootOf(NSString *s, unsigned l)
+static NSUInteger rootOf(NSString *s, NSUInteger l)
 {
-  unsigned	root = 0;
+  NSUInteger	root = 0;
 
   if (l > 0)
     {
@@ -442,7 +440,7 @@ static unsigned rootOf(NSString *s, unsigned l)
 					       range: range];
 		  if (range.length > 0 && range.location > 2)
 		    {
-		      unsigned pos = NSMaxRange(range);
+		      NSUInteger pos = NSMaxRange(range);
 
 		      // Found end of UNC host perhaps ... look for share
 		      if (pos < l)
@@ -836,7 +834,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 + (id) stringWithCString: (const char*)byteString
 {
   NSString	*obj;
-  unsigned	length = byteString ? strlen(byteString) : 0;
+  NSUInteger	length = byteString ? strlen(byteString) : 0;
 
   obj = [self allocWithZone: NSDefaultMallocZone()];
   obj = [obj initWithCString: byteString length: length];
@@ -1178,7 +1176,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
  */
 - (id) initWithString: (NSString*)string
 {
-  unsigned	length = [string length];
+  NSUInteger	length = [string length];
 
   if (length > 0)
     {
@@ -1359,7 +1357,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 {
   NSStringEncoding	enc = _DefaultStringEncoding;
   NSData		*d;
-  unsigned int		len;
+  NSUInteger		len;
   const unsigned char	*data_bytes;
 
   d = [[NSDataClass alloc] initWithContentsOfFile: path];
@@ -1425,7 +1423,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
                         error: (NSError**)error
 {
   NSData		*d;
-  unsigned int		len;
+  NSUInteger		len;
   const unsigned char	*data_bytes;
 
   d = [[NSDataClass alloc] initWithContentsOfFile: path];
@@ -1479,7 +1477,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
                         error: (NSError**)error
 {
   NSData		*d;
-  unsigned int		len;
+  NSUInteger		len;
 
   d = [[NSDataClass alloc] initWithContentsOfFile: path];
   if (d == nil)
@@ -1530,7 +1528,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 {
   NSStringEncoding	enc = _DefaultStringEncoding;
   NSData		*d = [NSDataClass dataWithContentsOfURL: url];
-  unsigned int		len = [d length];
+  NSUInteger		len = [d length];
   const unsigned char	*data_bytes;
 
   if (d == nil)
@@ -1574,7 +1572,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
                        error: (NSError**)error
 {
   NSData		*d;
-  unsigned int		len;
+  NSUInteger		len;
   const unsigned char	*data_bytes;
 
   d = [NSDataClass dataWithContentsOfURL: url];
@@ -1626,7 +1624,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
                        error: (NSError**)error
 {
   NSData		*d;
-  unsigned int		len;
+  NSUInteger		len;
 
   d = [NSDataClass dataWithContentsOfURL: url];
   if (d == nil)
@@ -1696,8 +1694,8 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 - (void) getCharacters: (unichar*)buffer
 		 range: (NSRange)aRange
 {
-  unsigned	l = [self length];
-  unsigned	i;
+  NSUInteger	l = [self length];
+  NSUInteger	i;
   unichar	(*caiImp)(NSString*, SEL, NSUInteger);
 
   GS_RANGE_CHECK(aRange, l);
@@ -1738,10 +1736,10 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
   if (data != nil)
     {
       unsigned char	*src = (unsigned char*)[data bytes];
-      unsigned int	slen = [data length];
+      NSUInteger	slen = [data length];
       unsigned char	*dst;
-      unsigned int	spos = 0;
-      unsigned int	dpos = 0;
+      NSUInteger	spos = 0;
+      NSUInteger	dpos = 0;
 
       dst = (unsigned char*)NSZoneMalloc(NSDefaultMallocZone(), slen * 3);
       while (spos < slen)
@@ -1795,8 +1793,8 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
  */
 - (NSString*) stringByAppendingString: (NSString*)aString
 {
-  unsigned	len = [self length];
-  unsigned	otherLength = [aString length];
+  NSUInteger	len = [self length];
+  NSUInteger	otherLength = [aString length];
   NSZone	*z = [self zone];
   unichar	*s = NSZoneMalloc(z, (len+otherLength)*sizeof(unichar));
   NSString	*tmp;
@@ -1981,7 +1979,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 {
   unichar	*buf;
   id		ret;
-  unsigned	len = [self length];
+  NSUInteger	len = [self length];
 
   GS_RANGE_CHECK(aRange, len);
 
@@ -2043,10 +2041,10 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 			    options: (NSUInteger)mask
 			      range: (NSRange)aRange
 {
-  unsigned int	i;
-  unsigned int	start;
-  unsigned int	stop;
-  int		step;
+  NSUInteger	i;
+  NSUInteger	start;
+  NSUInteger	stop;
+  NSInteger		step;
   NSRange	range;
   unichar	(*cImp)(id, SEL, NSUInteger);
   BOOL		(*mImp)(id, SEL, unichar);
@@ -2205,9 +2203,10 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
       
 	  [self getCharacters: charsSelf range: aRange];
 	  [aString getCharacters: charsOther range: NSMakeRange(0, countOther)];
-	  
-	  search = usearch_openFromCollator(charsOther, countOther,
-					    charsSelf, countSelf,
+
+      NSCAssert(countSelf < INT32_MAX && countOther < INT32_MAX, @"String(s) too large");
+	  search = usearch_openFromCollator(charsOther, (int32_t)countOther,
+					    charsSelf, (int32_t)countSelf,
 					    coll, NULL, &status);
 	  if (search != NULL && U_SUCCESS(status))
 	    {
@@ -2282,9 +2281,9 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
  */
 - (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex
 {
-  unsigned	start;
-  unsigned	end;
-  unsigned	length = [self length];
+  NSUInteger	start;
+  NSUInteger	end;
+  NSUInteger	length = [self length];
   unichar	ch;
   unichar	(*caiImp)(NSString*, SEL, NSUInteger);
   NSCharacterSet *nbSet = [NSCharacterSet nonBaseCharacterSet];
@@ -2422,8 +2421,8 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
  */
 - (NSUInteger) hash
 {
-  unsigned	ret = 0;
-  unsigned	len = [self length];
+  NSUInteger	ret = 0;
+  NSUInteger	len = [self length];
 
   if (len > 0)
     {
@@ -2483,8 +2482,8 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
   if (mask & NSLiteralSearch)
     {
       int prefix_len = 0;
-      unsigned	length = [self length];
-      unsigned	aLength = [aString length];
+      NSUInteger	length = [self length];
+      NSUInteger	aLength = [aString length];
       unichar *u;
       unichar a1[length+1];
       unichar *s1 = a1;
@@ -2529,10 +2528,10 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
       BOOL	gotFetchImps = NO;
       NSRange	sRange;
       NSRange	oRange;
-      unsigned	sLength = [self length];
-      unsigned	oLength = [aString length];
-      unsigned	sIndex = 0;
-      unsigned	oIndex = 0;
+      NSUInteger	sLength = [self length];
+      NSUInteger	oLength = [aString length];
+      NSUInteger	sIndex = 0;
+      NSUInteger	oIndex = 0;
 
       if (!sLength)
 	return IMMUTABLE(self);
@@ -2637,7 +2636,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 	   lineSep: (BOOL)flag
 {
   unichar	thischar;
-  unsigned	start, end, len, termlen;
+  NSUInteger	start, end, len, termlen;
   unichar	(*caiImp)(NSString*, SEL, NSUInteger);
 
   len = [self length];
@@ -2836,9 +2835,9 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 - (NSString*) capitalizedString
 {
   unichar	*s;
-  unsigned	count = 0;
+  NSUInteger	count = 0;
   BOOL		found = YES;
-  unsigned	len = [self length];
+  NSUInteger	len = [self length];
 
   if (len == 0)
     return IMMUTABLE(self);
@@ -2890,9 +2889,9 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 {
   static NSCharacterSet	*uc = nil;
   unichar	*s;
-  unsigned	count;
+  NSUInteger	count;
   NSRange	start;
-  unsigned	len = [self length];
+  NSUInteger	len = [self length];
 
   if (len == 0)
     {
@@ -2927,9 +2926,9 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 {
   static NSCharacterSet	*lc = nil;
   unichar	*s;
-  unsigned	count;
+  NSUInteger	count;
   NSRange	start;
-  unsigned	len = [self length];
+  NSUInteger	len = [self length];
 
   if (len == 0)
     {
@@ -3030,7 +3029,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
   if (NSUnicodeStringEncoding == encoding)
     {
       unichar	*u;
-      unsigned	l;
+      NSUInteger	l;
 
       l = [self length];
       m = [NSMutableData dataWithLength: (l + 1) * sizeof(unichar)];
@@ -3181,7 +3180,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 {
   if (encoding == NSUnicodeStringEncoding)
     {
-      unsigned	length = [self length];
+      NSUInteger	length = [self length];
 
       if (maxLength > length * sizeof(unichar))
 	{
@@ -3198,7 +3197,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
   else
     {
       NSData	*d = [self dataUsingEncoding: encoding];
-      unsigned	length = [d length];
+      NSUInteger	length = [d length];
       BOOL	result = (length < maxLength) ? YES : NO;
 
       if (d == nil)
@@ -3244,7 +3243,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 
 - (BOOL) boolValue
 {
-  unsigned	length = [self length];
+  NSUInteger	length = [self length];
 
   if (length > 0)
     {
@@ -3476,7 +3475,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 - (NSData*) dataUsingEncoding: (NSStringEncoding)encoding
 	 allowLossyConversion: (BOOL)flag
 {
-  unsigned	len = [self length];
+  NSUInteger	len = [self length];
   NSData	*d;
 
   if (len == 0)
@@ -3486,7 +3485,7 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
   else if (encoding == NSUnicodeStringEncoding)
     {
       unichar	*u;
-      unsigned	l;
+      NSUInteger	l;
 
       u = (unichar*)NSZoneMalloc(NSDefaultMallocZone(),
 	(len + 1) * sizeof(unichar));
@@ -3716,9 +3715,9 @@ static NSFileManager *fm = nil;
 
 - (NSString*) lastPathComponent
 {
-  unsigned int	l = [self length];
+  NSUInteger	l = [self length];
   NSRange	range;
-  unsigned int	i;
+  NSUInteger	i;
 
   if (l == 0)
     {
@@ -3774,8 +3773,8 @@ static NSFileManager *fm = nil;
 - (NSString*) pathExtension
 {
   NSRange	range;
-  unsigned int	l = [self length];
-  unsigned int	root;
+  NSUInteger	l = [self length];
+  NSUInteger	root;
 
   if (l == 0)
     {
@@ -3825,10 +3824,10 @@ static NSFileManager *fm = nil;
 
 - (NSString*) stringByAppendingPathComponent: (NSString*)aString
 {
-  unsigned	originalLength = [self length];
-  unsigned	length = originalLength;
-  unsigned	aLength = [aString length];
-  unsigned	root;
+  NSUInteger	originalLength = [self length];
+  NSUInteger	length = originalLength;
+  NSUInteger	aLength = [aString length];
+  NSUInteger	root;
   unichar	buf[length+aLength+1];
 
   root = rootOf(aString, aLength);
@@ -3854,7 +3853,7 @@ static NSFileManager *fm = nil;
 	    }
 	  else if (root > 1 && pathSepMember(c))
 	    {
-	      int	i;
+	      NSUInteger	i;
 
 	      for (i = 1; i < root; i++)
 		{
@@ -3923,7 +3922,7 @@ static NSFileManager *fm = nil;
 		  buf[aLength] = pathSepChar();
 		  if (pathSepMember(buf[aLength-1]) == YES)
 		    {
-		      unsigned	pos;
+		      NSUInteger	pos;
 
 		      buf[aLength-1] = pathSepChar();
 		      for (pos = aLength+1; pos < length; pos++)
@@ -3942,9 +3941,9 @@ static NSFileManager *fm = nil;
 
 - (NSString*) stringByAppendingPathExtension: (NSString*)aString
 {
-  unsigned	l = [self length];
-  unsigned 	originalLength = l;
-  unsigned	root;
+  NSUInteger	l = [self length];
+  NSUInteger 	originalLength = l;
+  NSUInteger	root;
 
   if (l == 0)
     {
@@ -3993,10 +3992,10 @@ static NSFileManager *fm = nil;
 
 - (NSString*) stringByDeletingLastPathComponent
 {
-  unsigned int	length;
-  unsigned int	root;
-  unsigned int	end;
-  unsigned int	i;
+  NSUInteger	length;
+  NSUInteger	root;
+  NSUInteger	end;
+  NSUInteger	i;
 
   end = length = [self length];
   if (length == 0)
@@ -4039,8 +4038,8 @@ static NSFileManager *fm = nil;
     {
       NSString	*result;
       unichar	*to;
-      unsigned	o;
-      unsigned	lastComponent = root;
+      NSUInteger	o;
+      NSUInteger	lastComponent = root;
       GS_BEGINITEMBUF(from, (end * 2 * sizeof(unichar)), unichar)
 
       to = from + end;
@@ -4084,8 +4083,8 @@ static NSFileManager *fm = nil;
   NSRange	r0;
   NSRange	r1;
   NSString	*substring;
-  unsigned	l = [self length];
-  unsigned	root;
+  NSUInteger	l = [self length];
+  NSUInteger	root;
 
   if ((root = rootOf(self, l)) == l)
     {
@@ -4129,7 +4128,7 @@ static NSFileManager *fm = nil;
 {
   NSString	*homedir;
   NSRange	firstSlashRange;
-  unsigned	length;
+  NSUInteger	length;
 
   if ((length = [self length]) == 0)
     {
@@ -4169,7 +4168,7 @@ static NSFileManager *fm = nil;
   if (firstSlashRange.location != 1)
     {
       /* It is of the form `~username/blah/...' or '~username' */
-      int	userNameLen;
+      NSInteger	userNameLen;
       NSString	*uname;
 
       if (firstSlashRange.length != 0)
@@ -4236,8 +4235,8 @@ static NSFileManager *fm = nil;
 			   withString: (NSString*)padString
 		      startingAtIndex: (NSUInteger)padIndex
 {
-  unsigned	length = [self length];
-  unsigned	padLength;
+  NSUInteger	length = [self length];
+  NSUInteger	padLength;
 
   if (padString == nil || [padString isKindOfClass: [NSString class]] == NO)
     {
@@ -4324,9 +4323,9 @@ static NSFileManager *fm = nil;
   if (d != nil)
     {
       unsigned char	*p = (unsigned char*)[d mutableBytes];
-      unsigned		l = [d length];
-      unsigned		i = 0;
-      unsigned		j = 0;
+      NSUInteger		l = [d length];
+      NSUInteger		i = 0;
+      NSUInteger		j = 0;
 
       while (i < l)
 	{
@@ -4586,7 +4585,7 @@ static NSFileManager *fm = nil;
 
       if (lstat(&newBuf[8], &st) == 0)
 	{
-	  int	l = strlen(newBuf) - 7;
+	  NSUInteger	l = strlen(newBuf) - 7;
 
 	  memmove(newBuf, &newBuf[8], l);
 	}
@@ -4602,9 +4601,9 @@ static NSFileManager *fm = nil;
   NSMutableString	*s;
   NSRange		r;
   unichar		(*caiImp)(NSString*, SEL, NSUInteger);
-  unsigned int		l = [self length];
+  NSUInteger		l = [self length];
   unichar		c;
-  unsigned		root;
+  NSUInteger		root;
 
   if (l == 0)
     {
@@ -4639,7 +4638,7 @@ static NSFileManager *fm = nil;
    */
   if (root > 0 && YES == pathSepMember((*caiImp)(s, caiSel, root-1)))
     {
-      unsigned	i;
+      NSUInteger	i;
 
       for (i = root; i < l; i++)
 	{
@@ -4791,9 +4790,9 @@ static NSFileManager *fm = nil;
  */
 - (NSString*) stringByTrimmingCharactersInSet: (NSCharacterSet*)aSet
 {
-  unsigned	length = [self length];
-  unsigned	end = length;
-  unsigned	start = 0;
+  NSUInteger	length = [self length];
+  NSUInteger	end = length;
+  NSUInteger	start = 0;
 
   if (aSet == nil)
     {
@@ -4865,8 +4864,8 @@ static NSFileManager *fm = nil;
 + (NSString*) pathWithComponents: (NSArray*)components
 {
   NSString	*s;
-  unsigned	c;
-  unsigned	i;
+  NSUInteger	c;
+  NSUInteger	i;
 
   c = [components count];
   if (c == 0)
@@ -4888,8 +4887,8 @@ static NSFileManager *fm = nil;
 - (BOOL) isAbsolutePath
 {
   unichar	c;
-  unsigned	l = [self length];
-  unsigned	root;
+  NSUInteger	l = [self length];
+  NSUInteger	root;
 
   if (l == 0)
     {
@@ -4944,9 +4943,9 @@ static NSFileManager *fm = nil;
   NSMutableArray	*a;
   NSArray		*r;
   NSString		*s = self;
-  unsigned int		l = [s length];
-  unsigned int		root;
-  unsigned int		i;
+  NSUInteger		l = [s length];
+  NSUInteger		root;
+  NSUInteger		i;
   NSRange		range;
 
   if (l == 0)
@@ -5000,7 +4999,7 @@ static NSFileManager *fm = nil;
 {
   NSMutableArray	*a;
   NSArray		*r;
-  unsigned		i, count = [paths count];
+  NSUInteger		i, count = [paths count];
 
   a = [[NSMutableArray allocWithZone: NSDefaultMallocZone()]
 	initWithCapacity: count];
@@ -5109,9 +5108,10 @@ static NSFileManager *fm = nil;
 
 	  [self getCharacters: charsSelf range: compareRange];
 	  [string getCharacters: charsOther range: NSMakeRange(0, countOther)];
-	  
+
+      NSCAssert(countSelf < INT32_MAX && countOther < INT32_MAX, @"String(s) too large");
 	  result = ucol_strcoll(coll,
-	    charsSelf, countSelf, charsOther, countOther);
+	    charsSelf, (int32_t)countSelf, charsOther, (int32_t)countOther);
 
 	  NSZoneFree(NSDefaultMallocZone(), charsSelf);
 	  NSZoneFree(NSDefaultMallocZone(), charsOther);	  
@@ -5285,7 +5285,7 @@ static NSFileManager *fm = nil;
     }
   else
     {
-      unsigned	count = [self length];
+      NSUInteger	count = [self length];
 
       [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
       if (count > 0)
@@ -5759,7 +5759,7 @@ static NSFileManager *fm = nil;
                                     range: (NSRange)searchRange
 {
   NSRange	range;
-  unsigned int	count = 0;
+  NSUInteger	count = 0;
   GSRSFunc	func;
 
   if ([replace isKindOfClass: NSStringClass] == NO)
@@ -5782,7 +5782,7 @@ static NSFileManager *fm = nil;
 
   if (range.length > 0)
     {
-      unsigned	byLen = [by length];
+      NSUInteger	byLen = [by length];
       SEL	sel;
       void	(*imp)(id, SEL, NSRange, NSString*);
 
@@ -5798,7 +5798,7 @@ static NSFileManager *fm = nil;
 	    }
 	  else
 	    {
-	      unsigned int	newEnd;
+	      NSUInteger	newEnd;
 
 	      newEnd = NSMaxRange(searchRange) + byLen - range.length;
 	      searchRange.location = range.location + byLen;

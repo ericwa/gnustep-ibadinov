@@ -293,7 +293,8 @@ static Class	NSMutableDataMallocClass;
 	}
       else
 	{
-	  c = count;
+	  NSAssert(count < UINT32_MAX, @"Archieved array length is limited to 4 billions");
+	  c = (uint32_t)count;
 	}
     }
 
@@ -802,7 +803,7 @@ static Class	NSMutableDataMallocClass;
 
 - (void) encodeDataObject: (NSData*)anObject
 {
-  unsigned	l = [anObject length];
+  NSUInteger	l = [anObject length];
 
   (*_eValImp)(self, eValSel, @encode(unsigned int), &l);
   if (l)
@@ -1083,18 +1084,19 @@ static Class	NSMutableDataMallocClass;
 /**
  *  Writes out header for GNUstep archive format.
  */
-- (void) serializeHeaderAt: (unsigned)positionInData
+- (void) serializeHeaderAt: (NSUInteger)positionInData
 		   version: (unsigned)systemVersion
-		   classes: (unsigned)classCount
-		   objects: (unsigned)objectCount
-		  pointers: (unsigned)pointerCount
+		   classes: (NSUInteger)classCount
+		   objects: (NSUInteger)objectCount
+		  pointers: (NSUInteger)pointerCount
 {
-  unsigned	headerLength = strlen(PREFIX)+36;
-  char		header[headerLength+1];
-  unsigned	dataLength = [_data length];
+  NSUInteger	headerLength = strlen(PREFIX)+36;
+  char          header[headerLength+1];
+  NSUInteger	dataLength = [_data length];
 
+  NSAssert(classCount < INT_MAX && objectCount < INT_MAX && pointerCount < INT_MAX, @"Counts are limited to size of int");
   snprintf(header, sizeof(header), "%s%08x:%08x:%08x:%08x:",
-    PREFIX, systemVersion, classCount, objectCount, pointerCount);
+    PREFIX, systemVersion, (int)classCount, (int)objectCount, (int)pointerCount);
 
   if (positionInData + headerLength <= dataLength)
     {

@@ -88,10 +88,12 @@ extern "C" {
 - (NSString*) stringByReplacingString: (NSString*)replace
 			   withString: (NSString*)by;
 
+#ifndef GNUSTEP /* declared in NSString */
 /**
  * An obsolete name for -substringWithRange: ... deprecated.
  */
 - (NSString*) substringFromRange: (NSRange)aRange;
+#endif
 
 @end
 

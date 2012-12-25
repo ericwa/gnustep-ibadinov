@@ -103,7 +103,7 @@ strerror_r(int eno, char *buf, int len)
   return [self _systemError: eno];
 }
 
-+ (NSError*) _systemError: (long)code
++ (NSError*) _systemError: (int)code
 {
   NSError	*error;
   NSString	*domain;
@@ -148,7 +148,7 @@ strerror_r(int eno, char *buf, int len)
 # else
   if (result < 0)
     {
-      snprintf(buf, sizeof(buf), "%ld", code);
+      snprintf(buf, sizeof(buf), "%d", code);
     }
   message = [NSString stringWithCString: buf
 			       encoding: [NSString defaultCStringEncoding]];

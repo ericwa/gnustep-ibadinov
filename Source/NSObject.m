@@ -806,7 +806,7 @@ NSAllocateObject (Class aClass, NSUInteger extraBytes, NSZone *zone)
 #endif
 {
   id	new;
-  int	size;
+  size_t	size;
 
   NSCAssert((!class_isMetaClass(aClass)), @"Bad class for new object");
   size = class_getInstanceSize(aClass) + extraBytes + sizeof(struct obj_layout);
@@ -2205,12 +2205,20 @@ static id gs_weak_load(id obj)
  */
 + (id) setVersion: (NSInteger)aVersion
 {
-  if (aVersion < 0)
-    [NSException raise: NSInvalidArgumentException
-	        format: @"%s +setVersion: may not set a negative version",
-			GSClassNameFromObject(self)];
-  class_setVersion(self, aVersion);
-  return self;
+    if (aVersion < 0)
+    {
+        [NSException raise: NSInvalidArgumentException
+                    format: @"%s +setVersion: must not set a negative version",
+         GSClassNameFromObject(self)];
+    }
+    if (aVersion > INT_MAX)
+    {
+        [NSException raise: NSInvalidArgumentException
+                    format: @"%s +setVersion: version must not exceed int size",
+         GSClassNameFromObject(self)];
+    }  
+    class_setVersion(self, (int)aVersion);
+    return self;
 }
 
 /**

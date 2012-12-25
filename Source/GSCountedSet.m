@@ -167,14 +167,15 @@ static GC_descr	nodeDesc;	// Type descriptor for map node.
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  unsigned	count = map.nodeCount;
-  SEL		sel1 = @selector(encodeObject:);
-  IMP		imp1 = [aCoder methodForSelector: sel1];
-  SEL		sel2 = @selector(encodeValueOfObjCType:at:);
-  IMP		imp2 = [aCoder methodForSelector: sel2];
-  const char	*type = @encode(unsigned);
-  GSIMapEnumerator_t	enumerator = GSIMapEnumeratorForMap(&map);
-  GSIMapNode 		node = GSIMapEnumeratorNextNode(&enumerator);
+  NSUInteger    count = map.nodeCount;
+  SEL           sel1 = @selector(encodeObject:);
+  IMP           imp1 = [aCoder methodForSelector: sel1];
+  SEL           sel2 = @selector(encodeValueOfObjCType:at:);
+  IMP           imp2 = [aCoder methodForSelector: sel2];
+  const char    *type = @encode(unsigned);
+    
+  GSIMapEnumerator_t    enumerator = GSIMapEnumeratorForMap(&map);
+  GSIMapNode            node = GSIMapEnumeratorNextNode(&enumerator);
 
   (*imp2)(aCoder, sel2, type, &count);
 

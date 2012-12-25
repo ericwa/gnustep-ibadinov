@@ -99,11 +99,11 @@
  */
 - (NSString*) stringByTrimmingLeadSpaces
 {
-  unsigned	length = [self length];
+  NSUInteger	length = [self length];
 
   if (length > 0)
     {
-      unsigned	start = 0;
+      NSUInteger	start = 0;
       unichar	(*caiImp)(NSString*, SEL, NSUInteger);
       SEL caiSel = @selector(characterAtIndex:);
 
@@ -126,11 +126,11 @@
  */
 - (NSString*) stringByTrimmingTailSpaces
 {
-  unsigned	length = [self length];
+  NSUInteger	length = [self length];
 
   if (length > 0)
     {
-      unsigned	end = length;
+      NSUInteger	end = length;
       unichar	(*caiImp)(NSString*, SEL, NSUInteger);
       SEL caiSel = @selector(characterAtIndex:);
 
@@ -157,12 +157,12 @@
  */
 - (NSString*) stringByTrimmingSpaces
 {
-  unsigned	length = [self length];
+  NSUInteger	length = [self length];
 
   if (length > 0)
     {
-      unsigned	start = 0;
-      unsigned	end = length;
+      NSUInteger	start = 0;
+      NSUInteger	end = length;
       unichar	(*caiImp)(NSString*, SEL, NSUInteger);
       SEL caiSel = @selector(characterAtIndex:);
 
@@ -183,7 +183,7 @@
 	{
           if (start < end)
 	    {
-	      return [self substringFromRange:
+	      return [self substringWithRange:
 		NSMakeRange(start, end - start)];
 	    }
           else
@@ -221,9 +221,11 @@
     return self;
 }
 
+#ifndef GNUSTEP /* defined in NSString */
 - (NSString*) substringFromRange:(NSRange)range
 {
   return [self substringWithRange:range];
 }
+#endif
 
 @end

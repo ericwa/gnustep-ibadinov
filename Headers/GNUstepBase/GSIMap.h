@@ -388,7 +388,7 @@ typedef struct _GSIMapEnumerator GSIMapEnumerator_t;
 typedef GSIMapEnumerator_t	*GSIMapEnumerator;
 
 static INLINE GSIMapBucket
-GSIMapPickBucket(unsigned hash, GSIMapBucket buckets, uintptr_t bucketCount)
+GSIMapPickBucket(NSUInteger hash, GSIMapBucket buckets, uintptr_t bucketCount)
 {
   return buckets + hash % bucketCount;
 }
@@ -558,7 +558,7 @@ GSIMapRemangleBuckets(GSIMapTable map,
 }
 
 static INLINE void
-GSIMapMoreNodes(GSIMapTable map, unsigned required)
+GSIMapMoreNodes(GSIMapTable map, NSUInteger required)
 {
   GSIMapNode	*newArray;
 

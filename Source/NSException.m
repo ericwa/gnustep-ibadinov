@@ -566,8 +566,8 @@ GSListModules()
 {
   NSMutableString *result;
   NSArray *s;
-  int i;
-  int n;
+  NSUInteger i;
+  NSUInteger n;
 
   result = [NSMutableString string];
   s = [self symbols];
@@ -615,8 +615,8 @@ GSListModules()
       char	**strs;
       void	**addr;
       NSString	**symbolArray;
-      unsigned	count;
-      int 	i;
+      NSUInteger	count;
+      NSUInteger 	i;
 
       count = [addresses count];
       addr = alloca(count * sizeof(void*));
@@ -625,7 +625,7 @@ GSListModules()
 	  addr[i] = (void*)[[addresses objectAtIndex: i] unsignedIntegerValue];
 	}
 
-      strs = backtrace_symbols(addr, count);
+      strs = backtrace_symbols(addr, (int)count);
       symbolArray = alloca(count * sizeof(NSString*));
       for (i = 0; i < count; i++)
 	{
@@ -1104,6 +1104,7 @@ callUncaughtHandler(id value)
 
 @end
 
+#if !USER_NATIVE_OBJC_EXCEPTIONS && !BASE_NATIVE_OBJC_EXCEPTIONS
 
 void
 _NSAddHandler (NSHandler* handler)
@@ -1153,6 +1154,8 @@ _NSRemoveHandler (NSHandler* handler)
 #endif
   thread->_exception_handler = handler->next;
 }
+
+#endif /* _NATIVE_OBJC_EXCEPTIONS */
 
 NSUncaughtExceptionHandler *
 NSGetUncaughtExceptionHandler()

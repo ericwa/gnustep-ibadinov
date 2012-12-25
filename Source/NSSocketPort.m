@@ -251,6 +251,13 @@ typedef enum {
 @end
 
 
+NS_INLINE uint32_t
+SwapHostLengthToBig(NSUInteger length)
+{
+    NSCParameterAssert(length <= UINT32_MAX);
+    return GSSwapHostI32ToBig((uint32_t)length);
+}
+
 /*
  * Utility functions for encoding and decoding ports.
  */
@@ -309,7 +316,7 @@ newDataWithEncodedPort(NSSocketPort *port)
   GSPortItemHeader	*pih;
   GSPortInfo		*pi;
   NSMutableData		*data;
-  unsigned		plen;
+  NSUInteger		plen;
   NSString		*addr;
   uint16_t		pnum;
 
@@ -347,7 +354,7 @@ newDataWithEncodedPort(NSSocketPort *port)
   data = [[NSMutableData alloc] initWithLength: sizeof(GSPortItemHeader)+plen];
   pih = (GSPortItemHeader*)[data mutableBytes];
   pih->type = GSSwapHostI32ToBig(GSP_PORT);
-  pih->length = GSSwapHostI32ToBig(plen);
+  pih->length = SwapHostLengthToBig(plen);
   pi = (GSPortInfo*)&pih[1];
   pi->num = GSSwapHostI16ToBig(pnum);
   [addr getCString: pi->addr];
@@ -760,9 +767,9 @@ static Class	runLoopClass;
 
 - (void) receivedEventRead
 {
-  unsigned	want;
+  NSUInteger	want;
   void	*bytes;
-  int	res;
+  ssize_t	res;
 
   /*
    * Make sure we have a buffer big enough to hold all the data we are
@@ -1112,8 +1119,8 @@ static Class	runLoopClass;
         {
           NSData	*d = newDataWithEncodedPort([self recvPort]);
 
-          len = send(desc, [d bytes], [d length], 0);
-          if (len == (int)[d length])
+          ssize_t len = send(desc, [d bytes], [d length], 0);
+          if (len == [d length])
             {
 	      ASSIGN(defaultAddress, GSPrivateSockaddrHost(&sockAddr));
 	      NSDebugMLLog(@"GSTcpHandle",
@@ -1131,8 +1138,8 @@ static Class	runLoopClass;
     }
   else
     {
-      int		res;
-      unsigned	l;
+      ssize_t		res;
+      NSUInteger	l;
       const void	*b;
 
       if (wData == nil)
@@ -2040,7 +2047,7 @@ static Class		tcpPortClass;
 	{
 	  NSMapTable	*thePorts;
 	  NSArray	*handleArray;
-	  unsigned	i;
+	  NSUInteger	i;
 
 	  M_LOCK(tcpPortLock);
 	  thePorts = NSMapGet(tcpPortMap, (void*)(uintptr_t)portNum);
@@ -2273,14 +2280,14 @@ static Class		tcpPortClass;
 }
 
 - (BOOL) sendBeforeDate: (NSDate*)when
-		  msgid: (NSInteger)msgId
+                  msgid: (NSInteger)msgId
              components: (NSMutableArray*)components
                    from: (NSPort*)receivingPort
                reserved: (NSUInteger)length
 {
   BOOL		sent = NO;
   GSTcpHandle	*h;
-  unsigned	rl;
+  NSUInteger	rl;
 
   if ([self isValid] == NO)
     {
@@ -2312,12 +2319,12 @@ static Class		tcpPortClass;
   if (h != nil)
     {
       NSMutableData	*header;
-      unsigned		hLength;
-      unsigned		l;
+      NSUInteger		hLength;
+      NSUInteger		l;
       GSPortItemHeader	*pih;
       GSPortMsgHeader	*pmh;
-      unsigned		c = [components count];
-      unsigned		i;
+      NSUInteger		c = [components count];
+      NSUInteger		i;
       BOOL		pack = YES;
 
       /*
@@ -2341,7 +2348,7 @@ static Class		tcpPortClass;
       l = hLength - sizeof(GSPortItemHeader);
       pih = (GSPortItemHeader*)[header mutableBytes];
       pih->type = GSSwapHostI32ToBig(GSP_HEAD);
-      pih->length = GSSwapHostI32ToBig(l);
+      pih->length = SwapHostLengthToBig(l);
 
       /*
        * The message header contains the message Id and the original count
@@ -2349,8 +2356,8 @@ static Class		tcpPortClass;
        * simply to hold the header).
        */
       pmh = (GSPortMsgHeader*)&pih[1];
-      pmh->mId = GSSwapHostI32ToBig(msgId);
-      pmh->nItems = GSSwapHostI32ToBig(c);
+      pmh->mId = SwapHostLengthToBig(msgId);
+      pmh->nItems = SwapHostLengthToBig(c);
 
       /*
        * Now insert item header information as required.
@@ -2366,8 +2373,8 @@ static Class		tcpPortClass;
 	  if ([o isKindOfClass: [NSData class]])
 	    {
 	      GSPortItemHeader	*pih;
-	      unsigned		h = sizeof(GSPortItemHeader);
-	      unsigned		l = [o length];
+	      NSUInteger		h = sizeof(GSPortItemHeader);
+	      NSUInteger		l = [o length];
 	      void		*b;
 
 	      if (pack == YES && hLength + l + h <= NETBLOCK)
@@ -2399,7 +2406,7 @@ static Class		tcpPortClass;
 #else
 		  pih = (GSPortItemHeader*)b;
 		  pih->type = GSSwapHostI32ToBig(GSP_DATA);
-		  pih->length = GSSwapHostI32ToBig(l);
+		  pih->length = SwapHostLengthToBig(l);
 #endif
 		  memcpy(b+h, [o bytes], l);
 		  [components removeObjectAtIndex: i--];
@@ -2416,7 +2423,7 @@ static Class		tcpPortClass;
 		  pih = (GSPortItemHeader*)b;
 		  memcpy(b+h, [o bytes], l);
 		  pih->type = GSSwapHostI32ToBig(GSP_DATA);
-		  pih->length = GSSwapHostI32ToBig(l);
+		  pih->length = SwapHostLengthToBig(l);
 		  [components replaceObjectAtIndex: i
 					withObject: d];
 		  RELEASE(d);
@@ -2425,7 +2432,7 @@ static Class		tcpPortClass;
 	  else if ([o isKindOfClass: tcpPortClass])
 	    {
 	      NSData	*d = newDataWithEncodedPort(o);
-	      unsigned	dLength = [d length];
+	      NSUInteger	dLength = [d length];
 
 	      if (pack == YES && hLength + dLength <= NETBLOCK)
 		{

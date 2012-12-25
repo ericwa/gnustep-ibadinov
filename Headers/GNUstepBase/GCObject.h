@@ -86,7 +86,7 @@ typedef struct {
   gcInfo	gc;
   id		*_contents;	// C array of content objects
   BOOL		*_isGCObject;	// Is content object collectable?
-  unsigned int	_count;		// Number of content objects.
+  NSUInteger	_count;		// Number of content objects.
 }
 @end
 
@@ -96,8 +96,8 @@ typedef struct {
   gcInfo	gc;
   id		*_contents;
   BOOL		*_isGCObject;
-  unsigned	_count;
-  unsigned	_maxCount;	// Maximum number of content objects.
+  NSUInteger	_count;
+  NSUInteger	_maxCount;	// Maximum number of content objects.
 }
 @end
 

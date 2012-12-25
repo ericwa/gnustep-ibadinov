@@ -83,8 +83,6 @@ static Class	NSMutableStringClass;
 static Class	GSStringClass;
 static Class	GSMutableStringClass;
 
-extern BOOL GSScanDouble(unichar*, NSUInteger, double*);
-
 @class	GSMutableDictionary;
 @interface GSMutableDictionary : NSObject	// Help the compiler
 @end
@@ -451,14 +449,14 @@ foundIgnorableWhitespace: (NSString *)string
 @interface GSBinaryPLParser : NSObject
 {
   NSPropertyListMutabilityOptions	mutability;
-  unsigned              _length;
+  NSUInteger              _length;
   const unsigned char	*_bytes;
   NSData		*data;
-  unsigned		offset_size;	// Number of bytes per table entry
-  unsigned		index_size;	// Number of bytes per table entry
-  unsigned		object_count;	// Number of objects
-  unsigned		root_index;	// Index of root object
-  unsigned		table_start;	// Start address of object table
+  NSUInteger		object_count;	// Number of objects
+  NSUInteger		root_index;	// Index of root object
+  NSUInteger		table_start;	// Start address of object table
+  unsigned          offset_size;	// Number of bytes per table entry
+  unsigned          index_size;	// Number of bytes per table entry
 }
 
 - (id) initWithData: (NSData*)plData
@@ -470,19 +468,19 @@ foundIgnorableWhitespace: (NSString *)string
 
 @interface GSBinaryPLGenerator : NSObject
 {
-  NSMutableData *dest;
-  NSMapTable 	*objectList;
-  NSMutableArray *objectsToDoList;
-  id root;
-
-  // Number of bytes per object table index
-  unsigned int index_size;
-  // Number of bytes per object table entry
-  unsigned int offset_size;
-
-  unsigned int table_start;
-  unsigned int table_size;
-  unsigned int *table;
+    NSMutableData *dest;
+    NSMapTable 	*objectList;
+    NSMutableArray *objectsToDoList;
+    id root;
+    
+    NSUInteger table_start;
+    NSUInteger table_size;
+    unsigned *table;
+    
+    // Number of bytes per object table index
+    unsigned index_size;
+    // Number of bytes per object table entry
+    unsigned offset_size;
 }
 
 + (void) serializePropertyList: (id)aPropertyList
@@ -618,9 +616,9 @@ static void setupQuotables(void)
 
 typedef	struct	{
   const unsigned char	*ptr;
-  unsigned	end;
-  unsigned	pos;
-  unsigned	lin;
+  NSUInteger	end;
+  NSUInteger	pos;
+  NSUInteger	lin;
   NSString	*err;
   NSPropertyListMutabilityOptions opt;
   BOOL		key;
@@ -711,9 +709,9 @@ static BOOL skipSpace(pldata *pld)
 
 static inline id parseQuotedString(pldata* pld)
 {
-  unsigned	start = ++pld->pos;
-  unsigned	escaped = 0;
-  unsigned	shrink = 0;
+  NSUInteger	start = ++pld->pos;
+  NSUInteger	escaped = 0;
+  NSUInteger	shrink = 0;
   BOOL		hex = NO;
   NSString	*obj;
 
@@ -914,9 +912,9 @@ static inline id parseQuotedString(pldata* pld)
 
 static inline id parseUnquotedString(pldata *pld)
 {
-  unsigned	start = pld->pos;
-  unsigned	i;
-  unsigned	length;
+  NSUInteger	start = pld->pos;
+  NSUInteger	i;
+  NSUInteger	length;
   id		obj;
   unichar	*chars;
 
@@ -1114,9 +1112,9 @@ static id parsePlItem(pldata* pld)
 	if (pld->pos < pld->end && pld->ptr[pld->pos] == '*')
 	  {
 	    const unsigned char	*ptr;
-	    unsigned		min;
-	    unsigned		len = 0;
-	    unsigned		i;
+	    NSUInteger		min;
+	    NSUInteger		len = 0;
+	    NSUInteger		i;
 
 	    pld->old = NO;
 	    pld->pos++;
@@ -1223,9 +1221,9 @@ static id parsePlItem(pldata* pld)
 	else
 	  {
 	    NSMutableData	*data;
-	    unsigned	max = pld->end - 1;
+	    NSUInteger	max = pld->end - 1;
 	    unsigned	char	buf[BUFSIZ];
-	    unsigned	len = 0;
+	    NSUInteger	len = 0;
 
 	    data = [[NSMutableData alloc] initWithCapacity: 0];
 	    skipSpace(pld);
@@ -1426,14 +1424,14 @@ static char base64[]
 static void
 encodeBase64(NSData *source, NSMutableData *dest)
 {
-  int		length = [source length];
-  int		enclen = length / 3;
-  int		remlen = length - 3 * enclen;
-  int		destlen = 4 * ((length + 2) / 3);
+  NSInteger		length = [source length];
+  NSInteger		enclen = length / 3;
+  NSInteger		remlen = length - 3 * enclen;
+  NSInteger		destlen = 4 * ((length + 2) / 3);
   unsigned char *sBuf;
   unsigned char *dBuf;
-  int		sIndex = 0;
-  int		dIndex = [dest length];
+  NSInteger		sIndex = 0;
+  NSInteger		dIndex = [dest length];
 
   [dest setLength: dIndex + destlen];
 
@@ -1486,7 +1484,7 @@ static inline void Append(void *bytes, unsigned length, NSMutableData *dst)
 static void
 PString(NSString *obj, NSMutableData *output)
 {
-  unsigned	length;
+  NSUInteger	length;
 
   if ((length = [obj length]) == 0)
     {
@@ -1498,8 +1496,8 @@ PString(NSString *obj, NSMutableData *output)
       unichar		*from;
       unichar		*end;
       unsigned char	*ptr;
-      int		base = [output length];
-      int		len = 0;
+      NSInteger		base = [output length];
+      NSInteger		len = 0;
       GS_BEGINITEMBUF(ustring, (length * sizeof(unichar)), unichar)
 
       end = &ustring[length];
@@ -1621,7 +1619,7 @@ static void
 XString(NSString* obj, NSMutableData *output)
 {
   static const char	*hexdigits = "0123456789ABCDEF";
-  unsigned	end;
+  NSUInteger	end;
 
   end = [obj length];
   if (end == 0)
@@ -1634,9 +1632,9 @@ XString(NSString* obj, NSMutableData *output)
       unichar	*base;
       unichar	*map;
       unichar	c;
-      unsigned	len;
-      unsigned	rpos;
-      unsigned	wpos;
+      NSUInteger	len;
+      NSUInteger	rpos;
+      NSUInteger	wpos;
       BOOL	osx;
 
       osx = GSPrivateDefaultsFlag(GSMacOSXCompatible);
@@ -1925,9 +1923,9 @@ OAppend(id obj, NSDictionary *loc, unsigned lev, unsigned step,
 	{
 	  const unsigned char	*src;
 	  unsigned char		*dst;
-	  int		length;
-	  int		i;
-	  int		j;
+	  NSInteger		length;
+	  NSInteger		i;
+	  NSInteger		j;
 
 	  src = [obj bytes];
 	  length = [obj length];
@@ -1985,7 +1983,7 @@ OAppend(id obj, NSDictionary *loc, unsigned lev, unsigned step,
     {
       const char	*iBaseString;
       const char	*iSizeString;
-      unsigned	level = lev;
+      unsigned      level = lev;
 
       if (level*step < sizeof(indentStrings)/sizeof(id))
 	{
@@ -2023,10 +2021,10 @@ OAppend(id obj, NSDictionary *loc, unsigned lev, unsigned step,
 	}
       else
 	{
-	  unsigned		count = [obj count];
-	  unsigned		last = count - 1;
+	  NSUInteger		count = [obj count];
+	  NSUInteger		last = count - 1;
 	  NSString		*plists[count];
-	  unsigned		i;
+	  NSUInteger		i;
 
 	  if ([obj isProxy] == YES)
 	    {
@@ -2084,9 +2082,9 @@ OAppend(id obj, NSDictionary *loc, unsigned lev, unsigned step,
       const char	*iSizeString;
       SEL		objSel = @selector(objectForKey:);
       IMP		myObj = [obj methodForSelector: objSel];
-      unsigned		i;
+      NSUInteger		i;
       NSArray		*keyArray = [obj allKeys];
-      unsigned		numKeys = [keyArray count];
+      NSUInteger		numKeys = [keyArray count];
       NSString		*plists[numKeys];
       NSString		*keys[numKeys];
       BOOL		canCompare = YES;
@@ -2170,10 +2168,10 @@ OAppend(id obj, NSDictionary *loc, unsigned lev, unsigned step,
       if (canCompare == YES)
 	{
 	  #define STRIDE_FACTOR 3
-	  unsigned	c,d, stride;
+	  NSUInteger	c,d, stride;
 	  BOOL		found;
 	  NSComparisonResult	(*comp)(id, SEL, id) = 0;
-	  unsigned int	count = numKeys;
+	  NSUInteger	count = numKeys;
 	  #ifdef	GSWARN
 	  BOOL		badComparison = NO;
 	  #endif
@@ -2430,7 +2428,7 @@ static BOOL	classInitialized = NO;
 
 void
 GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
-  BOOL forDescription, unsigned step, id *str)
+                   BOOL forDescription, unsigned step, id *str)
 {
   NSString		*tmp;
   NSPropertyListFormat	style;
@@ -2548,7 +2546,7 @@ GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
   NSString           *errorStr = nil;
   id			result = nil;
   const unsigned char	*bytes = 0;
-  unsigned int		length = 0;
+  NSUInteger		length = 0;
 
   if (data == nil)
     {
@@ -2826,7 +2824,7 @@ GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
 
       if (offset_size < 1 || offset_size > 4)
 	{
-	  unsigned saved = offset_size;
+	  NSUInteger saved = offset_size;
 
 	  DESTROY(self);	// Bad format
 	  [NSException raise: NSGenericException
@@ -2834,7 +2832,7 @@ GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
 	}
       else if (index_size < 1 || index_size > 4)
 	{
-	  unsigned saved = index_size;
+	  NSUInteger saved = index_size;
 
 	  DESTROY(self);	// Bad format
 	  [NSException raise: NSGenericException
@@ -2865,7 +2863,7 @@ GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
   return self;
 }
 
-- (unsigned long) offsetForIndex: (unsigned)index
+- (NSUInteger) offsetForIndex: (NSUInteger)index
 {
   if (index >= object_count)
     {
@@ -2875,9 +2873,9 @@ GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
     }
   else
     {
-      unsigned long     offset;
-      unsigned          count;
-      unsigned          pos;
+      NSUInteger offset;
+      NSUInteger count;
+      NSUInteger pos;
 
       /* An offset is stored in big-endian byte order, so we can simply
        * read it byte by byte.
@@ -2892,11 +2890,11 @@ GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
     }
 }
 
-- (unsigned) readObjectIndexAt: (unsigned*)counter
+- (NSUInteger) readObjectIndexAt: (NSUInteger*)counter
 {
-  unsigned      index;
-  unsigned      count;
-  unsigned      pos;
+  NSUInteger index;
+  NSUInteger count;
+  NSUInteger pos;
 
 NSAssert(0 != counter, NSInvalidArgumentException);
   pos = *counter;
@@ -2910,10 +2908,10 @@ NSAssert(pos + index_size < _length, NSInvalidArgumentException);
   return index;
 }
 
-- (unsigned long) readCountAt: (unsigned*) counter
+- (NSUInteger) readCountAt: (NSUInteger*) counter
 {
-  unsigned long count;
-  unsigned      pos;
+  NSUInteger count;
+  NSUInteger pos;
   unsigned char c;
 
 NSAssert(0 != counter, NSInvalidArgumentException);
@@ -2967,7 +2965,7 @@ NSAssert(pos + count < _length, NSInvalidArgumentException);
 - (id) objectAtIndex: (NSUInteger)index
 {
   unsigned char	next;
-  unsigned counter = [self offsetForIndex: index];
+  NSUInteger counter = [self offsetForIndex: index];
   id	        result = nil;
 
   [data getBytes: &next range: NSMakeRange(counter,1)];
@@ -3088,7 +3086,7 @@ NSAssert(counter + len <= _length, NSInvalidArgumentException);
   else if (next == 0x5F)
     {
       NSString  *s;     // Long utf8 string
-      unsigned	len;
+      NSUInteger	len;
 
       if (mutability == NSPropertyListMutableContainersAndLeaves)
 	{
@@ -3170,7 +3168,7 @@ NSAssert(counter + len <= _length, NSInvalidArgumentException);
 
       for (i = 0; i < len; i++)
         {
-	  int oid = [self readObjectIndexAt: &counter];
+	  NSUInteger oid = [self readObjectIndexAt: &counter];
 
 	  objects[i] = [self objectAtIndex: oid];
 	}
@@ -3197,7 +3195,7 @@ NSAssert(counter + len <= _length, NSInvalidArgumentException);
 
       for (i = 0; i < len; i++)
         {
-	  int oid = [self readObjectIndexAt: &counter];
+	  NSUInteger oid = [self readObjectIndexAt: &counter];
 
 	  objects[i] = [self objectAtIndex: oid];
 	}
@@ -3223,14 +3221,14 @@ NSAssert(counter + len <= _length, NSInvalidArgumentException);
 
       for (i = 0; i < len; i++)
         {
-	  int oid = [self readObjectIndexAt: &counter];
+	  NSUInteger oid = [self readObjectIndexAt: &counter];
 
 	  keys[i] = [self objectAtIndex: oid];
 	}
 
       for (i = 0; i < len; i++)
         {
-	  int oid = [self readObjectIndexAt: &counter];
+	  NSUInteger oid = [self readObjectIndexAt: &counter];
 
 	  values[i] = [self objectAtIndex: oid];
 	}
@@ -3262,14 +3260,14 @@ NSAssert(counter + len <= _length, NSInvalidArgumentException);
       values = keys + len;
       for (i = 0; i < len; i++)
         {
-	  int oid = [self readObjectIndexAt: &counter];
+	  NSUInteger oid = [self readObjectIndexAt: &counter];
 
 	  keys[i] = [self objectAtIndex: oid];
 	}
 
       for (i = 0; i < len; i++)
         {
-	  int oid = [self readObjectIndexAt: &counter];
+	  NSUInteger oid = [self readObjectIndexAt: &counter];
 
 	  values[i] = [self objectAtIndex: oid];
 	}
@@ -3424,11 +3422,10 @@ isEqualFunc(const void *item1, const void *item2,
     }
 }
 
-- (void) markOffset: (unsigned int) offset for: (id)object
+- (void) markOffset: (NSUInteger) offset for: (id)object
 {
-  int oid;
-
-  oid = (NSInteger)[objectList objectForKey: object];
+  NSInteger oid = (NSInteger)[objectList objectForKey: object];
+    
   if (oid <= 0)
     {
       [NSException raise: NSGenericException
@@ -3441,16 +3438,16 @@ isEqualFunc(const void *item1, const void *item2,
 		   format: @"Object table index out of bounds %d.", oid];
     }
 
-  table[oid] = offset;
+  table[oid] = (unsigned) offset;
 }
 
 - (void) writeObjectTable
 {
-  unsigned int size;
-  unsigned int len;
-  unsigned int i;
+  NSUInteger size;
+  NSUInteger len;
+  NSUInteger i;
   unsigned char *buffer;
-  unsigned int last_offset;
+  NSUInteger last_offset;
 
   table_start = [dest length];
   // This is a bit too much, as the length
@@ -3538,8 +3535,8 @@ isEqualFunc(const void *item1, const void *item2,
 - (void) writeMetaData
 {
   unsigned char meta[32];
-  unsigned int i;
-  unsigned int len;
+  NSUInteger i;
+  NSUInteger len;
 
   for (i = 0; i < 32; i++)
     {
@@ -3597,8 +3594,8 @@ isEqualFunc(const void *item1, const void *item2,
   else if (index_size == 3)
     {
       unsigned char buffer[index_size];
-      int i;
-      unsigned num = index;
+      NSInteger i;
+      NSUInteger num = index;
 
       for (i = index_size - 1; i >= 0; i--)
         {
@@ -3609,9 +3606,7 @@ isEqualFunc(const void *item1, const void *item2,
     }
   else if (index_size == 4)
     {
-      unsigned int oid;
-
-      oid = NSSwapHostIntToBig(index);
+      NSUInteger oid = (NSUInteger)NSSwapHostLongToBig((long)index);
       [dest appendBytes: &oid length: 4];
     }
   else
@@ -3621,7 +3616,7 @@ isEqualFunc(const void *item1, const void *item2,
     }
 }
 
-- (void) storeCount: (unsigned int)count
+- (void) storeCount: (NSUInteger)count
 {
   unsigned char code;
 
@@ -3648,14 +3643,16 @@ isEqualFunc(const void *item1, const void *item2,
     {
       code = 0x13;
       [dest appendBytes: &code length: 1];
-      count = NSSwapHostIntToBig(count);
-      [dest appendBytes: &count length: 4];
+      NSAssert1(count < UINT32_MAX, @"Count is too large: %lu", count);
+      count = NSSwapHostLongToBig(count);
+      uint32_t count32 = (uint32_t)count;
+      [dest appendBytes: &count32 length: 4];
     }
 }
 
 - (void) storeData: (NSData*) data
 {
-  unsigned int len;
+  NSUInteger len;
   unsigned char code;
 
   len = [data length];
@@ -3677,7 +3674,7 @@ isEqualFunc(const void *item1, const void *item2,
 
 - (void) storeString: (NSString*) string
 {
-  unsigned int len;
+  NSUInteger len;
   NSData        *ascii;
   unsigned char code;
 
@@ -3852,8 +3849,8 @@ isEqualFunc(const void *item1, const void *item2,
 - (void) storeArray: (NSArray*) array
 {
   unsigned char code;
-  unsigned int len;
-  unsigned int i;
+  NSUInteger len;
+  NSUInteger i;
 
   len = [array count];
 
@@ -3914,7 +3911,7 @@ isEqualFunc(const void *item1, const void *item2,
     }
   else
     {
-      unsigned int len = [dict count];
+      NSUInteger len = [dict count];
       NSArray *keys = [dict allKeys];
       NSMutableArray *objects = [NSMutableArray arrayWithCapacity: len];
       id key;

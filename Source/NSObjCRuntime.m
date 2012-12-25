@@ -54,7 +54,7 @@ NSProtocolFromString(NSString *aProtocolName)
 {
   if (aProtocolName != nil)
     {
-      int	len = [aProtocolName length];
+      NSUInteger	len = [aProtocolName length];
       char	buf[len+1];
 
       [aProtocolName getCString: buf
@@ -86,7 +86,7 @@ NSSelectorFromString(NSString *aSelectorName)
 {
   if (aSelectorName != nil)
     {
-      int	len = [aSelectorName length];
+      NSUInteger	len = [aSelectorName length];
       char	buf[len+1];
 
       [aSelectorName getCString: buf
@@ -107,7 +107,7 @@ NSClassFromString(NSString *aClassName)
 {
   if (aClassName != nil)
     {
-      int	len = [aClassName length];
+      NSUInteger	len = [aClassName length];
       char	buf[len+1];
 
       [aClassName getCString: buf

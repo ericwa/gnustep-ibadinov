@@ -338,7 +338,7 @@ next_arg(const char *typePtr, NSArgumentInfo *info, char *outTypes)
    */
   if (outTypes != 0)
     {
-      unsigned	len = typePtr - info->qtype;
+      ptrdiff_t	len = typePtr - info->qtype;
 
       strncpy(outTypes, info->qtype, len);
       outTypes[len] = '\0';
@@ -400,9 +400,9 @@ next_arg(const char *typePtr, NSArgumentInfo *info, char *outTypes)
       char		*ret;
       char		*end;
       char		*ptr;
-      int		alen;
-      int		blen;
-      int		rlen;
+      ptrdiff_t		alen;
+      ptrdiff_t		blen;
+      ptrdiff_t		rlen;
 
 /* In case we have been given a method encoding string without offsets,
  * we attempt to generate the frame size and offsets in a new copy of
@@ -561,7 +561,7 @@ next_arg(const char *typePtr, NSArgumentInfo *info, char *outTypes)
     }
   else
     {
-      int i, n;
+      NSUInteger i, n;
       n = [self numberOfArguments];
       for (i = 0; i < n; i++)
         {

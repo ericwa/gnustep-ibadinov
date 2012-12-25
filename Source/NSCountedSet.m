@@ -157,24 +157,24 @@ static Class NSCountedSet_concrete_class;
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  unsigned	count = [self count];
+  NSUInteger	count = [self count];
   NSEnumerator	*e = [self objectEnumerator];
   id		o;
 
-  [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
+  [aCoder encodeValueOfObjCType: @encode(NSUInteger) at: &count];
   while ((o = [e nextObject]) != nil)
     {
       [aCoder encodeValueOfObjCType: @encode(id) at: &o];
       count = [self countForObject: o];
-      [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
+      [aCoder encodeValueOfObjCType: @encode(NSUInteger) at: &count];
     }
 }
 
 - (id) initWithSet: (NSSet*)other copyItems: (BOOL)flag
 {
-  unsigned	c = [other count];
+  NSUInteger	c = [other count];
   id		os[c], o, e = [other objectEnumerator];
-  unsigned	i = 0;
+  NSUInteger	i = 0;
   NSZone	*z = [self zone];
   IMP		next = [e methodForSelector: @selector(nextObject)];
 
@@ -189,12 +189,12 @@ static Class NSCountedSet_concrete_class;
   self = [self initWithObjects: os count: c];
   if ([other isKindOfClass: NSCountedSet_abstract_class])
     {
-      unsigned	j;
+      NSUInteger	j;
       IMP	addImp = [self methodForSelector: @selector(addObject:)];
 
       for (j = 0; j < i; j++)
 	{
-          unsigned	extra = [(NSCountedSet*)other countForObject: os[j]];
+          NSUInteger	extra = [(NSCountedSet*)other countForObject: os[j]];
 
 	  while (extra-- > 1)
 	    (*addImp)(self, @selector(addObject:), os[j]);

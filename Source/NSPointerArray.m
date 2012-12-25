@@ -44,8 +44,8 @@ static Class	concreteClass = Nil;
   PFInfo	_pf;
   NSUInteger	_count;
   void		**_contents;
-  unsigned	_capacity;
-  unsigned	_grow_factor;
+  NSUInteger	_capacity;
+  NSUInteger	_grow_factor;
 }
 @end
 
@@ -230,8 +230,8 @@ static Class	concreteClass = Nil;
   NSString     *reason;
 
   info = [NSDictionary dictionaryWithObjectsAndKeys:
-    [NSNumber numberWithUnsignedInt: index], @"Index",
-    [NSNumber numberWithUnsignedInt: _count], @"Count",
+    [NSNumber numberWithUnsignedInteger: index], @"Index",
+    [NSNumber numberWithUnsignedInteger: _count], @"Count",
     self, @"Array", nil, nil];
 
   reason = [NSString stringWithFormat:
@@ -300,7 +300,7 @@ static Class	concreteClass = Nil;
 - (id) copyWithZone: (NSZone*)zone
 {
   NSConcretePointerArray	*c;
-  unsigned			i;
+  NSUInteger			i;
   
   c = (NSConcretePointerArray*)NSCopyObject(self, 0, NSDefaultMallocZone());
   c->_capacity = c->_count;
@@ -320,7 +320,7 @@ static Class	concreteClass = Nil;
 #endif
   for (i = 0; i < _count; i++)
     {
-      NSLog(@"Copying %d, %p", i, _contents[i]);
+      NSLog(@"Copying %ld, %p", (long)i, _contents[i]);
       pointerFunctionsAcquire(&_pf, &c->_contents[i],
               pointerFunctionsRead(&_pf, &_contents[i]));
     }

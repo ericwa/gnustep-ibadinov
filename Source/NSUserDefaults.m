@@ -232,7 +232,7 @@ updateCache(NSUserDefaults *self)
       debug = [self arrayForKey: @"GNU-Debug"];
       if (debug != nil)
         {
-	  unsigned	c = [debug count];
+	  NSUInteger	c = [debug count];
 	  NSMutableSet	*s;
 
 	  s = [[NSProcessInfo processInfo] debugSet];
@@ -262,8 +262,8 @@ setPermissions(NSString *file)
 {
   NSFileManager	*mgr = [NSFileManager defaultManager];
   NSDictionary	*attr;
-  uint32_t	desired;
-  uint32_t	attributes;
+  NSUInteger	desired;
+  NSUInteger	attributes;
 
   attr = [mgr fileAttributesAtPath: file
 		      traverseLink: YES];
@@ -904,7 +904,7 @@ newLanguages(NSArray *oldNames)
       enumerator = [nL objectEnumerator];
       while ((lang = [enumerator nextObject]))
         {
-          unsigned	index = [defs->_searchList count] - 1;
+          NSUInteger	index = [defs->_searchList count] - 1;
 
           [defs->_searchList insertObject: lang atIndex: index];
         }

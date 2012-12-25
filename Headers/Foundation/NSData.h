@@ -124,22 +124,22 @@ enum {
 
 // Deserializing Data
 
-- (unsigned int) deserializeAlignedBytesLengthAtCursor: (unsigned int*)cursor;
+- (unsigned int) deserializeAlignedBytesLengthAtCursor: (NSUInteger*)cursor;
 - (void) deserializeBytes: (void*)buffer
-		   length: (unsigned int)bytes
-		 atCursor: (unsigned int*)cursor;
+		   length: (NSUInteger)bytes
+		 atCursor: (NSUInteger*)cursor;
 - (void) deserializeDataAt: (void*)data
 		ofObjCType: (const char*)type
-		  atCursor: (unsigned int*)cursor
+		  atCursor: (NSUInteger*)cursor
 		   context: (id <NSObjCTypeSerializationCallBack>)callback;
-- (int) deserializeIntAtCursor: (unsigned int*)cursor;
-- (int) deserializeIntAtIndex: (unsigned int)index;
+- (int) deserializeIntAtCursor: (NSUInteger*)cursor;
+- (int) deserializeIntAtIndex: (NSUInteger)index;
 - (void) deserializeInts: (int*)intBuffer
-		   count: (unsigned int)numInts
-		atCursor: (unsigned int*)cursor;
+		   count: (NSUInteger)numInts
+		atCursor: (NSUInteger*)cursor;
 - (void) deserializeInts: (int*)intBuffer
-		   count: (unsigned int)numInts
-		 atIndex: (unsigned int)index;
+		   count: (NSUInteger)numInts
+		 atIndex: (NSUInteger)index;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST) 
 /**
@@ -248,7 +248,7 @@ enum {
  */
 - (void) deserializeTypeTag: (unsigned char*)tag
 		andCrossRef: (unsigned int*)ref
-		   atCursor: (unsigned int*)cursor;
+		   atCursor: (NSUInteger*)cursor;
 @end
 #endif
 
@@ -285,18 +285,18 @@ enum {
 
 // Serializing Data
 
-- (void) serializeAlignedBytesLength: (unsigned int)length;
+- (void) serializeAlignedBytesLength: (NSUInteger)length;
 - (void) serializeDataAt: (const void*)data
 	      ofObjCType: (const char*)type
 		 context: (id <NSObjCTypeSerializationCallBack>)callback;
 - (void) serializeInt: (int)value;
 - (void) serializeInt: (int)value
-	      atIndex: (unsigned int)index;
+	      atIndex: (NSUInteger)index;
 - (void) serializeInts: (int*)intBuffer
-		 count: (unsigned int)numInts;
+		 count: (NSUInteger)numInts;
 - (void) serializeInts: (int*)intBuffer
-		 count: (unsigned int)numInts
-	       atIndex: (unsigned int)index;
+		 count: (NSUInteger)numInts
+	       atIndex: (NSUInteger)index;
 
 @end
 

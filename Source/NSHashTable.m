@@ -112,8 +112,8 @@ static Class	concreteClass = 0;
 - (NSArray*) allObjects
 {
   NSEnumerator	*enumerator;
-  unsigned	nodeCount = [self count];
-  unsigned	index;
+  NSUInteger	nodeCount = [self count];
+  NSUInteger	index;
   NSArray	*a;
   GS_BEGINITEMBUF(objects, nodeCount, id);
 
@@ -174,7 +174,7 @@ static Class	concreteClass = 0;
 
 - (void) intersectHashTable: (NSHashTable*)other
 {
-  unsigned		count = [self count];
+  NSUInteger		count = [self count];
 
   if (count > 0)
     {

@@ -118,7 +118,7 @@ static NSString	*httpVersion = @"1.1";
   NSMapTable            *wProperties;
   NSData		*wData;
   NSMutableDictionary   *request;
-  unsigned int          bodyPos;
+  NSUInteger          bodyPos;
   unsigned int		redirects;
   enum {
     idle,
@@ -532,7 +532,7 @@ debugWrite(GSHTTPURLHandle *handle, NSData *data)
   NSDictionary		*dict = [not userInfo];
   NSData		*d;
   NSRange		r;
-  unsigned		readCount;
+  NSUInteger    readCount;
 
   IF_NO_GC([self retain];)
 
@@ -1352,7 +1352,7 @@ debugWrite(GSHTTPURLHandle *handle, NSData *data)
 	}
       if (fd >= 0)
         {
-	  int		result;
+	  ssize_t		result;
 	  unsigned char	c;
 
 #if     !defined(MSG_DONTWAIT)

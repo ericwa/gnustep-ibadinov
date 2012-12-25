@@ -251,16 +251,16 @@ otherTime(NSDate* other)
   BOOL			hadMonth = NO;
   BOOL			hadYear = NO;
   BOOL			hadWeekDay = NO;
-  int			weekDay = 0;
-  int			dayOfWeek = 0;
-  int			modMonth = 0;
-  int			modYear = 0;
-  int			modDay = 0;
-  int			D, M, Y;
-  int			h = 12;
-  int			m = 0;
-  int			s = 0;
-  unsigned		dtoIndex;
+  NSInteger			weekDay = 0;
+  NSInteger			dayOfWeek = 0;
+  NSInteger			modMonth = 0;
+  NSInteger			modYear = 0;
+  NSInteger			modDay = 0;
+  NSInteger			D, M, Y;
+  NSInteger			h = 12;
+  NSInteger			m = 0;
+  NSInteger			s = 0;
+  NSUInteger		dtoIndex;
 
   if (locale == nil)
     {
@@ -798,7 +798,7 @@ otherTime(NSDate* other)
 		      }
 		    if (debug)
 		      {
-			NSLog(@"year (%d) adjusted to %d.", num, Y);
+			NSLog(@"year (%d) adjusted to %ld.", num, (long)Y);
 		      }
 		  }
 		else

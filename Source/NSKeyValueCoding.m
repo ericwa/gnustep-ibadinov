@@ -350,7 +350,7 @@ static id ValueForKey(NSObject *self, const char *key, size_t size)
 
 - (void) setValue: (id)anObject forKey: (NSString*)aKey
 {
-  unsigned	size = [aKey length] * 8;
+  NSUInteger	size = [aKey length] * 8;
   char		key[size + 1];
 #ifdef WANT_DEPRECATED_KVC_COMPAT
   IMP   	o = [self methodForSelector: @selector(takeValue:forKey:)];
@@ -462,7 +462,7 @@ static id ValueForKey(NSObject *self, const char *key, size_t size)
                 forKey: (NSString*)aKey
                  error: (NSError**)anError
 {
-  unsigned	size;
+  NSUInteger	size;
 
   if (aValue == 0 || (size = [aKey length] * 8) == 0)
     {
@@ -519,7 +519,7 @@ static id ValueForKey(NSObject *self, const char *key, size_t size)
 
 - (id) valueForKey: (NSString*)aKey
 {
-  unsigned	size = [aKey length] * 8;
+  NSUInteger	size = [aKey length] * 8;
   char		key[size + 1];
 
   [aKey getCString: key

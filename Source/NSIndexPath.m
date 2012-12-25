@@ -153,10 +153,10 @@ static	NSIndexPath	*dummy = nil;
 {
   if ([aCoder allowsKeyedCoding] == YES)
     {
-      [aCoder encodeInt: (NSInteger)_length forKey: @"NSIndexPathLength"];
+      [aCoder encodeInteger: (NSInteger)_length forKey: @"NSIndexPathLength"];
       if (_length == 1)
 	{
-	  [aCoder encodeInt: (NSInteger)_indexes[0] forKey: @"NSIndexPathValue"];
+	  [aCoder encodeInteger: (NSInteger)_indexes[0] forKey: @"NSIndexPathValue"];
 	}
       else if (_length > 1)
 	{
@@ -169,7 +169,7 @@ static	NSIndexPath	*dummy = nil;
 	  buf = [m mutableBytes];
 	  for (i = 0; i < _length; i++)
 	    {
-	      buf[i] = NSSwapHostIntToBig(_indexes[i]);
+	      buf[i] = (NSUInteger)NSSwapHostLongLongToBig((long long)_indexes[i]);
 	    }
 	  [aCoder encodeObject: m forKey: @"NSIndexPathData"];
 	  RELEASE(m);

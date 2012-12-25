@@ -284,7 +284,7 @@ GSBreakTime(NSTimeInterval when,
  * Returns the current time (seconds since reference date) as an NSTimeInterval.
  */
 NSTimeInterval
-GSPrivateTimeNow(void)
+GSPrivateTimeNow()
 {
   NSTimeInterval t;
 #if !defined(__MINGW__)

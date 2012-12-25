@@ -31,12 +31,12 @@
 #import "Foundation/NSSet.h"
 #import "GNUstepBase/NSBundle+GNUstepBase.h"
 
-@implementation NSBundle(GNUstepBase)
+@implementation NSBundle (GNUstepBase)
 
-// In NSBundle.m
+#ifndef GNUSTEP /* defined in NSBundle.m */
 + (NSString *) pathForLibraryResource: (NSString *)name
-			       ofType: (NSString *)ext
-			  inDirectory: (NSString *)bundlePath
+                               ofType: (NSString *)ext
+                          inDirectory: (NSString *)bundlePath
 {
   NSString	*path = nil;
   NSString	*bundle_path = nil;
@@ -59,6 +59,7 @@
 
   return path;
 }
+#endif
 
 @end
 

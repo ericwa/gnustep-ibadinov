@@ -197,7 +197,7 @@ ICUCalendarSetup (NSTimeZone *tz, NSLocale *locale)
   UErrorCode err = U_ZERO_ERROR;
   
   tzStr = [tz name];
-  if ((tzLen = [tzStr length]) > BUFFER_SIZE)
+  if ((tzLen = (int32_t)[tzStr length]) > BUFFER_SIZE)
     tzLen = BUFFER_SIZE;
   [tzStr getCharacters: tzName range: NSMakeRange(0, tzLen)];
   cLocale = [[locale localeIdentifier] UTF8String];
@@ -342,7 +342,7 @@ static NSString *_time_zone_path(NSString *subpath, NSString *type)
 @public
   NSString	*name;
   id		detail;
-  int		offset; // Offset from UTC in seconds.
+  NSInteger offset; // Offset from UTC in seconds.
 }
 
 - (id) initWithOffset: (NSInteger)anOffset name: (NSString*)aName;
@@ -355,7 +355,7 @@ static NSString *_time_zone_path(NSString *subpath, NSString *type)
 {
   NSTimeZone	*timeZone; // Time zone which created this object.
   NSString	*abbrev; // Abbreviation for time zone detail.
-  int		offset; // Offset from UTC in seconds.
+  NSInteger		offset; // Offset from UTC in seconds.
   BOOL		is_dst; // Is it daylight savings time?
 }
 
@@ -396,7 +396,7 @@ static NSString *_time_zone_path(NSString *subpath, NSString *type)
 - (id) initWithName: (NSString*)name data: (NSData*)data
 {
   NSTimeZone	*zone;
-  unsigned	length = [name length];
+  NSUInteger	length = [name length];
 
   if (length == 0)
     {
@@ -699,8 +699,8 @@ static NSMapTable	*absolutes = 0;
 - (id) initWithOffset: (NSInteger)anOffset name: (NSString*)aName
 {
   GSAbsTimeZone	*z;
-  int		extra;
-  int		sign = anOffset >= 0 ? 1 : -1;
+  NSInteger		extra;
+  NSInteger		sign = anOffset >= 0 ? 1 : -1;
 
   /*
    * Set the uninitialised offset so that dealloc before full
@@ -746,12 +746,12 @@ static NSMapTable	*absolutes = 0;
 	  if (anOffset % 60 == 0)
 	    {
 	      char	s = (anOffset >= 0) ? '+' : '-';
-	      int	i = (anOffset >= 0) ? anOffset / 60 : -anOffset / 60;
-	      int	h = i / 60;
-	      int	m = i % 60;
+	      NSInteger	i = (anOffset >= 0) ? anOffset / 60 : -anOffset / 60;
+	      NSInteger	h = i / 60;
+	      NSInteger	m = i % 60;
 	      char	buf[9];
 
-	      snprintf(buf, sizeof(buf), "GMT%c%02d%02d", s, h, m);
+	      snprintf(buf, sizeof(buf), "GMT%c%02ld%02ld", s, (long)h, (long)m);
 	      name = [[NSString alloc] initWithUTF8String: buf];
 	    }
 	  else
@@ -1885,7 +1885,7 @@ localZoneString, [zone name], sign, s/3600, (s/60)%60);
 			}
 		      if (zone != nil)
 			{
-			  int			offset;
+			  NSInteger			offset;
 			  NSArray		*details;
 			  NSTimeZoneDetail	*detail;
 			  NSEnumerator		*e;
@@ -2174,7 +2174,7 @@ localZoneString, [zone name], sign, s/3600, (s/60)%60);
 - (NSInteger) secondsFromGMTForDate: (NSDate*)aDate
 {
   NSTimeZoneDetail	*detail;
-  int			offset;
+  NSInteger			offset;
 
   detail = [self timeZoneDetailForDate: aDate];
   offset = [detail timeZoneSecondsFromGMT];
@@ -2440,12 +2440,6 @@ lastDayOfGregorianMonth(int month, int year)
       default: return 31;
     }
 }
-
-/* IMPORT from NSCalendar date */
-void
-GSBreakTime(NSTimeInterval when, NSInteger*year, NSInteger*month, NSInteger*day,
-  NSInteger*hour, NSInteger*minute, NSInteger*second, NSInteger*mil);
-
 
 @implementation GSWindowsTimeZone
 
@@ -2965,10 +2959,10 @@ newDetailInZoneForType(GSTimeZone *zone, TypeInfo *type)
   NS_DURING
     {
       const void	*bytes = [timeZoneData bytes];
-      unsigned		length = [timeZoneData length];
+      NSUInteger		length = [timeZoneData length];
       void		*buf;
-      unsigned		pos = 0;
-      unsigned		i, charcnt;
+      NSUInteger		pos = 0;
+      NSUInteger		i, charcnt;
       unsigned char	*abbr;
       struct tzhead	*header;
 

@@ -459,11 +459,20 @@ GSObjCAddMethods(Class cls, Method *list, BOOL replace);
  */
 GS_EXPORT id
 GSObjCGetVal(NSObject *self, const char *key, SEL sel,
-  const char *type, size_t size, ptrdiff_t offset);
+             const char *type, size_t size, ptrdiff_t offset);
 
 GS_EXPORT void
 GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
-  const char *type, size_t size, ptrdiff_t offset);
+             const char *type, size_t size, ptrdiff_t offset);
+
+
+GS_EXPORT id
+GSObjCGetValue(NSObject *self, NSString *key, SEL sel,
+               const char *type, size_t size, ptrdiff_t offset);
+
+GS_EXPORT void
+GSObjCSetValue(NSObject *self, NSString *key, id val, SEL sel,
+               const char *type, size_t size, ptrdiff_t offset);
 
 /*
  * This section includes runtime functions

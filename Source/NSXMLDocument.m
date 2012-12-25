@@ -128,8 +128,9 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
           xmlOptions |= XML_PARSE_NOBLANKS;
           //xmlKeepBlanksDefault(0);
         }
-      doc = xmlReadMemory([data bytes], [data length], 
-                          url, encoding, xmlOptions);
+        NSUInteger length = [data length];
+        NSAssert(length < INT_MAX, @"Data size should not exceed size of int (libxml limitation)");
+        doc = xmlReadMemory([data bytes], (int)length, url, encoding, xmlOptions);
       if (doc == NULL)
 	{
           DESTROY(self);
@@ -424,8 +425,9 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
 {
 #ifdef HAVE_LIBXSLT
   xmlChar **params = NULL;
-  xmlDocPtr stylesheetDoc = xmlReadMemory([xslt bytes], [xslt length],
-                                          NULL, NULL, XML_PARSE_NOERROR);
+  NSUInteger length = [xslt length];
+  NSAssert(length < INT_MAX, @"XSLT data size should not exceed size of int (libxml limitation)");
+  xmlDocPtr stylesheetDoc = xmlReadMemory([xslt bytes], (int)length, NULL, NULL, XML_PARSE_NOERROR);
   xsltStylesheetPtr stylesheet = xsltParseStylesheetDoc(stylesheetDoc);
   xmlDocPtr resultDoc = NULL;
  
@@ -435,7 +437,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
       NSEnumerator *en = [arguments keyEnumerator];
       NSString *key = nil;
       NSUInteger index = 0;
-      int count = [[arguments allKeys] count];
+      NSUInteger count = [[arguments allKeys] count];
 
       *params = NSZoneCalloc([self zone], ((count + 1) * 2), sizeof(xmlChar *));
       while ((key = [en nextObject]) != nil)

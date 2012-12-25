@@ -216,7 +216,7 @@ static Class		NSURLHandleClass = 0;
  */
 + (Class) URLHandleClassForURL: (NSURL*)url
 {
-  unsigned	count;
+  NSUInteger	count;
   Class		c = 0;
 
   [registryLock lock];

@@ -127,11 +127,12 @@ static SEL	objSel;
     }
   else
     {
-      unsigned	count = map.nodeCount;
-      SEL		sel = @selector(encodeObject:);
-      IMP		imp = [aCoder methodForSelector: sel];
-      GSIMapEnumerator_t	enumerator = GSIMapEnumeratorForMap(&map);
-      GSIMapNode	node = GSIMapEnumeratorNextNode(&enumerator);
+      NSUInteger    count = map.nodeCount;
+      SEL           sel = @selector(encodeObject:);
+      IMP           imp = [aCoder methodForSelector: sel];
+
+      GSIMapEnumerator_t    enumerator = GSIMapEnumeratorForMap(&map);
+      GSIMapNode            node = GSIMapEnumeratorNextNode(&enumerator);
 
       [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
       while (node != 0)

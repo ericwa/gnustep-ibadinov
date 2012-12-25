@@ -1197,18 +1197,23 @@ GSPrivateStackAddresses(void)
   return stack;
 }
 
-
+/*
+ * Functions used by GDB
+ */
+const char *_NSPrintForDebugger(id object);
 const char *_NSPrintForDebugger(id object)
 {
-  if (object && [object respondsToSelector: @selector(description)])
-    return [[object description] cString];
-
-  return NULL;
+    if (object && [object respondsToSelector: @selector(description)])
+    {
+        return [[object description] cString];
+    }
+    
+    return NULL;
 }
 
+NSString *_NSNewStringFromCString(const char *cstring);
 NSString *_NSNewStringFromCString(const char *cstring)
 {
-  return [NSString stringWithCString: cstring
-			    encoding: [NSString defaultCStringEncoding]];
+    return [NSString stringWithCString: cstring
+                              encoding: [NSString defaultCStringEncoding]];
 }
-

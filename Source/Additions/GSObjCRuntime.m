@@ -2528,7 +2528,7 @@ GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
  */
 void
 GSObjCSetValue(NSObject *self, NSString *key, id val, SEL sel,
-	       const char *type, unsigned size, int offset)
+	       const char *type, size_t size, ptrdiff_t offset)
 {
   GSObjCSetVal(self, [key UTF8String], val, sel, type, size, offset);
 }

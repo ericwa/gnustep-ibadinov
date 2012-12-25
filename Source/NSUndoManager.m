@@ -109,7 +109,7 @@
 {
   if (actions != nil)
     {
-      unsigned	i = [actions count];
+      NSUInteger	i = [actions count];
 
       while (i-- > 0)
 	{
@@ -122,7 +122,7 @@
 {
   if (actions != nil)
     {
-      unsigned	i = [actions count];
+      NSUInteger	i = [actions count];
 
       while (i-- > 0)
 	{
@@ -797,7 +797,7 @@
  */
 - (void) removeAllActionsWithTarget: (id)target
 {
-  unsigned 	i;
+  NSUInteger 	i;
 
   i = [_redoStack count];
   while (i-- > 0)

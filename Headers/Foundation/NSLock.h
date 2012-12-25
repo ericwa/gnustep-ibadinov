@@ -168,7 +168,7 @@ extern "C" {
 #if	GS_EXPOSE(NSConditionLock)
 @private
   NSCondition *_condition;
-  int   _condition_value;
+  NSInteger   _condition_value;
   NSString      *_name;
 #endif
 }

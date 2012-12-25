@@ -6453,7 +6453,7 @@ typedef	enum	{
   SMTPE_DSN,		// delivery status notification extension
 } SMTPE;
 
-NSString *
+static NSString *
 eventText(NSStreamEvent e)
 {
   if (e == NSStreamEventNone)
@@ -6471,7 +6471,7 @@ eventText(NSStreamEvent e)
   return @"unknown event";
 }
 
-NSString *
+static NSString *
 statusText(NSStreamStatus s)
 {
   if (s == NSStreamStatusNotOpen) return @"NSStreamStatusNotOpen";
@@ -6738,12 +6738,10 @@ GS_PRIVATE_INTERNAL(GSMimeSMTPClient)
  */
 - (void) stream: (NSStream*)aStream handleEvent: (NSStreamEvent)anEvent
 {
-  NSStreamStatus	sStatus = [aStream streamStatus];
-
   if (aStream == internal->istream)
     {
       NSDebugMLLog(@"GSMime", @"%@ istream event %@ in %@",
-	self, eventText(anEvent), statusText(sStatus));
+	self, eventText(anEvent), statusText([aStream streamStatus]));
       if (anEvent == NSStreamEventHasBytesAvailable)
         {
 	  internal->readable = YES;
@@ -6752,7 +6750,7 @@ GS_PRIVATE_INTERNAL(GSMimeSMTPClient)
   else
     {
       NSDebugMLLog(@"GSMime", @"%@ ostream event %@ in %@",
-	self, eventText(anEvent), statusText(sStatus));
+	self, eventText(anEvent), statusText([aStream streamStatus]));
       if (anEvent == NSStreamEventHasSpaceAvailable)
         {
 	  internal->writable = YES;

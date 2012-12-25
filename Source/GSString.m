@@ -1277,7 +1277,7 @@ fixBOM(unsigned char **bytes, NSUInteger*length, BOOL *owned,
       me->_flags.wide = 1;
       me->_flags.owned = flag;
     }
-  return me;
+  return (id)me;
 }
 
 - (id) initWithCharacters: (const unichar*)chars
@@ -2096,8 +2096,6 @@ dataUsingEncoding_u(GSStr self, NSStringEncoding encoding, BOOL lossy)
     }
 }
 
-extern BOOL GSScanDouble(unichar*, NSUInteger, double*);
-
 static inline double
 doubleValue_c(GSStr self)
 {
@@ -2698,9 +2696,9 @@ isEqual_c(GSStr self, id anObject)
        * First see if the hash is the same - if not, we can't be equal.
        */
       if (self->_flags.hash == 0)
-        self->_flags.hash = (*hashImp)((id)self, hashSel);
+        self->_flags.hash = (unsigned)(*hashImp)((id)self, hashSel);
       if (other->_flags.hash == 0)
-        other->_flags.hash = (*hashImp)((id)other, hashSel);
+        other->_flags.hash = (unsigned)(*hashImp)((id)other, hashSel);
       if (self->_flags.hash != other->_flags.hash)
 	return NO;
 
@@ -2761,9 +2759,9 @@ isEqual_u(GSStr self, id anObject)
        * First see if the hash is the same - if not, we can't be equal.
        */
       if (self->_flags.hash == 0)
-        self->_flags.hash = (*hashImp)((id)self, hashSel);
+        self->_flags.hash = (unsigned)(*hashImp)((id)self, hashSel);
       if (other->_flags.hash == 0)
-        other->_flags.hash = (*hashImp)((id)other, hashSel);
+        other->_flags.hash = (unsigned)(*hashImp)((id)other, hashSel);
       if (self->_flags.hash != other->_flags.hash)
 	return NO;
 
@@ -3436,7 +3434,7 @@ transmute(GSStr self, NSString *aString)
 	{
 	  ret = 0x0ffffffe;	/* Hash for an empty string.	*/
 	}
-      self->_flags.hash = ret;
+      self->_flags.hash = (unsigned)ret;
     }
 
   return self->_flags.hash;
@@ -5782,7 +5780,7 @@ literalIsEqual(NXConstantString *self, id anObject)
  * Append characters to a string.
  */
 void
-GSPrivateStrAppendUnichars(GSStr s, const unichar *u, unsigned l)
+GSPrivateStrAppendUnichars(GSStr s, const unichar *u, NSUInteger l)
 {
   /*
    * Make the string wide if necessary.
@@ -5793,7 +5791,7 @@ GSPrivateStrAppendUnichars(GSStr s, const unichar *u, unsigned l)
 
       if (internalEncoding == NSISOLatin1StringEncoding)
 	{
-	  unsigned	i;
+	  NSUInteger	i;
 
 	  for (i = 0; i < l; i++)
 	    {
@@ -5806,7 +5804,7 @@ GSPrivateStrAppendUnichars(GSStr s, const unichar *u, unsigned l)
 	}
       else
 	{
-	  unsigned	i;
+	  NSUInteger	i;
 
 	  for (i = 0; i < l; i++)
 	    {
@@ -5836,7 +5834,7 @@ GSPrivateStrAppendUnichars(GSStr s, const unichar *u, unsigned l)
    */
   if (s->_flags.wide == 1)
     {
-      unsigned 	i;
+      NSUInteger 	i;
 
       for (i = 0; i < l; i++)
 	{
@@ -5845,7 +5843,7 @@ GSPrivateStrAppendUnichars(GSStr s, const unichar *u, unsigned l)
     }
   else
     {
-      unsigned 	i;
+      NSUInteger 	i;
 
       for (i = 0; i < l; i++)
 	{

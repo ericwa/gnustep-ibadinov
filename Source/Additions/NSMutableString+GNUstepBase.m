@@ -270,8 +270,8 @@
 	    withString: (NSString*)by
 {
   NSRange       range;
-  unsigned int  count = 0;
-  unsigned int	newEnd;
+  NSUInteger    count = 0;
+  NSUInteger	newEnd;
   NSRange	searchRange;
 
   if (replace == nil)
@@ -290,7 +290,7 @@
 
   if (range.length > 0)
     {
-      unsigned  byLen = [by length];
+      NSUInteger  byLen = [by length];
 
       do
         {
@@ -315,11 +315,11 @@
  */
 - (void) trimLeadSpaces
 {
-  unsigned	length = [self length];
+  NSUInteger	length = [self length];
 
   if (length > 0)
     {
-      unsigned	start = 0;
+      NSUInteger	start = 0;
       unichar	(*caiImp)(NSString*, SEL, NSUInteger);
       SEL caiSel = @selector(characterAtIndex:);
 
@@ -340,11 +340,11 @@
  */
 - (void) trimTailSpaces
 {
-  unsigned	length = [self length];
+  NSUInteger	length = [self length];
 
   if (length > 0)
     {
-      unsigned	end = length;
+      NSUInteger	end = length;
       unichar	(*caiImp)(NSString*, SEL, NSUInteger);
       SEL caiSel = @selector(characterAtIndex:);
 

@@ -66,7 +66,7 @@ extern "C" {
   unsigned	_xRefC;		/* Counter for cross-reference.	*/
   unsigned	_xRefO;		/* Counter for cross-reference.	*/
   unsigned	_xRefP;		/* Counter for cross-reference.	*/
-  unsigned	_startPos;	/* Where in data we started.	*/
+  NSUInteger _startPos;	/* Where in data we started.	*/
   BOOL		_encodingRoot;
   BOOL		_initialPass;
 #endif
@@ -149,11 +149,11 @@ extern "C" {
  *	methods rather than those in the NSMutableData object.
  */
 - (BOOL) directDataAccess;
-- (void) serializeHeaderAt: (unsigned)positionInData
+- (void) serializeHeaderAt: (NSUInteger)positionInData
 		   version: (unsigned)systemVersion
-		   classes: (unsigned)classCount
-		   objects: (unsigned)objectCount
-		  pointers: (unsigned)pointerCount;
+		   classes: (NSUInteger)classCount
+		   objects: (NSUInteger)objectCount
+		  pointers: (NSUInteger)pointerCount;
 @end
 #endif
 
@@ -167,7 +167,7 @@ extern "C" {
   Class			dataClass;	/* What sort of data is it?	*/
   id			src;		/* Deserialization source.	*/
   IMP			desImp;		/* Method to deserialize with.	*/
-  void			(*tagImp)(id, SEL, unsigned char*, unsigned*,unsigned*);
+  void			(*tagImp)(id, SEL, unsigned char*, unsigned*,NSUInteger*);
   IMP			dValImp;	/* Method to decode data with.	*/
 #ifndef	_IN_NSUNARCHIVER_M
 #define	GSIArray	void*
@@ -178,7 +178,7 @@ extern "C" {
 #ifndef	_IN_NSUNARCHIVER_M
 #undef	GSIArray
 #endif
-  unsigned		cursor;		/* Position in data buffer.	*/
+  NSUInteger		cursor;		/* Position in data buffer.	*/
   unsigned		version;	/* Version of archiver used.	*/
   NSZone		*zone;		/* Zone for allocating objs.	*/
   NSMutableDictionary	*objDict;	/* Class information store.	*/
@@ -225,16 +225,16 @@ extern "C" {
 #if OS_API_VERSION(GS_API_NONE,GS_API_NONE) && GS_API_VERSION(1,GS_API_LATEST)
 @interface	NSUnarchiver (GNUstep)
 
-- (unsigned) cursor;
+- (NSUInteger) cursor;
 - (void) resetUnarchiverWithData: (NSData*)anObject
-			 atIndex: (unsigned)pos;
+			 atIndex: (NSUInteger)pos;
 
 - (BOOL) directDataAccess;
-- (void) deserializeHeaderAt: (unsigned*)pos
+- (void) deserializeHeaderAt: (NSUInteger*)pos
 		     version: (unsigned*)v
-		     classes: (unsigned*)c
-		     objects: (unsigned*)o
-		    pointers: (unsigned*)p;
+		     classes: (NSUInteger*)c
+		     objects: (NSUInteger*)o
+		    pointers: (NSUInteger*)p;
 @end
 #endif
 

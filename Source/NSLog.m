@@ -112,7 +112,7 @@ _NSLog_standard_printf_handler (NSString* message)
 {
   NSData	*d;
   const char	*buf;
-  unsigned	len;
+  NSUInteger	len;
 #if	defined(__MINGW__)
   LPCWSTR	null_terminated_buf;
 #else
@@ -193,7 +193,7 @@ _NSLog_standard_printf_handler (NSString* message)
       // QNX's slog has a size limit per entry. We might need to iterate over
 	  // _SLOG_MAXSIZEd chunks of the buffer
       const char *newBuf = buf;
-      unsigned newLen = len;
+      NSUInteger newLen = len;
 
       // Allocate at most _SLOG_MAXSIZE bytes
 	  null_terminated_buf = malloc(sizeof(char) * MIN(newLen, _SLOG_MAXSIZE));

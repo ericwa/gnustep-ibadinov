@@ -111,8 +111,8 @@ typedef unsigned long long uintmax_t;
 
 struct printf_info
 {
-  int prec;			/* Precision.  */
-  int width;			/* Width.  */
+  NSInteger prec;			/* Precision.  */
+  NSInteger width;			/* Width.  */
   unichar spec;			/* Format letter.  */
   unsigned int is_long_double:1;/* L flag.  */
   unsigned int is_short:1;	/* h flag.  */
@@ -291,7 +291,7 @@ _itowa_word (unsigned long value, unichar *buflim,
 
 #define PAD(Padchar) \
   { \
-    int w = width; \
+    NSInteger w = width; \
     while (w-- > 0) outchar(Padchar); \
   }
 
@@ -347,23 +347,23 @@ _i18n_number_rewrite (unichar *w, unichar *rear_ptr, NSString *locale_digits)
 
 
 struct printf_spec
-  {
+{
     /* Information parsed from the format spec.  */
     struct printf_info info;
-
+    
     /* Pointers into the format string for the end of this format
-       spec and the next (or to the end of the string if no more).  */
+     spec and the next (or to the end of the string if no more).  */
     const unichar *end_of_fmt, *next_fmt;
-
+    
     /* Position of arguments for precision and width, or -1 if `info' has
-       the constant value.  */
-    int prec_arg, width_arg;
-
-    int data_arg;		/* Position of data argument.  */
-    int data_arg_type;		/* Type of first argument.  */
+     the constant value.  */
+    NSInteger prec_arg, width_arg;
+    
+    size_t      ndata_args;
+    NSUInteger  data_arg;		/* Position of data argument.  */
+    int         data_arg_type;		/* Type of first argument.  */
     /* Number of arguments consumed by this format specifier.  */
-    size_t ndata_args;
-  };
+};
 
 
 /* The various kinds off arguments that can be passed to printf.  */
@@ -1104,8 +1104,8 @@ NSDictionary *locale)
 	int is_short = specs[nspecs_done].info.is_short;
 	int is_char = specs[nspecs_done].info.is_char;
 	int is_long = specs[nspecs_done].info.is_long;
-	int width = specs[nspecs_done].info.width;
-	int prec = specs[nspecs_done].info.prec;
+	NSInteger width = specs[nspecs_done].info.width;
+	NSInteger prec = specs[nspecs_done].info.prec;
 	int use_outdigits = specs[nspecs_done].info.i18n;
 	char pad = specs[nspecs_done].info.pad;
 	unichar spec = specs[nspecs_done].info.spec;
@@ -1396,7 +1396,7 @@ NSDictionary *locale)
 
 	  if (prec > 0)
 	    {
-	      int temp = width;
+	      NSInteger temp = width;
 	      width = prec;
 	      PAD ('0');
 	      width = temp;
@@ -1507,8 +1507,8 @@ NSDictionary *locale)
 	  {
 	    if (*bp == '\033')
 	      {
-		int	i = 0;
-		int	c = [decimal_sep length];
+		NSUInteger	i = 0;
+		NSUInteger	c = [decimal_sep length];
 		unichar	b[c];
 
 		[decimal_sep getCharacters: b];
@@ -1625,8 +1625,8 @@ NSDictionary *locale)
 	  {
 	    if (*bp == '\033')
 	      {
-		int	i = 0;
-		int	c = [decimal_sep length];
+		NSUInteger	i = 0;
+		NSUInteger	c = [decimal_sep length];
 		unichar	b[c];
 
 		[decimal_sep getCharacters: b];
@@ -1818,7 +1818,7 @@ NSDictionary *locale)
 	else
 	  {
 	    /* This is simple.  Wide string == unicode string.  */
-	    int prc;
+	    NSInteger prc;
 	    unichar *wsp;
 
 	    len = 0;

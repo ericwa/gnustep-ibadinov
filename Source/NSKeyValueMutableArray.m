@@ -90,7 +90,7 @@
                                 ofObject: (id)anObject
 {
   NSKeyValueMutableArray *proxy;
-  unsigned size = [aKey maximumLengthOfBytesUsingEncoding: 
+  NSUInteger size = [aKey maximumLengthOfBytesUsingEncoding: 
 			  NSUTF8StringEncoding];
   char keybuf[size + 1];
   [aKey getCString: keybuf

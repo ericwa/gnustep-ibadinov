@@ -1154,7 +1154,7 @@ typedef GSString	*ivars;
 /*
  * Some utilities
  */
-BOOL
+static BOOL
 GSScanInt(unichar *buf, NSUInteger length, int *result)
 {
   unsigned int num = 0;

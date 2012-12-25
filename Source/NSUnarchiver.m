@@ -498,7 +498,7 @@ static unsigned	encodingVersion;
 	{
 	  src = self;		/* Default object to handle serialisation */
 	  desImp = [src methodForSelector: desSel];
-	  tagImp = (void (*)(id, SEL, unsigned char*, unsigned*, unsigned*))
+	  tagImp = (void (*)(id, SEL, unsigned char*, unsigned*, NSUInteger*))
 	      [src methodForSelector: tagSel];
 	}
       /*
@@ -1439,7 +1439,7 @@ static unsigned	encodingVersion;
  */
 - (void) replaceObject: (id)anObject withObject: (id)replacement
 {
-  unsigned i;
+  NSUInteger i;
 
   if (replacement == anObject)
     return;
@@ -1480,7 +1480,7 @@ static unsigned	encodingVersion;
 /**
  *  Return current position within archive byte array.
  */
-- (unsigned) cursor
+- (NSUInteger) cursor
 {
   return cursor;
 }
@@ -1491,11 +1491,11 @@ static unsigned	encodingVersion;
  *  anObject, starting at pos.  Reads archive header.
  */
 - (void) resetUnarchiverWithData: (NSData*)anObject
-			 atIndex: (unsigned)pos
+			 atIndex: (NSUInteger)pos
 {
-  unsigned	sizeC;
-  unsigned	sizeO;
-  unsigned	sizeP;
+  NSUInteger	sizeC;
+  NSUInteger	sizeO;
+  NSUInteger	sizeP;
 
   if (anObject == nil)
     {
@@ -1518,7 +1518,7 @@ static unsigned	encodingVersion;
 	       *	Cache methods for deserialising from the data object.
 	       */
 	      desImp = [src methodForSelector: desSel];
-	      tagImp = (void (*)(id, SEL, unsigned char*, unsigned*, unsigned*))
+	      tagImp = (void (*)(id, SEL, unsigned char*, unsigned*, NSUInteger*))
 		  [src methodForSelector: tagSel];
 	    }
 	}
@@ -1571,11 +1571,11 @@ static unsigned	encodingVersion;
 /**
  *  Reads in header for GNUstep archive format.
  */
-- (void) deserializeHeaderAt: (unsigned*)pos
+- (void) deserializeHeaderAt: (NSUInteger*)pos
 		     version: (unsigned*)v
-		     classes: (unsigned*)c
-		     objects: (unsigned*)o
-		    pointers: (unsigned*)p
+		     classes: (NSUInteger*)c
+		     objects: (NSUInteger*)o
+		    pointers: (NSUInteger*)p
 {
   unsigned	plen = strlen(PREFIX);
   unsigned	size = plen+36;
@@ -1589,11 +1589,16 @@ static unsigned	encodingVersion;
       [NSException raise: NSInternalInconsistencyException
 		  format: @"Archive has wrong prefix"];
     }
-  if (sscanf(&header[plen], "%x:%x:%x:%x:", v, c, o, p) != 4)
+  unsigned ver, cls, obj, ptr;
+  if (sscanf(&header[plen], "%x:%x:%x:%x:", &ver, &cls, &obj, &ptr) != 4)
     {
       [NSException raise: NSInternalInconsistencyException
 		  format: @"Archive has wrong prefix"];
     }
+    *v = ver;
+    *c = cls;
+    *o = obj;
+    *p = ptr;
 }
 
 /**

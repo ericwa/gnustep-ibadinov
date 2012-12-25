@@ -111,7 +111,7 @@ static UCalendarDateFields _NSCalendarUnitToDateField (NSCalendarUnit unit)
 #define	UCAL_DEFAULT UCAL_TRADITIONAL
 #endif
   _cal = 
-    ucal_open ((const UChar *)cTzId, tzLen, cLocaleId, UCAL_DEFAULT, &err);
+    ucal_open ((const UChar *)cTzId, (int32_t)tzLen, cLocaleId, UCAL_DEFAULT, &err);
 #endif
 }
 

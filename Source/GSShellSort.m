@@ -31,7 +31,7 @@
 #import "GSSorting.h"
 
 #if GS_USE_SHELLSORT
-void
+static void
 _GSShellSort(id *objects,
   NSRange sortRange,
   id comparisonEntity,

@@ -300,6 +300,10 @@ GSPrivateBuildStrings()
 }
 
 
-
+#if (__GNUC__ == 3) && (__GNUC_MINOR__ == 1)
 /* For bug in gcc 3.1. See NSByteOrder.h */
-void _gcc3_1_hack(void){}
+void _gcc3_1_hack(void);
+void _gcc3_1_hack(void)
+{
+}
+#endif

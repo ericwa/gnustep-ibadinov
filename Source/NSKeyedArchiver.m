@@ -132,12 +132,12 @@ setupCache(void)
 /*
  * Make a dictionary referring to the object at ref in the array of all objects.
  */
-static NSDictionary *makeReference(unsigned ref)
+static NSDictionary *makeReference(NSUInteger ref)
 {
   NSNumber	*n;
   NSDictionary	*d;
 
-  n = [NSNumber numberWithUnsignedInt: ref];
+  n = [NSNumber numberWithUnsignedInteger: ref];
   d = [NSDictionary dictionaryWithObject: n forKey:  @"CF$UID"];
   return d;
 }
@@ -163,8 +163,8 @@ static NSDictionary *makeReference(unsigned ref)
   else
     {
       NSMutableArray	*m;
-      unsigned		c;
-      unsigned		i;
+      NSUInteger		c;
+      NSUInteger		i;
 
       c = [anArray count];
       m = [NSMutableArray arrayWithCapacity: c];
@@ -198,7 +198,7 @@ static NSDictionary *makeReference(unsigned ref)
   id			objectInfo = nil;	// Encoded object
   NSMutableDictionary	*m = nil;
   NSDictionary		*refObject;
-  unsigned		ref = 0;		// Reference to nil
+  NSUInteger		ref = 0;		// Reference to nil
 
   if (anObject != nil)
     {
@@ -732,17 +732,17 @@ static NSDictionary *makeReference(unsigned ref)
 	return;
 
       case _C_CHR:
-	o = [NSNumber numberWithInt: (NSInteger)*(char*)address];
+	o = [NSNumber numberWithInteger: (NSInteger)*(char*)address];
 	[_enc setObject: o forKey: aKey];
 	return;
 
       case _C_UCHR:
-	o = [NSNumber numberWithInt: (NSInteger)*(unsigned char*)address];
+	o = [NSNumber numberWithInteger: (NSInteger)*(unsigned char*)address];
 	[_enc setObject: o forKey: aKey];
 	return;
 
       case _C_SHT:
-	o = [NSNumber numberWithInt: (NSInteger)*(short*)address];
+	o = [NSNumber numberWithInteger: (NSInteger)*(short*)address];
 	[_enc setObject: o forKey: aKey];
 	return;
 
@@ -752,12 +752,12 @@ static NSDictionary *makeReference(unsigned ref)
 	return;
 
       case _C_INT:
-	o = [NSNumber numberWithInt: *(NSInteger*)address];
+	o = [NSNumber numberWithInteger: *(NSInteger*)address];
 	[_enc setObject: o forKey: aKey];
 	return;
 
       case _C_UINT:
-	o = [NSNumber numberWithUnsignedInt: *(NSUInteger*)address];
+	o = [NSNumber numberWithUnsignedInteger: *(NSUInteger*)address];
 	[_enc setObject: o forKey: aKey];
 	return;
 

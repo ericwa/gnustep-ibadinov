@@ -196,11 +196,11 @@ static Class NSMutableSet_concrete_class;
     }
   else
     {
-      unsigned		count = [self count];
+      NSUInteger		count = [self count];
       NSEnumerator	*e = [self objectEnumerator];
       id		o;
 
-      [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
+      [aCoder encodeValueOfObjCType: @encode(NSUInteger) at: &count];
       while ((o = [e nextObject]) != nil)
 	{
 	  [aCoder encodeValueOfObjCType: @encode(id) at: &o];
@@ -369,7 +369,7 @@ static Class NSMutableSet_concrete_class;
  */
 - (id) initWithArray: (NSArray*)other
 {
-  unsigned	count = [other count];
+  NSUInteger	count = [other count];
 
   if (count == 0)
     {
@@ -381,7 +381,7 @@ static Class NSMutableSet_concrete_class;
 
       if ([other isProxy])
 	{
-	  unsigned	i;
+	  NSUInteger	i;
 
 	  for (i = 0; i < count; i++)
 	    {
@@ -404,9 +404,9 @@ static Class NSMutableSet_concrete_class;
  */
 - (id) initWithSet: (NSSet*)other copyItems: (BOOL)flag
 {
-  unsigned	c = [other count];
+  NSUInteger	c = [other count];
   id		o, e = [other objectEnumerator];
-  unsigned	i = 0;
+  NSUInteger	i = 0;
   GS_BEGINIDBUF(os, c);
 
   while ((o = [e nextObject]))
@@ -441,8 +441,8 @@ static Class NSMutableSet_concrete_class;
 - (NSArray*) allObjects
 {
   id		e = [self objectEnumerator];
-  unsigned	i;
-  unsigned	c = [self count];
+  NSUInteger	i;
+  NSUInteger	c = [self count];
   NSArray	*result = nil;
   GS_BEGINIDBUF(k, c);
 
@@ -639,7 +639,7 @@ static Class NSMutableSet_concrete_class;
         {
           if ([path isEqualToString: @"@count"] == YES)
             {
-              result = [NSNumber numberWithUnsignedInt: [self count]];
+              result = [NSNumber numberWithUnsignedInteger: [self count]];
             }
           else
             {
@@ -650,11 +650,11 @@ static Class NSMutableSet_concrete_class;
         {
           NSString      *op = [path substringToIndex: r.location];
           NSString      *rem = [path substringFromIndex: NSMaxRange(r)];
-          unsigned      count = [self count];
+          NSUInteger      count = [self count];
 
           if ([op isEqualToString: @"@count"] == YES)
             {
-              result = [NSNumber numberWithUnsignedInt: count];
+              result = [NSNumber numberWithUnsignedInteger: count];
             }
           else if ([op isEqualToString: @"@avg"] == YES)
             {
@@ -1059,7 +1059,7 @@ static Class NSMutableSet_concrete_class;
  */
 - (void) addObjectsFromArray: (NSArray*)array
 {
-  unsigned	i, c = [array count];
+  NSUInteger	i, c = [array count];
 
   for (i = 0; i < c; i++)
     {

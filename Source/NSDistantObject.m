@@ -67,19 +67,30 @@ static int	debug_proxy = 0;
 static Class	placeHolder = 0;
 static Class	distantObjectClass = 0;
 
-#ifndef __GNUSTEP_RUNTIME__
+#if !defined (__GNUSTEP_RUNTIME__)
+
+#if defined (__OBJC2__)
+@interface Object (NSConformsTo)
+- (BOOL) conformsTo: (Protocol *)aProtocolObject;
++ (BOOL) conformsTo: (Protocol *)aProtocolObject;
+@end
+#endif /* __OBJC2__ */
+
 @interface Object (NSConformsToProtocolNamed)
 - (BOOL) _conformsToProtocolNamed: (const char*)aName;
 @end
-#endif
+
+#endif /* __GNUSTEP_RUNTIME__ */
+
 @interface NSObject (NSConformsToProtocolNamed)
 - (BOOL) _conformsToProtocolNamed: (const char*)aName;
 @end
+
 /*
  * Evil hack ... if a remote system wants to know if we conform
  * to a protocol we usa a local protocol with the same name.
  */
-#ifndef __GNUSTEP_RUNTIME__
+#if !defined (__GNUSTEP_RUNTIME__)
 @implementation Object (NSConformsToProtocolNamed)
 - (BOOL) _conformsToProtocolNamed: (const char*)aName
 {
@@ -89,7 +100,8 @@ static Class	distantObjectClass = 0;
   return [self conformsTo: p];
 }
 @end
-#endif
+#endif /* __GNUSTEP_RUNTIME__ */
+
 @implementation NSObject (NSConformsToProtocolNamed)
 - (BOOL) _conformsToProtocolNamed: (const char*)aName
 {

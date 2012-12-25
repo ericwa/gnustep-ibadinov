@@ -246,7 +246,7 @@ _gnu_process_args(int argc, char *argv[], char *env[])
 
   if (argv != 0 && argv[0] != 0)
     {
-      int	len;
+      NSUInteger	len;
 
       len = strlen(argv[0]) + 1;
       _gnu_arg_zero = (char*)malloc(len);
@@ -431,7 +431,7 @@ _gnu_process_args(int argc, char *argv[], char *env[])
 	i = 0;
 	while (env[i])
 	  {
-	    int		len = strlen(env[i]);
+	    NSUInteger		len = strlen(env[i]);
 	    char	*cp = strchr(env[i], '=');
 
 	    if (len && cp)

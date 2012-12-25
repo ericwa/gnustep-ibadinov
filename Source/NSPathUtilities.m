@@ -309,8 +309,8 @@ substUser(NSString *str)
   if (str != nil && [str rangeOfString: @"%"].length > 0)
     {
       NSMutableString	*m = [[str mutableCopy] autorelease];
-      int		l = [m length];
-      int		i = 0;
+      NSUInteger		l = [m length];
+      NSUInteger		i = 0;
       BOOL		percent = NO;
 
       while (i < l)
@@ -339,7 +339,7 @@ substUser(NSString *str)
 		}
 	      if (s != nil)
 		{
-		  int	diff = [s length] - 2;
+		  NSInteger	diff = [s length] - 2;
 
 		  [m replaceCharactersInRange: NSMakeRange(i-1, 2)
 				   withString: s];
@@ -1280,7 +1280,7 @@ ParseConfigurationFile(NSString *fileName, NSMutableDictionary *dict,
 {
   NSDictionary	*attributes;
   NSString      *file;
-  unsigned	l;
+  NSUInteger	l;
   unichar	*src;
   unichar	*dst;
   unichar	*end;
@@ -2067,8 +2067,8 @@ NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory directoryKey,
 {
   NSMutableArray  *paths;
   NSString        *path;
-  unsigned        i;
-  unsigned        count;
+  NSUInteger        i;
+  NSUInteger        count;
 
   InitialisePathUtilities();
 

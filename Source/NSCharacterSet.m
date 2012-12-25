@@ -88,7 +88,7 @@
 @interface NSBitmapCharSet : NSCharacterSet
 {
   const unsigned char	*_data;
-  unsigned		_length;
+  NSUInteger		_length;
   NSData		*_obj;
   unsigned		_known;
   unsigned		_present;
@@ -99,7 +99,7 @@
 @interface NSMutableBitmapCharSet : NSMutableCharacterSet
 {
   unsigned char		*_data;
-  unsigned		_length;
+  NSUInteger		_length;
   NSMutableData		*_obj;
   unsigned		_known;
   unsigned		_present;
@@ -200,7 +200,7 @@
 
 - (id) initWithBitmap: (NSData*)bitmap
 {
-  unsigned	length = [bitmap length];
+  NSUInteger	length = [bitmap length];
 
   if ((length % GSBITMAP_SIZE) != 0 || length > GSBITMAP_MAX)
     {
@@ -320,7 +320,7 @@
 
 - (void) addCharactersInString: (NSString*)aString
 {
-  unsigned   length;
+  NSUInteger   length;
 
   if (!aString)
     {
@@ -383,9 +383,9 @@
 
 - (void) formIntersectionWithCharacterSet: (NSCharacterSet *)otherSet
 {
-  unsigned		i;
+  NSUInteger		i;
   NSData		*otherData = [otherSet bitmapRepresentation];
-  unsigned		other_length = [otherData length];
+  NSUInteger		other_length = [otherData length];
   const unsigned char	*other_bytes = [otherData bytes];
 
   if (_length > other_length)
@@ -403,9 +403,9 @@
 
 - (void) formUnionWithCharacterSet: (NSCharacterSet*)otherSet
 {
-  unsigned		i;
+  NSUInteger		i;
   NSData		*otherData = [otherSet bitmapRepresentation];
-  unsigned		other_length = [otherData length];
+  NSUInteger		other_length = [otherData length];
   const unsigned char	*other_bytes = [otherData bytes];
 
   if (other_length > _length)
@@ -423,7 +423,7 @@
 
 - (id) initWithBitmap: (NSData*)bitmap
 {
-  unsigned	length = [bitmap length];
+  NSUInteger	length = [bitmap length];
   id		tmp;
 
   if ((length % GSBITMAP_SIZE) != 0 || length > GSBITMAP_MAX)
@@ -467,8 +467,8 @@
 
 - (void) removeCharactersInRange: (NSRange)aRange
 {
-  unsigned	i;
-  unsigned	limit = NSMaxRange(aRange);
+  NSUInteger	i;
+  NSUInteger	limit = NSMaxRange(aRange);
 
   if (NSMaxRange(aRange) > GSUNICODE_MAX)
     {
@@ -490,7 +490,7 @@
 
 - (void) removeCharactersInString: (NSString*)aString
 {
-  unsigned	length;
+  NSUInteger	length;
 
   if (!aString)
     {
@@ -587,7 +587,7 @@ static Class concreteMutableClass = nil;
 @interface _GSStaticCharSet : NSCharacterSet
 {
   const unsigned char	*_data;
-  unsigned		_length;
+  NSUInteger		_length;
   NSData		*_obj;
   unsigned		_known;
   unsigned		_present;
@@ -923,8 +923,8 @@ static Class concreteMutableClass = nil;
 
 - (NSCharacterSet*) invertedSet
 {
-  unsigned	i;
-  unsigned	length;
+  NSUInteger	i;
+  NSUInteger	length;
   unsigned char	*bytes;
   NSMutableData	*bitmap;
 
@@ -1299,9 +1299,9 @@ static Class concreteMutableClass = nil;
 - (id) initWithBitmap: (NSData*)bitmap
 {
   const unsigned char	*bytes = [bitmap bytes];
-  unsigned		length = [bitmap length];
-  unsigned		index = 0;
-  unsigned		i;
+  NSUInteger		length = [bitmap length];
+  NSUInteger		index = 0;
+  NSUInteger		i;
   NSRange		r;
   BOOL			findingLocation = YES;
 
@@ -1405,7 +1405,7 @@ static Class concreteMutableClass = nil;
 
 - (void) addCharactersInString: (NSString*)aString
 {
-  unsigned   length;
+  NSUInteger   length;
 
   if (!aString)
     {
@@ -1602,7 +1602,7 @@ static Class concreteMutableClass = nil;
 
 - (void) removeCharactersInString: (NSString*)aString
 {
-  unsigned	length;
+  NSUInteger	length;
 
   if (!aString)
     {

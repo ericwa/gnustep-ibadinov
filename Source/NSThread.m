@@ -159,7 +159,7 @@ static NSNotificationCenter *nc = nil;
  * If the date is in the past, this function simply allows other threads
  * (if any) to run.
  */
-void
+static void
 GSSleepUntilIntervalSinceReferenceDate(NSTimeInterval when)
 {
   NSTimeInterval delay;
@@ -341,7 +341,7 @@ GSCurrentThread(void)
   return thr;
 }
 
-NSMutableDictionary*
+static NSMutableDictionary*
 GSDictionaryForThread(NSThread *t)
 {
   if (nil == t)
@@ -573,6 +573,13 @@ unregisterActiveThread(NSThread *thread)
   return defaultThread;
 }
 
+/* On OSX <pthread.h> does not define _POSIX_THREAD_PRIORITY_SCHEDULING */
+#if !defined (__APPLE__)
+#  define HAVE_PRIORITY_SCHEDULING (defined(_POSIX_THREAD_PRIORITY_SCHEDULING) && (_POSIX_THREAD_PRIORITY_SCHEDULING > 0))
+#else
+#  define HAVE_PRIORITY_SCHEDULING 1
+#endif
+
 /**
  * Set the priority of the current thread.  This is a value in the
  * range 0.0 (lowest) to 1.0 (highest) which is mapped to the underlying
@@ -580,7 +587,7 @@ unregisterActiveThread(NSThread *thread)
  */
 + (void) setThreadPriority: (double)pri
 {
-#if defined(_POSIX_THREAD_PRIORITY_SCHEDULING) && (_POSIX_THREAD_PRIORITY_SCHEDULING > 0)
+#if HAVE_PRIORITY_SCHEDULING
   int	policy;
   struct sched_param param;
 
@@ -611,14 +618,13 @@ unregisterActiveThread(NSThread *thread)
   GSSleepUntilIntervalSinceReferenceDate([date timeIntervalSinceReferenceDate]);
 }
 
-
 /**
  * Return the priority of the current thread.
  */
 + (double) threadPriority
 {
   double pri = 0;
-#if defined(_POSIX_THREAD_PRIORITY_SCHEDULING) && (_POSIX_THREAD_PRIORITY_SCHEDULING > 0)
+#if HAVE_PRIORITY_SCHEDULING
   int policy;
   struct sched_param param;
 
@@ -629,17 +635,17 @@ unregisterActiveThread(NSThread *thread)
   pri /= (PTHREAD_MAX_PRIORITY - PTHREAD_MIN_PRIORITY);
 
 #else
-#warning Your pthread implementation does not support thread priorities
+#  warning Your pthread implementation does not support thread priorities
 #endif
   return pri;
 
 }
 
-
 
 /*
  * Thread instance methods.
  */
+
 
 - (void) cancel
 {
@@ -1017,8 +1023,8 @@ static void *nsthreadLauncher(void* thread)
 - (void) fire
 {
   NSArray	*toDo;
-  unsigned int	i;
-  unsigned int	c;
+  NSUInteger	i;
+  NSUInteger	c;
 
   [lock lock];
 #if defined(__MINGW__)

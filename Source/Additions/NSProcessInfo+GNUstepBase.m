@@ -83,9 +83,9 @@ BOOL GSDebugSet(NSString *level)
 {
   if (_debug_set == nil)
     {
-      int		argc = [[self arguments] count];
+      NSUInteger		argc = [[self arguments] count];
       NSMutableSet	*mySet;
-      int		i;
+      NSUInteger		i;
 
       mySet = [NSMutableSet new];
       for (i = 0; i < argc; i++)

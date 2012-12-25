@@ -1437,12 +1437,12 @@ GSPrivateCheckTasks()
   NSDictionary		*e = [self environment];
   NSArray		*k = [e allKeys];
   NSArray		*a = [self arguments];
-  int			ec = [e count];
-  int			ac = [a count];
+  NSUInteger			ec = [e count];
+  NSUInteger			ac = [a count];
   const char		*args[ac+2];
   const char		*envl[ec+1];
   id			hdl;
-  int			i;
+  NSUInteger			i;
 
   if (_hasLaunched)
     {

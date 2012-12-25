@@ -92,8 +92,7 @@
 + (NSKeyValueMutableSet *) setForKey: (NSString *)aKey ofObject: (id)anObject
 {
   NSKeyValueMutableSet *proxy;
-  unsigned size = [aKey maximumLengthOfBytesUsingEncoding:
-			  NSUTF8StringEncoding];
+  NSUInteger size = [aKey maximumLengthOfBytesUsingEncoding: NSUTF8StringEncoding];
   char keybuf[size + 1];
 
   [aKey getCString: keybuf

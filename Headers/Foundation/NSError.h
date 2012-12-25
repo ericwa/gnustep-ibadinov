@@ -117,7 +117,7 @@ GS_EXPORT NSString* const NSCocoaErrorDomain;
 {
 #if	GS_EXPOSE(NSError)
 @private
-  int		_code;
+  NSInteger		_code;
   NSString	*_domain;
   NSDictionary	*_userInfo;
 #endif

@@ -277,7 +277,7 @@ GS_PRIVATE_INTERNAL(NSNumberFormatter)
 - (int32_t) attributeForKey: (int)key;
 - (NSString*) symbolForKey: (int)key;
 - (NSString*) textAttributeForKey: (int)key;
-- (void) setAttribute: (int32_t)value forKey: (int)key;
+- (void) setAttribute: (NSInteger)value forKey: (int)key;
 - (void) setSymbol: (NSString*)value forKey: (int)key;
 - (void) setTextAttribute: (NSString*)value forKey: (int)key;
 @end
@@ -359,7 +359,7 @@ GS_PRIVATE_INTERNAL(NSNumberFormatter)
 #endif
 }
 
-- (void) setAttribute: (int32_t)value forKey: (int)key
+- (void) setAttribute: (NSInteger)value forKey: (int)key
 {
   NSAssert(key >= 0
     && key < sizeof(_attributes) / sizeof(*_attributes),
@@ -367,8 +367,8 @@ GS_PRIVATE_INTERNAL(NSNumberFormatter)
 #if GS_USE_ICU == 1
   if (value < 0)
     value = -1;
-  _attributes[key] = value;
-  unum_setAttribute (_formatter, key, value);
+  _attributes[key] = (int32_t)value;
+  unum_setAttribute (_formatter, key, (int32_t)value);
 #endif
   return;
 }
@@ -400,7 +400,7 @@ GS_PRIVATE_INTERNAL(NSNumberFormatter)
   if (length > BUFFER_SIZE)
     length = BUFFER_SIZE;
   [value getCharacters: buffer range: NSMakeRange (0, length)];
-  unum_setSymbol (_formatter, key, buffer, length, &err);
+  unum_setSymbol (_formatter, key, buffer, (int32_t)length, &err);
 #endif
   return;
 }
@@ -420,7 +420,7 @@ GS_PRIVATE_INTERNAL(NSNumberFormatter)
   if (length > BUFFER_SIZE)
     length = BUFFER_SIZE;
   [value getCharacters: buffer range: NSMakeRange (0, length)];
-  unum_setTextAttribute (_formatter, key, buffer, length, &err);
+  unum_setTextAttribute (_formatter, key, buffer, (int32_t)length, &err);
 #endif
   return;
 }
@@ -1144,7 +1144,7 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
       NSDecimalNumber	*roundedNumber;
       NSDecimalNumber	*intPart;
       NSDecimalNumber	*fracPart;
-      int		decimalPlaces = 0;
+      NSInteger		decimalPlaces = 0;
       BOOL		displayThousandsSeparators = NO;
       BOOL		displayFractionalPart = NO;
       BOOL		negativeNumber = NO;
@@ -1313,7 +1313,7 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
       // fix the thousands separators up
       if (displayThousandsSeparators && [intPartString length] > 3)
         {
-          int index = [intPartString length];
+          NSInteger index = [intPartString length];
 
           while (0 < (index -= 3))
 	    {
@@ -1435,7 +1435,7 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
   if (range.location == NSNotFound)
     {
       intNum = unum_parseInt64(internal->_formatter,
-        ustring, length, NULL, &err);
+        ustring, (int32_t)length, NULL, &err);
       if (U_FAILURE(err))
         return nil;
       if (intNum == 0 || intNum == 1)
@@ -1448,7 +1448,7 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
   else
     {
       doubleNum = unum_parseDouble(internal->_formatter,
-        ustring, length, NULL, &err);
+        ustring, (int32_t)length, NULL, &err);
       if (U_FAILURE(err))
         return nil;
       result = [NSNumber numberWithDouble: doubleNum];
@@ -1968,10 +1968,11 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
                   error: (out NSError **) error
 {
 #if GS_USE_ICU == 1
+  NSParameterAssert(rangep->location + rangep->length < INT32_MAX);
   BOOL result;
   BOOL genDec = [self generatesDecimalNumbers];
   NSUInteger inLen;
-  int32_t parsePos = rangep->location;
+  int32_t parsePos = (int32_t)rangep->location;
   UChar inBuffer[BUFFER_SIZE];
   UErrorCode err = U_ZERO_ERROR;
   
@@ -2014,7 +2015,7 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
       double output;
       
       output = 
-        unum_parseDouble (internal->_formatter, inBuffer, inLen, &parsePos,
+        unum_parseDouble (internal->_formatter, inBuffer, (int32_t)inLen, &parsePos,
           &err);
       if (U_SUCCESS(err))
         {
@@ -2160,7 +2161,7 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
 	    length = BUFFER_SIZE;
 	  [internal->_symbols[idx] getCharacters: buffer
 					   range: NSMakeRange (0, length)];
-	  unum_setSymbol (internal->_formatter, idx, buffer, length, &err);
+	  unum_setSymbol (internal->_formatter, idx, buffer, (int32_t)length, &err);
 	}
     }
 
@@ -2174,7 +2175,7 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
 	  [internal->_textAttributes[idx] getCharacters: buffer
 					   range: NSMakeRange (0, length)];
 	  unum_setTextAttribute
-	    (internal->_formatter, idx, buffer, length, &err);
+	    (internal->_formatter, idx, buffer, (int32_t)length, &err);
 	}
     }
 
@@ -2190,4 +2191,5 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
   return;
 #endif
 }
+
 @end

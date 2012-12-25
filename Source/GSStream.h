@@ -181,9 +181,9 @@ IVARS
 @interface GSBufferOutputStream : GSOutputStream
 {
 @private
-  uint8_t	*_buffer;
-  unsigned	_capacity;
-  unsigned long _pointer;
+  uint8_t       *_buffer;
+  NSUInteger	_capacity;
+  NSUInteger    _pointer;
 }
 @end
 

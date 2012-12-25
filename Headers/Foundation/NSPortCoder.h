@@ -78,7 +78,7 @@ extern "C" {
 // Decoding
   id			_src;		/* Deserialization source.	*/
   IMP			_dDesImp;	/* Method to deserialize with.	*/
-  void			(*_dTagImp)(id,SEL,unsigned char*,unsigned*,unsigned*);
+  void			(*_dTagImp)(id,SEL,unsigned char*,unsigned*,NSUInteger*);
   IMP			_dValImp;	/* Method to decode data with.	*/
 #ifndef	_IN_PORT_CODER_M
 #define	GSIArray	void*
@@ -90,7 +90,7 @@ extern "C" {
 #undef	GSIArray
 #endif
   NSMutableDictionary	*_cInfo;	/* Class version information.	*/
-  unsigned		_cursor;	/* Position in data buffer.	*/
+  NSUInteger		_cursor;	/* Position in data buffer.	*/
   unsigned		_version;	/* Version of archiver used.	*/
   NSZone		*_zone;		/* Zone for allocating objs.	*/
 #endif

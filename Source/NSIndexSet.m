@@ -318,7 +318,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
 
   if ([aCoder allowsKeyedCoding])
     {
-      [aCoder encodeInt: rangeCount forKey: @"NSRangeCount"];
+      [aCoder encodeInteger: rangeCount forKey: @"NSRangeCount"];
     }
   else
     {
@@ -337,8 +337,8 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
       r = GSIArrayItemAtIndex(_array, 0).ext;
       if ([aCoder allowsKeyedCoding])
         {
-          [aCoder encodeInt: r.location forKey: @"NSLocation"];
-          [aCoder encodeInt: r.length forKey: @"NSLength"];
+          [aCoder encodeInteger: r.location forKey: @"NSLocation"];
+          [aCoder encodeInteger: r.length forKey: @"NSLength"];
         }
       else
         {
@@ -1109,7 +1109,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
       GSIArrayRemoveItemAtIndex(_array, pos + 1);
       if (NSMaxRange(r) > NSMaxRange(aRange))
 	{
-	  int	offset = NSMaxRange(r) - NSMaxRange(aRange);
+	  NSInteger	offset = NSMaxRange(r) - NSMaxRange(aRange);
 
 	  r = GSIArrayItemAtIndex(_array, pos).ext;
 	  r.length += offset;

@@ -33,7 +33,7 @@
 typedef struct {
   NSURLProtectionSpace				*space;
   NSURLCredential				*credential;
-  int						previousFailureCount;
+  NSInteger						previousFailureCount;
   NSURLResponse					*response;
   NSError					*error;
   id<NSURLAuthenticationChallengeSender>	sender;

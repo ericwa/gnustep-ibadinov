@@ -44,7 +44,7 @@ NSString * const NSURLAuthenticationMethodHTTPDigest
 // Internal data storage
 typedef struct {
   NSString	*host;
-  int		port;
+  NSInteger port;
   NSString	*protocol;
   NSString	*realm;
   NSString	*proxyType;		// Not retained

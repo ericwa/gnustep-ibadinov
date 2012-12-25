@@ -1,5 +1,6 @@
 #if defined (NeXT_RUNTIME) && (defined (__x86_64__) || defined (__x86_64))
 
+#import <Foundation/NSException.h>
 #import <Foundation/NSInvocation.h>
 #import <Foundation/NSCoder.h>
 #import <Foundation/NSNull.h>

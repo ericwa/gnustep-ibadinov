@@ -404,13 +404,13 @@ static NSLock			*placeholderLock;
 - (void) encodeWithCoder: (NSCoder *)coder
 {
   NSUInteger	tsize;
-  unsigned	size;
+  NSUInteger	size;
   const char	*data;
   const char	*objctype = [self objCType];
   NSMutableData	*d;
 
   size = strlen(objctype)+1;
-  [coder encodeValueOfObjCType: @encode(unsigned) at: &size];
+  [coder encodeValueOfObjCType: @encode(NSUInteger) at: &size];
   [coder encodeArrayOfObjCType: @encode(signed char) count: size at: objctype];
   if (strncmp("{_NSSize=", objctype, 9) == 0)
     {
@@ -447,7 +447,7 @@ static NSLock			*placeholderLock;
   d = [NSMutableData new];
   [d serializeDataAt: data ofObjCType: objctype context: nil];
   size = [d length];
-  [coder encodeValueOfObjCType: @encode(unsigned) at: &size];
+  [coder encodeValueOfObjCType: @encode(NSUInteger) at: &size];
   NSZoneFree(NSDefaultMallocZone(), (void*)data);
   data = [d bytes];
   [coder encodeArrayOfObjCType: @encode(unsigned char) count: size at: data];
@@ -461,10 +461,10 @@ static NSLock			*placeholderLock;
   Class		c;
   id		o;
   NSUInteger	tsize;
-  unsigned	size;
-  int		ver;
+  NSUInteger	size;
+  NSInteger		ver;
 
-  [coder decodeValueOfObjCType: @encode(unsigned) at: &size];
+  [coder decodeValueOfObjCType: @encode(NSUInteger) at: &size];
   /*
    * For almost all type encodings, we can use space on the stack,
    * but to handle exceptionally large ones (possibly some huge structs)
@@ -566,7 +566,7 @@ static NSLock			*placeholderLock;
 	    {
 	      unsigned char	*data;
 
-	      [coder decodeValueOfObjCType: @encode(unsigned) at: &size];
+	      [coder decodeValueOfObjCType: @encode(NSUInteger) at: &size];
 	      data = (void *)NSZoneMalloc(NSDefaultMallocZone(), size);
 	      [coder decodeArrayOfObjCType: @encode(unsigned char)
 				     count: size
@@ -578,7 +578,7 @@ static NSLock			*placeholderLock;
       else
 	{
 	  NSData        *d;
-	  unsigned      cursor = 0;
+	  NSUInteger      cursor = 0;
 
 	  /*
 	   * For performance, decode small values directly onto the stack,
@@ -616,7 +616,7 @@ static NSLock			*placeholderLock;
   else
     {
       static NSData	*d = nil;
-      unsigned  	cursor = 0;
+      NSUInteger  	cursor = 0;
 
       if (d == nil)
 	{
@@ -631,7 +631,7 @@ static NSLock			*placeholderLock;
 	{
 	  unsigned char	data[tsize];
 
-	  [coder decodeValueOfObjCType: @encode(unsigned) at: &size];
+	  [coder decodeValueOfObjCType: @encode(NSUInteger) at: &size];
 	  {
 	    unsigned char	serialized[size];
 
@@ -651,7 +651,7 @@ static NSLock			*placeholderLock;
 	  void	*data;
 
 	  data = (void *)NSZoneMalloc(NSDefaultMallocZone(), tsize);
-	  [coder decodeValueOfObjCType: @encode(unsigned) at: &size];
+	  [coder decodeValueOfObjCType: @encode(NSUInteger) at: &size];
 	  {
 	    void	*serialized;
 

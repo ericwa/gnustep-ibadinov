@@ -153,7 +153,7 @@ setup()
 @public
   NSObject      *observer;      // Not retained (zeroing weak pointer)
   void          *context;
-  int           options;
+  NSKeyValueObservingOptions    options;
 }
 @end
 
@@ -315,9 +315,9 @@ setup()
 static NSString *newKey(SEL _cmd)
 {
   const char	*name = sel_getName(_cmd);
-  unsigned	len = strlen(name);
+  NSUInteger	len = strlen(name);
   NSString	*key;
-  unsigned	i;
+  NSUInteger	i;
   NSCAssert(len > 0, @"Invalid selector name!");
 
   if (*name == '_')
@@ -1006,7 +1006,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
 
 - (void) notifyForKey: (NSString *)aKey ofInstance: (id)instance prior: (BOOL)f
 {
-  unsigned      count;
+  NSUInteger      count;
   id            oldValue;
   id            newValue;
 
@@ -1115,7 +1115,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
 {
   GSKVOPathInfo         *pathInfo;
   GSKVOObservation      *observation;
-  unsigned              count;
+  NSUInteger              count;
 
   if ([anObserver respondsToSelector:
     @selector(observeValueForKeyPath:ofObject:change:context:)] == NO)
@@ -1239,7 +1239,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
   pathInfo = (GSKVOPathInfo*)NSMapGet(paths, (void*)aPath);
   if (pathInfo != nil)
     {
-      unsigned  count = [pathInfo->observations count];
+      NSUInteger  count = [pathInfo->observations count];
 
       pathInfo->allOptions = 0;
       while (count-- > 0)
@@ -1273,7 +1273,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
   pathInfo = (GSKVOPathInfo*)NSMapGet(paths, (void*)aPath);
   if (pathInfo != nil)
     {
-      unsigned  count = [pathInfo->observations count];
+      NSUInteger  count = [pathInfo->observations count];
 
       while (count-- > 0)
         {
@@ -1797,7 +1797,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
           NSMutableArray        *array;
 
           array = [self valueForKey: aKey];
-          [pathInfo->change setValue: [NSNumber numberWithInt: changeKind]
+          [pathInfo->change setValue: [NSNumber numberWithUnsignedLong: changeKind]
                               forKey: NSKeyValueChangeKindKey];
           [pathInfo->change setValue: indexes
                               forKey: NSKeyValueChangeIndexesKey];
@@ -1847,7 +1847,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
               [pathInfo->change setValue: [array objectsAtIndexes: indexes]
                                   forKey: NSKeyValueChangeOldKey];
             }
-          [pathInfo->change setValue: [NSNumber numberWithInt: changeKind]
+          [pathInfo->change setValue: [NSNumber numberWithUnsignedLong: changeKind]
                               forKey: NSKeyValueChangeKindKey];
           [pathInfo notifyForKey: aKey ofInstance: [info instance] prior: YES];
         }

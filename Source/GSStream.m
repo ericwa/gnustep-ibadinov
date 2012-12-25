@@ -428,7 +428,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
   enumerator = NSEnumerateMapTable(_loops);
   while (NSNextMapEnumeratorPair(&enumerator, (void **)(&k), (void**)&v))
     {
-      unsigned	i = [v count];
+      NSUInteger	i = [v count];
 
       while (i-- > 0)
 	{
@@ -558,7 +558,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
   enumerator = NSEnumerateMapTable(_loops);
   while (NSNextMapEnumeratorPair(&enumerator, (void **)(&k), (void**)&v))
     {
-      unsigned	i = [v count];
+      NSUInteger	i = [v count];
 
       while (i-- > 0)
 	{

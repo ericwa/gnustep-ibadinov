@@ -43,7 +43,7 @@ typedef struct {
   NSString		*textEncodingName;
   NSString		*statusText;
   NSMutableDictionary	*headers; /* _GSMutableInsensitiveDictionary */
-  int			statusCode;
+  NSInteger			statusCode;
 } Internal;
  
 #define	this	((Internal*)(self->_NSURLResponseInternal))

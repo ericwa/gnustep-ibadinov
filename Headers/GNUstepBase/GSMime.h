@@ -208,13 +208,13 @@ extern "C" {
 #if	GS_EXPOSE(GSMimeParser)
   NSMutableData		*data;
   unsigned char		*bytes;
-  unsigned		dataEnd;
-  unsigned		sectionStart;
-  unsigned		lineStart;
-  unsigned		lineEnd;
-  unsigned		input;
-  unsigned		expect;
-  unsigned		rawBodyLength;
+  NSUInteger		dataEnd;
+  NSUInteger		sectionStart;
+  NSUInteger		lineStart;
+  NSUInteger		lineEnd;
+  NSUInteger		input;
+  NSUInteger		expect;
+  NSUInteger		rawBodyLength;
   struct {
     unsigned int	inBody:1;
     unsigned int	isHttp:1;

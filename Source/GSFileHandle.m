@@ -117,10 +117,6 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
 - (void) receivedEventWrite;
 @end
 
-#if !defined (__GNUC__)
-#  define __builtin_expect(expression, value) expression
-#endif
-
 @implementation GSFileHandle
 
 /**
@@ -131,11 +127,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
 {
     ssize_t	result;
     
-#if NSUIntegerMax > UINT_MAX
-    if (__builtin_expect(gzDescriptor && len > UINT_MAX, NO)) {
-        [NSException raise:NSRangeException format:@"Maximum read size with gzip is %u", UINT_MAX];
-    }
-#endif
+    NSAssert1(!gzDescriptor || len <= UINT_MAX, @"Maximum read size with gzip is %u", UINT_MAX);
     
     do
     {
@@ -167,11 +159,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
 {
     ssize_t	result;
     
-#if NSUIntegerMax > UINT_MAX
-    if (__builtin_expect(gzDescriptor && len > UINT_MAX, NO)) {
-        [NSException raise:NSRangeException format:@"Maximum write size with gzip is %u", UINT_MAX];
-    }
-#endif
+    NSAssert1(!gzDescriptor || len <= UINT_MAX, @"Maximum write size with gzip is %u", UINT_MAX);
     
     do
     {

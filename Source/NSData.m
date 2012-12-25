@@ -150,8 +150,8 @@ readContentsOfFile(NSString* path, void** buf, long* len, NSZone* zone)
 #endif	
   FILE		*theFile = 0;
   void		*tmp = 0;
-  int		c;
-  long		fileLength;
+  ssize_t		c;
+  ssize_t		fileLength;
 	
 #if defined(__MINGW__)
   thePath = (const unichar*)[path fileSystemRepresentation];
@@ -895,7 +895,7 @@ failure:
  *  Copies data from buffer starting from cursor.  <strong>Deprecated</strong>.
  *  Use [-getBytes:] and related methods instead.
  */
-- (unsigned int) deserializeAlignedBytesLengthAtCursor: (unsigned int*)cursor
+- (unsigned int) deserializeAlignedBytesLengthAtCursor: (NSUInteger*)cursor
 {
   return (unsigned)[self deserializeIntAtCursor: cursor];
 }
@@ -905,8 +905,8 @@ failure:
  *  Use [-getBytes:] and related methods instead.
  */
 - (void) deserializeBytes: (void*)buffer
-		   length: (unsigned int)bytes
-		 atCursor: (unsigned int*)cursor
+		   length: (NSUInteger)bytes
+		 atCursor: (NSUInteger*)cursor
 {
   NSRange	range = { *cursor, bytes };
 
@@ -916,7 +916,7 @@ failure:
 
 - (void) deserializeDataAt: (void*)data
 	        ofObjCType: (const char*)type
-		  atCursor: (unsigned int*)cursor
+		  atCursor: (NSUInteger*)cursor
 		   context: (id <NSObjCTypeSerializationCallBack>)callback
 {
   if (!type || !data)
@@ -1195,7 +1195,7 @@ failure:
  *  Retrieve an int from this data, which is assumed to be in network
  *  (big-endian) byte order.  Cursor refers to byte position.
  */
-- (int) deserializeIntAtCursor: (unsigned int*)cursor
+- (int) deserializeIntAtCursor: (NSUInteger*)cursor
 {
   unsigned ni, result;
 
@@ -1208,7 +1208,7 @@ failure:
  *  Retrieve an int from this data, which is assumed to be in network
  *  (big-endian) byte order.  Index refers to byte position.
  */
-- (int) deserializeIntAtIndex: (unsigned int)index
+- (int) deserializeIntAtIndex: (NSUInteger)index
 {
   unsigned ni, result;
 
@@ -1223,8 +1223,8 @@ failure:
  *  position.
  */
 - (void) deserializeInts: (int*)intBuffer
-		   count: (unsigned int)numInts
-	        atCursor: (unsigned int*)cursor
+		   count: (NSUInteger)numInts
+	        atCursor: (NSUInteger*)cursor
 {
   unsigned i;
 
@@ -1241,8 +1241,8 @@ failure:
  *  position.
  */
 - (void) deserializeInts: (int*)intBuffer
-		   count: (unsigned int)numInts
-		 atIndex: (unsigned int)index
+		   count: (NSUInteger)numInts
+		 atIndex: (NSUInteger)index
 {
   unsigned i;
 
@@ -1315,7 +1315,7 @@ failure:
   char		thePath[BUFSIZ*2+8];
   char		theRealPath[BUFSIZ*2];
 #endif
-  int		c;
+  ssize_t		c;
   FILE		*theFile;
   BOOL		useAuxiliaryFile = NO;
   BOOL		error_BadPath = YES;
@@ -1689,7 +1689,7 @@ failure:
 
 - (void) deserializeTypeTag: (unsigned char*)tag
 		andCrossRef: (unsigned int*)ref
-		   atCursor: (unsigned int*)cursor
+		   atCursor: (NSUInteger*)cursor
 {
   [self deserializeDataAt: (void*)tag
 	       ofObjCType: @encode(uint8_t)
@@ -2148,9 +2148,10 @@ failure:
  *  Does not act as the name suggests.  Instead, serializes length itself
  *  as an int into buffer.
  */
-- (void) serializeAlignedBytesLength: (unsigned int)length
+- (void) serializeAlignedBytesLength: (NSUInteger)length
 {
-  [self serializeInt: length];
+    NSAssert1(length <= INT_MAX, @"Currently, serializeAlignedBytesLength: is limited to size of int, provided length: %lu", (unsigned long)length);
+    [self serializeInt: (int)length];
 }
 
 - (void) serializeDataAt: (const void*)data
@@ -2338,7 +2339,7 @@ failure:
  * anything there currently), swapping it to network (big-endian) byte order
  * first.
  */
-- (void) serializeInt: (int)value atIndex: (unsigned int)index
+- (void) serializeInt: (int)value atIndex: (NSUInteger)index
 {
   unsigned ni = NSSwapHostIntToBig(value);
   NSRange range = { index, sizeof(int) };
@@ -2351,7 +2352,7 @@ failure:
  * network (big-endian) byte order first.
  */
 - (void) serializeInts: (int*)intBuffer
-		 count: (unsigned int)numInts
+		 count: (NSUInteger)numInts
 {
   unsigned	i;
   SEL		sel = @selector(serializeInt:);
@@ -2369,10 +2370,10 @@ failure:
  * byte order first.
  */
 - (void) serializeInts: (int*)intBuffer
-		 count: (unsigned int)numInts
-	       atIndex: (unsigned int)index
+		 count: (NSUInteger)numInts
+	       atIndex: (NSUInteger)index
 {
-  unsigned	i;
+  NSUInteger	i;
   SEL		sel = @selector(serializeInt:atIndex:);
   IMP		imp = [self methodForSelector: sel];
 
@@ -2572,7 +2573,7 @@ failure:
 }
 
 static inline void
-getBytes(void* dst, void* src, unsigned len, unsigned limit, unsigned *pos)
+getBytes(void* dst, void* src, NSUInteger len, NSUInteger limit, NSUInteger *pos)
 {
   if (*pos > limit || len > limit || len+*pos > limit)
     {
@@ -2586,7 +2587,7 @@ getBytes(void* dst, void* src, unsigned len, unsigned limit, unsigned *pos)
 
 - (void) deserializeDataAt: (void*)data
 	        ofObjCType: (const char*)type
-		  atCursor: (unsigned int*)cursor
+		  atCursor: (NSUInteger *)cursor
 		   context: (id <NSObjCTypeSerializationCallBack>)callback
 {
   if (data == 0 || type == 0)
@@ -3449,9 +3450,9 @@ getBytes(void* dst, void* src, unsigned len, unsigned limit, unsigned *pos)
 
       case _C_CHARPTR:
 	{
-	  unsigned	len;
+	  size_t	len;
 	  int32_t	ni;
-	  uint32_t	minimum;
+	  size_t	minimum;
 
 	  if (!*(void**)data)
 	    {
@@ -3461,7 +3462,8 @@ getBytes(void* dst, void* src, unsigned len, unsigned limit, unsigned *pos)
 	      return;
 	    }
 	  len = strlen(*(void**)data);
-	  ni = GSSwapHostI32ToBig(len);
+	  NSAssert1(len < INT32_MAX, @"Serialized string too long, length: %lu", (unsigned long)len);
+	  ni = GSSwapHostI32ToBig((int32_t)len);
 	  minimum = length + len + sizeof(ni);
 	  if (minimum > capacity)
 	    {
@@ -3478,11 +3480,11 @@ getBytes(void* dst, void* src, unsigned len, unsigned limit, unsigned *pos)
 	}
       case _C_ARY_B:
 	{
-	  unsigned	offset = 0;
-	  unsigned	size;
-	  unsigned	count = atoi(++type);
-	  unsigned	i;
-	  uint32_t	minimum;
+	  size_t	offset = 0;
+	  size_t	size;
+	  size_t	count = atoi(++type);
+	  size_t	i;
+	  size_t	minimum;
 
 	  while (isdigit(*type))
 	    {
@@ -3585,7 +3587,7 @@ getBytes(void* dst, void* src, unsigned len, unsigned limit, unsigned *pos)
 	{
 	  const char  *name = *(Class*)data?class_getName(*(Class*)data):"";
 	  uint16_t	ln = (uint16_t)strlen(name);
-	  uint32_t	minimum = length + ln + sizeof(uint16_t);
+	  size_t	minimum = length + ln + sizeof(uint16_t);
 	  uint16_t	ni;
 
 	  if (minimum > capacity)
@@ -3608,7 +3610,7 @@ getBytes(void* dst, void* src, unsigned len, unsigned limit, unsigned *pos)
 	  uint16_t	ln = (name == 0) ? 0 : (uint16_t)strlen(name);
 	  const char  *types = *(SEL*)data?GSTypesFromSelector(*(SEL*)data):"";
 	  uint16_t	lt = (types == 0) ? 0 : (uint16_t)strlen(types);
-	  uint32_t	minimum = length + ln + lt + 2*sizeof(uint16_t);
+	  size_t	minimum = length + ln + lt + 2*sizeof(uint16_t);
 	  uint16_t	ni;
 
 	  if (minimum > capacity)

@@ -30,10 +30,10 @@
 
 // FIXME ... locking and disk storage needed
 typedef struct {
-  unsigned		diskCapacity;
-  unsigned		memoryCapacity;
-  unsigned		diskUsage;
-  unsigned		memoryUsage;
+  NSUInteger		diskCapacity;
+  NSUInteger		memoryCapacity;
+  NSUInteger		diskUsage;
+  NSUInteger		memoryUsage;
   NSString		*path;
   NSMutableDictionary	*memory;
 } Internal;
@@ -180,7 +180,7 @@ static NSURLCache	*shared = nil;
 
       case NSURLCacheStorageAllowedInMemoryOnly:
         {
-	  unsigned		size = [[cachedResponse data] length];
+	  NSUInteger		size = [[cachedResponse data] length];
 
 	  if (size < this->memoryCapacity)
 	    {

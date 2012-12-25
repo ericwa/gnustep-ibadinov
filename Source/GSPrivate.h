@@ -51,7 +51,7 @@
  */
 #define GREGORIAN_REFERENCE 730486
 
-NSTimeInterval   GSPrivateTimeNow() GS_ATTRIB_PRIVATE;
+NSTimeInterval   GSPrivateTimeNow(void) GS_ATTRIB_PRIVATE;
 
 #include "GNUstepBase/GSObjCRuntime.h"
 
@@ -246,8 +246,8 @@ typedef enum {
 @interface	_NSKeyedCoderOldStyleArray : NSObject <NSCoding>
 {
   char		_t[2];
-  unsigned	_c;
-  unsigned	_s;
+  NSUInteger	_c;
+  NSUInteger	_s;
   const void	*_a;
   NSData	*_d;	// Only valid after initWithCoder:
 }
@@ -264,7 +264,7 @@ typedef enum {
  */
 @interface	NSError (GNUstepBase)
 + (NSError*) _last;
-+ (NSError*) _systemError: (long)number;
++ (NSError*) _systemError: (int)number;
 @end
 
 @class  NSRunLoop;
@@ -311,7 +311,7 @@ GSRunLoopInfoForThread(NSThread *aThread) GS_ATTRIB_PRIVATE;
  * methods/functions which might cause a recursive exception.
  */
 const char*
-GSPrivateArgZero() GS_ATTRIB_PRIVATE;
+GSPrivateArgZero(void) GS_ATTRIB_PRIVATE;
 
 /* get the available string encodings (nul terminated array)
  */
@@ -337,7 +337,7 @@ GSPrivateDefaultCStringEncoding(void);// GS_ATTRIB_PRIVATE;
  * External apps would cache the locale themselves.
  */
 NSDictionary *
-GSPrivateDefaultLocale() GS_ATTRIB_PRIVATE;
+GSPrivateDefaultLocale(void) GS_ATTRIB_PRIVATE;
 
 /* Get one of several standard values.
  */
@@ -380,14 +380,14 @@ GSPrivateIsEncodingSupported(NSStringEncoding encoding);// GS_ATTRIB_PRIVATE;
  * If the flag is NO then a result of 0 is mapped to 0xffffffff.
  * This is a pretty useful general purpose hash function.
  */
-static inline unsigned
-GSPrivateHash(const void *data, unsigned length, unsigned limit, BOOL zero)
+static inline NSUInteger
+GSPrivateHash(const void *data, NSUInteger length, NSUInteger limit, BOOL zero)
   __attribute__((unused));
-static inline unsigned
-GSPrivateHash(const void *data, unsigned length, unsigned limit, BOOL zero)
+static inline NSUInteger
+GSPrivateHash(const void *data, NSUInteger length, NSUInteger limit, BOOL zero)
 {
-  unsigned	ret = length;
-  unsigned	l = length;
+  NSUInteger	ret = length;
+  NSUInteger	l = length;
 
   if (limit < length)
     {
@@ -435,7 +435,7 @@ BOOL GSPrivateNotifyMore(NSString *mode) GS_ATTRIB_PRIVATE;
 
 /* Function to return the function for searching in a string for a range.
  */
-typedef NSRange (*GSRSFunc)(id, id, unsigned, NSRange);
+typedef NSRange (*GSRSFunc)(id, id, NSUInteger, NSRange);
 GSRSFunc
 GSPrivateRangeOfString(NSString *receiver, NSString *target) GS_ATTRIB_PRIVATE;
 
@@ -452,7 +452,7 @@ GSPrivateSmallHash(int n) GS_ATTRIB_PRIVATE;
 /* Function to append data to an GSStr
  */
 void
-GSPrivateStrAppendUnichars(GSStr s, const unichar *u, unsigned l)
+GSPrivateStrAppendUnichars(GSStr s, const unichar *u, NSUInteger l)
   GS_ATTRIB_PRIVATE;
 
 /* Make the content of this string into unicode if it is not in
@@ -543,5 +543,21 @@ GSPrivateIsCollectable(const void *ptr) GS_ATTRIB_PRIVATE;
 NSZone*
 GSAtomicMallocZone (void);
 
-#endif /* _GSPrivate_h_ */
+void
+GSBreakTime(NSTimeInterval when, NSInteger*year, NSInteger*month, NSInteger*day,
+            NSInteger*hour, NSInteger*minute, NSInteger*second, NSInteger*mil);
 
+const char*
+GSPathHandling(const char *mode);
+
+void
+GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
+                   BOOL forDescription, unsigned step, id *str);
+
+id
+GSPropertyListFromStringsFormat(NSString *string);
+
+BOOL
+GSScanDouble(unichar *buf, NSUInteger length, double *result);
+
+#endif /* _GSPrivate_h_ */

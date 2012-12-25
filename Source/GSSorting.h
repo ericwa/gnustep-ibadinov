@@ -152,8 +152,7 @@ GSCompareUsingDescriptorOrComparator(id first, id second, id descOrComp,
         return CALL_BLOCK(((NSComparator)descOrComp), first, second);
 
       case GSComparisonTypeFunction:
-        return ((NSInteger (*)(id, id, void *))descOrComp)(first,
-          second, context);
+        return (NSComparisonResult)((NSInteger (*)(id, id, void *))descOrComp)(first, second, context);
 
       default:
         [NSException raise: @"NSInternalInconstitencyException"

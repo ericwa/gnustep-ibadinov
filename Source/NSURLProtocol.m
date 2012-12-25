@@ -110,7 +110,7 @@ static NSLock		*pairLock = nil;
 + (void) purge: (NSNotification*)n
 {
   NSDate	*now = [NSDate date];
-  unsigned	count;
+  NSUInteger	count;
 
   [pairLock lock];
   count = [pairCache count];
@@ -184,7 +184,7 @@ static NSLock		*pairLock = nil;
 
 - (id) initWithHost: (NSHost*)h port: (uint16_t)p forSSL: (BOOL)s;
 {
-  unsigned		count;
+  NSUInteger		count;
   NSDate		*now;
 
   now = [NSDate date];
@@ -263,11 +263,11 @@ static NSLock		*pairLock = nil;
   <NSURLAuthenticationChallengeSender>
 {
   GSMimeParser		*_parser;	// Parser handling incoming data
-  unsigned		_parseOffset;	// Bytes of body loaded in parser.
+  NSUInteger		_parseOffset;	// Bytes of body loaded in parser.
   float			_version;	// The HTTP version in use.
   int			_statusCode;	// The HTTP status code returned.
   NSInputStream		*_body;		// for sending the body
-  unsigned		_writeOffset;	// Request data to write
+  NSUInteger		_writeOffset;	// Request data to write
   NSData		*_writeData;	// Request bytes written so far
   BOOL			_complete;
   BOOL			_debug;
@@ -394,7 +394,7 @@ static NSURLProtocol	*placeholder = nil;
 + (Class) _classToHandleRequest:(NSURLRequest *)request
 {
   Class protoClass = nil;
-  int count;
+  NSInteger count;
   [regLock lock];
 
   count = [registered count];
@@ -503,7 +503,7 @@ static NSURLProtocol	*placeholder = nil;
 
   if (c == abstractClass || c == placeholderClass)
     {
-      unsigned	count;
+      NSUInteger	count;
 
       DESTROY(self);
       [regLock lock];
@@ -857,7 +857,7 @@ static NSURLProtocol	*placeholder = nil;
 - (void) _got: (NSStream*)stream
 {
   unsigned char	buffer[BUFSIZ*64];
-  int 		readCount;
+  NSInteger 		readCount;
   NSError	*e;
   NSData	*d;
   BOOL		wasInHeaders = NO;
@@ -880,8 +880,8 @@ static NSURLProtocol	*placeholder = nil;
     }
   if (_debug)
     {
-      NSLog(@"%@ read %d bytes: '%*.*s'",
-	self, readCount, readCount, readCount, buffer);
+      NSLog(@"%@ read %ld bytes: '%*.*s'",
+	self, (long)readCount, (int)readCount, (int)readCount, buffer);
     }
 
   if (_parser == nil)
@@ -908,7 +908,7 @@ static NSURLProtocol	*placeholder = nil;
     {
       BOOL		isInHeaders = [_parser isInHeaders];
       GSMimeDocument	*document = [_parser mimeDocument];
-      unsigned		bodyLength;
+      NSUInteger		bodyLength;
 
       _complete = [_parser isComplete];
       if (YES == wasInHeaders && NO == isInHeaders)
@@ -1017,7 +1017,7 @@ static NSURLProtocol	*placeholder = nil;
 	    }
 	  else
 	    {
-	      NSURLCacheStoragePolicy policy;
+	      NSURLRequestCachePolicy policy;
 
 	      /* Get cookies from the response and accept them into
 	       * shared storage if policy permits
@@ -1063,7 +1063,7 @@ static NSURLProtocol	*placeholder = nil;
 		}
 	      [this->client URLProtocol: self
 		     didReceiveResponse: _response
-		     cacheStoragePolicy: policy];
+		     cacheStoragePolicy: (NSURLCacheStoragePolicy)policy];
 	    }
 	  
 #if	USE_ZLIB
@@ -1088,7 +1088,7 @@ static NSURLProtocol	*placeholder = nil;
 	      NSURLProtectionSpace	*space;
 	      NSString			*hdr;
 	      NSURL			*url;
-	      int			failures = 0;
+	      NSInteger			failures = 0;
 
 	      /* This was an authentication challenge.
 	       */
@@ -1192,7 +1192,7 @@ static NSURLProtocol	*placeholder = nil;
 
 		  if (auth == nil)
 		    {
-		      NSURLCacheStoragePolicy policy;
+		      NSURLRequestCachePolicy policy;
 
 		      /* We have no authentication credentials so we
 		       * treat this as a download of the challenge page.
@@ -1222,7 +1222,7 @@ static NSURLProtocol	*placeholder = nil;
 			}
 		      [this->client URLProtocol: self
 			     didReceiveResponse: _response
-			     cacheStoragePolicy: policy];
+			     cacheStoragePolicy: (NSURLCacheStoragePolicy)policy];
 		      /* Fall through to code providing page data.
 		       */
 		    }
@@ -1374,7 +1374,7 @@ static NSURLProtocol	*placeholder = nil;
 	      NSEnumerator	*e;
 	      NSString		*s;
 	      NSURL		*u;
-	      int		l;		
+	      NSInteger		l;		
 
 	      if (_debug == YES)
 	        {
@@ -1472,14 +1472,14 @@ static NSURLProtocol	*placeholder = nil;
 
 	  case NSStreamEventHasSpaceAvailable: 
 	    {
-	      int	written;
+	      NSInteger	written;
 	      BOOL	sent = NO;
 
 	      // FIXME: should also send out relevant Cookies
 	      if (_writeData != nil)
 		{
 		  const unsigned char	*bytes = [_writeData bytes];
-		  unsigned		len = [_writeData length];
+		  NSUInteger		len = [_writeData length];
 
 		  written = [this->output write: bytes + _writeOffset
 				      maxLength: len - _writeOffset];
@@ -1487,8 +1487,8 @@ static NSURLProtocol	*placeholder = nil;
 		    {
 		      if (_debug == YES)
 		        {
-			  NSLog(@"%@ wrote %d bytes: '%*.*s'", self, written,
-			    written, written, bytes + _writeOffset);
+			  NSLog(@"%@ wrote %ld bytes: '%*.*s'", self, (long)written,
+			    (int)written, (int)written, bytes + _writeOffset);
 			}
 		      _writeOffset += written;
 		      if (_writeOffset >= len)
@@ -1521,7 +1521,7 @@ static NSURLProtocol	*placeholder = nil;
 		  if ([_body hasBytesAvailable])
 		    {
 		      unsigned char	buffer[BUFSIZ*64];
-		      int		len;
+		      NSInteger		len;
 
 		      len = [_body read: buffer maxLength: sizeof(buffer)];
 		      if (len < 0)
@@ -1545,8 +1545,8 @@ static NSURLProtocol	*placeholder = nil;
 			    {
 			      if (_debug == YES)
 				{
-				  NSLog(@"%@ wrote %d bytes: '%*.*s'", self,
-				    written, written, written, buffer);
+				  NSLog(@"%@ wrote %ld bytes: '%*.*s'", self,
+				    (long)written, (int)written, (int)written, buffer);
 				}
 			      len -= written;
 			      if (len > 0)

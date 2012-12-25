@@ -66,10 +66,11 @@
  */
 #define	XMLSTRING(X)	((const unsigned char*)[X UTF8String])
 
-inline static unsigned char *XMLStringCopy(NSString *source)
+inline static unsigned char *
+XMLStringCopy(NSString *source)
 {
   char *xmlstr;
-  unsigned int len;
+  NSUInteger len;
 
   len = [source maximumLengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1;
   if (len == 0)
@@ -83,7 +84,7 @@ inline static NSString*
 StringFromXMLStringPtr(const unsigned char *bytes)
 {
   NSString	*str;
-  unsigned int length;
+  NSUInteger length;
 
   if (bytes == NULL)
     return @"";
@@ -108,6 +109,12 @@ StringFromXMLString(const unsigned char *bytes, unsigned length)
 				     encoding: NSUTF8StringEncoding];
   return AUTORELEASE(str);
 }
+
+void
+cleanup_namespaces(xmlNodePtr node, xmlNsPtr ns);
+
+void
+ensure_oldNs(xmlNodePtr node);
 
 /* Instance variables for NSXMLNode.  This macro needs to be defined before
  * the NSXMLNode.h header is imported and before GSInternal.h is imported.

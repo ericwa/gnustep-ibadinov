@@ -164,9 +164,9 @@ extern "C" {
 
 struct	_GSIArray {
   GSIArrayItem	*ptr;
-  unsigned	count;
-  unsigned	cap;
-  unsigned	old;
+  NSUInteger	count;
+  NSUInteger	cap;
+  NSUInteger	old;
   NSZone	*zone;
 #ifdef	GSI_ARRAY_EXTRA
   GSI_ARRAY_EXTRA	extra;
@@ -175,13 +175,13 @@ struct	_GSIArray {
 typedef	struct	_GSIArray	GSIArray_t;
 typedef	struct	_GSIArray	*GSIArray;
 
-static INLINE unsigned
+static INLINE NSUInteger
 GSIArrayCapacity(GSIArray array)
 {
   return array->cap;
 }
 
-static INLINE unsigned
+static INLINE NSUInteger
 GSIArrayCount(GSIArray array)
 {
   return array->count;
@@ -190,8 +190,8 @@ GSIArrayCount(GSIArray array)
 static INLINE void
 GSIArrayGrow(GSIArray array)
 {
-  unsigned int	next;
-  unsigned int	size;
+  NSUInteger	next;
+  NSUInteger	size;
   GSIArrayItem	*tmp;
 
   if (array->old == 0)
@@ -237,9 +237,9 @@ GSIArrayGrow(GSIArray array)
 }
 
 static INLINE void
-GSIArrayGrowTo(GSIArray array, unsigned next)
+GSIArrayGrowTo(GSIArray array, NSUInteger next)
 {
-  unsigned int	size;
+  NSUInteger	size;
   GSIArrayItem	*tmp;
 
   if (next < array->count)
@@ -281,9 +281,9 @@ GSIArrayGrowTo(GSIArray array, unsigned next)
 }
 
 static INLINE void
-GSIArrayInsertItem(GSIArray array, GSIArrayItem item, unsigned index)
+GSIArrayInsertItem(GSIArray array, GSIArrayItem item, NSUInteger index)
 {
-  unsigned int	i;
+  NSUInteger	i;
 
   GSI_ARRAY_CHECK;
   GSI_ARRAY_RETAIN(array, item);
@@ -300,9 +300,9 @@ GSIArrayInsertItem(GSIArray array, GSIArrayItem item, unsigned index)
 }
 
 static INLINE void
-GSIArrayInsertItemNoRetain(GSIArray array, GSIArrayItem item, unsigned index)
+GSIArrayInsertItemNoRetain(GSIArray array, GSIArrayItem item, NSUInteger index)
 {
-  unsigned int	i;
+  NSUInteger	i;
 
   GSI_ARRAY_CHECK;
   if (array->count == array->cap)
@@ -349,13 +349,13 @@ GSIArrayAddItemNoRetain(GSIArray array, GSIArrayItem item)
  *      added is 'less than' the item in the array, NSOrderedDescending
  *      if it is greater, and NSOrderedSame if it is equal.
  */
-static INLINE unsigned
+static INLINE NSUInteger
 GSIArraySearch(GSIArray array, GSIArrayItem item, 
   NSComparisonResult (*sorter)(GSIArrayItem, GSIArrayItem))
 {
-  unsigned int	upper = array->count;
-  unsigned int	lower = 0;
-  unsigned int	index;
+  NSUInteger	upper = array->count;
+  NSUInteger	lower = 0;
+  NSUInteger	index;
 
   /*
    *	Binary search for an item equal to the one to be inserted.
@@ -382,11 +382,11 @@ GSIArraySearch(GSIArray array, GSIArrayItem item,
   return index;
 }
 
-static INLINE unsigned
+static INLINE NSUInteger
 GSIArrayInsertionPosition(GSIArray array, GSIArrayItem item, 
   NSComparisonResult (*sorter)(GSIArrayItem, GSIArrayItem))
 {
-  unsigned int	index;
+  NSUInteger	index;
 
   index = GSIArraySearch(array,item,sorter);
   /*
@@ -409,7 +409,7 @@ static INLINE void
 GSIArrayCheckSort(GSIArray array, 
   NSComparisonResult (*sorter)(GSIArrayItem, GSIArrayItem))
 {
-  unsigned int	i;
+  NSUInteger	i;
 
   for (i = 1; i < array->count; i++)
     {
@@ -425,7 +425,7 @@ static INLINE void
 GSIArrayInsertSorted(GSIArray array, GSIArrayItem item, 
   NSComparisonResult (*sorter)(GSIArrayItem, GSIArrayItem))
 {
-  unsigned int	index;
+  NSUInteger	index;
 
 #ifdef	GSI_ARRAY_CHECKS
   GSIArrayCheckSort(array, sorter);
@@ -441,7 +441,7 @@ static INLINE void
 GSIArrayInsertSortedNoRetain(GSIArray array, GSIArrayItem item,
   NSComparisonResult (*sorter)(GSIArrayItem, GSIArrayItem))
 {
-  unsigned int	index;
+  NSUInteger	index;
 
 #ifdef	GSI_ARRAY_CHECKS
   GSIArrayCheckSort(array, sorter);
@@ -454,7 +454,7 @@ GSIArrayInsertSortedNoRetain(GSIArray array, GSIArrayItem item,
 }
 
 static INLINE void
-GSIArrayRemoveItemAtIndex(GSIArray array, unsigned index)
+GSIArrayRemoveItemAtIndex(GSIArray array, NSUInteger index)
 {
 #if	defined(GSI_ARRAY_NO_RELEASE)
 # ifdef	GSI_ARRAY_CHECKS
@@ -498,7 +498,7 @@ GSIArrayRemoveLastItem(GSIArray array)
 }
 
 static INLINE void
-GSIArrayRemoveItemAtIndexNoRelease(GSIArray array, unsigned index)
+GSIArrayRemoveItemAtIndexNoRelease(GSIArray array, NSUInteger index)
 {
 #ifdef	GSI_ARRAY_CHECKS
   NSCAssert(index < array->count, NSInvalidArgumentException);
@@ -512,7 +512,7 @@ GSIArrayRemoveItemAtIndexNoRelease(GSIArray array, unsigned index)
 }
 
 static INLINE void
-GSIArraySetItemAtIndex(GSIArray array, GSIArrayItem item, unsigned index)
+GSIArraySetItemAtIndex(GSIArray array, GSIArrayItem item, NSUInteger index)
 {
 #if	defined(GSI_ARRAY_NO_RELEASE)
 # ifdef	GSI_ARRAY_CHECKS
@@ -543,7 +543,7 @@ GSIArrayItems(GSIArray array)
 }
 
 static INLINE GSIArrayItem
-GSIArrayItemAtIndex(GSIArray array, unsigned index)
+GSIArrayItemAtIndex(GSIArray array, NSUInteger index)
 {
 #ifdef	GSI_ARRAY_CHECKS
   NSCAssert(index < array->count, NSInvalidArgumentException);
@@ -580,7 +580,7 @@ GSIArrayClear(GSIArray array)
 }
 
 static INLINE void
-GSIArrayRemoveItemsFromIndex(GSIArray array, unsigned index)
+GSIArrayRemoveItemsFromIndex(GSIArray array, NSUInteger index)
 {
   if (index < array->count)
     {
@@ -620,9 +620,9 @@ GSIArrayEmpty(GSIArray array)
 }
 
 static INLINE GSIArray
-GSIArrayInitWithZoneAndCapacity(GSIArray array, NSZone *zone, size_t capacity)
+GSIArrayInitWithZoneAndCapacity(GSIArray array, NSZone *zone, NSUInteger capacity)
 {
-  unsigned int	size;
+  NSUInteger	size;
 
   array->zone = zone;
   array->count = 0;
@@ -642,7 +642,7 @@ GSIArrayInitWithZoneAndCapacity(GSIArray array, NSZone *zone, size_t capacity)
 
 static INLINE GSIArray
 GSIArrayInitWithZoneAndStaticCapacity(GSIArray array, NSZone *zone,
-    size_t capacity, GSIArrayItem *buffer)
+    NSUInteger capacity, GSIArrayItem *buffer)
 {
   array->zone = zone;
   array->count = 0;
@@ -655,7 +655,7 @@ GSIArrayInitWithZoneAndStaticCapacity(GSIArray array, NSZone *zone,
 static INLINE GSIArray
 GSIArrayCopyWithZone(GSIArray array, NSZone *zone)
 {
-  unsigned int i;
+  NSUInteger i;
   GSIArray new;
 
 #if	GS_WITH_GC

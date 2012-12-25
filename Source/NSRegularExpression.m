@@ -55,7 +55,7 @@
  * in theory use the libicu values directly (that would be sensible), but that
  * would break any code that didn't correctly use the symbolic constants.
  */
-uint32_t
+static uint32_t
 NSRegularExpressionOptionsToURegexpFlags(NSRegularExpressionOptions opts)
 {
   uint32_t flags = 0;
@@ -217,12 +217,13 @@ callback(const void *context, int32_t steps)
 #if HAVE_UREGEX_OPENUTEXT
 static URegularExpression *
 setupRegex(URegularExpression *regex,
-  NSString *string,
-  UText *txt,
-  NSMatchingOptions options,
-  NSRange range,
-  GSRegexBlock block)
+           NSString *string,
+           UText *txt,
+           NSMatchingOptions options,
+           NSRange range,
+           GSRegexBlock block)
 {
+  NSCParameterAssert(range.location + range.length < INT32_MAX);
   UErrorCode		s = 0;
   URegularExpression	*r = uregex_clone(regex, &s);
 
@@ -232,7 +233,7 @@ setupRegex(URegularExpression *regex,
     }
   UTextInitWithNSString(txt, string);
   uregex_setUText(r, txt, &s);
-  uregex_setRegion(r, range.location, range.location+range.length, &s);
+  uregex_setRegion(r, (int32_t)range.location, (int32_t)(range.location + range.length), &s);
   if (options & NSMatchingWithoutAnchoringBounds)
     {
       uregex_useAnchoringBounds(r, FALSE, &s);
@@ -287,13 +288,14 @@ setupRegex(URegularExpression *regex,
 
 static uint32_t
 prepareResult(NSRegularExpression *regex,
-  URegularExpression *r,
-  NSRangePointer ranges,
-  NSUInteger groups,
-  UErrorCode *s)
+              URegularExpression *r,
+              NSRangePointer ranges,
+              NSUInteger groups,
+              UErrorCode *s)
 {
+  NSCParameterAssert(groups < INT32_MAX);
   uint32_t	flags = 0;
-  NSUInteger	i = 0;
+  int32_t	i = 0;
 
   for (i = 0; i < groups; i++)
     {

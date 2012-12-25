@@ -93,7 +93,7 @@ typeSize(const char* type)
   self = [super init];
   if (self != nil)
     {
-      int	size = typeSize(type);
+      ssize_t	size = typeSize(type);
 
       if (size < 0)
 	{
@@ -256,7 +256,7 @@ typeSize(const char* type)
 - (void) encodeWithCoder: (NSCoder *)coder
 {
   NSUInteger	tsize;
-  unsigned	size;
+  NSUInteger	size;
   NSMutableData	*d;
 
   size = strlen(objctype)+1;

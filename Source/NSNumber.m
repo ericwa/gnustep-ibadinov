@@ -939,7 +939,7 @@ if (aValue >= -1 && aValue <= 12)\
   // Compile time constant; the compiler will remove this conditional
   if (sizeof (NSInteger) == sizeof (int))
     {
-      return [self numberWithInt: aValue];
+      return [self numberWithInt: (int)aValue];
     }
   return [self numberWithLongLong: aValue];
 }
@@ -954,7 +954,7 @@ if (aValue >= -1 && aValue <= 12)\
   // Compile time constant; the compiler will remove this conditional
   if (sizeof (NSUInteger) == sizeof (unsigned int))
     {
-      return [self numberWithUnsignedInt: aValue];
+      return [self numberWithUnsignedInt: (unsigned int)aValue];
     }
   return [self numberWithUnsignedLongLong: aValue];
 }
@@ -1074,17 +1074,6 @@ if (aValue >= -1 && aValue <= 12)\
 {
   [self subclassResponsibility: _cmd];
   return NO;
-}
-
-- (NSDecimal) decimalValue
-{
-  NSDecimalNumber *dn;
-  NSDecimal decimal;
-
-  dn = [[NSDecimalNumber alloc] initWithString: [self stringValue]];
-  decimal = [dn decimalValue];
-  [dn release];
-  return decimal;
 }
 
 @end

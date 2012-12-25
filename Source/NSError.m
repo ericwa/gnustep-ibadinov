@@ -94,13 +94,13 @@ NSString* const NSCocoaErrorDomain = @"NSCocoaErrorDomain";
 {
   if ([aCoder allowsKeyedCoding])
     {
-      [aCoder encodeInt: _code forKey: @"NSCode"];
+      [aCoder encodeInteger: _code forKey: @"NSCode"];
       [aCoder encodeObject: _domain forKey: @"NSDomain"];
       [aCoder encodeObject: _userInfo forKey: @"NSUserInfo"];
     }
   else
     {
-      [aCoder encodeValueOfObjCType: @encode(int) at: &_code];
+      [aCoder encodeValueOfObjCType: @encode(NSInteger) at: &_code];
       [aCoder encodeValueOfObjCType: @encode(id) at: &_domain];
       [aCoder encodeValueOfObjCType: @encode(id) at: &_userInfo];
     }

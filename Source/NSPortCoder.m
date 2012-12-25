@@ -327,16 +327,16 @@ typeCheck(char t1, char t2)
 
 
 @interface	NSPortCoder (Headers)
-- (void) _deserializeHeaderAt: (unsigned*)pos
+- (void) _deserializeHeaderAt: (NSUInteger*)pos
 		      version: (unsigned*)v
-		      classes: (unsigned*)c
-		      objects: (unsigned*)o
-		     pointers: (unsigned*)p;
-- (void) _serializeHeaderAt: (unsigned)pos
+		      classes: (NSUInteger*)c
+		      objects: (NSUInteger*)o
+		     pointers: (NSUInteger*)p;
+- (void) _serializeHeaderAt: (NSUInteger)pos
 		    version: (unsigned)v
-		    classes: (unsigned)c
-		    objects: (unsigned)o
-		   pointers: (unsigned)p;
+		    classes: (NSUInteger)c
+		    objects: (NSUInteger)o
+		   pointers: (NSUInteger)p;
 @end
 
 
@@ -420,7 +420,7 @@ static unsigned	encodingVersion;
     }
   if (_clsAry != 0)
     {
-      unsigned	count = GSIArrayCount(_clsAry);
+      NSUInteger	count = GSIArrayCount(_clsAry);
 
       while (count-- > 0)
 	{
@@ -1147,7 +1147,7 @@ static unsigned	encodingVersion;
 			    at: (const void*)buf
 {
   NSUInteger	i;
-  uint32_t      c = count;
+  NSUInteger      c = count;
   uint8_t	bytes[20];
   uint8_t	*bytePtr = 0;
   uint8_t	byteCount = 0;
@@ -1459,10 +1459,10 @@ static unsigned	encodingVersion;
  */
 - (void) encodePortObject: (NSPort*)aPort
 {
-  unsigned	pos = [_comp count];
+  NSUInteger	pos = [_comp count];
 
   [_comp addObject: aPort];
-  [self encodeValueOfObjCType: @encode(unsigned) at: &pos];
+  [self encodeValueOfObjCType: @encode(NSUInteger) at: &pos];
 }
 
 - (void) encodeRootObject: (id)rootObject
@@ -1921,9 +1921,9 @@ static unsigned	encodingVersion;
       _comp = [comp mutableCopy];
       NS_DURING
 	{
-	  unsigned	sizeC;
-	  unsigned	sizeO;
-	  unsigned	sizeP;
+	  NSUInteger	sizeC;
+	  NSUInteger	sizeO;
+	  NSUInteger	sizeP;
 
 	  if (firstTime == YES)
 	    {
@@ -1931,7 +1931,7 @@ static unsigned	encodingVersion;
 	    }
 	  _src = [_comp objectAtIndex: 0];
 	  _dDesImp = [_src methodForSelector: dDesSel];
-	  _dTagImp = (void (*)(id, SEL, unsigned char*, unsigned*, unsigned*))
+	  _dTagImp = (void (*)(id, SEL, unsigned char*, unsigned*, NSUInteger*))
 	    [_src methodForSelector: dTagSel];
 
 	  /*
@@ -1978,7 +1978,7 @@ static unsigned	encodingVersion;
 	    }
 	  else
 	    {
-	      unsigned	count = GSIArrayCount(_clsAry);
+	      NSUInteger	count = GSIArrayCount(_clsAry);
 
 	      while (count-- > 0)
 		{
@@ -2032,7 +2032,7 @@ static unsigned	encodingVersion;
 {
   GSClassInfo	*info = nil;
   NSInteger	version = NSNotFound;
-  unsigned	count = GSIArrayCount(_clsAry);
+  NSUInteger	count = GSIArrayCount(_clsAry);
 
   /*
    * Lazy ... we construct a dictionary of all the class information in
@@ -2087,11 +2087,11 @@ static unsigned	encodingVersion;
 
 @implementation	NSPortCoder (Headers)
 
-- (void) _deserializeHeaderAt: (unsigned*)pos
+- (void) _deserializeHeaderAt: (NSUInteger*)pos
 		      version: (unsigned*)v
-		      classes: (unsigned*)c
-		      objects: (unsigned*)o
-		     pointers: (unsigned*)p
+		      classes: (NSUInteger*)c
+		      objects: (NSUInteger*)o
+		     pointers: (NSUInteger*)p
 {
   unsigned	plen = strlen(PREFIX);
   unsigned	size = plen+36;
@@ -2105,25 +2105,32 @@ static unsigned	encodingVersion;
       [NSException raise: NSInternalInconsistencyException
 		  format: @"Archive has wrong prefix"];
     }
-  if (sscanf(&header[plen], "%x:%x:%x:%x:", v, c, o, p) != 4)
+  int ver, cls, obj, ptr;
+  if (sscanf(&header[plen], "%x:%x:%x:%x:", &ver, &cls, &obj, &ptr) != 4)
     {
       [NSException raise: NSInternalInconsistencyException
 		  format: @"Archive has wrong prefix"];
     }
+    *v = ver;
+    *c = cls;
+    *o = obj;
+    *p = ptr;
 }
 
-- (void) _serializeHeaderAt: (unsigned)locationInData
+- (void) _serializeHeaderAt: (NSUInteger)locationInData
 		    version: (unsigned)v
-		    classes: (unsigned)cc
-		    objects: (unsigned)oc
-		   pointers: (unsigned)pc
+		    classes: (NSUInteger)cc
+		    objects: (NSUInteger)oc
+		   pointers: (NSUInteger)pc
 {
   unsigned	headerLength = strlen(PREFIX)+36;
   char		header[headerLength+1];
-  unsigned	dataLength = [_dst length];
+  NSUInteger	dataLength = [_dst length];
+    
 
+  NSAssert(cc < INT_MAX && oc < INT_MAX && pc < INT_MAX, @"Counts are limited to size of int");
   snprintf(header, sizeof(header), "%s%08x:%08x:%08x:%08x:",
-    PREFIX, v, cc, oc, pc);
+    PREFIX, v, (int)cc, (int)oc, (int)pc);
 
   if (locationInData + headerLength <= dataLength)
     {

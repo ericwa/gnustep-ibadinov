@@ -611,9 +611,9 @@ typedef enum {
   NSRunLoop		*loop = [NSRunLoop currentRunLoop];
   struct in_addr	singleServer;
   struct in_addr	*svrs = &singleServer;
-  unsigned		numSvrs = 1;
-  unsigned		count;
-  unsigned		len;
+  NSUInteger		numSvrs = 1;
+  NSUInteger		count;
+  NSUInteger		len;
   NSMutableArray	*array;
   NSDate		*limit;
 
@@ -727,7 +727,7 @@ typedef enum {
   [serverLock lock];
   NS_DURING
     {
-      unsigned	i;
+      NSUInteger	i;
 
       *port = 0;
       count = 0;
@@ -872,7 +872,7 @@ typedef enum {
 {
   NSRunLoop	*loop = [NSRunLoop currentRunLoop];
   GSPortCom	*com = nil;
-  unsigned	len;
+  NSUInteger	len;
   NSDate	*limit;
 
   if (name == nil)
@@ -1054,7 +1054,7 @@ typedef enum {
 {
   NSRunLoop	*loop = [NSRunLoop currentRunLoop];
   GSPortCom	*com = nil;
-  unsigned	len;
+  NSUInteger	len;
   NSDate	*limit = [NSDate dateWithTimeIntervalSinceNow: timeout];
   BOOL		val = NO;
 

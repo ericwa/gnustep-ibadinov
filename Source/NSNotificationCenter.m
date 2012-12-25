@@ -191,7 +191,7 @@ static inline unsigned doHash(NSString* key)
     }
   else
     {
-      return [key hash];
+      return (unsigned)[key hash];
     }
 }
 
@@ -1089,7 +1089,7 @@ static NSNotificationCenter *default_center = nil;
 - (void) _postAndRelease: (NSNotification*)notification
 {
   Observation	*o;
-  unsigned	count;
+  NSUInteger	count;
   NSString	*name = [notification name];
   id		object;
   GSIMapNode	n;

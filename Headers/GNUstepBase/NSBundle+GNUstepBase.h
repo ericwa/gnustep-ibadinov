@@ -36,10 +36,12 @@ extern "C" {
 
 #if	OS_API_VERSION(GS_API_NONE,GS_API_LATEST)
 
-@interface NSBundle(GNUstepBase)
+@interface NSBundle (GNUstepBase)
+#ifndef GNUSTEP /* declared in NSBundle */
 + (NSString *) pathForLibraryResource: (NSString *)name
-                               ofType: (NSString *)ext
+                               ofType: (NSString *)extension
                           inDirectory: (NSString *)bundlePath;
+#endif
 @end
 
 #endif	/* OS_API_VERSION */

@@ -134,7 +134,7 @@ static NSExpression	*evaluatedObjectExpression = nil;
   @public
   NSString		*_function;
   NSArray		*_args;
-  unsigned int		_argc;
+  NSUInteger		_argc;
   SEL _selector;
 }
 @end
@@ -210,7 +210,7 @@ static NSExpression	*evaluatedObjectExpression = nil;
               case 'D':
               case 'i':
                 ptr++;
-                [arr addObject: [NSNumber numberWithInt:
+                [arr addObject: [NSNumber numberWithInteger:
                   va_arg(args, NSInteger)]];
                 break;
 
@@ -221,7 +221,7 @@ static NSExpression	*evaluatedObjectExpression = nil;
               case 'x':
               case 'X':
                 ptr++;
-                [arr addObject: [NSNumber numberWithUnsignedInt:
+                [arr addObject: [NSNumber numberWithUnsignedInteger:
                   va_arg(args, NSUInteger)]];
                 break;
 
@@ -454,9 +454,9 @@ static NSExpression	*evaluatedObjectExpression = nil;
 
 - (NSPredicate *) predicateWithSubstitutionVariables: (NSDictionary *)variables
 {
-  unsigned int count = [_subs count];
+  NSUInteger count = [_subs count];
   NSMutableArray *esubs = [NSMutableArray arrayWithCapacity: count];
-   unsigned int i;
+   NSUInteger i;
 
   for (i = 0; i < count; i++)
     {
@@ -836,10 +836,10 @@ GSICUStringMatchesRegex(NSString *string, NSString *regex, NSStringCompareOption
   flags |= UREGEX_DOTALL; // . is supposed to recognize newlines
   if ((opts & NSCaseInsensitiveSearch) != 0) { flags |= UREGEX_CASE_INSENSITIVE; }
 
-  icuregex = uregex_open(regexBuffer, regexLength, flags, NULL, &error);
+  icuregex = uregex_open(regexBuffer, (int32_t)regexLength, flags, NULL, &error);
   if (icuregex != NULL && U_SUCCESS(error))
     {
-      uregex_setText(icuregex, stringBuffer, stringLength, &error);
+      uregex_setText(icuregex, stringBuffer, (int32_t)stringLength, &error);
       result = uregex_matches(icuregex, 0, &error);
     }
   uregex_close(icuregex);
@@ -1525,7 +1525,7 @@ GSICUStringMatchesRegex(NSString *string, NSString *regex, NSStringCompareOption
 - (id) _eval_count: (NSArray *)expressions
 {
   NSAssert(_argc == 1, NSInternalInconsistencyException);
-  return [NSNumber numberWithUnsignedInt:
+  return [NSNumber numberWithUnsignedInteger:
     [[expressions objectAtIndex: 0] count]];
 }
 
@@ -1628,7 +1628,7 @@ GSICUStringMatchesRegex(NSString *string, NSString *regex, NSStringCompareOption
 
 - (void) filterUsingPredicate: (NSPredicate *)predicate
 {	
-  unsigned	count = [self count];
+  NSUInteger	count = [self count];
 
   while (count-- > 0)
     {
@@ -1708,7 +1708,7 @@ GSICUStringMatchesRegex(NSString *string, NSString *regex, NSStringCompareOption
 - (BOOL) scanPredicateKeyword: (NSString *)key
 {
   // save to back up
-  unsigned loc = [self scanLocation];
+  NSUInteger loc = [self scanLocation];
   unichar c;
   
   [self setCaseSensitive: NO];

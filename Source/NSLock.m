@@ -133,6 +133,7 @@ static pthread_mutexattr_t attr_recursive;
 /*
  * OS X 10.5 compatibility function to allow debugging deadlock conditions.
  */
+void _NSLockError(id obj, SEL _cmd, BOOL stop);
 void _NSLockError(id obj, SEL _cmd, BOOL stop)
 {
   NSLog(@"*** -[%@ %@]: deadlock (%@)", [obj class],

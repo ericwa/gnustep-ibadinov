@@ -76,10 +76,10 @@ NSString * const NSErrorFailingURLStringKey = @"NSErrorFailingURLStringKey";
   if (data != nil)
     {
       unsigned char	*src = (unsigned char*)[data bytes];
-      unsigned int	slen = [data length];
+      NSUInteger	slen = [data length];
       unsigned char	*dst;
-      unsigned int	spos = 0;
-      unsigned int	dpos = 0;
+      NSUInteger	spos = 0;
+      NSUInteger	dpos = 0;
 
       dst = (unsigned char*)NSZoneMalloc(NSDefaultMallocZone(), slen * 3);
       while (spos < slen)
@@ -203,8 +203,8 @@ static char *buildURL(parsedURL *base, parsedURL *rel, BOOL standardize)
   char		*buf;
   char		*ptr;
   char		*tmp;
-  int		l;
-  unsigned int	len = 1;
+  NSInteger		l;
+  NSUInteger	len = 1;
 
   if (rel->scheme != 0)
     {
@@ -821,7 +821,7 @@ static NSUInteger	urlAlign;
     {
       parsedURL	*buf;
       parsedURL	*base = baseData;
-      unsigned	size = [_urlString length];
+      NSUInteger	size = [_urlString length];
       char	*end;
       char	*start;
       char	*ptr;
@@ -1338,7 +1338,7 @@ static NSUInteger	urlAlign;
   if (absString == nil)
     {
       char	*url = buildURL(baseData, myData, NO);
-      unsigned	len = strlen(url);
+      NSUInteger	len = strlen(url);
 
       absString = [[NSString alloc] initWithCStringNoCopy: url
 						   length: len
@@ -1419,7 +1419,7 @@ static NSUInteger	urlAlign;
 {
   char	*ptr = buf;
   char	*tmp = buf;
-  int	l;
+  NSInteger	l;
 
   if (myData->pathIsAbsolute == YES)
     {
@@ -1840,7 +1840,7 @@ static NSUInteger	urlAlign;
 - (NSURL*) standardizedURL
 {
   char		*url = buildURL(baseData, myData, YES);
-  unsigned	len = strlen(url);
+  NSUInteger	len = strlen(url);
   NSString	*str;
   NSURL		*tmp;
 

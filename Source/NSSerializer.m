@@ -121,11 +121,11 @@ static Class	NumberClass = 0;
 
 typedef struct {
   NSMutableData	*data;
-  void		(*appImp)(NSData*,SEL,const void*,unsigned);
+  void		(*appImp)(NSData*,SEL,const void*,NSUInteger);
   void*		(*datImp)(NSMutableData*,SEL);		// Bytes pointer.
   unsigned int	(*lenImp)(NSData*,SEL);			// Length of data.
-  void		(*serImp)(NSMutableData*,SEL,int);	// Serialize integer.
-  void		(*setImp)(NSMutableData*,SEL,unsigned);	// Set length of data.
+  void		(*serImp)(NSMutableData*,SEL,NSUInteger);	// Serialize integer.
+  void		(*setImp)(NSMutableData*,SEL,NSUInteger);	// Set length of data.
   unsigned	count;			// String counter.
   GSIMapTable_t	map;			// For uniquing.
   BOOL		shouldUnique;		// Do we do uniquing?
@@ -144,15 +144,15 @@ initSerializerInfo(_NSSerializerInfo* info, NSMutableData *d, BOOL u)
 
   c = object_getClass(d);
   info->data = d;
-  info->appImp = (void (*)(NSData*,SEL,const void*,unsigned))
+  info->appImp = (void (*)(NSData*,SEL,const void*,NSUInteger))
     class_getMethodImplementation(c, appSel);
   info->datImp = (void* (*)(NSMutableData*,SEL))
     class_getMethodImplementation(c, datSel);
   info->lenImp = (unsigned int (*)(NSData*,SEL))
     class_getMethodImplementation(c, lenSel);
-  info->serImp = (void (*)(NSMutableData*,SEL,int))
+  info->serImp = (void (*)(NSMutableData*,SEL,NSUInteger))
     class_getMethodImplementation(c, serSel);
-  info->setImp = (void (*)(NSMutableData*,SEL,unsigned))
+  info->setImp = (void (*)(NSMutableData*,SEL,NSUInteger))
     class_getMethodImplementation(c, setSel);
   info->shouldUnique = u;
   (*info->appImp)(d, appSel, &info->shouldUnique, 1);
@@ -230,8 +230,8 @@ serializeToInfo(id object, _NSSerializerInfo* info)
 	node = 0;
       if (node == 0)
 	{
-	  unsigned	slen;
-	  unsigned	dlen;
+	  NSUInteger	slen;
+	  NSUInteger	dlen;
 
 	  slen = [object length];
 	  (*info->appImp)(info->data, appSel, &st_string, 1);
@@ -266,7 +266,7 @@ serializeToInfo(id object, _NSSerializerInfo* info)
     }
   else if (GSObjCIsKindOf(c, ArrayClass))
     {
-      unsigned int count;
+      NSUInteger count;
 
       if ([object isKindOfClass: MutableArrayClass])
         (*info->appImp)(info->data, appSel, &st_marray, 1);
@@ -367,7 +367,7 @@ static BOOL	shouldBeCompact = NO;
       appSel = @selector(appendBytes:length:);
       datSel = @selector(mutableBytes);
       lenSel = @selector(length);
-      serSel = @selector(serializeInt:);
+      serSel = @selector(serializeAlignedBytesLength:);
       setSel = @selector(setLength:);
       ArrayClass = [NSArray class];
       MutableArrayClass = [NSMutableArray class];
@@ -449,7 +449,7 @@ static Class	MDCls = 0;	/* Mutable Dictionary	*/
 
 typedef struct {
   NSData	*data;
-  unsigned	*cursor;
+  NSUInteger	*cursor;
   BOOL		mutable;
   BOOL		didUnique;
   void		(*debImp)();
@@ -471,7 +471,7 @@ static IMP maAddImp;
 static IMP mdSetImp;
 
 static BOOL
-initDeserializerInfo(_NSDeserializerInfo* info, NSData *d, unsigned *c, BOOL m)
+initDeserializerInfo(_NSDeserializerInfo* info, NSData *d, NSUInteger *c, BOOL m)
 {
   unsigned char	u;
 
@@ -490,7 +490,7 @@ initDeserializerInfo(_NSDeserializerInfo* info, NSData *d, unsigned *c, BOOL m)
       if (u == 'G')
 	{
 	  const unsigned char	*b = [d bytes];
-	  unsigned int		l = [d length];
+	  NSUInteger		l = [d length];
 
 	  if (*c + 11 < l && memcmp(&b[*c-1], "GNUstepSer", 10) == 0)
 	    {
@@ -764,13 +764,13 @@ deserializeFromInfo(_NSDeserializerInfo* info)
   id			plist;
 }
 + (_NSDeserializerProxy*) proxyWithData: (NSData*)d
-			       atCursor: (unsigned int*)c
+			       atCursor: (NSUInteger*)c
 				mutable: (BOOL)m;
 @end
 
 @implementation	_NSDeserializerProxy
 + (_NSDeserializerProxy*) proxyWithData: (NSData*)d
-			       atCursor: (unsigned int*)c
+			       atCursor: (NSUInteger*)c
 				mutable: (BOOL)m
 {
   _NSDeserializerProxy	*proxy;
@@ -853,7 +853,7 @@ deserializeFromInfo(_NSDeserializerInfo* info)
  * </p>
  */
 + (id) deserializePropertyListFromData: (NSData*)data
-                              atCursor: (unsigned int*)cursor
+                              atCursor: (NSUInteger*)cursor
                      mutableContainers: (BOOL)flag
 {
   _NSDeserializerInfo	info;
@@ -888,7 +888,7 @@ deserializeFromInfo(_NSDeserializerInfo* info)
                      mutableContainers: (BOOL)flag
 {
   _NSDeserializerInfo	info;
-  unsigned int	cursor = 0;
+  NSUInteger	cursor = 0;
   id		o;
 
   if (data == nil || [data isKindOfClass: [NSData class]] == NO)
@@ -923,8 +923,8 @@ deserializeFromInfo(_NSDeserializerInfo* info)
  * </p>
  */
 + (id) deserializePropertyListLazilyFromData: (NSData*)data
-                                    atCursor: (unsigned*)cursor
-                                      length: (unsigned)length
+                                    atCursor: (NSUInteger*)cursor
+                                      length: (NSUInteger)length
                            mutableContainers: (BOOL)flag
 {
   if (data == nil || [data isKindOfClass: [NSData class]] == NO)

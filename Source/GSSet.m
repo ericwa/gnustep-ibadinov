@@ -199,7 +199,7 @@ static Class	mutableSetClass;
     }
   else
     {
-      unsigned		count = map.nodeCount;
+      NSUInteger    count = map.nodeCount;
       SEL			sel = @selector(encodeObject:);
       IMP			imp = [aCoder methodForSelector: sel];
       GSIMapEnumerator_t	enumerator = GSIMapEnumeratorForMap(&map);

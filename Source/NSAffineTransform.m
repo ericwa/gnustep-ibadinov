@@ -600,7 +600,7 @@ static NSAffineTransformStruct identityTransform = {
 	  NSUInteger length;
 	  const uint8_t *data;
           NSData *d;
-          unsigned int cursor = 0;
+          NSUInteger cursor = 0;
 
           data = [aCoder decodeBytesForKey: @"NSTransformStruct"
                               returnedLength: &length]; 

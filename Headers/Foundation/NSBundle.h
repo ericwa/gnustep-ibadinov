@@ -507,8 +507,8 @@ GS_EXPORT NSString* const NSLoadedClasses;
 
 /** Find a resource in the "Library" directory. */
 + (NSString*) pathForLibraryResource: (NSString*)name
-			      ofType: (NSString*)extension
-			 inDirectory: (NSString*)bundlePath;
+                              ofType: (NSString*)extension
+                         inDirectory: (NSString*)bundlePath;
 
 @end
 

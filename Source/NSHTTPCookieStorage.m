@@ -144,7 +144,7 @@ static NSHTTPCookieStorage   *storage = nil;
 {
   BOOL changed = NO;
   NSDate *now = [NSDate date];
-  unsigned count = [this->_cookies count];
+  NSUInteger count = [this->_cookies count];
 
   /* FIXME: Handle Max-age */
   while (count-- > 0)
@@ -198,7 +198,7 @@ static NSHTTPCookieStorage   *storage = nil;
 
 - (void) _updateToCookieStore
 {
-  int i, count;
+  NSUInteger i, count;
   NSMutableArray *properties;
   NSString *path = [self _cookieStorePath];
 
@@ -327,7 +327,7 @@ static NSHTTPCookieStorage   *storage = nil;
     mainDocumentURL: (NSURL *)mainDocumentURL
 {
   BOOL     changed = NO;
-  unsigned count = [cookies count];
+  NSUInteger count = [cookies count];
 
   if (count == 0 || this->_policy == NSHTTPCookieAcceptPolicyNever)
     return;
