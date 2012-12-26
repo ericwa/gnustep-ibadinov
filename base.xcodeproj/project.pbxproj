@@ -9,46 +9,9 @@
 /* Begin PBXBuildFile section */
 		180878891618537A006EBD74 /* objc-load.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890700B1610BF3C0003C892 /* objc-load.m */; };
 		180DFAEB165BF98C00573635 /* NSInvocation.x86_64.S in Sources */ = {isa = PBXBuildFile; fileRef = 180DFAE9165BF94E00573635 /* NSInvocation.x86_64.S */; };
-		18115CD216513CB300672055 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
-		18115CD316513CB300672055 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		18115CD516513CB300672055 /* NSInvocation_general.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 183976AE16318A84008266AA /* NSInvocation_general.1 */; };
-		18115CDC16513CD100672055 /* test01.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1EE31628550100389A13 /* test01.m */; };
-		18115CEB16517EB200672055 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		18115CF216517ED000672055 /* test00.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1F9D1628550100389A13 /* test00.m */; };
-		18115CF31651809C00672055 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
-		1837D9981652876E00197E53 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
-		1837D9991652876E00197E53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		1837D99B1652876E00197E53 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18510849164D6DB200B11B12 /* InfoPlist.strings */; };
-		1837D9A21652877900197E53 /* Connection.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1E9D1628550000389A13 /* Connection.m */; };
-		1837D9A9165288A900197E53 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
-		1837D9AA165288A900197E53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		1837D9B1165288D100197E53 /* connection.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1EA11628550000389A13 /* connection.m */; };
-		1837D9BC1652BA3D00197E53 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
-		1837D9BD1652BA3D00197E53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		1837D9C41652BA5100197E53 /* basic.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1F9C1628550100389A13 /* basic.m */; };
 		1837DA131652D18400197E53 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
 		1837DA141652D18400197E53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
 		1837DA1B1652D19600197E53 /* gdnc.m in Sources */ = {isa = PBXBuildFile; fileRef = 1837D9DE1652D0FF00197E53 /* gdnc.m */; };
-		18394B021610D7F800335E85 /* GNUstepBase-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 18394B001610D7F800335E85 /* GNUstepBase-Prefix.pch */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394B041610D8BD00335E85 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 18394AA31610CC4E00335E85 /* config.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B051610D8BD00335E85 /* GSConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 18394AA41610CC4E00335E85 /* GSConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B061610D8BD00335E85 /* Additions.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EDD1610BF3C0003C892 /* Additions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B071610D8BD00335E85 /* CXXException.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EDE1610BF3C0003C892 /* CXXException.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B081610D8BD00335E85 /* DistributedObjects.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EDF1610BF3C0003C892 /* DistributedObjects.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B091610D8BD00335E85 /* GCObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EE01610BF3C0003C892 /* GCObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B0A1610D8BD00335E85 /* GNUstep.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EE11610BF3C0003C892 /* GNUstep.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B0B1610D8BD00335E85 /* GSBlocks.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EE21610BF3C0003C892 /* GSBlocks.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B0C1610D8BD00335E85 /* GSFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EE41610BF3C0003C892 /* GSFunctions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B0D1610D8BD00335E85 /* GSIArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EE51610BF3C0003C892 /* GSIArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B0E1610D8BD00335E85 /* GSIMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EE61610BF3C0003C892 /* GSIMap.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B0F1610D8BD00335E85 /* GSLocale.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EE71610BF3C0003C892 /* GSLocale.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B101610D8BD00335E85 /* GSLock.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EE81610BF3C0003C892 /* GSLock.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B111610D8BD00335E85 /* GSMime.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EE91610BF3C0003C892 /* GSMime.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B121610D8BD00335E85 /* GSObjCRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EEA1610BF3C0003C892 /* GSObjCRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B131610D8BD00335E85 /* GSUnion.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EEB1610BF3C0003C892 /* GSUnion.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B141610D8BD00335E85 /* GSVersionMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EEC1610BF3C0003C892 /* GSVersionMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B151610D8BD00335E85 /* GSXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EED1610BF3C0003C892 /* GSXML.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B161610D8BD00335E85 /* Unicode.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F001610BF3C0003C892 /* Unicode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B341610D95600335E85 /* Foundation-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 18394B321610D95600335E85 /* Foundation-Prefix.pch */; settings = {ATTRIBUTES = (Private, ); }; };
 		18394B351610D9D000335E85 /* Foundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906E681610BF3C0003C892 /* Foundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B361610D9D000335E85 /* FoundationErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906E691610BF3C0003C892 /* FoundationErrors.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -183,54 +146,6 @@
 		18394BB71610D9ED00335E85 /* NSTask+GNUstepBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EFD1610BF3C0003C892 /* NSTask+GNUstepBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394BB81610D9ED00335E85 /* NSThread+GNUstepBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EFE1610BF3C0003C892 /* NSThread+GNUstepBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394BB91610D9ED00335E85 /* NSURL+GNUstepBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EFF1610BF3C0003C892 /* NSURL+GNUstepBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394BBC1610DA8C00335E85 /* GSAvahiClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F3B1610BF3C0003C892 /* GSAvahiClient.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BBD1610DA8C00335E85 /* GSAvahiRunLoopIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F3F1610BF3C0003C892 /* GSAvahiRunLoopIntegration.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BBE1610DA8C00335E85 /* GSDispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F461610BF3C0003C892 /* GSDispatch.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BBF1610DA8C00335E85 /* GSFastEnumeration.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F4A1610BF3C0003C892 /* GSFastEnumeration.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BC01610DA8C00335E85 /* GSFileHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F4B1610BF3C0003C892 /* GSFileHandle.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BC11610DA8C00335E85 /* GSICUString.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F501610BF3C0003C892 /* GSICUString.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BC21610DA8C00335E85 /* GSInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F521610BF3C0003C892 /* GSInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BC31610DA8C00335E85 /* GSInvocation.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F531610BF3C0003C892 /* GSInvocation.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BC41610DA8C00335E85 /* GSNetServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F561610BF3C0003C892 /* GSNetServices.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BC51610DA8C00335E85 /* GSNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F571610BF3C0003C892 /* GSNetwork.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BC61610DA8C00335E85 /* GSNumberTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F581610BF3C0003C892 /* GSNumberTypes.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BC71610DA8C00335E85 /* GSPThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F591610BF3C0003C892 /* GSPThread.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BC81610DA8C00335E85 /* GSPortPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F5A1610BF3C0003C892 /* GSPortPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BC91610DA8C00335E85 /* GSPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F5B1610BF3C0003C892 /* GSPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BCA1610DA8C00335E85 /* GSRunLoopCtxt.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F5D1610BF3C0003C892 /* GSRunLoopCtxt.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BCB1610DA8C00335E85 /* GSRunLoopWatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F5E1610BF3C0003C892 /* GSRunLoopWatcher.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BCC1610DA8C00335E85 /* GSSocketStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F621610BF3C0003C892 /* GSSocketStream.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BCD1610DA8C00335E85 /* GSSorting.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F641610BF3C0003C892 /* GSSorting.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BCE1610DA8C00335E85 /* GSStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F651610BF3C0003C892 /* GSStream.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BCF1610DA8C00335E85 /* GSTLS.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F681610BF3C0003C892 /* GSTLS.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BD01610DA8C00335E85 /* GSURLPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F6B1610BF3C0003C892 /* GSURLPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BD11610DA8C00335E85 /* GSeq.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F6D1610BF3C0003C892 /* GSeq.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18394BD21610DAC100335E85 /* CXXException.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F351610BF3C0003C892 /* CXXException.m */; };
-		18394BD31610DAC100335E85 /* GSArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F391610BF3C0003C892 /* GSArray.m */; };
-		18394BD41610DAC100335E85 /* GSAttributedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F3A1610BF3C0003C892 /* GSAttributedString.m */; };
-		18394BD91610DADE00335E85 /* GSBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F411610BF3C0003C892 /* GSBlocks.m */; };
-		18394BDA1610DADE00335E85 /* GSConcreteValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F421610BF3C0003C892 /* GSConcreteValue.m */; };
-		18394BDC1610DADE00335E85 /* GSCountedSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F441610BF3C0003C892 /* GSCountedSet.m */; };
-		18394BDD1610DADE00335E85 /* GSDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F451610BF3C0003C892 /* GSDictionary.m */; };
-		18394BE11610DAF400335E85 /* GSFileHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F4C1610BF3C0003C892 /* GSFileHandle.m */; };
-		18394BE21610DAF400335E85 /* GSFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F4D1610BF3C0003C892 /* GSFormat.m */; };
-		18394BE31610DAF400335E85 /* GSHTTPAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F4E1610BF3C0003C892 /* GSHTTPAuthentication.m */; };
-		18394BE41610DAF400335E85 /* GSHTTPURLHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F4F1610BF3C0003C892 /* GSHTTPURLHandle.m */; };
-		18394BE51610DAFC00335E85 /* GSICUString.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F511610BF3C0003C892 /* GSICUString.m */; };
-		18394BE61610DB0100335E85 /* GSLocale.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F541610BF3C0003C892 /* GSLocale.m */; };
-		18394BE71610DB0400335E85 /* GSMDNSNetServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F551610BF3C0003C892 /* GSMDNSNetServices.m */; };
-		18394BE81610DB0800335E85 /* GSQuickSort.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F5C1610BF3C0003C892 /* GSQuickSort.m */; };
-		18394BE91610DB1200335E85 /* GSRunLoopWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F5F1610BF3C0003C892 /* GSRunLoopWatcher.m */; };
-		18394BEA1610DB1200335E85 /* GSSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F601610BF3C0003C892 /* GSSet.m */; };
-		18394BEB1610DB1200335E85 /* GSShellSort.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F611610BF3C0003C892 /* GSShellSort.m */; };
-		18394BEC1610DB1A00335E85 /* GSSocketStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F631610BF3C0003C892 /* GSSocketStream.m */; };
-		18394BED1610DB1C00335E85 /* GSStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F661610BF3C0003C892 /* GSStream.m */; };
-		18394BEE1610DB2200335E85 /* GSString.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F671610BF3C0003C892 /* GSString.m */; };
-		18394BEF1610DB2700335E85 /* GSTLS.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F691610BF3C0003C892 /* GSTLS.m */; };
-		18394BF01610DB2A00335E85 /* GSTimSort.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F6A1610BF3C0003C892 /* GSTimSort.m */; };
-		18394BF11610DB3000335E85 /* GSValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F6C1610BF3C0003C892 /* GSValue.m */; };
-		18394BF61610E73400335E85 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
-		18394BFE1610E97A00335E85 /* libicuuc.48.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BFD1610E97A00335E85 /* libicuuc.48.1.dylib */; };
 		18394C011610EB7F00335E85 /* NSAffineTransform.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F701610BF3C0003C892 /* NSAffineTransform.m */; };
 		18394C031610EB7F00335E85 /* NSArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F721610BF3C0003C892 /* NSArray.m */; };
 		18394C041610EB7F00335E85 /* NSAssertionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F731610BF3C0003C892 /* NSAssertionHandler.m */; };
@@ -351,30 +266,7 @@
 		18394C7F1610EC5E00335E85 /* NSConcretePointerFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F831610BF3C0003C892 /* NSConcretePointerFunctions.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		18394C801610EC5E00335E85 /* NSNumberMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906FB61610BF3C0003C892 /* NSNumberMethods.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		18394C811610EC5E00335E85 /* NSXMLPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906FF01610BF3C0003C892 /* NSXMLPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		18397697163185DF008266AA /* NSProxy_basic.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18397696163185DF008266AA /* NSProxy_basic.1 */; };
-		1839769C163185FB008266AA /* basic.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1F4E1628550100389A13 /* basic.m */; };
-		183976A01631860D008266AA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		183976A11631861D008266AA /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
-		183976AF16318A84008266AA /* NSInvocation_general.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 183976AE16318A84008266AA /* NSInvocation_general.1 */; };
-		183976B516318AE1008266AA /* general.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1EE21628550100389A13 /* general.m */; };
-		183976B616318AEB008266AA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		183976B716318B63008266AA /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
-		183976BE16318D63008266AA /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
-		183976BF16318D63008266AA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		183976C116318D63008266AA /* NSProxy_basic.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18397696163185DF008266AA /* NSProxy_basic.1 */; };
-		183976C716318D82008266AA /* test00.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1F4F1628550100389A13 /* test00.m */; };
 		184915A5163056E800B0ED83 /* libffi.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 184915A4163056E800B0ED83 /* libffi.dylib */; };
-		184CD4DD16555FAE00A66366 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
-		184CD4E81655637E00A66366 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		184CD4E91655637E00A66366 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
-		184CD4F01655638E00A66366 /* respond.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1F9A1628550100389A13 /* respond.m */; };
-		18510836164D679200B11B12 /* keepalive.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1F991628550100389A13 /* keepalive.m */; };
-		18510839164D67A900B11B12 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		1851083A164D6C5600B11B12 /* basic.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1E561628550000389A13 /* basic.m */; };
-		1851084B164D6DB200B11B12 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 18510849164D6DB200B11B12 /* InfoPlist.strings */; };
-		18510852164D6DC300B11B12 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		18510853164D6DEE00B11B12 /* InvokeProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1EDF1628550100389A13 /* InvokeProxy.m */; };
-		18510854164D6E5F00B11B12 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
 		1852894F161243FC0016729B /* NSObjCRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FB71610BF3C0003C892 /* NSObjCRuntime.m */; };
 		185289511613861E0016729B /* GSObjCRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F131610BF3C0003C892 /* GSObjCRuntime.m */; };
 		1852895216138A7D0016729B /* NSUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FE51610BF3C0003C892 /* NSUnarchiver.m */; };
@@ -445,136 +337,19 @@
 		185289A216139AAF0016729B /* NSObject+NSComparisonMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FB81610BF3C0003C892 /* NSObject+NSComparisonMethods.m */; };
 		185289A516139AAF0016729B /* externs.m in Sources */ = {isa = PBXBuildFile; fileRef = 189070031610BF3C0003C892 /* externs.m */; };
 		185289AA16139AAF0016729B /* preface.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890700C1610BF3C0003C892 /* preface.m */; };
-		185289AC1613A06F0016729B /* configure.ac in Resources */ = {isa = PBXBuildFile; fileRef = 185289AB1613A06F0016729B /* configure.ac */; };
-		185289D61613A1060016729B /* addlibrarypath.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289AE1613A1060016729B /* addlibrarypath.m4 */; };
-		185289D71613A1060016729B /* codeset.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289AF1613A1060016729B /* codeset.m4 */; };
-		185289E41613A1060016729B /* config.nextcc.h in Headers */ = {isa = PBXBuildFile; fileRef = 185289BC1613A1060016729B /* config.nextcc.h */; };
-		185289F61613A1060016729B /* icu.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289CE1613A1060016729B /* icu.m4 */; };
-		185289F71613A1060016729B /* objc-common.g in Resources */ = {isa = PBXBuildFile; fileRef = 185289CF1613A1060016729B /* objc-common.g */; };
-		185289F81613A1060016729B /* objc-con-autoload.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289D01613A1060016729B /* objc-con-autoload.m4 */; };
-		185289F91613A1060016729B /* objc-sys-dynamic.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289D11613A1060016729B /* objc-sys-dynamic.m4 */; };
-		185289FA1613A1060016729B /* pathtls.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289D21613A1060016729B /* pathtls.m4 */; };
-		185289FB1613A1060016729B /* pathxml.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289D31613A1060016729B /* pathxml.m4 */; };
-		185289FC1613A1060016729B /* procfs-exe-link.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289D41613A1060016729B /* procfs-exe-link.m4 */; };
-		185289FD1613A1060016729B /* procfs.m4 in Resources */ = {isa = PBXBuildFile; fileRef = 185289D51613A1060016729B /* procfs.m4 */; };
 		185289FF1613A8840016729B /* NSNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FB11610BF3C0003C892 /* NSNotificationCenter.m */; };
 		18528A001613AB940016729B /* GSRunLoopCtxt.m in Sources */ = {isa = PBXBuildFile; fileRef = 189070101610BF3C0003C892 /* GSRunLoopCtxt.m */; };
 		18528A011613AB940016729B /* NSStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 189070121610BF3C0003C892 /* NSStream.m */; };
 		185391931625FD0C0015BDFA /* NSKeyedUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA71610BF3C0003C892 /* NSKeyedUnarchiver.m */; };
-		18641D161678AD04003C6E11 /* GSSocks4Parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 18641D0E1678AD04003C6E11 /* GSSocks4Parser.h */; };
-		18641D181678AD04003C6E11 /* GSSocks5Parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 18641D101678AD04003C6E11 /* GSSocks5Parser.h */; };
-		18641D1A1678AD04003C6E11 /* GSSocksParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 18641D121678AD04003C6E11 /* GSSocksParser.h */; };
-		18641D1C1678AD04003C6E11 /* GSSocksParserPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 18641D141678AD04003C6E11 /* GSSocksParserPrivate.h */; };
 		18641D1F1678AD34003C6E11 /* GSSocks4Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D0F1678AD04003C6E11 /* GSSocks4Parser.m */; };
 		18641D201678AD39003C6E11 /* GSSocks5Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D111678AD04003C6E11 /* GSSocks5Parser.m */; };
 		18641D211678AD41003C6E11 /* GSSocksParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D131678AD04003C6E11 /* GSSocksParser.m */; };
 		18641D221678AD46003C6E11 /* GSSocksParserPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D151678AD04003C6E11 /* GSSocksParserPrivate.m */; };
-		18950A7E1628886A009D6FE7 /* KVC_basic.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18950A7D1628886A009D6FE7 /* KVC_basic.1 */; };
-		18950A84162888DC009D6FE7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		18950A87162888F3009D6FE7 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
 		18D8BEA4164B5FF800942A5D /* NSInvocation.x86_64.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */; };
-		18FE1E15162716A200389A13 /* ChangeLog in Resources */ = {isa = PBXBuildFile; fileRef = 18FE1E12162716A200389A13 /* ChangeLog */; };
-		18FE1E16162716A200389A13 /* ChangeLog.1 in Resources */ = {isa = PBXBuildFile; fileRef = 18FE1E13162716A200389A13 /* ChangeLog.1 */; };
-		18FE1E17162716A200389A13 /* ChangeLog.2 in Resources */ = {isa = PBXBuildFile; fileRef = 18FE1E14162716A200389A13 /* ChangeLog.2 */; };
-		18FE20721628559A00389A13 /* NSGeometry1.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 18FE20711628559A00389A13 /* NSGeometry1.1 */; };
-		18FE2078162855E600389A13 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		18FE2079162855EF00389A13 /* NSGeometry1.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE1E2B1628550000389A13 /* NSGeometry1.m */; };
-		18FE207A1628566400389A13 /* libobjc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394BF51610E73300335E85 /* libobjc.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		18115CCE16513CB300672055 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
-		18115CE716517EB200672055 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
-		1837D9941652876E00197E53 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
-		1837D9A5165288A900197E53 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
-		1837D9B81652BA3D00197E53 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
 		1837DA0F1652D18400197E53 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
-		1839769D163185FF008266AA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
-		183976B316318ADC008266AA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
-		183976BA16318D63008266AA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
-		184CD4E41655637E00A66366 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
-		18510837164D67A200B11B12 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
-		18510850164D6DB800B11B12 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
-		18950A85162888E1009D6FE7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18394B1B1610D8E300335E85;
-			remoteInfo = Foundation;
-		};
-		18FE2076162855D400389A13 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 18906E371610BC4C0003C892 /* Project object */;
 			proxyType = 1;
@@ -584,43 +359,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		18115CD416513CB300672055 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-				18115CD516513CB300672055 /* NSInvocation_general.1 in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		18115CEC16517EB200672055 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		1837D9AB165288A900197E53 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		1837D9BE1652BA3D00197E53 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		1837DA151652D18400197E53 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -630,84 +368,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		1839768C163185DE008266AA /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-				18397697163185DF008266AA /* NSProxy_basic.1 in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		183976A416318A83008266AA /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-				183976AF16318A84008266AA /* NSInvocation_general.1 in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		183976C016318D63008266AA /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-				183976C116318D63008266AA /* NSProxy_basic.1 in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		184CD4EA1655637E00A66366 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		18510827164D677500B11B12 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		18950A731628886A009D6FE7 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-				18950A7E1628886A009D6FE7 /* KVC_basic.1 in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		18FE20661628559A00389A13 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-				18FE20721628559A00389A13 /* NSGeometry1.1 in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		180DFAE9165BF94E00573635 /* NSInvocation.x86_64.S */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = NSInvocation.x86_64.S; sourceTree = "<group>"; };
-		18115CD916513CB300672055 /* NSInvocation_test01 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NSInvocation_test01; sourceTree = BUILT_PRODUCTS_DIR; };
-		18115CF016517EB200672055 /* NSURL_test00 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NSURL_test00; sourceTree = BUILT_PRODUCTS_DIR; };
-		1837D99F1652876E00197E53 /* TestConnection.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestConnection.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		1837D9A11652876F00197E53 /* InvokeProxy copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "InvokeProxy copy-Info.plist"; path = "/Volumes/Projects/gnustep/gnustep-base/InvokeProxy copy-Info.plist"; sourceTree = "<absolute>"; };
-		1837D9AF165288A900197E53 /* NSConnection_connection */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NSConnection_connection; sourceTree = BUILT_PRODUCTS_DIR; };
-		1837D9C21652BA3D00197E53 /* NSURL_basic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NSURL_basic; sourceTree = BUILT_PRODUCTS_DIR; };
 		1837D9C61652D0FF00197E53 /* .cvsignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
 		1837D9C71652D0FF00197E53 /* AGSHtml.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AGSHtml.h; sourceTree = "<group>"; };
 		1837D9C81652D0FF00197E53 /* AGSHtml.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AGSHtml.m; sourceTree = "<group>"; };
@@ -782,41 +446,21 @@
 		18394A9C1610C04600335E85 /* configure */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = configure; sourceTree = SOURCE_ROOT; };
 		18394AA31610CC4E00335E85 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		18394AA41610CC4E00335E85 /* GSConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSConfig.h; sourceTree = "<group>"; };
-		18394AEA1610D6D500335E85 /* GNUstepBase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GNUstepBase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		18394AFF1610D7F800335E85 /* GNUstepBase-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GNUstepBase-Info.plist"; path = "Support/GNUstepBase/GNUstepBase-Info.plist"; sourceTree = SOURCE_ROOT; };
-		18394B001610D7F800335E85 /* GNUstepBase-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GNUstepBase-Prefix.pch"; path = "Support/GNUstepBase/GNUstepBase-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		18394B1C1610D8E300335E85 /* Foundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Foundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18394B311610D95600335E85 /* Foundation-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Foundation-Info.plist"; path = "Support/Foundation/Foundation-Info.plist"; sourceTree = SOURCE_ROOT; };
 		18394B321610D95600335E85 /* Foundation-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Foundation-Prefix.pch"; path = "Support/Foundation/Foundation-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		18394BF51610E73300335E85 /* libobjc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libobjc.dylib; path = usr/lib/libobjc.dylib; sourceTree = SDKROOT; };
-		18394BF71610E84A00335E85 /* libicudata.48.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicudata.48.1.dylib; path = ../../../../opt/local/lib/libicudata.48.1.dylib; sourceTree = "<group>"; };
+		18394BF71610E84A00335E85 /* libicudata.48.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicudata.48.1.dylib; path = /opt/local/lib/libicudata.48.1.dylib; sourceTree = "<absolute>"; };
 		18394BF91610E85A00335E85 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
-		18394BFB1610E8FB00335E85 /* libicui18n.48.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicui18n.48.1.dylib; path = ../../../../opt/local/lib/libicui18n.48.1.dylib; sourceTree = "<group>"; };
-		18394BFD1610E97A00335E85 /* libicuuc.48.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicuuc.48.1.dylib; path = ../../../../opt/local/lib/libicuuc.48.1.dylib; sourceTree = "<group>"; };
-		1839768E163185DE008266AA /* NSProxy_basic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NSProxy_basic; sourceTree = BUILT_PRODUCTS_DIR; };
-		18397695163185DF008266AA /* NSProxy_basic-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSProxy_basic-Prefix.pch"; sourceTree = "<group>"; };
-		18397696163185DF008266AA /* NSProxy_basic.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = NSProxy_basic.1; sourceTree = "<group>"; };
-		183976A616318A83008266AA /* NSInvocation_general */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NSInvocation_general; sourceTree = BUILT_PRODUCTS_DIR; };
-		183976AD16318A84008266AA /* NSInvocation_general-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSInvocation_general-Prefix.pch"; sourceTree = "<group>"; };
-		183976AE16318A84008266AA /* NSInvocation_general.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = NSInvocation_general.1; sourceTree = "<group>"; };
-		183976C516318D63008266AA /* NSProxy_test00 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NSProxy_test00; sourceTree = BUILT_PRODUCTS_DIR; };
+		18394BFB1610E8FB00335E85 /* libicui18n.48.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicui18n.48.1.dylib; path = /opt/local/lib/libicui18n.48.1.dylib; sourceTree = "<absolute>"; };
+		18394BFD1610E97A00335E85 /* libicuuc.48.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicuuc.48.1.dylib; path = /opt/local/lib/libicuuc.48.1.dylib; sourceTree = "<absolute>"; };
 		184915A4163056E800B0ED83 /* libffi.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libffi.dylib; path = usr/lib/libffi.dylib; sourceTree = SDKROOT; };
-		184CD4EE1655637E00A66366 /* respond */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = respond; sourceTree = BUILT_PRODUCTS_DIR; };
-		18510829164D677500B11B12 /* keepalive */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = keepalive; sourceTree = BUILT_PRODUCTS_DIR; };
-		1851083F164D6DB100B11B12 /* InvokeProxy.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InvokeProxy.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		18510840164D6DB100B11B12 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		18510843164D6DB100B11B12 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		18510844164D6DB100B11B12 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		18510845164D6DB100B11B12 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		18510848164D6DB200B11B12 /* InvokeProxy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "InvokeProxy-Info.plist"; sourceTree = "<group>"; };
-		1851084A164D6DB200B11B12 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1851084C164D6DB200B11B12 /* InvokeProxy-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "InvokeProxy-Prefix.pch"; sourceTree = "<group>"; };
-		18528980161397F40016729B /* libgnutls.26.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgnutls.26.dylib; path = ../../../../opt/local/lib/libgnutls.26.dylib; sourceTree = "<group>"; };
+		18528980161397F40016729B /* libgnutls.26.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgnutls.26.dylib; path = /opt/local/lib/libgnutls.26.dylib; sourceTree = "<absolute>"; };
 		185289981613996F0016729B /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		1852899A161399D40016729B /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1852899C161399F80016729B /* libxslt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxslt.dylib; path = usr/lib/libxslt.dylib; sourceTree = SDKROOT; };
 		1852899E16139A180016729B /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
-		185289A016139A470016729B /* libgcrypt.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgcrypt.11.dylib; path = ../../../../opt/local/lib/libgcrypt.11.dylib; sourceTree = "<group>"; };
+		185289A016139A470016729B /* libgcrypt.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgcrypt.11.dylib; path = /opt/local/lib/libgcrypt.11.dylib; sourceTree = "<absolute>"; };
 		185289AB1613A06F0016729B /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = SOURCE_ROOT; };
 		185289AE1613A1060016729B /* addlibrarypath.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = addlibrarypath.m4; sourceTree = "<group>"; };
 		185289AF1613A1060016729B /* codeset.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = codeset.m4; sourceTree = "<group>"; };
@@ -1282,9 +926,6 @@
 		1890701B1610BF3C0003C892 /* NSUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUserDefaults.m; sourceTree = "<group>"; };
 		1890701C1610BF3C0003C892 /* win32-def.top */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "win32-def.top"; sourceTree = "<group>"; };
 		1890701D1610BF3C0003C892 /* win32-load.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "win32-load.h"; sourceTree = "<group>"; };
-		18950A751628886A009D6FE7 /* KVC_basic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = KVC_basic; sourceTree = BUILT_PRODUCTS_DIR; };
-		18950A7C1628886A009D6FE7 /* KVC_basic-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KVC_basic-Prefix.pch"; sourceTree = "<group>"; };
-		18950A7D1628886A009D6FE7 /* KVC_basic.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = KVC_basic.1; sourceTree = "<group>"; };
 		18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInvocation.x86_64.m; sourceTree = "<group>"; };
 		18FE1E12162716A200389A13 /* ChangeLog */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog; sourceTree = SOURCE_ROOT; };
 		18FE1E13162716A200389A13 /* ChangeLog.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = ChangeLog.1; sourceTree = SOURCE_ROOT; };
@@ -1771,73 +1412,15 @@
 		18FE20601628550100389A13 /* ObjCXX.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ObjCXX.mm; sourceTree = "<group>"; };
 		18FE20611628550100389A13 /* TestInfo */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestInfo; sourceTree = "<group>"; };
 		18FE20621628550100389A13 /* Unicode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Unicode.m; sourceTree = "<group>"; };
-		18FE20681628559A00389A13 /* NSGeometry1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NSGeometry1; sourceTree = BUILT_PRODUCTS_DIR; };
-		18FE206A1628559A00389A13 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		18FE20701628559A00389A13 /* NSGeometry1-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSGeometry1-Prefix.pch"; sourceTree = "<group>"; };
-		18FE20711628559A00389A13 /* NSGeometry1.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = NSGeometry1.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		18115CD116513CB300672055 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18115CD216513CB300672055 /* libobjc.dylib in Frameworks */,
-				18115CD316513CB300672055 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		18115CEA16517EB200672055 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18115CF31651809C00672055 /* libobjc.dylib in Frameworks */,
-				18115CEB16517EB200672055 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1837D9971652876E00197E53 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1837D9981652876E00197E53 /* libobjc.dylib in Frameworks */,
-				1837D9991652876E00197E53 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1837D9A8165288A900197E53 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1837D9A9165288A900197E53 /* libobjc.dylib in Frameworks */,
-				1837D9AA165288A900197E53 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1837D9BB1652BA3D00197E53 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1837D9BC1652BA3D00197E53 /* libobjc.dylib in Frameworks */,
-				1837D9BD1652BA3D00197E53 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1837DA121652D18400197E53 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				1837DA131652D18400197E53 /* libobjc.dylib in Frameworks */,
 				1837DA141652D18400197E53 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		18394AE61610D6D500335E85 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18394BFE1610E97A00335E85 /* libicuuc.48.1.dylib in Frameworks */,
-				18394BF61610E73400335E85 /* libobjc.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1854,78 +1437,6 @@
 				18528982161398430016729B /* libicudata.48.1.dylib in Frameworks */,
 				1852897F161397B90016729B /* libicuuc.48.1.dylib in Frameworks */,
 				18528956161393EB0016729B /* libobjc.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1839768B163185DE008266AA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				183976A11631861D008266AA /* libobjc.dylib in Frameworks */,
-				183976A01631860D008266AA /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		183976A316318A83008266AA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				183976B716318B63008266AA /* libobjc.dylib in Frameworks */,
-				183976B616318AEB008266AA /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		183976BD16318D63008266AA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				183976BE16318D63008266AA /* libobjc.dylib in Frameworks */,
-				183976BF16318D63008266AA /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		184CD4E71655637E00A66366 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				184CD4E81655637E00A66366 /* Foundation.framework in Frameworks */,
-				184CD4E91655637E00A66366 /* libobjc.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		18510826164D677500B11B12 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18510839164D67A900B11B12 /* Foundation.framework in Frameworks */,
-				184CD4DD16555FAE00A66366 /* libobjc.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1851083C164D6DB100B11B12 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18510854164D6E5F00B11B12 /* libobjc.dylib in Frameworks */,
-				18510852164D6DC300B11B12 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		18950A721628886A009D6FE7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18950A87162888F3009D6FE7 /* libobjc.dylib in Frameworks */,
-				18950A84162888DC009D6FE7 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		18FE20651628559A00389A13 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18FE207A1628566400389A13 /* libobjc.dylib in Frameworks */,
-				18FE2078162855E600389A13 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2015,15 +1526,6 @@
 				1837D9FE1652D0FF00197E53 /* test1.m */,
 			);
 			path = make_strings;
-			sourceTree = "<group>";
-		};
-		18394AFE1610D72200335E85 /* GNUstepBase */ = {
-			isa = PBXGroup;
-			children = (
-				18394AFF1610D7F800335E85 /* GNUstepBase-Info.plist */,
-				18394B001610D7F800335E85 /* GNUstepBase-Prefix.pch */,
-			);
-			name = GNUstepBase;
 			sourceTree = "<group>";
 		};
 		18394B031610D85D00335E85 /* Additions */ = {
@@ -2283,83 +1785,6 @@
 			name = Foundation;
 			sourceTree = "<group>";
 		};
-		18397691163185DF008266AA /* NSProxy_basic */ = {
-			isa = PBXGroup;
-			children = (
-				18397696163185DF008266AA /* NSProxy_basic.1 */,
-				18397694163185DF008266AA /* Supporting Files */,
-			);
-			path = NSProxy_basic;
-			sourceTree = "<group>";
-		};
-		18397694163185DF008266AA /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				18397695163185DF008266AA /* NSProxy_basic-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		183976A916318A83008266AA /* NSInvocation_general */ = {
-			isa = PBXGroup;
-			children = (
-				183976AE16318A84008266AA /* NSInvocation_general.1 */,
-				183976AC16318A84008266AA /* Supporting Files */,
-			);
-			path = NSInvocation_general;
-			sourceTree = "<group>";
-		};
-		183976AC16318A84008266AA /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				183976AD16318A84008266AA /* NSInvocation_general-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		1851082C164D677500B11B12 /* keepalive */ = {
-			isa = PBXGroup;
-			children = (
-				1851082F164D677600B11B12 /* Supporting Files */,
-			);
-			path = keepalive;
-			sourceTree = "<group>";
-		};
-		1851082F164D677600B11B12 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		18510842164D6DB100B11B12 /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				18510843164D6DB100B11B12 /* AppKit.framework */,
-				18510844164D6DB100B11B12 /* CoreData.framework */,
-				18510845164D6DB100B11B12 /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
-			sourceTree = "<group>";
-		};
-		18510846164D6DB100B11B12 /* InvokeProxy */ = {
-			isa = PBXGroup;
-			children = (
-				18510847164D6DB200B11B12 /* Supporting Files */,
-			);
-			path = InvokeProxy;
-			sourceTree = "<group>";
-		};
-		18510847164D6DB200B11B12 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				18510848164D6DB200B11B12 /* InvokeProxy-Info.plist */,
-				18510849164D6DB200B11B12 /* InfoPlist.strings */,
-				1851084C164D6DB200B11B12 /* InvokeProxy-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		185289AD1613A1060016729B /* config */ = {
 			isa = PBXGroup;
 			children = (
@@ -2425,6 +1850,29 @@
 		18906E351610BC4C0003C892 = {
 			isa = PBXGroup;
 			children = (
+				18906E661610BF3C0003C892 /* Headers */,
+				18394BF31610DC4B00335E85 /* Private Headers */,
+				18906F081610BF3C0003C892 /* Source */,
+				18906E4B1610BC4C0003C892 /* Supporting Files */,
+				18FE1E271628550000389A13 /* Tests */,
+				1837D9C51652D0FF00197E53 /* Tools */,
+				18906E421610BC4C0003C892 /* Products */,
+				18906E431610BC4C0003C892 /* Libraries */,
+			);
+			sourceTree = "<group>";
+		};
+		18906E421610BC4C0003C892 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				18394B1C1610D8E300335E85 /* Foundation.framework */,
+				1837DA191652D18400197E53 /* gdnc */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		18906E431610BC4C0003C892 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
 				184915A4163056E800B0ED83 /* libffi.dylib */,
 				185289A016139A470016729B /* libgcrypt.11.dylib */,
 				1852899E16139A180016729B /* libiconv.dylib */,
@@ -2437,61 +1885,13 @@
 				18394BF91610E85A00335E85 /* libicucore.dylib */,
 				18394BF71610E84A00335E85 /* libicudata.48.1.dylib */,
 				18394BF51610E73300335E85 /* libobjc.dylib */,
-				18906E661610BF3C0003C892 /* Headers */,
-				18394BF31610DC4B00335E85 /* Private Headers */,
-				18906F081610BF3C0003C892 /* Source */,
-				18906E4B1610BC4C0003C892 /* Supporting Files */,
-				18FE1E271628550000389A13 /* Tests */,
-				18FE206C1628559A00389A13 /* NSGeometry1 */,
-				18950A781628886A009D6FE7 /* KVC_basic */,
-				18397691163185DF008266AA /* NSProxy_basic */,
-				183976A916318A83008266AA /* NSInvocation_general */,
-				1851082C164D677500B11B12 /* keepalive */,
-				18510846164D6DB100B11B12 /* InvokeProxy */,
-				1837D9C51652D0FF00197E53 /* Tools */,
-				18906E431610BC4C0003C892 /* Frameworks */,
-				18906E421610BC4C0003C892 /* Products */,
-				1837D9A11652876F00197E53 /* InvokeProxy copy-Info.plist */,
 			);
-			sourceTree = "<group>";
-		};
-		18906E421610BC4C0003C892 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				18394AEA1610D6D500335E85 /* GNUstepBase.framework */,
-				18394B1C1610D8E300335E85 /* Foundation.framework */,
-				18FE20681628559A00389A13 /* NSGeometry1 */,
-				18950A751628886A009D6FE7 /* KVC_basic */,
-				1839768E163185DE008266AA /* NSProxy_basic */,
-				183976A616318A83008266AA /* NSInvocation_general */,
-				183976C516318D63008266AA /* NSProxy_test00 */,
-				18510829164D677500B11B12 /* keepalive */,
-				1851083F164D6DB100B11B12 /* InvokeProxy.bundle */,
-				18115CD916513CB300672055 /* NSInvocation_test01 */,
-				18115CF016517EB200672055 /* NSURL_test00 */,
-				1837D99F1652876E00197E53 /* TestConnection.bundle */,
-				1837D9AF165288A900197E53 /* NSConnection_connection */,
-				1837D9C21652BA3D00197E53 /* NSURL_basic */,
-				1837DA191652D18400197E53 /* gdnc */,
-				184CD4EE1655637E00A66366 /* respond */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		18906E431610BC4C0003C892 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				18FE206A1628559A00389A13 /* Foundation.framework */,
-				18510840164D6DB100B11B12 /* Cocoa.framework */,
-				18510842164D6DB100B11B12 /* Other Frameworks */,
-			);
-			name = Frameworks;
+			name = Libraries;
 			sourceTree = "<group>";
 		};
 		18906E4B1610BC4C0003C892 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				18394AFE1610D72200335E85 /* GNUstepBase */,
 				18394B301610D93700335E85 /* Foundation */,
 				185289AD1613A1060016729B /* config */,
 				185289AB1613A06F0016729B /* configure.ac */,
@@ -2784,23 +2184,6 @@
 				1890701B1610BF3C0003C892 /* NSUserDefaults.m */,
 			);
 			path = win32;
-			sourceTree = "<group>";
-		};
-		18950A781628886A009D6FE7 /* KVC_basic */ = {
-			isa = PBXGroup;
-			children = (
-				18950A7D1628886A009D6FE7 /* KVC_basic.1 */,
-				18950A7B1628886A009D6FE7 /* Supporting Files */,
-			);
-			path = KVC_basic;
-			sourceTree = "<group>";
-		};
-		18950A7B1628886A009D6FE7 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				18950A7C1628886A009D6FE7 /* KVC_basic-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		18FE1E271628550000389A13 /* Tests */ = {
@@ -3994,80 +3377,9 @@
 			path = headers;
 			sourceTree = "<group>";
 		};
-		18FE206C1628559A00389A13 /* NSGeometry1 */ = {
-			isa = PBXGroup;
-			children = (
-				18FE20711628559A00389A13 /* NSGeometry1.1 */,
-				18FE206F1628559A00389A13 /* Supporting Files */,
-			);
-			path = NSGeometry1;
-			sourceTree = "<group>";
-		};
-		18FE206F1628559A00389A13 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				18FE20701628559A00389A13 /* NSGeometry1-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		18394AE71610D6D500335E85 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18394B041610D8BD00335E85 /* config.h in Headers */,
-				18394B051610D8BD00335E85 /* GSConfig.h in Headers */,
-				18394B061610D8BD00335E85 /* Additions.h in Headers */,
-				18394B071610D8BD00335E85 /* CXXException.h in Headers */,
-				18394B081610D8BD00335E85 /* DistributedObjects.h in Headers */,
-				18394B091610D8BD00335E85 /* GCObject.h in Headers */,
-				18394B0A1610D8BD00335E85 /* GNUstep.h in Headers */,
-				18394B0B1610D8BD00335E85 /* GSBlocks.h in Headers */,
-				18394B0C1610D8BD00335E85 /* GSFunctions.h in Headers */,
-				18394B0D1610D8BD00335E85 /* GSIArray.h in Headers */,
-				18394B0E1610D8BD00335E85 /* GSIMap.h in Headers */,
-				18394B0F1610D8BD00335E85 /* GSLocale.h in Headers */,
-				18394B101610D8BD00335E85 /* GSLock.h in Headers */,
-				18394B111610D8BD00335E85 /* GSMime.h in Headers */,
-				18394B121610D8BD00335E85 /* GSObjCRuntime.h in Headers */,
-				18394B131610D8BD00335E85 /* GSUnion.h in Headers */,
-				18394B141610D8BD00335E85 /* GSVersionMacros.h in Headers */,
-				18394B151610D8BD00335E85 /* GSXML.h in Headers */,
-				18394B161610D8BD00335E85 /* Unicode.h in Headers */,
-				18394BBC1610DA8C00335E85 /* GSAvahiClient.h in Headers */,
-				18394BBD1610DA8C00335E85 /* GSAvahiRunLoopIntegration.h in Headers */,
-				18394BBE1610DA8C00335E85 /* GSDispatch.h in Headers */,
-				18394BBF1610DA8C00335E85 /* GSFastEnumeration.h in Headers */,
-				18394BC01610DA8C00335E85 /* GSFileHandle.h in Headers */,
-				18394BC11610DA8C00335E85 /* GSICUString.h in Headers */,
-				18394BC21610DA8C00335E85 /* GSInternal.h in Headers */,
-				18394BC31610DA8C00335E85 /* GSInvocation.h in Headers */,
-				18394BC41610DA8C00335E85 /* GSNetServices.h in Headers */,
-				18394BC51610DA8C00335E85 /* GSNetwork.h in Headers */,
-				18394BC61610DA8C00335E85 /* GSNumberTypes.h in Headers */,
-				18394BC71610DA8C00335E85 /* GSPThread.h in Headers */,
-				18394BC81610DA8C00335E85 /* GSPortPrivate.h in Headers */,
-				18394BC91610DA8C00335E85 /* GSPrivate.h in Headers */,
-				18394BCA1610DA8C00335E85 /* GSRunLoopCtxt.h in Headers */,
-				18394BCB1610DA8C00335E85 /* GSRunLoopWatcher.h in Headers */,
-				18394BCC1610DA8C00335E85 /* GSSocketStream.h in Headers */,
-				18394BCD1610DA8C00335E85 /* GSSorting.h in Headers */,
-				18394BCE1610DA8C00335E85 /* GSStream.h in Headers */,
-				18394BCF1610DA8C00335E85 /* GSTLS.h in Headers */,
-				18394BD01610DA8C00335E85 /* GSURLPrivate.h in Headers */,
-				18394BD11610DA8C00335E85 /* GSeq.h in Headers */,
-				18394B021610D7F800335E85 /* GNUstepBase-Prefix.pch in Headers */,
-				185289E41613A1060016729B /* config.nextcc.h in Headers */,
-				18641D161678AD04003C6E11 /* GSSocks4Parser.h in Headers */,
-				18641D181678AD04003C6E11 /* GSSocks5Parser.h in Headers */,
-				18641D1A1678AD04003C6E11 /* GSSocksParser.h in Headers */,
-				18641D1C1678AD04003C6E11 /* GSSocksParserPrivate.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		18394B191610D8E300335E85 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -4217,96 +3529,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		18115CCC16513CB300672055 /* NSInvocation_test01 */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 18115CD616513CB300672055 /* Build configuration list for PBXNativeTarget "NSInvocation_test01" */;
-			buildPhases = (
-				18115CCF16513CB300672055 /* Sources */,
-				18115CD116513CB300672055 /* Frameworks */,
-				18115CD416513CB300672055 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				18115CCD16513CB300672055 /* PBXTargetDependency */,
-			);
-			name = NSInvocation_test01;
-			productName = NSInvocation_general;
-			productReference = 18115CD916513CB300672055 /* NSInvocation_test01 */;
-			productType = "com.apple.product-type.tool";
-		};
-		18115CE516517EB200672055 /* NSURL_test00 */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 18115CED16517EB200672055 /* Build configuration list for PBXNativeTarget "NSURL_test00" */;
-			buildPhases = (
-				18115CE816517EB200672055 /* Sources */,
-				18115CEA16517EB200672055 /* Frameworks */,
-				18115CEC16517EB200672055 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				18115CE616517EB200672055 /* PBXTargetDependency */,
-			);
-			name = NSURL_test00;
-			productName = keepalive;
-			productReference = 18115CF016517EB200672055 /* NSURL_test00 */;
-			productType = "com.apple.product-type.tool";
-		};
-		1837D9921652876E00197E53 /* TestConnection */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1837D99C1652876E00197E53 /* Build configuration list for PBXNativeTarget "TestConnection" */;
-			buildPhases = (
-				1837D9951652876E00197E53 /* Sources */,
-				1837D9971652876E00197E53 /* Frameworks */,
-				1837D99A1652876E00197E53 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				1837D9931652876E00197E53 /* PBXTargetDependency */,
-			);
-			name = TestConnection;
-			productName = InvokeProxy;
-			productReference = 1837D99F1652876E00197E53 /* TestConnection.bundle */;
-			productType = "com.apple.product-type.bundle";
-		};
-		1837D9A3165288A900197E53 /* NSConnection_connection */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1837D9AC165288A900197E53 /* Build configuration list for PBXNativeTarget "NSConnection_connection" */;
-			buildPhases = (
-				1837D9A6165288A900197E53 /* Sources */,
-				1837D9A8165288A900197E53 /* Frameworks */,
-				1837D9AB165288A900197E53 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				1837D9A4165288A900197E53 /* PBXTargetDependency */,
-			);
-			name = NSConnection_connection;
-			productName = keepalive;
-			productReference = 1837D9AF165288A900197E53 /* NSConnection_connection */;
-			productType = "com.apple.product-type.tool";
-		};
-		1837D9B61652BA3D00197E53 /* NSURL_basic */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1837D9BF1652BA3D00197E53 /* Build configuration list for PBXNativeTarget "NSURL_basic" */;
-			buildPhases = (
-				1837D9B91652BA3D00197E53 /* Sources */,
-				1837D9BB1652BA3D00197E53 /* Frameworks */,
-				1837D9BE1652BA3D00197E53 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				1837D9B71652BA3D00197E53 /* PBXTargetDependency */,
-			);
-			name = NSURL_basic;
-			productName = keepalive;
-			productReference = 1837D9C21652BA3D00197E53 /* NSURL_basic */;
-			productType = "com.apple.product-type.tool";
-		};
 		1837DA0D1652D18400197E53 /* gdnc */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1837DA161652D18400197E53 /* Build configuration list for PBXNativeTarget "gdnc" */;
@@ -4325,24 +3547,6 @@
 			productReference = 1837DA191652D18400197E53 /* gdnc */;
 			productType = "com.apple.product-type.tool";
 		};
-		18394AE91610D6D500335E85 /* GNUstepBase */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 18394AFB1610D6D500335E85 /* Build configuration list for PBXNativeTarget "GNUstepBase" */;
-			buildPhases = (
-				18394AE51610D6D500335E85 /* Sources */,
-				18394AE61610D6D500335E85 /* Frameworks */,
-				18394AE71610D6D500335E85 /* Headers */,
-				18394AE81610D6D500335E85 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = GNUstepBase;
-			productName = GNUstepBase;
-			productReference = 18394AEA1610D6D500335E85 /* GNUstepBase.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		18394B1B1610D8E300335E85 /* Foundation */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 18394B2D1610D8E400335E85 /* Build configuration list for PBXNativeTarget "Foundation" */;
@@ -4360,150 +3564,6 @@
 			productName = Foundation;
 			productReference = 18394B1C1610D8E300335E85 /* Foundation.framework */;
 			productType = "com.apple.product-type.framework";
-		};
-		1839768D163185DE008266AA /* NSProxy_basic */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1839769A163185DF008266AA /* Build configuration list for PBXNativeTarget "NSProxy_basic" */;
-			buildPhases = (
-				1839768A163185DE008266AA /* Sources */,
-				1839768B163185DE008266AA /* Frameworks */,
-				1839768C163185DE008266AA /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				1839769E163185FF008266AA /* PBXTargetDependency */,
-			);
-			name = NSProxy_basic;
-			productName = NSProxy_basic;
-			productReference = 1839768E163185DE008266AA /* NSProxy_basic */;
-			productType = "com.apple.product-type.tool";
-		};
-		183976A516318A83008266AA /* NSInvocation_general */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 183976B016318A84008266AA /* Build configuration list for PBXNativeTarget "NSInvocation_general" */;
-			buildPhases = (
-				183976A216318A83008266AA /* Sources */,
-				183976A316318A83008266AA /* Frameworks */,
-				183976A416318A83008266AA /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				183976B416318ADC008266AA /* PBXTargetDependency */,
-			);
-			name = NSInvocation_general;
-			productName = NSInvocation_general;
-			productReference = 183976A616318A83008266AA /* NSInvocation_general */;
-			productType = "com.apple.product-type.tool";
-		};
-		183976B816318D63008266AA /* NSProxy_test00 */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 183976C216318D63008266AA /* Build configuration list for PBXNativeTarget "NSProxy_test00" */;
-			buildPhases = (
-				183976BB16318D63008266AA /* Sources */,
-				183976BD16318D63008266AA /* Frameworks */,
-				183976C016318D63008266AA /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				183976B916318D63008266AA /* PBXTargetDependency */,
-			);
-			name = NSProxy_test00;
-			productName = NSProxy_basic;
-			productReference = 183976C516318D63008266AA /* NSProxy_test00 */;
-			productType = "com.apple.product-type.tool";
-		};
-		184CD4E21655637E00A66366 /* respond */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 184CD4EB1655637E00A66366 /* Build configuration list for PBXNativeTarget "respond" */;
-			buildPhases = (
-				184CD4E51655637E00A66366 /* Sources */,
-				184CD4E71655637E00A66366 /* Frameworks */,
-				184CD4EA1655637E00A66366 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				184CD4E31655637E00A66366 /* PBXTargetDependency */,
-			);
-			name = respond;
-			productName = keepalive;
-			productReference = 184CD4EE1655637E00A66366 /* respond */;
-			productType = "com.apple.product-type.tool";
-		};
-		18510828164D677500B11B12 /* keepalive */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 18510833164D677600B11B12 /* Build configuration list for PBXNativeTarget "keepalive" */;
-			buildPhases = (
-				18510825164D677500B11B12 /* Sources */,
-				18510826164D677500B11B12 /* Frameworks */,
-				18510827164D677500B11B12 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				18510838164D67A200B11B12 /* PBXTargetDependency */,
-			);
-			name = keepalive;
-			productName = keepalive;
-			productReference = 18510829164D677500B11B12 /* keepalive */;
-			productType = "com.apple.product-type.tool";
-		};
-		1851083E164D6DB100B11B12 /* InvokeProxy */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1851084D164D6DB200B11B12 /* Build configuration list for PBXNativeTarget "InvokeProxy" */;
-			buildPhases = (
-				1851083B164D6DB100B11B12 /* Sources */,
-				1851083C164D6DB100B11B12 /* Frameworks */,
-				1851083D164D6DB100B11B12 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				18510851164D6DB800B11B12 /* PBXTargetDependency */,
-			);
-			name = InvokeProxy;
-			productName = InvokeProxy;
-			productReference = 1851083F164D6DB100B11B12 /* InvokeProxy.bundle */;
-			productType = "com.apple.product-type.bundle";
-		};
-		18950A741628886A009D6FE7 /* KVC_basic */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 18950A811628886A009D6FE7 /* Build configuration list for PBXNativeTarget "KVC_basic" */;
-			buildPhases = (
-				18950A711628886A009D6FE7 /* Sources */,
-				18950A721628886A009D6FE7 /* Frameworks */,
-				18950A731628886A009D6FE7 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				18950A86162888E1009D6FE7 /* PBXTargetDependency */,
-			);
-			name = KVC_basic;
-			productName = KVC_basic;
-			productReference = 18950A751628886A009D6FE7 /* KVC_basic */;
-			productType = "com.apple.product-type.tool";
-		};
-		18FE20671628559A00389A13 /* NSGeometry1 */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 18FE20731628559A00389A13 /* Build configuration list for PBXNativeTarget "NSGeometry1" */;
-			buildPhases = (
-				18FE20641628559A00389A13 /* Sources */,
-				18FE20651628559A00389A13 /* Frameworks */,
-				18FE20661628559A00389A13 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				18FE2077162855D400389A13 /* PBXTargetDependency */,
-			);
-			name = NSGeometry1;
-			productName = NSGeometry1;
-			productReference = 18FE20681628559A00389A13 /* NSGeometry1 */;
-			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -4528,56 +3588,13 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				18394AE91610D6D500335E85 /* GNUstepBase */,
 				18394B1B1610D8E300335E85 /* Foundation */,
-				18FE20671628559A00389A13 /* NSGeometry1 */,
-				18950A741628886A009D6FE7 /* KVC_basic */,
-				1839768D163185DE008266AA /* NSProxy_basic */,
-				183976A516318A83008266AA /* NSInvocation_general */,
-				18115CCC16513CB300672055 /* NSInvocation_test01 */,
-				183976B816318D63008266AA /* NSProxy_test00 */,
-				18510828164D677500B11B12 /* keepalive */,
-				1851083E164D6DB100B11B12 /* InvokeProxy */,
-				1837D9921652876E00197E53 /* TestConnection */,
-				1837D9A3165288A900197E53 /* NSConnection_connection */,
-				1837D9B61652BA3D00197E53 /* NSURL_basic */,
-				18115CE516517EB200672055 /* NSURL_test00 */,
 				1837DA0D1652D18400197E53 /* gdnc */,
-				184CD4E21655637E00A66366 /* respond */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		1837D99A1652876E00197E53 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1837D99B1652876E00197E53 /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		18394AE81610D6D500335E85 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				185289AC1613A06F0016729B /* configure.ac in Resources */,
-				185289D61613A1060016729B /* addlibrarypath.m4 in Resources */,
-				185289D71613A1060016729B /* codeset.m4 in Resources */,
-				185289F61613A1060016729B /* icu.m4 in Resources */,
-				185289F71613A1060016729B /* objc-common.g in Resources */,
-				185289F81613A1060016729B /* objc-con-autoload.m4 in Resources */,
-				185289F91613A1060016729B /* objc-sys-dynamic.m4 in Resources */,
-				185289FA1613A1060016729B /* pathtls.m4 in Resources */,
-				185289FB1613A1060016729B /* pathxml.m4 in Resources */,
-				185289FC1613A1060016729B /* procfs-exe-link.m4 in Resources */,
-				185289FD1613A1060016729B /* procfs.m4 in Resources */,
-				18FE1E15162716A200389A13 /* ChangeLog in Resources */,
-				18FE1E16162716A200389A13 /* ChangeLog.1 in Resources */,
-				18FE1E17162716A200389A13 /* ChangeLog.2 in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		18394B1A1610D8E300335E85 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4585,93 +3602,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1851083D164D6DB100B11B12 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1851084B164D6DB200B11B12 /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		18115CCF16513CB300672055 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18115CDC16513CD100672055 /* test01.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		18115CE816517EB200672055 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18115CF216517ED000672055 /* test00.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1837D9951652876E00197E53 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1837D9A21652877900197E53 /* Connection.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1837D9A6165288A900197E53 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1837D9B1165288D100197E53 /* connection.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1837D9B91652BA3D00197E53 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1837D9C41652BA5100197E53 /* basic.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1837DA101652D18400197E53 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				1837DA1B1652D19600197E53 /* gdnc.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		18394AE51610D6D500335E85 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18394BD21610DAC100335E85 /* CXXException.m in Sources */,
-				18394BD31610DAC100335E85 /* GSArray.m in Sources */,
-				18394BD41610DAC100335E85 /* GSAttributedString.m in Sources */,
-				18394BD91610DADE00335E85 /* GSBlocks.m in Sources */,
-				18394BDA1610DADE00335E85 /* GSConcreteValue.m in Sources */,
-				18394BDC1610DADE00335E85 /* GSCountedSet.m in Sources */,
-				18394BDD1610DADE00335E85 /* GSDictionary.m in Sources */,
-				18394BE11610DAF400335E85 /* GSFileHandle.m in Sources */,
-				18394BE21610DAF400335E85 /* GSFormat.m in Sources */,
-				18394BE31610DAF400335E85 /* GSHTTPAuthentication.m in Sources */,
-				18394BE41610DAF400335E85 /* GSHTTPURLHandle.m in Sources */,
-				18394BE51610DAFC00335E85 /* GSICUString.m in Sources */,
-				18394BE61610DB0100335E85 /* GSLocale.m in Sources */,
-				18394BE71610DB0400335E85 /* GSMDNSNetServices.m in Sources */,
-				18394BE81610DB0800335E85 /* GSQuickSort.m in Sources */,
-				18394BE91610DB1200335E85 /* GSRunLoopWatcher.m in Sources */,
-				18394BEA1610DB1200335E85 /* GSSet.m in Sources */,
-				18394BEB1610DB1200335E85 /* GSShellSort.m in Sources */,
-				18394BEC1610DB1A00335E85 /* GSSocketStream.m in Sources */,
-				18394BED1610DB1C00335E85 /* GSStream.m in Sources */,
-				18394BEE1610DB2200335E85 /* GSString.m in Sources */,
-				18394BEF1610DB2700335E85 /* GSTLS.m in Sources */,
-				18394BF01610DB2A00335E85 /* GSTimSort.m in Sources */,
-				18394BF11610DB3000335E85 /* GSValue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4870,154 +3808,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1839768A163185DE008266AA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1839769C163185FB008266AA /* basic.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		183976A216318A83008266AA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				183976B516318AE1008266AA /* general.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		183976BB16318D63008266AA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				183976C716318D82008266AA /* test00.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		184CD4E51655637E00A66366 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				184CD4F01655638E00A66366 /* respond.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		18510825164D677500B11B12 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18510836164D679200B11B12 /* keepalive.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1851083B164D6DB100B11B12 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18510853164D6DEE00B11B12 /* InvokeProxy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		18950A711628886A009D6FE7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1851083A164D6C5600B11B12 /* basic.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		18FE20641628559A00389A13 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				18FE2079162855EF00389A13 /* NSGeometry1.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		18115CCD16513CB300672055 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 18115CCE16513CB300672055 /* PBXContainerItemProxy */;
-		};
-		18115CE616517EB200672055 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 18115CE716517EB200672055 /* PBXContainerItemProxy */;
-		};
-		1837D9931652876E00197E53 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 1837D9941652876E00197E53 /* PBXContainerItemProxy */;
-		};
-		1837D9A4165288A900197E53 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 1837D9A5165288A900197E53 /* PBXContainerItemProxy */;
-		};
-		1837D9B71652BA3D00197E53 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 1837D9B81652BA3D00197E53 /* PBXContainerItemProxy */;
-		};
 		1837DA0E1652D18400197E53 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 18394B1B1610D8E300335E85 /* Foundation */;
 			targetProxy = 1837DA0F1652D18400197E53 /* PBXContainerItemProxy */;
 		};
-		1839769E163185FF008266AA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 1839769D163185FF008266AA /* PBXContainerItemProxy */;
-		};
-		183976B416318ADC008266AA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 183976B316318ADC008266AA /* PBXContainerItemProxy */;
-		};
-		183976B916318D63008266AA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 183976BA16318D63008266AA /* PBXContainerItemProxy */;
-		};
-		184CD4E31655637E00A66366 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 184CD4E41655637E00A66366 /* PBXContainerItemProxy */;
-		};
-		18510838164D67A200B11B12 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 18510837164D67A200B11B12 /* PBXContainerItemProxy */;
-		};
-		18510851164D6DB800B11B12 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 18510850164D6DB800B11B12 /* PBXContainerItemProxy */;
-		};
-		18950A86162888E1009D6FE7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 18950A85162888E1009D6FE7 /* PBXContainerItemProxy */;
-		};
-		18FE2077162855D400389A13 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 18394B1B1610D8E300335E85 /* Foundation */;
-			targetProxy = 18FE2076162855D400389A13 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		18510849164D6DB200B11B12 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1851084A164D6DB200B11B12 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 		18FE1E781628550000389A13 /* TextRes.txt */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -5031,190 +3832,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		18115CD716513CB300672055 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NSInvocation_general/NSInvocation_general-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = NSInvocation_test01;
-			};
-			name = Debug;
-		};
-		18115CD816513CB300672055 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NSInvocation_general/NSInvocation_general-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = NSInvocation_test01;
-			};
-			name = Release;
-		};
-		18115CEE16517EB200672055 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP",
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = NSURL_test00;
-			};
-			name = Debug;
-		};
-		18115CEF16517EB200672055 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP",
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = NSURL_test00;
-			};
-			name = Release;
-		};
-		1837D99D1652876E00197E53 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "InvokeProxy/InvokeProxy-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/Headers";
-				INFOPLIST_FILE = "InvokeProxy copy-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				OTHER_CFLAGS = (
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = TestConnection;
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
-		1837D99E1652876E00197E53 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "InvokeProxy/InvokeProxy-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/Headers";
-				INFOPLIST_FILE = "InvokeProxy copy-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				OTHER_CFLAGS = (
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = TestConnection;
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Release;
-		};
-		1837D9AD165288A900197E53 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP",
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = NSConnection_connection;
-			};
-			name = Debug;
-		};
-		1837D9AE165288A900197E53 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP",
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = NSConnection_connection;
-			};
-			name = Release;
-		};
-		1837D9C01652BA3D00197E53 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP",
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = NSURL_basic;
-			};
-			name = Debug;
-		};
-		1837D9C11652BA3D00197E53 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP",
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = NSURL_basic;
-			};
-			name = Release;
-		};
 		1837DA171652D18400197E53 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -5250,40 +3867,6 @@
 					"-fconstant-string-class=NSConstantString",
 				);
 				PRODUCT_NAME = gdnc;
-			};
-			name = Release;
-		};
-		18394AFC1610D6D500335E85 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Support/GNUstepBase/GNUstepBase-Prefix.pch";
-				HEADER_SEARCH_PATHS = /opt/local/include;
-				INFOPLIST_FILE = "Support/GNUstepBase/GNUstepBase-Info.plist";
-				LIBRARY_SEARCH_PATHS = /opt/local/lib;
-				OTHER_CFLAGS = "-DNeXT_RUNTIME";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = framework;
-			};
-			name = Debug;
-		};
-		18394AFD1610D6D500335E85 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Support/GNUstepBase/GNUstepBase-Prefix.pch";
-				HEADER_SEARCH_PATHS = /opt/local/include;
-				INFOPLIST_FILE = "Support/GNUstepBase/GNUstepBase-Info.plist";
-				LIBRARY_SEARCH_PATHS = /opt/local/lib;
-				OTHER_CFLAGS = "-DNeXT_RUNTIME";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
 		};
@@ -5349,208 +3932,6 @@
 			};
 			name = Release;
 		};
-		18397698163185DF008266AA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NSProxy_basic/NSProxy_basic-Prefix.pch";
-				HEADER_SEARCH_PATHS = /usr/GNUstep/System/Library/Makefiles/TestFramework/;
-				OTHER_CFLAGS = (
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		18397699163185DF008266AA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NSProxy_basic/NSProxy_basic-Prefix.pch";
-				HEADER_SEARCH_PATHS = /usr/GNUstep/System/Library/Makefiles/TestFramework/;
-				OTHER_CFLAGS = (
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		183976B116318A84008266AA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NSInvocation_general/NSInvocation_general-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		183976B216318A84008266AA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NSInvocation_general/NSInvocation_general-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		183976C316318D63008266AA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NSProxy_basic/NSProxy_basic-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = NSProxy_test00;
-			};
-			name = Debug;
-		};
-		183976C416318D63008266AA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NSProxy_basic/NSProxy_basic-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = NSProxy_test00;
-			};
-			name = Release;
-		};
-		184CD4EC1655637E00A66366 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/Headers";
-				OTHER_CFLAGS = (
-					"-DGNUSTEP",
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = respond;
-			};
-			name = Debug;
-		};
-		184CD4ED1655637E00A66366 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/Headers";
-				OTHER_CFLAGS = (
-					"-DGNUSTEP",
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = respond;
-			};
-			name = Release;
-		};
-		18510834164D677600B11B12 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/Headers";
-				OTHER_CFLAGS = (
-					"-DGNUSTEP",
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		18510835164D677600B11B12 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/Headers";
-				OTHER_CFLAGS = (
-					"-DGNUSTEP",
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		1851084E164D6DB200B11B12 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "InvokeProxy/InvokeProxy-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/Headers";
-				INFOPLIST_FILE = "InvokeProxy/InvokeProxy-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				OTHER_CFLAGS = (
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
-		1851084F164D6DB200B11B12 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "InvokeProxy/InvokeProxy-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/Headers";
-				INFOPLIST_FILE = "InvokeProxy/InvokeProxy-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				OTHER_CFLAGS = (
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Release;
-		};
 		18906E541610BC4C0003C892 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -5596,136 +3977,14 @@
 			};
 			name = Release;
 		};
-		18950A7F1628886A009D6FE7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "KVC_basic/KVC_basic-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP",
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		18950A801628886A009D6FE7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "KVC_basic/KVC_basic-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					/usr/GNUstep/System/Library/Makefiles/TestFramework/,
-					"$(SRCROOT)/Headers",
-				);
-				OTHER_CFLAGS = (
-					"-DGNUSTEP",
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		18FE20741628559A00389A13 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NSGeometry1/NSGeometry1-Prefix.pch";
-				HEADER_SEARCH_PATHS = /usr/GNUstep/System/Library/Makefiles/TestFramework/;
-				OTHER_CFLAGS = (
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		18FE20751628559A00389A13 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NSGeometry1/NSGeometry1-Prefix.pch";
-				HEADER_SEARCH_PATHS = /usr/GNUstep/System/Library/Makefiles/TestFramework/;
-				OTHER_CFLAGS = (
-					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		18115CD616513CB300672055 /* Build configuration list for PBXNativeTarget "NSInvocation_test01" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				18115CD716513CB300672055 /* Debug */,
-				18115CD816513CB300672055 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		18115CED16517EB200672055 /* Build configuration list for PBXNativeTarget "NSURL_test00" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				18115CEE16517EB200672055 /* Debug */,
-				18115CEF16517EB200672055 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		1837D99C1652876E00197E53 /* Build configuration list for PBXNativeTarget "TestConnection" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1837D99D1652876E00197E53 /* Debug */,
-				1837D99E1652876E00197E53 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		1837D9AC165288A900197E53 /* Build configuration list for PBXNativeTarget "NSConnection_connection" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1837D9AD165288A900197E53 /* Debug */,
-				1837D9AE165288A900197E53 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		1837D9BF1652BA3D00197E53 /* Build configuration list for PBXNativeTarget "NSURL_basic" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1837D9C01652BA3D00197E53 /* Debug */,
-				1837D9C11652BA3D00197E53 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		1837DA161652D18400197E53 /* Build configuration list for PBXNativeTarget "gdnc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1837DA171652D18400197E53 /* Debug */,
 				1837DA181652D18400197E53 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		18394AFB1610D6D500335E85 /* Build configuration list for PBXNativeTarget "GNUstepBase" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				18394AFC1610D6D500335E85 /* Debug */,
-				18394AFD1610D6D500335E85 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -5739,83 +3998,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1839769A163185DF008266AA /* Build configuration list for PBXNativeTarget "NSProxy_basic" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				18397698163185DF008266AA /* Debug */,
-				18397699163185DF008266AA /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		183976B016318A84008266AA /* Build configuration list for PBXNativeTarget "NSInvocation_general" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				183976B116318A84008266AA /* Debug */,
-				183976B216318A84008266AA /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		183976C216318D63008266AA /* Build configuration list for PBXNativeTarget "NSProxy_test00" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				183976C316318D63008266AA /* Debug */,
-				183976C416318D63008266AA /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		184CD4EB1655637E00A66366 /* Build configuration list for PBXNativeTarget "respond" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				184CD4EC1655637E00A66366 /* Debug */,
-				184CD4ED1655637E00A66366 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		18510833164D677600B11B12 /* Build configuration list for PBXNativeTarget "keepalive" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				18510834164D677600B11B12 /* Debug */,
-				18510835164D677600B11B12 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		1851084D164D6DB200B11B12 /* Build configuration list for PBXNativeTarget "InvokeProxy" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1851084E164D6DB200B11B12 /* Debug */,
-				1851084F164D6DB200B11B12 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		18906E3A1610BC4C0003C892 /* Build configuration list for PBXProject "base" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				18906E541610BC4C0003C892 /* Debug */,
 				18906E551610BC4C0003C892 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		18950A811628886A009D6FE7 /* Build configuration list for PBXNativeTarget "KVC_basic" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				18950A7F1628886A009D6FE7 /* Debug */,
-				18950A801628886A009D6FE7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		18FE20731628559A00389A13 /* Build configuration list for PBXNativeTarget "NSGeometry1" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				18FE20741628559A00389A13 /* Debug */,
-				18FE20751628559A00389A13 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
