@@ -50,7 +50,11 @@ static NSConnection *spellServerConnection = nil;
 static NSString *GNU_UserDictionariesDir = @"Dictionaries";
 
 // Function to create name for spell server....
-static NSString*
+// todo: move into some protected header
+NSString*
+GSSpellServerName(NSString *vendor, NSString *language);
+
+NSString*
 GSSpellServerName(NSString *vendor, NSString *language)
 {
   NSString *serverName = nil;
