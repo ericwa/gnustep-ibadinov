@@ -409,6 +409,13 @@ extern "C" {
 - (id) _decodePropertyListForKey: (NSString*)aKey;
 @end
 
+/* Dirty hack and should be removed */
+@interface NSKeyedUnarchiver (GNUstepGUI)
+/**
+ * This method is used by GSNibLoading
+ */
+- (BOOL)replaceObject:(id)anObject withObject:(id)newObject;
+@end
 
 /* Exceptions */
 GS_EXPORT NSString * const NSInvalidArchiveOperationException;

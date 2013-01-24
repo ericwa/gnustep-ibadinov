@@ -88,6 +88,31 @@ static NSMapTable	*globalClassMap = 0;
   o = [_keyMap objectForKey: aKey];
 
 
+/* This is really, really dirty and SHOULD be removed */
+@implementation NSKeyedUnarchiver (GNUstepGUI)
+
+- (BOOL)replaceObject:(id)anObject withObject:(id)newObject
+{
+    NSUInteger index = 0;
+    NSUInteger count = GSIArrayCount(_objMap);
+    for (index = 0; index < count; ++index)
+    {
+        id obj = GSIArrayItemAtIndex(_objMap, index).obj;
+        if (obj == anObject) {
+            break;
+        }
+    }
+    
+    if (index < count)
+    {
+        GSIArraySetItemAtIndex(_objMap, (GSIArrayItem)newObject, index);
+        return YES;
+    }
+    
+    return NO;
+}
+
+@end
 
 @interface NSKeyedUnarchiver (Private)
 - (id) _decodeObject: (unsigned)index;
