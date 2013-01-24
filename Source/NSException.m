@@ -736,6 +736,7 @@ NSString* const NSParseErrorException
 NSString* const NSRangeException
  = @"NSRangeException";
 
+#if !defined (__APPLE__)
 static void _terminate()
 {
   BOOL			shouldAbort;
@@ -755,24 +756,45 @@ static void _terminate()
       exit(1);
     }
 }
+#else
+static void _terminate()
+{
+    /* Apple's ObjC runtime terminates program after calling uncaught handler */
+}
+#endif
+
+#if defined (__OBJC2__)
+static id
+_NSFoundationExceptionPreprocessor (id exception)
+{
+    CREATE_AUTORELEASE_POOL(pool);
+    
+    if (class_respondsToSelector(object_getClass(exception), @selector(_recordStackTrace))) {
+        objc_msgSend(exception, @selector(_recordStackTrace));
+    }
+    
+    RELEASE(pool);
+    return exception;
+}
+#endif
 
 static void
 _NSFoundationUncaughtExceptionHandler (NSException *exception)
 {
-  NSAutoreleasePool	*pool = [NSAutoreleasePool new];
-
-  fprintf(stderr, "%s: Uncaught exception %s, reason: %s\n",
-    GSPrivateArgZero(),
-    [[exception name] lossyCString], [[exception reason] lossyCString]);
-  fflush(stderr);	/* NEEDED UNDER MINGW */
-  if (GSPrivateEnvironmentFlag("GNUSTEP_STACK_TRACE", NO) == YES)
-    {
-      fprintf(stderr, "Stack\n%s\n",
-	[[[exception _callStack] description] lossyCString]);
+    CREATE_AUTORELEASE_POOL(pool);
+    
+    const char *className = class_getName(object_getClass(exception));
+    if (GSObjCIsKindOf(object_getClass(exception), [NSException class])) {
+        NSLog(@"*** Terminating app due to uncaught exception '%@', reason: '%@'\n"
+              @"*** Call stack at first throw:\n"
+              @"(\n\t%@\n)",
+              [exception name], [exception reason], [[exception callStackSymbols] componentsJoinedByString:@"\n\t"]);   
+    } else {
+        NSLog(@"*** Terminating app due to uncaught exception of class '%s'\n", className);
     }
-  fflush(stderr);	/* NEEDED UNDER MINGW */
-  [pool drain];
-  _terminate();
+    
+    RELEASE(pool);
+    _terminate();
 }
 
 static void
@@ -806,16 +828,24 @@ callUncaughtHandler(id value)
     }
   NSLog(@"WARNING this copy of gnustep-base has been built with libbfd to provide symbolic stacktrace support. This means that the license of this copy of gnustep-base is GPL rather than the normal LGPL license (since libbfd is released under the GPL license).  If this is not what you want, please obtain a copy of gnustep-base which was not configured with the --enable-bfd option");
 #endif	/* USE_BINUTILS */
+  return;
+}
+
++ (void)load
+{
 #if defined(_NATIVE_OBJC_EXCEPTIONS)
 #  ifdef HAVE_SET_UNCAUGHT_EXCEPTION_HANDLER
-  objc_setUncaughtExceptionHandler(callUncaughtHandler);
+    objc_setUncaughtExceptionHandler(callUncaughtHandler);
 #  elif defined(HAVE_UNEXPECTED)
-  _objc_unexpected_exception = callUncaughtHandler;
+    _objc_unexpected_exception = callUncaughtHandler;
 #  elif defined(HAVE_SET_UNEXPECTED)
-  objc_set_unexpected(callUncaughtHandler);
+    objc_set_unexpected(callUncaughtHandler);
 #  endif
 #endif
-  return;
+    
+#if defined (__OBJC2__) && defined (__APPLE__)
+    objc_setExceptionPreprocessor(&_NSFoundationExceptionPreprocessor);
+#endif
 }
 
 + (NSException*) exceptionWithName: (NSString*)name
@@ -826,27 +856,20 @@ callUncaughtHandler(id value)
 				   userInfo: userInfo]);
 }
 
-+ (void) raise: (NSString*)name
-	format: (NSString*)format,...
++ (void)raise:(NSString *)name format:(NSString *)format, ...
 {
-  va_list args;
-
-  va_start(args, format);
-  [self raise: name format: format arguments: args];
-  // This probably doesn't matter, but va_end won't get called
-  va_end(args);
+    va_list args;
+    
+    va_start(args, format);
+    [self raise:name format:format arguments:args];
+    // This probably doesn't matter, but va_end won't get called
+    va_end(args);
 }
 
-+ (void) raise: (NSString*)name
-	format: (NSString*)format
-     arguments: (va_list)argList
++ (void)raise:(NSString *)name format:(NSString *)format arguments:(va_list)argList
 {
-  NSString	*reason;
-  NSException	*except;
-
-  reason = [NSString stringWithFormat: format arguments: argList];
-  except = [self exceptionWithName: name reason: reason userInfo: nil];
-  [except raise];
+    NSString *reason = [NSString stringWithFormat:format arguments:argList];
+    [[self exceptionWithName:name reason:reason userInfo:nil] raise];
 }
 
 /* For OSX compatibility -init returns nil.
@@ -951,17 +974,22 @@ callUncaughtHandler(id value)
   return [result autorelease];
 }
 
+- (void) _recordStackTrace
+{
+    if (_reserved == 0)
+    {
+        _reserved = NSZoneCalloc([self zone], 2, sizeof(id));
+    }
+    if (nil == _e_stack)
+    {
+        // Only set the stack when first raised
+        _e_stack = [GSStackTrace new];
+    }
+}
+
 - (void) raise
 {
-  if (_reserved == 0)
-    {
-      _reserved = NSZoneCalloc([self zone], 2, sizeof(id));
-    }
-  if (nil == _e_stack)
-    {
-      // Only set the stack when first raised
-      _e_stack = [GSStackTrace new];
-    }
+  [self _recordStackTrace];
 
 #if     defined(_NATIVE_OBJC_EXCEPTIONS)
   @throw self;
