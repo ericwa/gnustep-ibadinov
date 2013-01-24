@@ -30,9 +30,25 @@
 #define __NSObjCRuntime_h_GNUSTEP_BASE_INCLUDE
 
 #ifdef __cplusplus
-#ifndef __STDC_LIMIT_MACROS
-#define __STDC_LIMIT_MACROS 1
+#  ifndef __STDC_LIMIT_MACROS
+#    define __STDC_LIMIT_MACROS 1
+#  endif
 #endif
+
+#if !defined(NS_FORMAT_FUNCTION)
+#  if defined (__GNUC__) && (__GNUC__*10 + __GNUC_MINOR__ >= 42)
+#    define NS_FORMAT_FUNCTION(F,A) __attribute__((format(__NSString__, F, A)))
+#  else
+#    define NS_FORMAT_FUNCTION(F,A)
+#  endif
+#endif
+
+#if !defined(NS_FORMAT_ARGUMENT)
+#  if defined (__GNUC__) && (__GNUC__*10 + __GNUC_MINOR__ >= 42)
+#    define NS_FORMAT_ARGUMENT(A) __attribute__ ((format_arg(A)))
+#  else
+#    define NS_FORMAT_ARGUMENT(A)
+#  endif
 #endif
 
 #include <stdarg.h>
@@ -143,8 +159,8 @@ GS_EXPORT int	_NSLogDescriptor;
 GS_EXPORT NSRecursiveLock	*GSLogLock(void);
 #endif
 
-GS_EXPORT void			NSLog (NSString *format, ...);
-GS_EXPORT void			NSLogv (NSString *format, va_list args);
+GS_EXPORT void NSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
+GS_EXPORT void NSLogv(NSString *format, va_list args) NS_FORMAT_FUNCTION(1,0);
 
 #ifndef YES
 #define YES		1

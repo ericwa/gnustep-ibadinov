@@ -263,20 +263,26 @@ typedef NSUInteger NSStringEncodingConversionOptions;
  *   that of the receiver which returned them.
  * </p>
  */
-@interface NSString :NSObject <NSCoding, NSCopying, NSMutableCopying>
+@interface NSString : NSObject <NSCopying, NSMutableCopying, NSCoding>
 
-+ (id) string;
-+ (id) stringWithCharacters: (const unichar*)chars
-		     length: (NSUInteger)length;
+/* NSString primitive (funnel) methods. A minimal subclass of NSString just needs to implement these, although we also recommend getCharacters:range:. See below for the other methods.
+ */
+- (NSUInteger)length;			
+- (unichar)characterAtIndex:(NSUInteger)index;
+
+@end
+
+@interface NSString (NSStringExtensionMethods)
+
++ (id)string;
++ (id)stringWithCharacters:(const unichar *)chars length:(NSUInteger)length;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST) // FIXDEF! && GS_API_VERSION( 10200,GS_API_LATEST)
-+ (id) stringWithCString: (const char*)byteString
-		encoding: (NSStringEncoding)encoding;
++ (id)stringWithCString:(const char *)byteString encoding:(NSStringEncoding)encoding;
 #endif
-+ (id) stringWithCString: (const char*)byteString
-		  length: (NSUInteger)length;
-+ (id) stringWithCString: (const char*)byteString;
-+ (id) stringWithFormat: (NSString*)format,...;
-+ (id) stringWithContentsOfFile:(NSString *)path;
++ (id)stringWithCString:(const char *)byteString length:(NSUInteger)length;
++ (id)stringWithCString:(const char *)byteString;
++ (id)stringWithFormat:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
++ (id)stringWithContentsOfFile:(NSString *)path;
 
 // Initializing Newly Allocated Strings
 - (id) init;
@@ -333,24 +339,20 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (NSString*) stringByReplacingCharactersInRange: (NSRange)aRange 
                                       withString: (NSString*)by;
 #endif
-- (id) initWithCharactersNoCopy: (unichar*)chars
-			 length: (NSUInteger)length
-		   freeWhenDone: (BOOL)flag;
-- (id) initWithCharacters: (const unichar*)chars
-		   length: (NSUInteger)length;
-- (id) initWithCStringNoCopy: (char*)byteString
-		      length: (NSUInteger)length
-	        freeWhenDone: (BOOL)flag;
-- (id) initWithCString: (const char*)byteString
-	        length: (NSUInteger)length;
-- (id) initWithCString: (const char*)byteString;
-- (id) initWithString: (NSString*)string;
-- (id) initWithFormat: (NSString*)format, ...;
-- (id) initWithFormat: (NSString*)format
-	    arguments: (va_list)argList;
-- (id) initWithData: (NSData*)data
-	   encoding: (NSStringEncoding)encoding;
-- (id) initWithContentsOfFile: (NSString*)path;
+
+- (id)initWithCharactersNoCopy:(unichar *)chars length:(NSUInteger)length freeWhenDone:(BOOL)flag;
+- (id)initWithCharacters:(const unichar *)chars length:(NSUInteger)length;
+
+- (id)initWithCStringNoCopy:(char *)byteString length:(NSUInteger)length freeWhenDone:(BOOL)flag;
+- (id)initWithCString:(const char *)byteString length:(NSUInteger)length;
+- (id)initWithCString:(const char *)byteString;
+
+- (id)initWithString:(NSString *)string;
+- (id)initWithFormat:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
+- (id)initWithFormat:(NSString *)format arguments:(va_list)argList NS_FORMAT_FUNCTION(1,0);
+
+- (id)initWithData:(NSData *)data encoding:(NSStringEncoding)encoding;
+- (id)initWithContentsOfFile:(NSString *)path;
 
 // Getting a String's Length
 - (NSUInteger) length;
@@ -362,13 +364,13 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 		 range: (NSRange)aRange;
 
 // Combining Strings
-- (NSString*) stringByAppendingFormat: (NSString*)format,...;
-- (NSString*) stringByAppendingString: (NSString*)aString;
+- (NSString *)stringByAppendingFormat:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
+- (NSString *)stringByAppendingString:(NSString *)aString;
 
 // Dividing Strings into Substrings
-- (NSArray*) componentsSeparatedByString: (NSString*)separator;
-- (NSString*) substringFromIndex: (NSUInteger)index;
-- (NSString*) substringToIndex: (NSUInteger)index;
+- (NSArray *)componentsSeparatedByString:(NSString *)separator;
+- (NSString *)substringFromIndex:(NSUInteger)index;
+- (NSString *)substringToIndex:(NSUInteger)index;
 
 // Finding Ranges of Characters and Substrings
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet;
@@ -723,20 +725,19 @@ typedef NSUInteger NSStringEncodingConversionOptions;
  * Returns an array of strings made by appending the values in paths
  * to the receiver.
  */
-- (NSArray*) stringsByAppendingPaths: (NSArray*)paths;
+- (NSArray*)stringsByAppendingPaths:(NSArray*)paths;
 
-+ (NSString*) localizedStringWithFormat: (NSString*)format, ...;
++ (NSString*)localizedStringWithFormat:(NSString*)format, ... NS_FORMAT_FUNCTION(1,2);
 
-+ (id) stringWithString: (NSString*)aString;
-+ (id) stringWithContentsOfURL: (NSURL*)url;
-+ (id) stringWithUTF8String: (const char*)bytes;
-- (id) initWithFormat: (NSString*)format
-	       locale: (NSDictionary*)locale, ...;
-- (id) initWithFormat: (NSString*)format
-	       locale: (NSDictionary*)locale
-	    arguments: (va_list)argList;
-- (id) initWithUTF8String: (const char *)bytes;
-- (id) initWithContentsOfURL: (NSURL*)url;
++ (id)stringWithString: (NSString*)aString;
++ (id)stringWithContentsOfURL: (NSURL*)url;
++ (id)stringWithUTF8String: (const char*)bytes;
+
+- (id)initWithFormat:(NSString*)format locale:(NSDictionary*)locale, ... NS_FORMAT_FUNCTION(1,3);
+- (id)initWithFormat:(NSString*)format locale:(NSDictionary*)locale arguments:(va_list)argList NS_FORMAT_FUNCTION(1,0);
+- (id)initWithUTF8String:(const char *)bytes;
+- (id)initWithContentsOfURL:(NSURL*)url;
+
 - (NSString*) substringWithRange: (NSRange)aRange;
 - (NSComparisonResult) caseInsensitiveCompare: (NSString*)aString;
 - (NSComparisonResult) compare: (NSString*)string 
@@ -808,31 +809,32 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 @interface NSMutableString : NSString
 
 // Creating Temporary Strings
-+ (id) string;
-+ (id) stringWithCharacters: (const unichar*)characters
-		     length: (NSUInteger)length;
-+ (id) stringWithCString: (const char*)byteString
-		  length: (NSUInteger)length;
-+ (id) stringWithCString: (const char*)byteString;
-+ (id) stringWithFormat: (NSString*)format,...;
-+ (id) stringWithContentsOfFile: (NSString*)path;
-+ (NSMutableString*) stringWithCapacity: (NSUInteger)capacity;
++ (id)string;
++ (id)stringWithCharacters:(const unichar *)characters length:(NSUInteger)length;
++ (id)stringWithCString:(const char *)byteString length:(NSUInteger)length;
++ (id)stringWithCString:(const char *)byteString;
++ (id)stringWithFormat:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
++ (id)stringWithContentsOfFile:(NSString *)path;
+
++ (NSMutableString *)stringWithCapacity:(NSUInteger)capacity;
 
 // Initializing Newly Allocated Strings
 - (id) initWithCapacity: (NSUInteger)capacity;
 
 // Modify A String
-- (void) appendFormat: (NSString*)format, ...;
-- (void) appendString: (NSString*)aString;
-- (void) deleteCharactersInRange: (NSRange)range;
-- (void) insertString: (NSString*)aString atIndex: (NSUInteger)loc;
-- (void) replaceCharactersInRange: (NSRange)range 
-		       withString: (NSString*)aString;
-- (NSUInteger) replaceOccurrencesOfString: (NSString*)replace
-				 withString: (NSString*)by
-				    options: (NSUInteger)opts
-				      range: (NSRange)searchRange;
-- (void) setString: (NSString*)aString;
+- (void)appendFormat:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
+- (void)appendString:(NSString *)aString;
+
+- (void)deleteCharactersInRange:(NSRange)range;
+- (void)insertString:(NSString *)aString atIndex:(NSUInteger)loc;
+
+- (void)replaceCharactersInRange:(NSRange)range withString:(NSString *)aString;
+- (NSUInteger)replaceOccurrencesOfString:(NSString *)replace 
+                              withString:(NSString *)by
+                                 options:(NSUInteger)opts
+                                   range:(NSRange)searchRange;
+
+- (void)setString:(NSString *)aString;
 
 @end
 
@@ -860,11 +862,10 @@ typedef NSUInteger NSStringEncodingConversionOptions;
  * What follows is a dummy declaration of the class to keep the compiler
  * happy.
  */
-@interface NXConstantString : NSString
-{
+@interface NXConstantString : NSString {
 @public
-  const char * const nxcsptr;
-  const unsigned int nxcslen;
+    const char * const nxcsptr;
+    const unsigned int nxcslen;
 }
 @end
 

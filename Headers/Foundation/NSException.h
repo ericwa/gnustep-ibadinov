@@ -123,8 +123,7 @@ extern "C" {
  * format string and any additional arguments. The exception is then
  * <em>raised</em> using the -raise method.
  */
-+ (void) raise: (NSString*)name
-	format: (NSString*)format,...;
++ (void)raise:(NSString *)name format:(NSString *)format, ... NS_FORMAT_FUNCTION(2,3);
 
 /**
  * Creates an exception with a name and a reason string using the
@@ -132,9 +131,7 @@ extern "C" {
  * argument list argList. The exception is then <em>raised</em>
  * using the -raise method.
  */
-+ (void) raise: (NSString*)name
-	format: (NSString*)format
-     arguments: (va_list)argList;
++ (void)raise:(NSString *)name format:(NSString *)format arguments:(va_list)argList NS_FORMAT_FUNCTION(2,0);
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST) // FIXDEF! && GS_API_VERSION( 11501,GS_API_LATEST)
 /** Returns an array of the call stack return addresses at the point when
