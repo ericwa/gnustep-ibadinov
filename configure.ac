@@ -1773,16 +1773,19 @@ fi
 # Unless we are building for the apple runtime (ie only building base
 # additions library and not implementing a constant string class).
 #---------------------------------------------------------------------
-if test "$FOUNDATION_LIB" = "nx" -o "$FOUNDATION_LIB" = "apple"; then
+AC_MSG_CHECKING(if the compiler generates constant CFStrings)
+case "$target_os" in
+    darwin*)    IS_DARWIN="yes";;
+    *)          IS_DARWIN="no";;
+esac
+AC_MSG_RESULT($IS_DARWIN)
+
+if test "$IS_DARWIN" = "yes"; then
   NX_CONST_STRING_OBJCFLAGS=""
-  NX_CONST_STRING_CLASS=NXConstantString
+  NX_CONST_STRING_CLASS=NSCFConstantString
 else
   strclass_CPPFLAGS="$CPPFLAGS"
-  #-------------------------------------------------------------------
-  # On Apple platforms compiler ignores "-fconstant-string-class="
-  # if "-fno-constant-cfstrings" is not specified
-  #-------------------------------------------------------------------
-  CPPFLAGS="$CPPFLAGS -fno-constant-cfstrings -fconstant-string-class=FooConstantString"
+  CPPFLAGS="$CPPFLAGS -fconstant-string-class=FooConstantString"
   AC_MSG_CHECKING(if the compiler supports -fconstant-string-class)
   AC_CACHE_VAL(gs_cv_objc_compiler_supports_constant_string_class,
     AC_TRY_RUN([#include "$srcdir/config/config.constant-string-class.m"],

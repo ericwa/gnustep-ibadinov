@@ -33,6 +33,31 @@
    Boston, MA 02111 USA.
 */
 
+/*
+ * Constant string class references
+ */
+
+#if __APPLE__
+#if __OBJC2__
+Class _NSConstantStringClassReference;
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+struct objc_class _NSConstantStringClassReference;
+#pragma GCC diagnostic pop
+#endif /* __OBJC2__ */
+#endif /* __APPLE__ */
+
+#if __LP64__
+int __CFConstantStringClassReference[24] = {0};
+#else
+int __CFConstantStringClassReference[12] = {0};
+#endif
+
+/*
+ * GSString implementation
+ */
+
 #import "common.h"
 #import "Foundation/NSCoder.h"
 #import "Foundation/NSArray.h"
@@ -85,7 +110,7 @@ static BOOL isByteEncoding(NSStringEncoding enc)
  * sets the ascii flag according to the content found.
  */
 static NSUInteger
-lengthUTF8(const uint8_t *p, unsigned l, BOOL *ascii, BOOL *latin1)
+lengthUTF8(const uint8_t *p, NSUInteger l, BOOL *ascii, BOOL *latin1)
 {
   const uint8_t	*e = p + l;
   BOOL		a = YES;
@@ -206,7 +231,7 @@ lengthUTF8(const uint8_t *p, unsigned l, BOOL *ascii, BOOL *latin1)
  * is zero (meaning there is no second part of a surrogate pair remaining).
  */
 static inline unichar
-nextUTF8(const uint8_t *p, unsigned l, unsigned *o, unichar *n)
+nextUTF8(const uint8_t *p, NSUInteger l, unsigned *o, unichar *n)
 {
   unsigned	i;
 
@@ -302,159 +327,157 @@ nextUTF8(const uint8_t *p, unsigned l, unsigned *o, unichar *n)
 }
 
 static BOOL
-literalIsEqualInternal(NXConstantString *s, GSStr o)
+literalIsEqualInternal(NSConstantString *s, GSStr o)
 {
-  NSUInteger len = o->_count;
-
-  /* Since UTF-8 is a multibyte character set, it must have at least
-   * as many bytes as another string of the same length. So if the
-   * UTF-8 string is shorter, the two cannot be equal.
-   * A check for this can quickly give us a result in half the cases
-   * where the two strings have different lengths.
-   */
-  if (len > s->nxcslen)
+    NSUInteger len = o->_count;
+    
+    /* Since UTF-8 is a multibyte character set, it must have at least
+     * as many bytes as another string of the same length. So if the
+     * UTF-8 string is shorter, the two cannot be equal.
+     * A check for this can quickly give us a result in half the cases
+     * where the two strings have different lengths.
+     */
+    if (len > s->numBytes)
     {
-      return NO;
+        return NO;
     }
-  else
+    else
     {
-      NSUInteger	pos = 0;
-      unichar		n = 0;
-      unsigned		i = 0;
-      unichar		u;
-
-      if (0 == o->_flags.wide)
-	{
-	  /* If the other string is a buffer containing ascii characters,
-	   * we can perform a bytewise comparison.
-	   */
-	  if (internalEncoding == NSASCIIStringEncoding)
-	    {
-	      if (len == s->nxcslen
-		&& 0 == memcmp(o->_contents.c, s->nxcsptr, len))
-		{
-		  return YES;
-		}
-	      else
-		{
-		  return NO;
-		}
-	    }
-
-	  /* If the other string is a buffer containing latin1 characters,
-	   * we can compare buffer contents with unichar values directly.
-	   */
-	  if (internalEncoding == NSISOLatin1StringEncoding)
-	    {
-	      while (i < s->nxcslen || n > 0)
-		{
-		  u = nextUTF8((const uint8_t *)s->nxcsptr, s->nxcslen, &i, &n);
-		  if (pos >= len || (unichar)o->_contents.c[pos] != u)
-		    {
-		      return NO;
-		    }
-		  pos++;
-		}
-	      if (pos != len)
-		{
-		  return NO;
-		}
-	      return YES;
-	    }
-
-	  /* For any other narrow internal string, we know that ascii is
-	   * a subset of the encoding, so as long as characters are ascii
-	   * (don't have the top bit set) we can do bytewise comparison.
-	   */
-	  if (len == s->nxcslen)
-	    {
-	      unsigned	index;
-
-	      for (index = 0; index < len; index++)
-		{
-		  uint8_t	c = s->nxcsptr[index];
-
-		  if (c != o->_contents.c[index] || c >= 128)
-		    {
-		      /* Characters differ at this point.
-		       */
-		      break;
-		    }
-		}
-	      if (index == len)
-		{
-		  return YES;
-		}
-	      /* The characters were the same up to 'index', so we won't
-	       * need to recheck those first few characters.
-	       */
-	      pos = i = index;
-	    }
-	}
-
-      /* For small strings, or ones where we already have an array of
-       * UTF-16 characters, we can do a UTF-16 comparison directly.
-       * For larger strings, we may do as well with a character by
-       * character comparison.
-       */
-      if (1 == o->_flags.wide || (len < 200 && pos < len))
-	{
-	  unichar	*ptr;
-
-	  if (1 == o->_flags.wide)
-	    {
-	      ptr = o->_contents.u;
-	    }
-	  else
-	    {
-	      ptr = alloca(sizeof(unichar) * len);
-	      if (NO == GSToUnicode(&ptr, &len, o->_contents.c,
-		len, internalEncoding, 0, 0))
-		{
-		  return NO;
-		}
-	    }
-
-	  /* Now we have a UTF-16 buffer, so we can do a UTF-16 comparison.
-	   */
-	  while (i < s->nxcslen || n > 0)
-	    {
-	      u = nextUTF8((const uint8_t *)s->nxcsptr, s->nxcslen, &i, &n);
-	      if (pos >= len || ptr[pos] != u)
-		{
-		  return NO;
-		}
-	      pos++;
-	    }
-	}
-      else
-	{
-	  unichar	(*imp)(id, SEL, NSUInteger);
-
-	  /* Do a character by character comparison using characterAtIndex:
-	   * This will be relatively slow, but how often will we actually
-	   * need to do this for a literal string?  Most string literals will
-	   * either be short or will differ from any other string we are
-	   * doing a comparison with within the first few tens of characters.
-	   */
-	  imp = (unichar(*)(id,SEL,NSUInteger))[(id)o methodForSelector:
-	    @selector(characterAtIndex:)];
-	  while (i < s->nxcslen || n > 0)
-	    {
-	      u = nextUTF8((const uint8_t *)s->nxcsptr, s->nxcslen, &i, &n);
-	      if (pos >= len
-		|| (*imp)((id)o, @selector(characterAtIndex:), pos) != u)
-		{
-		  return NO;
-		}
-	      pos++;
-	    }
-	}
-      if (pos != len)
-	{
-	  return NO;
-	}
-      return YES;
+        NSUInteger	pos = 0;
+        unichar		n = 0;
+        unsigned		i = 0;
+        unichar		u;
+        
+        if (0 == o->_flags.wide)
+        {
+            /* If the other string is a buffer containing ascii characters,
+             * we can perform a bytewise comparison.
+             */
+            if (internalEncoding == NSASCIIStringEncoding)
+            {
+                if (len == s->numBytes && 0 == memcmp(o->_contents.c, s->bytes, len))
+                {
+                    return YES;
+                }
+                else
+                {
+                    return NO;
+                }
+            }
+            
+            /* If the other string is a buffer containing latin1 characters,
+             * we can compare buffer contents with unichar values directly.
+             */
+            if (internalEncoding == NSISOLatin1StringEncoding)
+            {
+                while (i < s->numBytes || n > 0)
+                {
+                    u = nextUTF8((const uint8_t *)s->bytes, s->numBytes, &i, &n);
+                    if (pos >= len || (unichar)o->_contents.c[pos] != u)
+                    {
+                        return NO;
+                    }
+                    pos++;
+                }
+                if (pos != len)
+                {
+                    return NO;
+                }
+                return YES;
+            }
+            
+            /* For any other narrow internal string, we know that ascii is
+             * a subset of the encoding, so as long as characters are ascii
+             * (don't have the top bit set) we can do bytewise comparison.
+             */
+            if (len == s->numBytes)
+            {
+                unsigned	index;
+                
+                for (index = 0; index < len; index++)
+                {
+                    uint8_t	c = s->bytes[index];
+                    
+                    if (c != o->_contents.c[index] || c >= 128)
+                    {
+                        /* Characters differ at this point.
+                         */
+                        break;
+                    }
+                }
+                if (index == len)
+                {
+                    return YES;
+                }
+                /* The characters were the same up to 'index', so we won't
+                 * need to recheck those first few characters.
+                 */
+                pos = i = index;
+            }
+        }
+        
+        /* For small strings, or ones where we already have an array of
+         * UTF-16 characters, we can do a UTF-16 comparison directly.
+         * For larger strings, we may do as well with a character by
+         * character comparison.
+         */
+        if (1 == o->_flags.wide || (len < 200 && pos < len))
+        {
+            unichar	*ptr;
+            
+            if (1 == o->_flags.wide)
+            {
+                ptr = o->_contents.u;
+            }
+            else
+            {
+                ptr = alloca(sizeof(unichar) * len);
+                if (NO == GSToUnicode(&ptr, &len, o->_contents.c,
+                                      len, internalEncoding, 0, 0))
+                {
+                    return NO;
+                }
+            }
+            
+            /* Now we have a UTF-16 buffer, so we can do a UTF-16 comparison.
+             */
+            while (i < s->numBytes || n > 0)
+            {
+                u = nextUTF8((const uint8_t *)s->bytes, s->numBytes, &i, &n);
+                if (pos >= len || ptr[pos] != u)
+                {
+                    return NO;
+                }
+                pos++;
+            }
+        }
+        else
+        {
+            unichar	(*imp)(id, SEL, NSUInteger);
+            
+            /* Do a character by character comparison using characterAtIndex:
+             * This will be relatively slow, but how often will we actually
+             * need to do this for a literal string?  Most string literals will
+             * either be short or will differ from any other string we are
+             * doing a comparison with within the first few tens of characters.
+             */
+            imp = (unichar(*)(id,SEL,NSUInteger))[(id)o methodForSelector:@selector(characterAtIndex:)];
+            while (i < s->numBytes || n > 0)
+            {
+                u = nextUTF8((const uint8_t *)s->bytes, s->numBytes, &i, &n);
+                if (pos >= len
+                    || (*imp)((id)o, @selector(characterAtIndex:), pos) != u)
+                {
+                    return NO;
+                }
+                pos++;
+            }
+        }
+        if (pos != len)
+        {
+            return NO;
+        }
+        return YES;
     }
 }
 
@@ -670,7 +693,7 @@ setup(BOOL rerun)
       GSCSubStringClass = [GSCSubString class];
       GSUnicodeSubStringClass = [GSUnicodeSubString class];
       GSMutableStringClass = [GSMutableString class];
-      NSConstantStringClass = [NXConstantString class];
+      NSConstantStringClass = [NSConstantString class];
 
       /*
        * Cache some selectors and method implementations for
@@ -2683,9 +2706,9 @@ isEqual_c(GSStr self, id anObject)
       return NO;
     }
   c = object_getClass(anObject);
-  if (c == NSConstantStringClass)
+  if (GSObjCIsKindOf(c, NSConstantStringClass))
     {
-      return literalIsEqualInternal((NXConstantString*)anObject, (GSStr)self);
+      return literalIsEqualInternal((NSConstantString *)anObject, (GSStr)self);
     }
   if (c == GSMutableStringClass || GSObjCIsKindOf(c, GSStringClass) == YES)
     {
@@ -2746,9 +2769,9 @@ isEqual_u(GSStr self, id anObject)
       return NO;
     }
   c = object_getClass(anObject);
-  if (c == NSConstantStringClass)
+  if (GSObjCIsKindOf(c, NSConstantStringClass))
     {
-      return literalIsEqualInternal((NXConstantString*)anObject, (GSStr)self);
+      return literalIsEqualInternal((NSConstantString *)anObject, (GSStr)self);
     }
   if (c == GSMutableStringClass || GSObjCIsKindOf(c, GSStringClass) == YES)
     {
@@ -3004,29 +3027,29 @@ makeHole(GSStr self, NSUInteger index, NSUInteger size)
 }
 
 static inline NSRange
-rangeOfSequence_c(GSStr self, NSUInteger anIndex)
+rangeOfSequence_c(const char *buffer, NSUInteger size, NSUInteger anIndex)
 {
-  if (anIndex >= self->_count)
+  if (anIndex >= size)
     [NSException raise: NSRangeException format:@"Invalid location."];
 
   return (NSRange){anIndex, 1};
 }
 
 static inline NSRange
-rangeOfSequence_u(GSStr self, NSUInteger anIndex)
+rangeOfSequence_u(unichar *buffer, NSUInteger size, NSUInteger anIndex)
 {
   NSUInteger start;
   NSUInteger end;
 
-  if (anIndex >= self->_count)
+  if (anIndex >= size)
     [NSException raise: NSRangeException format:@"Invalid location."];
 
   start = anIndex;
-  while (uni_isnonsp(self->_contents.u[start]) && start > 0)
+  while (uni_isnonsp(buffer[start]) && start > 0)
     start--;
   end = start + 1;
-  if (end < self->_count)
-    while ((end < self->_count) && (uni_isnonsp(self->_contents.u[end])))
+  if (end < size)
+    while ((end < size) && (uni_isnonsp(buffer[end])))
       end++;
   return (NSRange){start, end-start};
 }
@@ -3727,7 +3750,7 @@ agree, create a new GSCInlineString otherwise.
 
 - (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex
 {
-  return rangeOfSequence_c((GSStr)self, anIndex);
+    return rangeOfSequence_c((const char *)((GSStr)self)->_contents.c, ((GSStr)self)->_count, anIndex);
 }
 
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
@@ -4095,7 +4118,7 @@ agree, create a new GSCInlineString otherwise.
 
 - (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex
 {
-  return rangeOfSequence_u((GSStr)self, anIndex);
+  return rangeOfSequence_u(((GSStr)self)->_contents.u, ((GSStr)self)->_count, anIndex);
 }
 
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
@@ -4944,9 +4967,9 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
 - (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex
 {
   if (_flags.wide == 1)
-    return rangeOfSequence_u((GSStr)self, anIndex);
+    return rangeOfSequence_u(((GSStr)self)->_contents.u, ((GSStr)self)->_count, anIndex);
   else
-    return rangeOfSequence_c((GSStr)self, anIndex);
+    return rangeOfSequence_c((const char *)((GSStr)self)->_contents.c, ((GSStr)self)->_count, anIndex);
 }
 
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
@@ -5283,498 +5306,74 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
 
 
 static BOOL
-literalIsEqual(NXConstantString *self, id anObject)
+literalIsEqual(NSConstantString *self, id anObject)
 {
-  Class	c;
-
-  if (anObject == (id)self)
+    Class	c;
+    
+    if (anObject == (id)self)
     {
-      return YES;
+        return YES;
     }
-  if (anObject == nil)
+    if (anObject == nil)
     {
-      return NO;
+        return NO;
     }
-  if (GSObjCIsInstance(anObject) == NO)
+    if (GSObjCIsInstance(anObject) == NO)
     {
-      return NO;
+        return NO;
     }
-  c = object_getClass(anObject);
-  if (c == NSConstantStringClass)
+    c = object_getClass(anObject);
+    if (GSObjCIsKindOf(c, NSConstantStringClass))
     {
-      NXConstantString	*other = (NXConstantString*)anObject;
-
-      if (other->nxcslen != self->nxcslen
-	|| strcmp(other->nxcsptr, self->nxcsptr) != 0)
-	{
-	  return NO;
-	}
-      return YES;
-    }
-  else if (c == GSMutableStringClass || GSObjCIsKindOf(c, GSStringClass) == YES)
-    {
-      return literalIsEqualInternal(self, (GSStr)anObject);
-    }
-  else if (YES == [anObject isKindOfClass: NSStringClass]) // may be proxy
-    {
-      unichar		(*imp)(id, SEL, NSUInteger);
-      NSUInteger	len = [anObject length];
-      NSUInteger	pos = 0;
-      unichar		n = 0;
-      unsigned		i = 0;
-      unichar		u;
-
-      if (len > self->nxcslen)
-	{
-	  /* Since UTF-8 is a multibyte character set, it must have at least
-	   * as many bytes as another string of the same length. So if the
-	   * UTF-8 string is shorter, the two cannot be equal.
-	   */
-	  return NO;
-	}
-
-      /* Do a character by character comparison using characterAtIndex:
-       */
-      imp = (unichar(*)(id,SEL,NSUInteger))[anObject methodForSelector:
-	@selector(characterAtIndex:)];
-      while (i < self->nxcslen || n > 0)
-	{
-	  u = nextUTF8((const uint8_t *)self->nxcsptr,
-	    self->nxcslen, &i, &n);
-	  if (pos >= len
-	    || (*imp)(anObject, @selector(characterAtIndex:), pos) != u)
-	    {
-	      return NO;
-	    }
-	  pos++;
-	}
-      if (pos != len)
-	{
-	  return NO;
-	}
-      return YES;
-    }
-  return NO;
-}
-
-/**
- * <p>The NXConstantString class is used by the compiler for constant
- * strings, as such its ivar layout is determined by the compiler
- * and consists of a pointer (_contents.c) and a character count
- * (_count). 
- */
-@implementation NXConstantString
-
-#if defined (NeXT_RUNTIME) && NXConstantString == NSConstantString
-+ (void) load
-{
-#if defined (__OBJC2__)
-  _NSConstantStringClassReference = objc_getClass("NSConstantString");
-#else
-  /* This memcpy has to be done before the first message is sent to any
-   * constant string object. See Apple Radar 2870817 
-   */
-  memcpy(&_NSConstantStringClassReference,
-         objc_getClass(STRINGIFY(NXConstantString)),
-         sizeof(_NSConstantStringClassReference));
-#endif /* __OBJC2__ */
-}
-#endif /* NeXT_RUNTIME */
-
-+ (void) initialize
-{
-  if (self == [NXConstantString class])
-    {
-      NSConstantStringClass = self;
-    }
-}
-
-- (const char*) UTF8String
-{
-  return nxcsptr;
-}
-
-- (unichar) characterAtIndex: (NSUInteger)index
-{
-  NSUInteger	l = 0;
-  unichar	u;
-  unichar	n = 0;
-  unsigned	i = 0;
-
-  while (i < nxcslen || n > 0)
-    {
-      u = nextUTF8((const uint8_t *)nxcsptr, nxcslen, &i, &n);
-      if (l++ == index)
-	{
-	  return u;
-	}
-    }
-
-  [NSException raise: NSInvalidArgumentException
-	      format: @"-characterAtIndex: index out of range"];
-  return 0;
-}
-
-- (BOOL) canBeConvertedToEncoding: (NSStringEncoding)encoding
-{
-  /* If the string contains bad (non-utf8) data, the lengthUTF8() function
-   * will raise an exception ... we catch it and return NO in that case
-   * since this method is not expected to raise exceptions.
-   */
-  NS_DURING
-    {
-      if (NSASCIIStringEncoding == encoding)
+        NSConstantString *other = (NSConstantString *)anObject;
+        if (other->numBytes != self->numBytes || strcmp(other->bytes, self->bytes) != 0)
         {
-          BOOL	ascii;
-
-          lengthUTF8((const uint8_t*)nxcsptr, nxcslen, &ascii, 0);
-          NS_VALRETURN(ascii);
+            return NO;
         }
-      else if (NSISOLatin1StringEncoding == encoding)
+        return YES;
+    }
+    else if (c == GSMutableStringClass || GSObjCIsKindOf(c, GSStringClass) == YES)
+    {
+        return literalIsEqualInternal(self, (GSStr)anObject);
+    }
+    else if (YES == [anObject isKindOfClass: NSStringClass]) // may be proxy
+    {
+        unichar		(*imp)(id, SEL, NSUInteger);
+        NSUInteger	len = [anObject length];
+        NSUInteger	pos = 0;
+        unichar		n = 0;
+        unsigned		i = 0;
+        unichar		u;
+        
+        if (len > self->numBytes)
         {
-          BOOL	latin1;
-
-          lengthUTF8((const uint8_t*)nxcsptr, nxcslen, 0, &latin1);
-          NS_VALRETURN(latin1);
+            /* Since UTF-8 is a multibyte character set, it must have at least
+             * as many bytes as another string of the same length. So if the
+             * UTF-8 string is shorter, the two cannot be equal.
+             */
+            return NO;
         }
-      else if (NSUTF8StringEncoding == encoding
-        || NSUnicodeStringEncoding == encoding)
+        
+        /* Do a character by character comparison using characterAtIndex:
+         */
+        imp = (unichar(*)(id,SEL,NSUInteger))[anObject methodForSelector:@selector(characterAtIndex:)];
+        while (i < self->numBytes || n > 0)
         {
-          lengthUTF8((const uint8_t*)nxcsptr, nxcslen, 0, 0);
-          NS_VALRETURN(YES);
+            u = nextUTF8((const uint8_t *)self->bytes, self->numBytes, &i, &n);
+            if (pos >= len || (*imp)(anObject, @selector(characterAtIndex:), pos) != u)
+            {
+                return NO;
+            }
+            pos++;
         }
-      else
+        if (pos != len)
         {
-          id d = [self dataUsingEncoding: encoding allowLossyConversion: NO];
-
-          NS_VALRETURN(d != nil ? YES : NO);
+            return NO;
         }
+        return YES;
     }
-  NS_HANDLER
-    {
-      return NO;
-    }
-  NS_ENDHANDLER
+    return NO;
 }
-
-- (NSData*) dataUsingEncoding: (NSStringEncoding)encoding
-	 allowLossyConversion: (BOOL)flag
-{
-  BOOL        ascii;
-  BOOL        latin1;
-  NSUInteger  length;
-
-  if (0 == nxcslen)
-    {
-      return [NSDataClass data];
-    }
-
-  /* Check what is actually in this string ... if it's corrupt an exception
-   * is raised.
-   */
-  length = lengthUTF8((const uint8_t*)nxcsptr, nxcslen, &ascii, &latin1);
-
-  if (NSUTF8StringEncoding == encoding)
-    {
-      /* We want utf-8, so we can just return an object pointing to the
-       * constant string data since e just checked that it's UTF8 in
-       * lengthUTF8().
-       */
-      return [NSDataClass dataWithBytesNoCopy: (void*)nxcsptr
-				       length: nxcslen
-				 freeWhenDone: NO];
-    }
-
-  if (YES == ascii && GSPrivateIsByteEncoding(encoding))
-    {
-      /* The constant string data is just ascii, so we can return a
-       * pointer to it directly for any encoding which has ascii as
-       * a subset.
-       */
-      return [NSDataClass dataWithBytesNoCopy: (void*)nxcsptr
-                                       length: nxcslen
-                                 freeWhenDone: NO];
-    }
-
-  if (YES == latin1 && NSISOLatin1StringEncoding == encoding)
-    {
-      unsigned	i = 0;
-      unichar	n = 0;
-      uint8_t	*b;
-
-      /* If all the characters are latin1 we can copy them efficiently.
-       */
-      b = NSAllocateCollectable(length, 0);
-      while (i < length)
-        {
-          b[i] = nextUTF8((const uint8_t *)nxcsptr, nxcslen, &i, &n);
-        }
-      return [NSDataClass dataWithBytesNoCopy: (void*)b
-                                       length: length
-                                 freeWhenDone: YES];
-    }
-
-  return [super dataUsingEncoding: encoding allowLossyConversion: flag];
-}
-
-- (void) dealloc
-{
-  GSNOSUPERDEALLOC;
-}
-
-- (void) getCharacters: (unichar*)buffer
-		 range: (NSRange)aRange
-{
-  unichar	n = 0;
-  unsigned	i = 0;
-  NSUInteger	max = NSMaxRange(aRange);
-  NSUInteger	index = 0;
-
-  if (NSNotFound == aRange.location)
-    [NSException raise: NSRangeException
-                format: @"in %s, range { %u, %u } extends beyond string",
-     GSNameFromSelector(_cmd), aRange.location, aRange.length];
-
-  while (index < aRange.location && (i < nxcslen || n > 0))
-    {
-      nextUTF8((const uint8_t *)nxcsptr, nxcslen, &i, &n);
-      index++;
-    }
-  if (index == aRange.location)
-    {
-      while (index < max && (i < nxcslen || n > 0))
-	{
-	  *buffer++ = nextUTF8((const uint8_t *)nxcsptr, nxcslen, &i, &n);
-	  index++;
-	}
-    }
-  if (index != max)
-    {
-      [NSException raise: NSRangeException
-		  format: @"in %s, range { %u, %u } extends beyond string",
-       GSNameFromSelector(_cmd), aRange.location, aRange.length];
-    }
-}
-
-/* Must match the implementation in NSString
- */
-- (NSUInteger) hash
-{
-  if (nxcslen > 0)
-    {
-      unsigned	ret = 0;
-      unichar	n = 0;
-      unsigned	i = 0;
-      unichar	c;
-
-      while (i < nxcslen)
-	{
-	  c = nextUTF8((const uint8_t *)nxcsptr, nxcslen, &i, &n);
-	  ret = (ret << 5) + ret + c;
-	}
-      if (0 != n)
-	{
-	  ret = (ret << 5) + ret + n;	// Add final character
-	}
-      ret &= 0x0fffffff;
-      if (ret == 0)
-	{
-	  ret = 0x0fffffff;
-	}
-      return ret;
-    }
-  else
-    {
-      return 0x0ffffffe;	/* Hash for an empty string.	*/
-    }
-}
-
-- (id) initWithBytes: (const void*)bytes
-	      length: (NSUInteger)length
-	    encoding: (NSStringEncoding)encoding
-{
-  [NSException raise: NSGenericException
-	      format: @"Attempt to init a constant string"];
-  return nil;
-}
-
-- (id) initWithBytesNoCopy: (void*)bytes
-		    length: (NSUInteger)length
-		  encoding: (NSStringEncoding)encoding
-	      freeWhenDone: (BOOL)flag
-{
-  [NSException raise: NSGenericException
-	      format: @"Attempt to init a constant string"];
-  return nil;
-}
-
-- (BOOL) isEqual: (id)anObject
-{
-  return literalIsEqual(self, anObject);
-}
-
-- (BOOL) isEqualToString: (NSString*)other
-{
-  return literalIsEqual(self, other);
-}
-
-- (NSUInteger) length
-{
-  return lengthUTF8((const uint8_t*)nxcsptr, nxcslen, 0, 0);
-}
-
-- (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
-			    options: (NSUInteger)mask
-			      range: (NSRange)aRange
-{
-  NSUInteger	index;
-  NSUInteger	start;
-  NSUInteger	stop;
-  NSRange	range;
-  BOOL		ascii;
-
-  index = lengthUTF8((const uint8_t*)nxcsptr, nxcslen, &ascii, 0);
-  GS_RANGE_CHECK(aRange, index);
-
-  start = aRange.location;
-  stop = NSMaxRange(aRange);
-
-  range.location = NSNotFound;
-  range.length = 0;
-
-  if (stop  > start)
-    {
-      BOOL	(*mImp)(id, SEL, unichar);
-      unichar	n = 0;
-      unsigned	i = 0;
-
-      mImp = (BOOL(*)(id,SEL,unichar))
-	[aSet methodForSelector: @selector(characterIsMember:)];
-
-      for (index = 0; index < start; index++)
-	{
-	  nextUTF8((const uint8_t *)nxcsptr, nxcslen, &i, &n);
-	}
-      if ((mask & NSBackwardsSearch) == NSBackwardsSearch)
-	{
-	  unichar	buf[stop - start];
-	  NSUInteger	pos = 0;
-	  
-	  for (pos = 0; pos + start < stop; pos++)
-	    {
-	      buf[pos] = nextUTF8((const uint8_t *)nxcsptr, nxcslen, &i, &n);
-	    }
-	  index = stop;
-	  while (index-- > 0)
-	    {
-	      if ((*mImp)(aSet, @selector(characterIsMember:), buf[--pos]))
-		{
-		  range = NSMakeRange(index, 1);
-		  break;
-		}
-	    }
-	}
-      else
-	{
-	  while (index < stop)
-	    {
-	      unichar letter;
-
-	      letter = nextUTF8((const uint8_t *)nxcsptr, nxcslen, &i, &n);
-	      if ((*mImp)(aSet, @selector(characterIsMember:), letter))
-		{
-		  range = NSMakeRange(index, 1);
-		  break;
-		}
-	      index++;
-	    }
-	}
-    }
-
-  return range;
-}
-
-- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex
-{
-  NSUInteger	start = 0;
-  NSUInteger	pos = 0;
-  unichar	n = 0;
-  unsigned	i = 0;
-  unichar	u;
-
-  /* A composed character sequence consists of a single base character
-   * followed by zero or more non-base characters.
-   */
-  while (i < nxcslen || n > 0)
-    {
-      u = nextUTF8((const uint8_t *)nxcsptr, nxcslen, &i, &n);
-      if (!uni_isnonsp(u))
-	{
-	  /* This may be the base character at the start of the sequence.
-	   */
-	  start = pos;
-	}
-      if (pos++ == anIndex)
-	{
-	  /* Look ahead to see if the character at the specified index is
-	   * followed by one or more non-base characters. If it is, we
-	   * make the range longer before returning it.
-	   */
-	  while (i < nxcslen || n > 0)
-	    {
-	      u = nextUTF8((const uint8_t *)nxcsptr, nxcslen, &i, &n);
-	      if (!uni_isnonsp(u))
-		{
-		  break;
-		}
-	      pos++;
-	    }
-	  return NSMakeRange(start, pos - start);
-	}
-    }
-
-  [NSException raise: NSInvalidArgumentException
-    format: @"-rangeOfComposedCharacterSequenceAtIndex: index out of range"];
-  return NSMakeRange(NSNotFound, 0);
-}
-
-- (id) retain
-{
-  return self;
-}
-
-- (oneway void) release
-{
-  return;
-}
-
-- (id) autorelease
-{
-  return self;
-}
-
-- (id) copyWithZone: (NSZone*)z
-{
-  return self;
-}
-
-- (NSZone*) zone
-{
-  return NSDefaultMallocZone();
-}
-
-- (NSStringEncoding) fastestEncoding
-{
-  return NSUTF8StringEncoding;
-}
-
-- (NSStringEncoding) smallestEncoding
-{
-  return NSUTF8StringEncoding;
-}
-
-@end
-
 
 /**
  * Append characters to a string.
@@ -5862,3 +5461,543 @@ GSPrivateStrExternalize(GSStr s)
     }
 }
 
+
+
+
+/*
+ *
+ * Constant string implementation. todo: decouple it from GSString
+ *
+ */
+
+
+
+
+@implementation NSSimpleCString
+
+- (id)initWithBytes:(const void *)bytes
+             length:(NSUInteger)length
+           encoding:(NSStringEncoding)encoding
+{
+    [NSException raise:NSGenericException format:@"Attempt to init a constant string"];
+    return nil;
+}
+
+- (id)initWithBytesNoCopy:(void *)bytes
+                   length:(NSUInteger)length
+                 encoding:(NSStringEncoding)encoding
+             freeWhenDone:(BOOL)flag
+{
+    [NSException raise:NSGenericException format:@"Attempt to init a constant string"];
+    return nil;
+}
+
+- (void)dealloc
+{
+    GSNOSUPERDEALLOC;
+}
+
+- (id)retain
+{
+    return self;
+}
+
+- (oneway void)release
+{
+    return;
+}
+
+- (id)autorelease
+{
+    return self;
+}
+
+- (id)copyWithZone:(NSZone *)z
+{
+    return self;
+}
+
+- (NSZone*)zone
+{
+    return NSDefaultMallocZone();
+}
+
+@end
+
+@implementation NSConstantString
+
++ (void)load
+{
+#if __APPLE__
+#if __OBJC2__
+    _NSConstantStringClassReference = self;
+#else
+    memcpy(&_NSConstantStringClassReference, self, sizeof(_NSConstantStringClassReference));
+#endif /* __OBJC2__ */
+#endif /* __APPLE__ */
+}
+
+- (const char *)UTF8String
+{
+    return bytes;
+}
+
+- (NSStringEncoding)fastestEncoding
+{
+    return NSUTF8StringEncoding;
+}
+
+- (NSStringEncoding)smallestEncoding
+{
+    return NSUTF8StringEncoding;
+}
+
+- (NSUInteger)length
+{
+    return lengthUTF8((const uint8_t *)bytes, numBytes, 0, 0);
+}
+
+- (BOOL)isEqual:(id)anObject
+{
+    return literalIsEqual(self, anObject);
+}
+
+- (BOOL)isEqualToString:(NSString *)other
+{
+    return literalIsEqual(self, other);
+}
+
+- (unichar)characterAtIndex:(NSUInteger)index
+{
+    NSUInteger	l = 0;
+    unichar	u;
+    unichar	n = 0;
+    unsigned	i = 0;
+    
+    while (i < numBytes || n > 0)
+    {
+        u = nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
+        if (l++ == index)
+        {
+            return u;
+        }
+    }
+    
+    [NSException raise:NSInvalidArgumentException format:@"-characterAtIndex: index out of range"];
+    return 0;
+}
+
+- (BOOL)canBeConvertedToEncoding:(NSStringEncoding)encoding
+{
+    /* If the string contains bad (non-utf8) data, the lengthUTF8() function
+     * will raise an exception ... we catch it and return NO in that case
+     * since this method is not expected to raise exceptions.
+     */
+    NS_DURING
+    {
+        if (NSASCIIStringEncoding == encoding)
+        {
+            BOOL	ascii;
+            
+            lengthUTF8((const uint8_t *)bytes, numBytes, &ascii, 0);
+            NS_VALRETURN(ascii);
+        }
+        else if (NSISOLatin1StringEncoding == encoding)
+        {
+            BOOL	latin1;
+            
+            lengthUTF8((const uint8_t *)bytes, numBytes, 0, &latin1);
+            NS_VALRETURN(latin1);
+        }
+        else if (NSUTF8StringEncoding == encoding || NSUnicodeStringEncoding == encoding)
+        {
+            lengthUTF8((const uint8_t *)bytes, numBytes, 0, 0);
+            NS_VALRETURN(YES);
+        }
+        else
+        {
+            id d = [self dataUsingEncoding: encoding allowLossyConversion: NO];
+            
+            NS_VALRETURN(d != nil ? YES : NO);
+        }
+    }
+    NS_HANDLER
+    {
+        return NO;
+    }
+    NS_ENDHANDLER
+}
+
+- (NSData *)dataUsingEncoding:(NSStringEncoding)encoding allowLossyConversion:(BOOL)flag
+{
+    BOOL        ascii;
+    BOOL        latin1;
+    NSUInteger  length;
+    
+    if (0 == numBytes)
+    {
+        return [NSDataClass data];
+    }
+    
+    /* Check what is actually in this string ... if it's corrupt an exception
+     * is raised.
+     */
+    length = lengthUTF8((const uint8_t *)bytes, numBytes, &ascii, &latin1);
+    
+    if (NSUTF8StringEncoding == encoding)
+    {
+        /* We want utf-8, so we can just return an object pointing to the
+         * constant string data since e just checked that it's UTF8 in
+         * lengthUTF8().
+         */
+        return [NSDataClass dataWithBytesNoCopy:(void *)bytes length:numBytes freeWhenDone:NO];
+    }
+    
+    if (YES == ascii && GSPrivateIsByteEncoding(encoding))
+    {
+        /* The constant string data is just ascii, so we can return a
+         * pointer to it directly for any encoding which has ascii as
+         * a subset.
+         */
+        return [NSDataClass dataWithBytesNoCopy:(void *)bytes length:numBytes freeWhenDone:NO];
+    }
+    
+    if (YES == latin1 && NSISOLatin1StringEncoding == encoding)
+    {
+        unsigned	i = 0;
+        unichar	n = 0;
+        uint8_t	*buffer;
+        
+        /* If all the characters are latin1 we can copy them efficiently.
+         */
+        buffer = NSAllocateCollectable(length, 0);
+        while (i < length)
+        {
+            buffer[i] = nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
+        }
+        return [NSDataClass dataWithBytesNoCopy:(void *)buffer length:length freeWhenDone:YES];
+    }
+    
+    return [super dataUsingEncoding:encoding allowLossyConversion:flag];
+}
+
+- (void)getCharacters:(unichar *)buffer range:(NSRange)aRange
+{
+    unichar	n = 0;
+    unsigned	i = 0;
+    NSUInteger	max = NSMaxRange(aRange);
+    NSUInteger	index = 0;
+    
+    if (NSNotFound == aRange.location)
+        [NSException raise: NSRangeException
+                    format: @"in %s, range { %u, %u } extends beyond string",
+         GSNameFromSelector(_cmd), aRange.location, aRange.length];
+    
+    while (index < aRange.location && (i < numBytes || n > 0))
+    {
+        nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
+        index++;
+    }
+    if (index == aRange.location)
+    {
+        while (index < max && (i < numBytes || n > 0))
+        {
+            *buffer++ = nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
+            index++;
+        }
+    }
+    if (index != max)
+    {
+        [NSException raise: NSRangeException
+                    format: @"in %s, range { %u, %u } extends beyond string",
+         GSNameFromSelector(_cmd), aRange.location, aRange.length];
+    }
+}
+
+/*
+ * Must match the implementation in NSString
+ */
+- (NSUInteger)hash
+{
+    if (numBytes > 0)
+    {
+        unsigned	ret = 0;
+        unichar	n = 0;
+        unsigned	i = 0;
+        unichar	c;
+        
+        while (i < numBytes)
+        {
+            c = nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
+            ret = (ret << 5) + ret + c;
+        }
+        if (0 != n)
+        {
+            ret = (ret << 5) + ret + n;	// Add final character
+        }
+        ret &= 0x0fffffff;
+        if (ret == 0)
+        {
+            ret = 0x0fffffff;
+        }
+        return ret;
+    }
+    else
+    {
+        return 0x0ffffffe;	/* Hash for an empty string.	*/
+    }
+}
+
+- (NSRange)rangeOfCharacterFromSet:(NSCharacterSet *)aSet
+                           options:(NSUInteger)mask
+                             range:(NSRange)aRange
+{
+    NSUInteger	index;
+    NSUInteger	start;
+    NSUInteger	stop;
+    NSRange	range;
+    BOOL		ascii;
+    
+    index = lengthUTF8((const uint8_t *)bytes, numBytes, &ascii, 0);
+    GS_RANGE_CHECK(aRange, index);
+    
+    start = aRange.location;
+    stop = NSMaxRange(aRange);
+    
+    range.location = NSNotFound;
+    range.length = 0;
+    
+    if (stop  > start)
+    {
+        BOOL	(*mImp)(id, SEL, unichar);
+        unichar	n = 0;
+        unsigned	i = 0;
+        
+        mImp = (BOOL(*)(id,SEL,unichar))
+        [aSet methodForSelector:@selector(characterIsMember:)];
+        
+        for (index = 0; index < start; index++)
+        {
+            nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
+        }
+        if ((mask & NSBackwardsSearch) == NSBackwardsSearch)
+        {
+            unichar	buf[stop - start];
+            NSUInteger	pos = 0;
+            
+            for (pos = 0; pos + start < stop; pos++)
+            {
+                buf[pos] = nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
+            }
+            index = stop;
+            while (index-- > 0)
+            {
+                if ((*mImp)(aSet, @selector(characterIsMember:), buf[--pos]))
+                {
+                    range = NSMakeRange(index, 1);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            while (index < stop)
+            {
+                unichar letter;
+                
+                letter = nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
+                if ((*mImp)(aSet, @selector(characterIsMember:), letter))
+                {
+                    range = NSMakeRange(index, 1);
+                    break;
+                }
+                index++;
+            }
+        }
+    }
+    
+    return range;
+}
+
+- (NSRange)rangeOfComposedCharacterSequenceAtIndex:(NSUInteger)anIndex
+{
+    NSUInteger	start = 0;
+    NSUInteger	pos = 0;
+    unichar	n = 0;
+    unsigned	i = 0;
+    unichar	u;
+    
+    /* A composed character sequence consists of a single base character
+     * followed by zero or more non-base characters.
+     */
+    while (i < numBytes || n > 0)
+    {
+        u = nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
+        if (!uni_isnonsp(u))
+        {
+            /* This may be the base character at the start of the sequence.
+             */
+            start = pos;
+        }
+        if (pos++ == anIndex)
+        {
+            /* Look ahead to see if the character at the specified index is
+             * followed by one or more non-base characters. If it is, we
+             * make the range longer before returning it.
+             */
+            while (i < numBytes || n > 0)
+            {
+                u = nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
+                if (!uni_isnonsp(u))
+                {
+                    break;
+                }
+                pos++;
+            }
+            return NSMakeRange(start, pos - start);
+        }
+    }
+    
+    [NSException raise:NSInvalidArgumentException format:@"-rangeOfComposedCharacterSequenceAtIndex: index out of range"];
+    return NSMakeRange(NSNotFound, 0);
+}
+
+@end
+
+@implementation NXConstantString
+
+@end
+
+NS_INLINE BOOL
+NSCFStringIsUnicode(NSCFConstantString *self)
+{
+    /* return self->flags != 1992 */
+    return ((uint8_t *)&self->flags)[0] == 0xd0;
+}
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-align"
+
+NS_INLINE unichar
+NSCFStringCharacterAtIndex(NSCFConstantString *self, NSUInteger index)
+{
+    return NSCFStringIsUnicode(self) ? *(unichar *)(self->bytes + index * 2) : (unichar)self->bytes[index];
+}
+
+#pragma GCC diagnostic pop
+
+@implementation NSCFConstantString
+
++ (void)load
+{
+    memcpy(__CFConstantStringClassReference, self, sizeof(__CFConstantStringClassReference));
+}
+
+- (const char *)UTF8String
+{
+    return NSCFStringIsUnicode(self) ? [super UTF8String] : bytes;
+}
+
+- (NSUInteger)length
+{
+    return numBytes; /* it contains length, but not a size */ 
+}
+
+- (unichar)characterAtIndex:(NSUInteger)index
+{
+    if (index >= numBytes) {
+        [NSException raise:NSInvalidArgumentException format:@"-characterAtIndex: index out of range: %ld", (long)index];
+    }
+    return NSCFStringCharacterAtIndex(self, index);
+}
+
+/*
+ * Must match the implementation in NSString
+ */
+- (NSUInteger)hash
+{
+    if (numBytes == 0)
+    {
+        return 0x0ffffffe;	/* Hash for an empty string */
+    }
+    
+    NSUInteger	result = 0;
+    unsigned	index = 0;
+    
+    while (index < numBytes)
+    {
+        result = (result << 5) + result + NSCFStringCharacterAtIndex(self, index);
+        ++index;
+    }
+    result &= 0x0fffffff;
+    if (result == 0)
+    {
+        result = 0x0fffffff;
+    }
+    return result;
+}
+
+- (void)getCharacters:(unichar *)buffer range:(NSRange)aRange
+{
+    if (NSNotFound == aRange.location || NSMaxRange(aRange) > numBytes) {
+        [NSException raise:NSRangeException
+                    format:@"in %s, range { %u, %u } extends beyond string", GSNameFromSelector(_cmd), aRange.location, aRange.length];
+    }
+    if (NSCFStringIsUnicode(self)) {
+        memcpy(buffer, bytes + aRange.location * 2, aRange.length * 2);
+        return;
+    }
+    for (NSUInteger index = 0; index < aRange.length; ++index) {
+        buffer[index] = (unichar)bytes[aRange.location + index];
+    }
+}
+
+- (NSData *)dataUsingEncoding:(NSStringEncoding)encoding allowLossyConversion:(BOOL)flag
+{
+    if (NSCFStringIsUnicode(self)) {
+        if (encoding == NSUnicodeStringEncoding) {
+            return [NSData dataWithBytesNoCopy:(void *)bytes length:numBytes * 2 freeWhenDone:NO];
+        } 
+    } else if (GSPrivateIsByteEncoding(encoding)) {
+        return [NSData dataWithBytesNoCopy:(void *)bytes length:numBytes freeWhenDone:NO];
+    }
+    return [super dataUsingEncoding:encoding allowLossyConversion:flag];
+}
+
+- (NSStringEncoding)fastestEncoding
+{
+    return NSCFStringIsUnicode(self) ? NSUnicodeStringEncoding : NSMacOSRomanStringEncoding;
+}
+
+- (NSStringEncoding)smallestEncoding
+{
+    return NSCFStringIsUnicode(self) ? NSUTF8StringEncoding : NSMacOSRomanStringEncoding;
+}
+
+- (BOOL)isEqualToString:(NSString *)aString
+{
+    if (!NSCFStringIsUnicode(self)) {
+        if (object_getClass(aString) == object_getClass(self)) {
+            NSCFConstantString *string = (NSCFConstantString *)aString;
+            if (!NSCFStringIsUnicode(string)) {
+                return string->numBytes == self->numBytes && strcmp(string->bytes, self->bytes) == 0;
+            }
+        }
+    }
+    return [super isEqualToString:aString];
+}
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-align"
+
+- (NSRange)rangeOfComposedCharacterSequenceAtIndex:(NSUInteger)anIndex
+{
+    if (NSCFStringIsUnicode(self)) {
+        return rangeOfSequence_u((unichar *)bytes, numBytes, anIndex);
+    } else
+        return rangeOfSequence_c(bytes, numBytes, anIndex);
+}
+
+#pragma GCC diagnostic pop
+
+@end

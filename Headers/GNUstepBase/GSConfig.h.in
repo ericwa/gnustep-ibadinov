@@ -177,11 +177,6 @@ typedef	gsuaddr gsaddr;
 #endif
 
 /*
- * Define to say if we use NXConstantString or NSConstantString
- */
-#define NXConstantString	@NX_CONST_STRING_CLASS@
-
-/*
  * Ensure some standard types are defined.
  */
 @INCLUDE_STDINT@

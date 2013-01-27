@@ -7261,16 +7261,21 @@ fi
 # Unless we are building for the apple runtime (ie only building base
 # additions library and not implementing a constant string class).
 #---------------------------------------------------------------------
-if test "$FOUNDATION_LIB" = "nx" -o "$FOUNDATION_LIB" = "apple"; then
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if the compiler generates constant CFStrings" >&5
+$as_echo_n "checking if the compiler generates constant CFStrings... " >&6; }
+case "$target_os" in
+    darwin*)    IS_DARWIN="yes";;
+    *)          IS_DARWIN="no";;
+esac
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $IS_DARWIN" >&5
+$as_echo "$IS_DARWIN" >&6; }
+
+if test "$IS_DARWIN" = "yes"; then
   NX_CONST_STRING_OBJCFLAGS=""
-  NX_CONST_STRING_CLASS=NXConstantString
+  NX_CONST_STRING_CLASS=NSCFConstantString
 else
   strclass_CPPFLAGS="$CPPFLAGS"
-  #-------------------------------------------------------------------
-  # On Apple platforms compiler ignores "-fconstant-string-class="
-  # if "-fno-constant-cfstrings" is not specified
-  #-------------------------------------------------------------------
-  CPPFLAGS="$CPPFLAGS -fno-constant-cfstrings -fconstant-string-class=FooConstantString"
+  CPPFLAGS="$CPPFLAGS -fconstant-string-class=FooConstantString"
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking if the compiler supports -fconstant-string-class" >&5
 $as_echo_n "checking if the compiler supports -fconstant-string-class... " >&6; }
   if ${gs_cv_objc_compiler_supports_constant_string_class+:} false; then :

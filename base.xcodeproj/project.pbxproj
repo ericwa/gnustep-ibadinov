@@ -3844,8 +3844,6 @@
 				OTHER_CFLAGS = (
 					"-DGNUSTEP",
 					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
 				);
 				PRODUCT_NAME = gdnc;
 			};
@@ -3863,8 +3861,6 @@
 				OTHER_CFLAGS = (
 					"-DGNUSTEP",
 					"-DGNUSTEP_BASE_LIBRARY",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
 				);
 				PRODUCT_NAME = gdnc;
 			};
@@ -3893,8 +3889,6 @@
 					"-DGNUSTEP",
 					"-DNeXT_RUNTIME",
 					"-pthread",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
@@ -3924,8 +3918,6 @@
 					"-DGNUSTEP",
 					"-DNeXT_RUNTIME",
 					"-pthread",
-					"-fno-constant-cfstrings",
-					"-fconstant-string-class=NSConstantString",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;

@@ -165,9 +165,6 @@ __attribute__((unused)) static void GSFreeTempBuffer(void **b)
  */
 #define GS_REPLACE_CONSTANT_STRING(ID) [(ID = [NSObject \
   leak: [[NSString alloc] initWithUTF8String: [ID UTF8String]]]) release]
-/* Using cString here is OK here
-   because NXConstantString returns a pointer
-   to it's internal pointer.  */
 
 /*
  * Type to hold either UTF-16 (unichar) or 8-bit encodings,
@@ -180,11 +177,6 @@ typedef union {
 
 /*
  * Private concrete string classes.
- * NB. All these concrete string classes MUST have the same initial ivar
- * layout so that we can swap between them as necessary.
- * The initial layout must also match that of NXConstantString (which is
- * determined by the compiler) - an initial pointer to the string data
- * followed by the string length (number of characters).
  */
 @interface GSString : NSString
 {

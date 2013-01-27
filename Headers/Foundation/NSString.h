@@ -839,7 +839,7 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 @end
 
 /**
- * <p>The NXConstantString class is used to hold constant 8-bit character
+ * <p>The NSSimpleCString class is used to hold constant 8-bit character
  * string objects produced by the compiler where it sees @"..." in the
  * source.  The compiler generates the instances of this class - which
  * has three instance variables -</p>
@@ -849,12 +849,7 @@ typedef NSUInteger NSStringEncodingConversionOptions;
  * <item>the length of the string</item>
  * </list>
  * <p>In older versions of the compiler, the isa variable is always set to
- * the NXConstantString class.  In newer versions a compiler option was
- * added for GNUstep, to permit the isa variable to be set to another
- * class, and GNUstep uses this to avoid conflicts with the default
- * implementation of NXConstantString in the ObjC runtime library (the
- * preprocessor is used to change all occurrences of NXConstantString
- * in the source code to NSConstantString).</p>
+ * the NXConstantString class.</p>
  * <p>Since GNUstep will generally use the GNUstep extension to the
  * compiler, you should never refer to the constant string class by
  * name, but should use the [NSString+constantStringClass] method to
@@ -862,24 +857,68 @@ typedef NSUInteger NSStringEncodingConversionOptions;
  * What follows is a dummy declaration of the class to keep the compiler
  * happy.
  */
-@interface NXConstantString : NSString {
-@public
-    const char * const nxcsptr;
-    const unsigned int nxcslen;
+@interface NSSimpleCString : NSString {
+}
+/* Overrides retain, release etc. */
+@end
+
+/*
+ * If build on other systems or on OSX with:
+ * -fno-constant-cfstrings -fconstant-string-class=NSConstantString
+ */
+
+@interface NSConstantString : NSSimpleCString {
+@package
+    const char * const bytes;
+    const unsigned int numBytes;
+#if __LP64__
+    int padding;
+#endif
+}
+@end
+    
+@interface NXConstantString : NSConstantString {
 }
 @end
 
-#ifdef NeXT_RUNTIME
-#ifndef __OBJC2__
-  /** 
-   * For internal use with NeXT runtime;
-   * needed, until Apple Radar 2870817 is fixed. 
-   */
-  extern struct objc_class _NSConstantStringClassReference;
+@interface NSCFConstantString : NSSimpleCString {
+@package
+    int32_t flags;
+#if __LP64__
+    int32_t padding;
+#endif
+    const char * const bytes;
+    const unsigned int numBytes;
+#if __LP64__
+    int padding2;
+#endif
+}
+@end
+
+/*
+ * -fno-constant-cfstrings & -fconstant-string-class support
+ */
+#if __APPLE__ /* __OBJC2__ may be undefined with GNUstep's runtime */
+#if __OBJC2__
+    extern Class _NSConstantStringClassReference;
 #else
-  extern Class _NSConstantStringClassReference;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    extern struct objc_class _NSConstantStringClassReference;
+#pragma GCC diagnostic pop
+#endif /* __OBJC2__ */
+#endif /* __APPLE__ */
+
+/*
+ * -fconstant-cfstrings support
+ * constant CFString's isa points to it
+ */
+#if __LP64__
+    extern int __CFConstantStringClassReference[24];
+#else
+    extern int __CFConstantStringClassReference[12];
 #endif
-#endif
+
 
 #if	defined(__cplusplus)
 }
