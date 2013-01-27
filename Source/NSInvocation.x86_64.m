@@ -42,10 +42,17 @@ typedef struct SmallStructureInfo
  * }
  */
 
+#if defined (__clang__)
 static uint32_t const OffsetFloat     = 0;
 static uint32_t const OffsetRegister  = OffsetFloat + 16 * 8;
 static uint32_t const OffsetLink      = OffsetRegister + 8 * 6;
 static uint32_t const OffsetStack     = OffsetLink + 8 * 4;
+#else
+static uint32_t const OffsetFloat     = 0;
+static uint32_t const OffsetRegister  = 0 + 16 * 8;
+static uint32_t const OffsetLink      = 0 + 16 * 8 + 8 * 6;
+static uint32_t const OffsetStack     = 0 + 16 * 8 + 8 * 6 + 8 * 4;
+#endif
 
 static uint32_t const ArgumentListMinSize   = 208;
 static uint8_t  const StackAlignment        = 16;

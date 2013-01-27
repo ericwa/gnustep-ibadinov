@@ -348,6 +348,20 @@
 		18D8BEA4164B5FF800942A5D /* NSInvocation.x86_64.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildRule section */
+		1801C64416B5A8E400999B34 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.S";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"${OBJECT_FILE_DIR}/${INPUT_FILE_NAME}.o",
+			);
+			script = "clang -DNeXT_RUNTIME -c $INPUT_FILE_DIR/$INPUT_FILE_NAME -o $SCRIPT_OUTPUT_FILE_0";
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXContainerItemProxy section */
 		1837DA0F1652D18400197E53 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -3557,6 +3571,7 @@
 				18394B1A1610D8E300335E85 /* Resources */,
 			);
 			buildRules = (
+				1801C64416B5A8E400999B34 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
