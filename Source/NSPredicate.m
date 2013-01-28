@@ -2077,7 +2077,7 @@ GSICUStringMatchesRegex(NSString *string, NSString *regex, NSStringCompareOption
 
 - (NSExpression *) parseSimpleExpression
 {
-  unsigned      location;
+  NSUInteger    location;
   double        dbl;
 
   if ([self scanDouble: &dbl])

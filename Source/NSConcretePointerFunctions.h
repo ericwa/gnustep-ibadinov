@@ -89,7 +89,7 @@ typedef struct
 
 } PFInfo;
 
-inline static BOOL memoryType(int options, int flag)
+inline static BOOL memoryType(NSUInteger options, int flag)
 {
 	return (options & 0xff) == flag;
 }
