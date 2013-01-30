@@ -1307,50 +1307,54 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
             withTarget: (id)aTarget
                context: (void *)context
 {
-  NSString * remainingKeyPath;
-  NSRange dot;
-
-  target = aTarget;
-  keyPathToForward = [keyPath copy];
-  contextToForward = context;
-
-  dot = [keyPath rangeOfString: @"."];
-  if (dot.location == NSNotFound)
+    if (!(self = [super init]))
     {
-      [NSException raise: NSInvalidArgumentException
-        format: @"NSKeyValueObservationForwarder was not given a key path"];
+        return nil;
     }
-  keyForUpdate = [[keyPath substringToIndex: dot.location] copy];
-  remainingKeyPath = [keyPath substringFromIndex: dot.location + 1];
-  observedObjectForUpdate = object;
-  [object addObserver: self
-           forKeyPath: keyForUpdate
-              options: NSKeyValueObservingOptionNew
-                     | NSKeyValueObservingOptionOld
-              context: target];
-  dot = [remainingKeyPath rangeOfString: @"."];
-  if (dot.location != NSNotFound)
+    NSString * remainingKeyPath;
+    NSRange dot;
+    
+    target = aTarget;
+    keyPathToForward = [keyPath copy];
+    contextToForward = context;
+    
+    dot = [keyPath rangeOfString: @"."];
+    if (dot.location == NSNotFound)
     {
-      child = [[NSKeyValueObservationForwarder alloc]
-        initWithKeyPath: remainingKeyPath
-	       ofObject: [object valueForKey: keyForUpdate]
-	     withTarget: self
-		context: NULL];
-      observedObjectForForwarding = nil;
+        [NSException raise: NSInvalidArgumentException
+                    format: @"NSKeyValueObservationForwarder was not given a key path"];
     }
-  else
+    keyForUpdate = [[keyPath substringToIndex: dot.location] copy];
+    remainingKeyPath = [keyPath substringFromIndex: dot.location + 1];
+    observedObjectForUpdate = object;
+    [object addObserver: self
+             forKeyPath: keyForUpdate
+                options: NSKeyValueObservingOptionNew
+     | NSKeyValueObservingOptionOld
+                context: target];
+    dot = [remainingKeyPath rangeOfString: @"."];
+    if (dot.location != NSNotFound)
     {
-      keyForForwarding = [remainingKeyPath copy];
-      observedObjectForForwarding = [object valueForKey: keyForUpdate];
-      [observedObjectForForwarding addObserver: self
-                                    forKeyPath: keyForForwarding
-                                       options: NSKeyValueObservingOptionNew
-                                              | NSKeyValueObservingOptionOld
-                                       context: target];
-      child = nil;
+        child = [[NSKeyValueObservationForwarder alloc]
+                 initWithKeyPath: remainingKeyPath
+                 ofObject: [object valueForKey: keyForUpdate]
+                 withTarget: self
+                 context: NULL];
+        observedObjectForForwarding = nil;
     }
-
-  return self;
+    else
+    {
+        keyForForwarding = [remainingKeyPath copy];
+        observedObjectForForwarding = [object valueForKey: keyForUpdate];
+        [observedObjectForForwarding addObserver: self
+                                      forKeyPath: keyForForwarding
+                                         options: NSKeyValueObservingOptionNew
+         | NSKeyValueObservingOptionOld
+                                         context: target];
+        child = nil;
+    }
+    
+    return self;
 }
 
 - (void) finalize
@@ -1858,113 +1862,109 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
 }
 
 - (void) willChangeValueForKey: (NSString*)aKey
-	       withSetMutation: (NSKeyValueSetMutationKind)mutationKind
-		  usingObjects: (NSSet*)objects
+               withSetMutation: (NSKeyValueSetMutationKind)mutationKind
+                  usingObjects: (NSSet*)objects
 {
-  GSKVOPathInfo *pathInfo;
-  GSKVOInfo	*info;
-
-  info = [self observationInfo];
-  if (info == nil)
+    GSKVOPathInfo *pathInfo;
+    GSKVOInfo	*info;
+    
+    info = [self observationInfo];
+    if (info == nil)
     {
-      return;
+        return;
     }
-
-  pathInfo = [info lockReturningPathInfoForKey: aKey];
-  if (pathInfo != nil)
+    
+    pathInfo = [info lockReturningPathInfoForKey: aKey];
+    if (pathInfo != nil)
     {
-      if (pathInfo->recursion++ == 0)
+        if (pathInfo->recursion++ == 0)
         {
-          id    set = objects;
-
-          if (nil == set)
+            id    set = objects;
+            
+            if (nil == set)
             {
-              set = [self valueForKey: aKey];
+                set = [self valueForKey: aKey];
             }
-          [pathInfo->change setValue: [set mutableCopy] forKey: @"oldSet"];
-          [pathInfo notifyForKey: aKey ofInstance: [info instance] prior: YES];
+            id mutableSet = [set mutableCopy];
+            [pathInfo->change setValue: mutableSet forKey: @"oldSet"];
+            [mutableSet release];
+            [pathInfo notifyForKey: aKey ofInstance: [info instance] prior: YES];
         }
-      [info unlock];
+        [info unlock];
     }
-
-  [self willChangeValueForDependentsOfKey: aKey];
+    
+    [self willChangeValueForDependentsOfKey: aKey];
 }
 
 - (void) didChangeValueForKey: (NSString*)aKey
-	      withSetMutation: (NSKeyValueSetMutationKind)mutationKind
-		 usingObjects: (NSSet*)objects
+              withSetMutation: (NSKeyValueSetMutationKind)mutationKind
+                 usingObjects: (NSSet*)objects
 {
-  GSKVOPathInfo *pathInfo;
-  GSKVOInfo	*info;
-
-  info = [self observationInfo];
-  if (info == nil)
+    GSKVOPathInfo *pathInfo;
+    GSKVOInfo	*info;
+    
+    info = [self observationInfo];
+    if (info == nil)
     {
-      return;
+        return;
     }
-
-  pathInfo = [info lockReturningPathInfoForKey: aKey];
-  if (pathInfo != nil)
+    
+    pathInfo = [info lockReturningPathInfoForKey: aKey];
+    if (pathInfo != nil)
     {
-      if (pathInfo->recursion == 1)
+        if (pathInfo->recursion == 1)
         {
-          NSMutableSet  *oldSet;
-          id            set = objects;
-
-          oldSet = [pathInfo->change valueForKey: @"oldSet"];
-          if (nil == set)
+            NSMutableSet  *oldSet;
+            id            set = objects;
+            
+            oldSet = [pathInfo->change valueForKey: @"oldSet"];
+            if (nil == set)
             {
-              set = [self valueForKey: aKey];
+                set = [self valueForKey: aKey];
             }
-          [pathInfo->change removeObjectForKey: @"oldSet"];
-
-          if (mutationKind == NSKeyValueUnionSetMutation)
+            [pathInfo->change removeObjectForKey: @"oldSet"];
+            
+            if (mutationKind == NSKeyValueUnionSetMutation)
             {
-              set = [set mutableCopy];
-              [set minusSet: oldSet];
-              [pathInfo->change setValue:
-                [NSNumber numberWithInt: NSKeyValueChangeInsertion]
-                        forKey: NSKeyValueChangeKindKey];
-              [pathInfo->change setValue: set
-                                  forKey: NSKeyValueChangeNewKey];
+                NSMutableSet *new = [set mutableCopy];
+                [new minusSet: oldSet];
+                
+                [pathInfo->change setValue:[NSNumber numberWithInt: NSKeyValueChangeInsertion] forKey:NSKeyValueChangeKindKey];
+                [pathInfo->change setValue:new forKey:NSKeyValueChangeNewKey];
+                
+                [new release];
             }
-          else if (mutationKind == NSKeyValueMinusSetMutation
-            || mutationKind == NSKeyValueIntersectSetMutation)
+            else if (mutationKind == NSKeyValueMinusSetMutation || mutationKind == NSKeyValueIntersectSetMutation)
             {
-              [oldSet minusSet: set];
-              [pathInfo->change setValue:
-                [NSNumber numberWithInt: NSKeyValueChangeRemoval]
-                        forKey: NSKeyValueChangeKindKey];
-              [pathInfo->change setValue: oldSet
-                                  forKey: NSKeyValueChangeOldKey];
+                [oldSet minusSet: set];
+                
+                [pathInfo->change setValue:[NSNumber numberWithInt: NSKeyValueChangeRemoval] forKey:NSKeyValueChangeKindKey];
+                [pathInfo->change setValue:oldSet forKey:NSKeyValueChangeOldKey];
             }
-          else if (mutationKind == NSKeyValueSetSetMutation)
+            else if (mutationKind == NSKeyValueSetSetMutation)
             {
-              NSMutableSet      *old;
-              NSMutableSet      *new;
-
-              old = [oldSet mutableCopy];
-              [old minusSet: set];
-              new = [set mutableCopy];
-              [new minusSet: oldSet];
-              [pathInfo->change setValue:
-                [NSNumber numberWithInt: NSKeyValueChangeReplacement]
-                        forKey: NSKeyValueChangeKindKey];
-              [pathInfo->change setValue: old
-                                  forKey: NSKeyValueChangeOldKey];
-              [pathInfo->change setValue: new
-                                  forKey: NSKeyValueChangeNewKey];
+                NSMutableSet *old = [oldSet mutableCopy];
+                NSMutableSet *new = [set mutableCopy];
+                [old minusSet: set];
+                [new minusSet: oldSet];
+                
+                [pathInfo->change setValue:[NSNumber numberWithInt: NSKeyValueChangeReplacement] forKey:NSKeyValueChangeKindKey];
+                [pathInfo->change setValue:old forKey:NSKeyValueChangeOldKey];
+                [pathInfo->change setValue:new forKey:NSKeyValueChangeNewKey];
+                
+                [old release];
+                [new release];
             }
-
-          [pathInfo notifyForKey: aKey ofInstance: [info instance] prior: NO];
+            
+            [pathInfo notifyForKey: aKey ofInstance: [info instance] prior: NO];
         }
-      if (pathInfo->recursion > 0)
+        if (pathInfo->recursion > 0)
         {
-          pathInfo->recursion--;
+            pathInfo->recursion--;
         }
-      [info unlock];
+        [info unlock];
     }
-  [self didChangeValueForDependentsOfKey: aKey];
+    [self didChangeValueForDependentsOfKey: aKey];
 }
 
 @end

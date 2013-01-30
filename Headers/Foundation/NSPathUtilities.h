@@ -27,7 +27,8 @@
 #ifndef __NSPathUtilities_h_GNUSTEP_BASE_INCLUDE
 #define __NSPathUtilities_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
-#import	<Foundation/NSObjCRuntime.h>
+#import	<Foundation/NSString.h>
+#import	<Foundation/NSArray.h>
 
 #if	defined(__cplusplus)
 extern "C" {

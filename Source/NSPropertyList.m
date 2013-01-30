@@ -977,6 +977,7 @@ static id parsePlItem(pldata* pld)
 	      pld->key = NO;
 	      if (key == nil)
 		{
+		  RELEASE(dict);
 		  return nil;
 		}
 	      if (skipSpace(pld) == NO)
@@ -1209,11 +1210,13 @@ static id parsePlItem(pldata* pld)
 	    if (pld->pos >= pld->end)
 	      {
 		pld->err = @"unexpected end of string when parsing data";
+		RELEASE(result);
 		return nil;
 	      }
 	    if (pld->ptr[pld->pos] != '>')
 	      {
 		pld->err = @"unexpected character (wanted '>')";
+		RELEASE(result);
 		return nil;
 	      }
 	    pld->pos++;

@@ -946,7 +946,7 @@ _find_main_bundle_for_tool(NSString *toolName)
 	    }
 	}
     }
-  return bundle;
+  return [bundle autorelease];
 }
 
 + (NSMutableArray*) _addFrameworks

@@ -920,9 +920,11 @@ static Class	GSInlineArrayClass;
 
 - (id) initWithArray: (GSArray*)anArray
 {
-  [super initWithArray: anArray];
-  pos = array->_count;
-  return self;
+    if (self = [super initWithArray: anArray])
+    {
+        pos = array->_count;
+    }
+    return self;
 }
 
 - (id) nextObject

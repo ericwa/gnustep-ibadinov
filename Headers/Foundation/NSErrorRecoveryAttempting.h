@@ -41,9 +41,9 @@ extern "C" {
 @interface NSObject (NSErrorRecoveryAttempting)
 
 - (BOOL) attemptRecoveryFromError: (NSError*)error
-                      optionIndex: (unsigned int)recoveryOptionIndex;
+                      optionIndex: (NSUInteger)recoveryOptionIndex;
 - (void) attemptRecoveryFromError: (NSError*)error
-                      optionIndex: (unsigned int)recoveryOptionIndex
+                      optionIndex: (NSUInteger)recoveryOptionIndex
                          delegate: (id)delegate
                didRecoverSelector: (SEL)didRecoverSelector
                       contextInfo: (void*)contextInfo;

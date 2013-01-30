@@ -54,13 +54,13 @@
  * that are COMPLETELY INCOMPATIBLE with MacOS-X 
  */
 #ifndef	MAC_OS_X_VERSION_10_0
-#define	MAC_OS_X_VERSION_10_0	100000
-#define	MAC_OS_X_VERSION_10_1	100100
-#define	MAC_OS_X_VERSION_10_2	100200
-#define	MAC_OS_X_VERSION_10_3	100300
-#define	MAC_OS_X_VERSION_10_4	100400
-#define	MAC_OS_X_VERSION_10_5	100500
-#define	MAC_OS_X_VERSION_10_6	100600
+#  define MAC_OS_X_VERSION_10_0 100000
+#  define MAC_OS_X_VERSION_10_1 100100
+#  define MAC_OS_X_VERSION_10_2 100200
+#  define MAC_OS_X_VERSION_10_3 100300
+#  define MAC_OS_X_VERSION_10_4 100400
+#  define MAC_OS_X_VERSION_10_5 100500
+#  define MAC_OS_X_VERSION_10_6 100600
 #endif	/* MAC_OS_X_VERSION_10_0 */
 
 #ifndef MAC_OS_X_VERSION_10_7
@@ -261,47 +261,6 @@
 #  define GS_NORETURN_METHOD __attribute__((__noreturn__))
 #else
 #  define GS_NORETURN_METHOD
-#endif
-
-#ifndef NS_RETURNS_RETAINED
-#  if __has_feature(attribute_ns_returns_retained)
-#    define NS_RETURNS_RETAINED __attribute__((ns_returns_retained))
-#  else
-#    define NS_RETURNS_RETAINED
-#  endif
-#endif
-
-#ifndef NS_RETURNS_NOT_RETAINED
-#  if __has_feature(attribute_ns_returns_not_retained)
-#    define NS_RETURNS_NOT_RETAINED __attribute__((ns_returns_not_retained))
-#  else
-#    define NS_RETURNS_NOT_RETAINED
-#  endif
-#endif
-
-#ifndef NS_CONSUMED
-#  if __has_feature(attribute_ns_consumed)
-#    define NS_CONSUMED __attribute__((ns_consumed))
-#  else
-#    define NS_CONSUMED
-#  endif
-#endif
-
-
-#ifndef NS_CONSUMES_SELF
-#  if __has_feature(attribute_ns_consumes_self)
-#    define NS_CONSUMES_SELF __attribute__((ns_consumes_self))
-#  else
-#    define NS_CONSUMES_SELF
-#  endif
-#endif
-
-#if defined(__clang__) && defined(__OBJC__)
-static inline void gs_consumed(id NS_CONSUMED o) __attribute__ ((unused));
-static inline void gs_consumed(id NS_CONSUMED __attribute__ ((unused))o) { return; }
-#define	GS_CONSUMED(O)	gs_consumed(O);
-#else
-#define	GS_CONSUMED(O)
 #endif
 
 /* Include the appropriate header for ObjC2 blocks support if it is in use.
