@@ -34,7 +34,7 @@
 #import	"Foundation/NSProcessInfo.h"
 #import	"Foundation/NSUserDefaults.h"
 
-void create_output(id propertyList)
+static void create_output(id propertyList)
 {
   NSFileHandle *fileHandle = nil;
   NSProcessInfo *processInfo = [NSProcessInfo processInfo];
@@ -68,7 +68,7 @@ void create_output(id propertyList)
     }
 }
 
-id process_plist(NSData *inputData)
+static id process_plist(NSData *inputData)
 {
   id propertyList = nil;
   NSString *string = nil;
@@ -88,7 +88,7 @@ id process_plist(NSData *inputData)
   return propertyList;
 }
 
-NSData *read_input()
+static NSData *read_input()
 {
   NSData *inputData = nil;
   NSFileHandle *fileHandle = nil;
