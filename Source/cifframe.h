@@ -57,11 +57,11 @@ extern NSMutableData *cifframe_from_signature (NSMethodSignature *info);
 
 extern GSCodeBuffer* cifframe_closure (NSMethodSignature *sig, void (*func)());
 
-extern void cifframe_set_arg(cifframe_t *cframe, int index, void *buffer, 
+extern void cifframe_set_arg(cifframe_t *cframe, NSInteger index, void *buffer, 
 			     int size);
-extern void cifframe_get_arg(cifframe_t *cframe, int index, void *buffer,
+extern void cifframe_get_arg(cifframe_t *cframe, NSInteger index, void *buffer,
 			     int size);
-extern void *cifframe_arg_addr(cifframe_t *cframe, int index);
+extern void *cifframe_arg_addr(cifframe_t *cframe, NSInteger index);
 extern BOOL cifframe_decode_arg (const char *type, void* buffer);
 extern BOOL cifframe_encode_arg (const char *type, void* buffer);
 

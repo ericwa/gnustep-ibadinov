@@ -38,11 +38,11 @@ typedef struct _callframe_t {
 
 extern callframe_t *callframe_from_signature (NSMethodSignature *info,
   void **retval);
-extern void callframe_set_arg(callframe_t *cframe, int index, void *buffer,
+extern void callframe_set_arg(callframe_t *cframe, NSInteger index, void *buffer,
 			      int size);
-extern void callframe_get_arg(callframe_t *cframe, int index, void *buffer,
+extern void callframe_get_arg(callframe_t *cframe, NSInteger index, void *buffer,
 			      int size);
-extern void *callframe_arg_addr(callframe_t *cframe, int index);
+extern void *callframe_arg_addr(callframe_t *cframe, NSInteger index);
 
 #endif
 
