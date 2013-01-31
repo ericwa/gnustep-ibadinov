@@ -47,7 +47,7 @@ main(int argc, char** argv, char **env)
   NSProcessInfo		*proc;
   NSArray		*args;
   int			status = EXIT_SUCCESS;
-  int			count;
+  NSUInteger			count;
 
 #ifdef GS_PASS_ARGUMENTS
   GSInitializeProcess(argc, argv, env);

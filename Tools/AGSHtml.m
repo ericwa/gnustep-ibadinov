@@ -44,9 +44,9 @@
 #define	GS_API_MACOSX	100000
 #endif
 
-static int      XML_ELEMENT_NODE;
-static int      XML_ENTITY_REF_NODE;
-static int      XML_TEXT_NODE;
+static NSInteger      XML_ELEMENT_NODE;
+static NSInteger      XML_ENTITY_REF_NODE;
+static NSInteger      XML_TEXT_NODE;
 
 static GSXMLNode	*firstElement(GSXMLNode *nodes)
 {
@@ -113,7 +113,7 @@ static NSString		*mainFont = nil;
 
 - (void) decIndent
 {
-  unsigned	len = [indent length];
+  NSUInteger	len = [indent length];
 
   if (len >= 2)
     {
@@ -318,8 +318,8 @@ static NSString		*mainFont = nil;
   NSDictionary	*refs = [localRefs refs];
   NSDictionary	*dict;
   NSArray	*a;
-  unsigned	c;
-  unsigned	i;
+  NSUInteger	c;
+  NSUInteger	i;
   BOOL		isBareStyle = [@"bare" isEqualToString: style];
 
   if (globalRefs != nil && [scope isEqual: @"global"] == YES)
@@ -2596,8 +2596,8 @@ static NSString		*mainFont = nil;
 {
   NSString	*str = [t stringByTrimmingSpaces];
   NSString	*s;
-  unsigned	end = [str length];
-  unsigned	start;
+  NSUInteger	end = [str length];
+  NSUInteger	start;
   NSMutableString	*ms = nil;
   NSRange		er;
   NSRange		sr;

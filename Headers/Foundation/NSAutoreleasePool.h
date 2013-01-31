@@ -262,7 +262,7 @@ NS_AUTOMATED_REFCOUNT_UNAVAILABLE
  *   used for debugging purposes.
  * </p>
  */
-+ (unsigned) autoreleaseCountForObject: (id)anObject;
++ (NSUInteger) autoreleaseCountForObject: (id)anObject;
 
 /** 
  * Return the currently active autorelease pool.
@@ -312,7 +312,7 @@ NS_AUTOMATED_REFCOUNT_UNAVAILABLE
 /**
  * Return the number of objects in this pool.
  */
-- (unsigned) autoreleaseCount;
+- (NSUInteger) autoreleaseCount;
 
 /**
  * Empties the current pool by releasing all the autoreleased objects

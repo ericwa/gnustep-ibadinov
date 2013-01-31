@@ -205,7 +205,7 @@ main(int argc, char** argv, char **env)
       FILE *fp;
       char line[130];
       NSString *execPath = nil;
-      int l = 0;
+      ssize_t l = 0;
 
       fp = popen("which openapp","r");
       fgets(line,sizeof line,fp);

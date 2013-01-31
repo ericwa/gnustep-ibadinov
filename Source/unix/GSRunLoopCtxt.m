@@ -281,8 +281,8 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
   int		fdEnd;	/* Number of descriptors being monitored. */
   int		fdIndex;
   int		fdFinish;
-  unsigned	count;
-  unsigned int	i;
+  NSUInteger	count;
+  NSUInteger	i;
   BOOL		immediate = NO;
 
   i = GSIArrayCount(watchers);

@@ -500,7 +500,7 @@ ihandler(int sig)
       NSHost		*host = [NSHost hostWithName: hostname];
       NSPort		*port = [conn receivePort];
       NSArray		*a;
-      unsigned		c;
+      NSUInteger		c;
 
       if (host == nil)
 	{
@@ -743,7 +743,7 @@ ihandler(int sig)
   NSMutableArray	*observers = [NSMutableArray array];
   NSMutableArray	*byName;
   NSMutableArray	*byObject;
-  unsigned		pos;
+  NSUInteger		pos;
   GDNCNotification	*notification = nil;
 
   byName = [observersForNames objectForKey: notificationName];
@@ -953,7 +953,7 @@ ihandler(int sig)
 	{
 	  NSMutableArray	*byName;
 	  NSMutableArray	*byObject;
-	  unsigned		pos;
+	  NSUInteger		pos;
 
 	  /*
 	   *	Remove observers that match both name and object.
@@ -1002,7 +1002,7 @@ ihandler(int sig)
       info = (GDNCClient*)NSMapGet(table, client);
       if (info != nil)
 	{
-	  unsigned	pos = [info->observers count];
+	  NSUInteger	pos = [info->observers count];
 
 	  while (pos > 0)
 	    {

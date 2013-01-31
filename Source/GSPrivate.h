@@ -516,7 +516,7 @@ GSPrivateUnloadModule(FILE *errorStream,
  */
 @interface      GSCodeBuffer : NSObject
 {
-  unsigned      size;
+  NSUInteger      size;
   void          *buffer;
   void		*executable;
   id            frame;

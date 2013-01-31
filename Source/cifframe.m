@@ -101,11 +101,11 @@ ffi_type *cifframe_type(const char *typePtr, const char **advance);
 
 /* Best guess at the space needed for a structure, since we don't know
    for sure until it's calculated in ffi_prep_cif, which is too late */
-int
+static size_t
 cifframe_guess_struct_size(ffi_type *stype)
 {
-  int      i, size;
-  unsigned align = __alignof(double);
+  size_t size;
+  NSUInteger i, align = __alignof(double);
 
   if (stype->elements == NULL)
     return stype->size;
@@ -139,7 +139,7 @@ cifframe_from_signature (NSMethodSignature *info)
   NSMutableData	*result;
   void          *buf;
   int           i;
-  int		numargs = [info numberOfArguments];
+  int		numargs = (int)[info numberOfArguments];
   ffi_type      *rtype;
   ffi_type      *arg_types[numargs];
   cifframe_t    *cframe;
@@ -230,7 +230,7 @@ cifframe_from_signature (NSMethodSignature *info)
 }
 
 void
-cifframe_set_arg(cifframe_t *cframe, int index, void *buffer, int size)
+cifframe_set_arg(cifframe_t *cframe, NSInteger index, void *buffer, int size)
 {
   if (index < 0 || index >= cframe->nargs)
      return;
@@ -238,7 +238,7 @@ cifframe_set_arg(cifframe_t *cframe, int index, void *buffer, int size)
 }
 
 void
-cifframe_get_arg(cifframe_t *cframe, int index, void *buffer, int size)
+cifframe_get_arg(cifframe_t *cframe, NSInteger index, void *buffer, int size)
 {
   if (index < 0 || index >= cframe->nargs)
      return;
@@ -246,7 +246,7 @@ cifframe_get_arg(cifframe_t *cframe, int index, void *buffer, int size)
 }
 
 void *
-cifframe_arg_addr(cifframe_t *cframe, int index)
+cifframe_arg_addr(cifframe_t *cframe, NSInteger index)
 {
   if (index < 0 || index >= cframe->nargs)
      return NULL;
@@ -491,7 +491,7 @@ cifframe_type(const char *typePtr, const char **advance)
 	while (*typePtr != _C_UNION_E)
 	  {
 	    ffi_type *local;
-	    int align = objc_alignof_type(typePtr);
+	    int align = (int)objc_alignof_type(typePtr);
 	    local = cifframe_type(typePtr, &adv);
 	    typePtr = adv;
 	    NSCAssert(typePtr, @"End of signature while parsing");

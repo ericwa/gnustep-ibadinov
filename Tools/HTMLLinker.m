@@ -183,7 +183,7 @@ static int verbose = 0;
 {
   /* The HTML code that we work on.  */
   unichar *chars;
-  unsigned length;
+  NSUInteger length;
 }
 /* Init with some HTML code to parse.  */
 - (id)initWithCode: (NSString *)HTML;
@@ -410,22 +410,22 @@ static int verbose = 0;
   struct stringFragment
     {
       unichar *chars;
-      unsigned length;
+      NSUInteger length;
       BOOL needsFreeing;
       struct stringFragment *next;
     } *head, *tail;
 
   /* The index of the beginning of the last string fragment (the tail).  */
-  unsigned tailIndex = 0;
+  NSUInteger tailIndex = 0;
 
   /* The temporary index.  */
-  unsigned i = 0;
+  NSUInteger i = 0;
 
   /* The total number of chars in the output string.  We don't know
      this beforehand because each time we fix up a link, we might add
      or remove characters from the output.  We update
      totalNumberOfChars each time we close a stringFragment.  */
-  unsigned totalNumberOfChars = 0;
+  NSUInteger totalNumberOfChars = 0;
   
 
   /* Initialize the linked list.  */
@@ -454,14 +454,14 @@ static int verbose = 0;
              where it ends, because we are going to replace it with a
              different one (the fixed up one) later on if we determine
              we should do it.  */
-	  unsigned hrefStart = 0, hrefEnd = 0;
+	  NSUInteger hrefStart = 0, hrefEnd = 0;
 
 	  i += 3;
 	  
 	  while (1)
 	    {
 	      /* A marker for the start of strings.  */
-	      unsigned s;
+	      NSUInteger s;
 
 	      /* If this is an interesting (href/rel) attribute or
 		 not, and which one.  */
@@ -912,7 +912,7 @@ static int verbose = 0;
     NSString *file = [NSString stringWithContentsOfFile: pathOnDisk];
     HTMLParser *p = [[HTMLParser alloc] initWithCode: file];
     NSArray *names = [p names];
-    unsigned i, count;
+    NSUInteger i, count;
     
     RELEASE (p);
 
@@ -1068,7 +1068,7 @@ build_relocation_table_for_directory (NSString *dir)
 	  NSString *file;
 	  HTMLParser *p;
 	  NSArray *names;
-	  unsigned i, count;
+	  NSUInteger i, count;
 
 	  fullPath = [dir stringByAppendingPathComponent: filename];	  
 
@@ -1124,7 +1124,7 @@ int main (int argc, char** argv, char** env)
   NSUserDefaults *userDefs;
   NSArray *args;
   NSMutableArray *inputFiles;
-  unsigned i, count;
+  NSUInteger i, count;
   BOOL warn;
   NSString *linksMarker;
   HTMLLinker *linker;

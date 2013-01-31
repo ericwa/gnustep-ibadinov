@@ -478,9 +478,9 @@ main(int argc, char** argv, char **env)
 
       if ([args count] == ++i)
 	{
-	  int	size = BUFSIZ;
-	  int	got;
-	  int	off = 0;
+	  ssize_t	size = BUFSIZ;
+	  ssize_t	got;
+	  ssize_t	off = 0;
 	  char	*buf = malloc(size);
 	  char	*ptr;
 
@@ -664,9 +664,9 @@ main(int argc, char** argv, char **env)
     {
       if ([args count] == ++i)
 	{
-	  int	size = BUFSIZ;
-	  int	got;
-	  int	off = 0;
+	  ssize_t	size = BUFSIZ;
+	  ssize_t	got;
+	  ssize_t	off = 0;
 	  char	*buf = malloc(size);
 	  char	*ptr;
 

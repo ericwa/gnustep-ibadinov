@@ -189,17 +189,17 @@ static BOOL snuggleStart(NSString *t)
   [super dealloc];
 }
 
-- (unsigned) fitWords: (NSArray*)a
-		 from: (unsigned)start
-		   to: (unsigned)end
-	      maxSize: (unsigned)limit
-	       output: (NSMutableString*)buf
+- (NSUInteger) fitWords: (NSArray*)a
+                   from: (NSUInteger)start
+                     to: (NSUInteger)end
+                maxSize: (NSUInteger)limit
+                 output: (NSMutableString*)buf
 {
-  unsigned	size = 0;
-  unsigned	nest = 0;
-  unsigned	i;
-  int		lastOk = -1;
-  BOOL		addSpace = NO;
+  NSUInteger	size = 0;
+  NSUInteger	nest = 0;
+  NSUInteger	i;
+  NSInteger		lastOk = -1;
+  BOOL          addSpace = NO;
 
   for (i = start; size < limit && i < end; i++)
     {
@@ -475,8 +475,8 @@ static BOOL snuggleStart(NSString *t)
   if ([classes count] > 0)
     {
       NSArray	*names;
-      unsigned	i;
-      unsigned	c = [classes count];
+      NSUInteger	i;
+      NSUInteger	c = [classes count];
 
       chapters += c;
       names = [classes allKeys];
@@ -493,8 +493,8 @@ static BOOL snuggleStart(NSString *t)
   if ([categories count] > 0)
     {
       NSArray	*names;
-      unsigned	i;
-      unsigned	c = [categories count];
+      NSUInteger	i;
+      NSUInteger	c = [categories count];
 
       chapters += c;
       names = [categories allKeys];
@@ -511,8 +511,8 @@ static BOOL snuggleStart(NSString *t)
   if ([protocols count] > 0)
     {
       NSArray	*names;
-      unsigned	i;
-      unsigned	c = [protocols count];
+      NSUInteger	i;
+      NSUInteger	c = [protocols count];
 
       chapters += c;
       names = [protocols allKeys];
@@ -530,8 +530,8 @@ static BOOL snuggleStart(NSString *t)
     {
       NSMutableString	*m = [NSMutableString new];
       NSArray		*names;
-      unsigned		i;
-      unsigned		c = [types count];
+      NSUInteger		i;
+      NSUInteger		c = [types count];
 
       [m appendString: @"    <chapter>\n"];
       [m appendFormat: @"      <heading>%@ types</heading>\n", base];
@@ -566,8 +566,8 @@ static BOOL snuggleStart(NSString *t)
     {
       NSMutableString	*m = [NSMutableString new];
       NSArray		*names;
-      unsigned		i;
-      unsigned		c = [constants count];
+      NSUInteger		i;
+      NSUInteger		c = [constants count];
 
       [m appendString: @"    <chapter>\n"];
       [m appendFormat: @"      <heading>%@ constants</heading>\n", base];
@@ -602,8 +602,8 @@ static BOOL snuggleStart(NSString *t)
     {
       NSMutableString	*m = [NSMutableString new];
       NSArray		*names;
-      unsigned		i;
-      unsigned		c = [macros count];
+      NSUInteger		i;
+      NSUInteger		c = [macros count];
 
       [m appendString: @"    <chapter>\n"];
       [m appendFormat: @"      <heading>%@ macros</heading>\n", base];
@@ -638,8 +638,8 @@ static BOOL snuggleStart(NSString *t)
     {
       NSMutableString	*m = [NSMutableString new];
       NSArray		*names;
-      unsigned		i;
-      unsigned		c = [variables count];
+      NSUInteger		i;
+      NSUInteger		c = [variables count];
 
       [m appendString: @"    <chapter>\n"];
       [m appendFormat: @"      <heading>%@ variables</heading>\n", base];
@@ -674,8 +674,8 @@ static BOOL snuggleStart(NSString *t)
     {
       NSMutableString	*m = [NSMutableString new];
       NSArray		*names;
-      unsigned		i;
-      unsigned		c = [functions count];
+      NSUInteger		i;
+      NSUInteger		c = [functions count];
 
       [m appendString: @"    <chapter>\n"];
       [m appendFormat: @"      <heading>%@ functions</heading>\n", base];
@@ -786,7 +786,7 @@ static BOOL snuggleStart(NSString *t)
   NSString	*name = [d objectForKey: @"Name"];
   NSString	*comment = [d objectForKey: @"Comment"];
   NSString	*declared = [d objectForKey: @"Declared"];
-  unsigned	i = [aa count];
+  NSUInteger	i = [aa count];
 
   if (warn == YES && [[d objectForKey: @"Implemented"] isEqual: @"YES"] == NO)
     {
@@ -1145,9 +1145,9 @@ static BOOL snuggleStart(NSString *t)
   NSString	*tmp;
   NSString	*unit = nil;
   NSRange	r;
-  unsigned	ind;
-  unsigned	i;
-  unsigned	j;
+  NSUInteger	ind;
+  NSUInteger	i;
+  NSUInteger	j;
 
   if ([[d objectForKey: @"Implemented"] isEqual: @"YES"] == NO)
     {
@@ -1189,7 +1189,7 @@ static BOOL snuggleStart(NSString *t)
       r = [comment rangeOfString: @"<unit>"];
       if (r.length > 0)
 	{
-	  unsigned	pos = r.location;
+	  NSUInteger	pos = r.location;
 
 	  r = [comment rangeOfString: @"</unit>"];
 	  if (r.length == 0 || r.location < pos)
@@ -1220,7 +1220,7 @@ static BOOL snuggleStart(NSString *t)
 		}
 	      else
 		{
-		  unsigned	end = NSMaxRange(r);
+		  NSUInteger	end = NSMaxRange(r);
 
 		  r = NSMakeRange(pos, end-pos);
 		  unit = [comment substringWithRange: r];
@@ -1350,16 +1350,16 @@ static BOOL snuggleStart(NSString *t)
 	      to: str];
 }
 
-- (unsigned) reformat: (NSString*)str
-	   withIndent: (unsigned)ind
+- (NSUInteger) reformat: (NSString*)str
+	   withIndent: (NSUInteger)ind
 		   to: (NSMutableString*)buf
 {
 #if GS_WITH_GC == 0
   CREATE_AUTORELEASE_POOL(arp);
 #endif
-  unsigned	l = [str length];
+  NSUInteger	l = [str length];
   NSRange	r = [str rangeOfString: @"<example"];
-  unsigned	i = 0;
+  NSUInteger	i = 0;
   NSArray	*a;
 
   /*
@@ -1442,8 +1442,8 @@ static BOOL snuggleStart(NSString *t)
 	}
       else
 	{
-	  unsigned	size = 70 - ind - [str length];
-	  unsigned	end;
+	  NSUInteger	size = 70 - ind - [str length];
+	  NSUInteger	end;
 
 	  for (j = 0; j < ind; j++)
 	    {
@@ -1485,7 +1485,7 @@ static BOOL snuggleStart(NSString *t)
 - (NSArray*) split: (NSString*)str
 {
   NSMutableArray	*a = [NSMutableArray arrayWithCapacity: 128];
-  unsigned		l = [str length];
+  NSUInteger		l = [str length];
   NSMutableData		*data;
   unichar		*ptr;
   unichar		*end;
@@ -1601,7 +1601,7 @@ static BOOL snuggleStart(NSString *t)
 	       */
 	      if (optr[-2] == '/' && optr[-3] != ' ')
 		{
-		  unsigned	len = optr - buf;
+		  NSUInteger	len = optr - buf;
 		  unichar	c[len + 1];
 
 		  memcpy(c, buf, (len+1)*sizeof(unichar));
@@ -1642,9 +1642,9 @@ static BOOL snuggleStart(NSString *t)
     {
       static NSArray	*constants = nil;
       static NSArray	*types = nil;
-      unsigned		count;
+      NSUInteger		count;
       NSString		*tmp = [a objectAtIndex: l];
-      unsigned		pos;
+      NSUInteger		pos;
       NSRange		r;
 
       if (constants == nil)
@@ -1878,14 +1878,14 @@ static BOOL snuggleStart(NSString *t)
       r = [tmp rangeOfString: @"["];
       if (r.length > 0)
 	{
-	  unsigned	sPos = NSMaxRange(r);
+	  NSUInteger	sPos = NSMaxRange(r);
 
 	  pos = sPos;
 	  r = NSMakeRange(pos, [tmp length] - pos);
 	  r = [tmp rangeOfString: @"]" options: NSLiteralSearch range: r];
 	  if (r.length > 0)
 	    {
-	      unsigned	ePos = r.location;
+	      NSUInteger	ePos = r.location;
 	      NSString	*cName = nil;
 	      NSString	*mName = nil;
 	      unichar	c = 0;
@@ -1973,7 +1973,7 @@ static BOOL snuggleStart(NSString *t)
 
 	      if (pos < ePos && (c == '+' || c == '-'))
 		{
-		  unsigned	mStart = pos;
+		  NSUInteger	mStart = pos;
 
 		  pos++;
 		  if (pos < ePos
@@ -2160,9 +2160,9 @@ static BOOL snuggleStart(NSString *t)
        */
       if ([tmp hasPrefix: @"-"] || [tmp hasPrefix: @"+"])
 	{
-	  unsigned	ePos = [tmp length];
+	  NSUInteger	ePos = [tmp length];
 	  NSString	*mName = nil;
-	  unsigned	c;
+	  NSUInteger	c;
 
 	  pos = 1;
 	  if (pos < ePos
@@ -2237,8 +2237,8 @@ static BOOL snuggleStart(NSString *t)
       r = [tmp rangeOfString: @"()"];
       if (r.length > 0)
 	{
-	  unsigned	c = [tmp characterAtIndex: 0];
-	  unsigned	len = [tmp length];
+	  NSUInteger	c = [tmp characterAtIndex: 0];
+	  NSUInteger	len = [tmp length];
 	  NSString	*str = [tmp substringToIndex: r.location];
 	  BOOL		ok = NO;
 

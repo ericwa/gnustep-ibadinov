@@ -969,8 +969,8 @@ failure:
 	}
       case _C_ARY_B:
 	{
-	  unsigned	offset = 0;
-	  unsigned	size;
+	  size_t	offset = 0;
+	  size_t	size;
 	  unsigned	count = atoi(++type);
 	  unsigned	i;
 
@@ -1013,7 +1013,7 @@ failure:
         }
       case _C_PTR:
 	{
-	  unsigned	len = objc_sizeof_type(++type);
+	  size_t	len = objc_sizeof_type(++type);
 
 #if	GS_WITH_GC
 	  *(char**)data = (char*)NSAllocateCollectable(len, 0);
@@ -2189,8 +2189,8 @@ failure:
 	}
       case _C_ARY_B:
 	{
-	  unsigned	offset = 0;
-	  unsigned	size;
+	  size_t	offset = 0;
+	  size_t	size;
 	  unsigned	count = atoi(++type);
 	  unsigned	i;
 
@@ -2645,8 +2645,8 @@ getBytes(void* dst, void* src, NSUInteger len, NSUInteger limit, NSUInteger *pos
 	}
       case _C_ARY_B:
 	{
-	  unsigned	offset = 0;
-	  unsigned	size;
+	  size_t	offset = 0;
+	  size_t	size;
 	  unsigned	count = atoi(++type);
 	  unsigned	i;
 
@@ -2689,7 +2689,7 @@ getBytes(void* dst, void* src, NSUInteger len, NSUInteger limit, NSUInteger *pos
         }
       case _C_PTR:
 	{
-	  unsigned	len = objc_sizeof_type(++type);
+	  size_t	len = objc_sizeof_type(++type);
 
 #if	GS_WITH_GC
 	  *(char**)data = (char*)NSAllocateCollectable(len, 0);

@@ -103,17 +103,16 @@ static unsigned systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 
 // Encoding Data
 
-- (void) encodeArrayOfObjCType: (const char*)type
-			 count: (NSUInteger)count
-			    at: (const void*)array
+- (void) encodeArrayOfObjCType: (const char *)type
+                         count: (NSUInteger)count
+                            at: (const void *)array
 {
-  unsigned	i;
-  unsigned	size = objc_sizeof_type(type);
-  const char	*where = array;
-  IMP		imp;
+  size_t size = objc_sizeof_type(type);
+  const char *where = array;
 
-  imp = [self methodForSelector: @selector(encodeValueOfObjCType:at:)];
-  for (i = 0; i < count; i++, where += size)
+  IMP imp = [self methodForSelector: @selector(encodeValueOfObjCType:at:)];
+    
+  for (NSUInteger i = 0; i < count; i++, where += size)
     {
       (*imp)(self, @selector(encodeValueOfObjCType:at:), type, where);
     }
@@ -198,18 +197,16 @@ static unsigned systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 
 // Decoding Data
 
-- (void) decodeArrayOfObjCType: (const char*)type
-			 count: (NSUInteger)count
-			    at: (void*)address
+- (void) decodeArrayOfObjCType: (const char *)type
+                         count: (NSUInteger)count
+                            at: (void *)address
 {
-  unsigned	i;
-  unsigned	size = objc_sizeof_type(type);
-  char		*where = address;
-  IMP		imp;
+  size_t size = objc_sizeof_type(type);
+  char *where = address;
 
-  imp = [self methodForSelector: @selector(decodeValueOfObjCType:at:)];
-
-  for (i = 0; i < count; i++, where += size)
+  IMP imp = [self methodForSelector: @selector(decodeValueOfObjCType:at:)];
+    
+  for (NSUInteger i = 0; i < count; i++, where += size)
     {
       (*imp)(self, @selector(decodeValueOfObjCType:at:), type, where);
     }

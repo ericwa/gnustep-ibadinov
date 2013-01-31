@@ -29,7 +29,7 @@
 #import	"Foundation/NSAutoreleasePool.h"
 #import "GNUstepBase/Additions.h"
 
-int
+static int
 convert_unicode(NSArray *args)
 {
   unsigned int i;
@@ -69,7 +69,7 @@ convert_unicode(NSArray *args)
   return 0;
 }
 
-int
+static int
 convert_utf8(NSArray *args)
 {
   unsigned int i;

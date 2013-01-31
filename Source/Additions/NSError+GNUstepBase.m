@@ -140,7 +140,7 @@ strerror_r(int eno, char *buf, int len)
 # if STRERROR_R_CHAR_P
   if (result == 0)
     {
-      snprintf(buf, sizeof(buf), "%ld", code);
+      snprintf(buf, sizeof(buf), "%d", code);
       result = buf;
     }
   message = [NSString stringWithCString: result

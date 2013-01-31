@@ -53,8 +53,8 @@
    * The next few ivars represent the data currently being parsed.
    */
   unichar	*buffer;
-  unsigned	length;
-  unsigned	pos;
+  NSUInteger	length;
+  NSUInteger	pos;
   BOOL		inHeader;
   BOOL		commentsRead;
   BOOL		haveOutput;
@@ -85,7 +85,7 @@
 - (NSDictionary *) orderedSymbolDeclarationsByUnit;
 - (id) init;	/** <init> Simple initialiser */
 - (NSMutableArray*) outputs;
-- (unsigned) parseComment;
+- (NSUInteger) parseComment;
 - (NSMutableDictionary*) parseDeclaration;
 - (NSMutableDictionary*) parseFile: (NSString*)name isSource: (BOOL)isSource;
 - (NSString*) parseIdentifier;
@@ -96,11 +96,11 @@
 - (NSMutableDictionary*) parseMethodIsDeclaration: (BOOL)flag;
 - (NSMutableDictionary*) parseMethodsAreDeclarations: (BOOL)flag;
 - (NSString*) parseMethodType;
-- (unsigned) parsePreprocessor;
+- (NSUInteger) parsePreprocessor;
 - (NSMutableDictionary*) parseProtocol;
 - (NSMutableArray*) parseProtocolList;
-- (unsigned) parseSpace: (NSCharacterSet*)spaceSet;
-- (unsigned) parseSpace;
+- (NSUInteger) parseSpace: (NSCharacterSet*)spaceSet;
+- (NSUInteger) parseSpace;
 - (NSString*) parseVersion;
 - (void) reset;
 - (void) setDeclared: (NSString*)name;
@@ -110,16 +110,16 @@
 - (void) setStandards: (NSMutableDictionary*)dict;
 - (void) setWordMap: (NSDictionary*)map;
 - (void) setupBuffer;
-- (unsigned) skipArray;
-- (unsigned) skipBlock;
-- (unsigned) skipBlock: (BOOL*)isEmpty;
-- (unsigned) skipLiteral;
-- (unsigned) skipRemainderOfLine;
-- (unsigned) skipSpaces;
-- (unsigned) skipStatement;
-- (unsigned) skipStatementLine;
-- (unsigned) skipToEndOfLine;
-- (unsigned) skipUnit;
+- (NSUInteger) skipArray;
+- (NSUInteger) skipBlock;
+- (NSUInteger) skipBlock: (BOOL*)isEmpty;
+- (NSUInteger) skipLiteral;
+- (NSUInteger) skipRemainderOfLine;
+- (NSUInteger) skipSpaces;
+- (NSUInteger) skipStatement;
+- (NSUInteger) skipStatementLine;
+- (NSUInteger) skipToEndOfLine;
+- (NSUInteger) skipUnit;
 - (NSMutableArray*) sources;
 @end
 

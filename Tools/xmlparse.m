@@ -40,7 +40,7 @@
 {
   char		buf[BUFSIZ];
   NSString	*str;
-  int		len;
+  ssize_t		len;
 
   GSPrintf(stdout, @"Enter filename to load entity '%@' at '%@': ",
     publicId, location);
@@ -65,8 +65,8 @@ main(int argc, char **argv, char **env)
 {
   NSProcessInfo		*proc;
   NSArray		*files;
-  unsigned int		count;
-  unsigned int		i;
+  NSUInteger		count;
+  NSUInteger		i;
   CREATE_AUTORELEASE_POOL(pool);
 
 #ifdef GS_PASS_ARGUMENTS

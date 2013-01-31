@@ -156,7 +156,7 @@ callframe_from_signature (NSMethodSignature *info, void **retval)
 }
 
 void
-callframe_set_arg(callframe_t *cframe, int index, void *buffer, int size)
+callframe_set_arg(callframe_t *cframe, NSInteger index, void *buffer, int size)
 {
   if (index < 0 || index >= cframe->nargs)
      return;
@@ -164,7 +164,7 @@ callframe_set_arg(callframe_t *cframe, int index, void *buffer, int size)
 }
 
 void
-callframe_get_arg(callframe_t *cframe, int index, void *buffer, int size)
+callframe_get_arg(callframe_t *cframe, NSInteger index, void *buffer, int size)
 {
   if (index < 0 || index >= cframe->nargs)
      return;
@@ -172,7 +172,7 @@ callframe_get_arg(callframe_t *cframe, int index, void *buffer, int size)
 }
 
 void *
-callframe_arg_addr(callframe_t *cframe, int index)
+callframe_arg_addr(callframe_t *cframe, NSInteger index)
 {
   if (index < 0 || index >= cframe->nargs)
      return NULL;
