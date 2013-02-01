@@ -1,0 +1,50 @@
+NS_ENUM
+NS_OPTIONS
+NS_AVAILABLE
+NS_RETURNS_INNER_POINTER
+
+NS_FRONTIER_PSYCHIATRIST
+-------------------------------------------------------------
+NSString:
+	<limits.h>
+	<stdarg.h>
+
+	NSParseErrorException
+	NSCharacterConversionException
+
+	- localizedStandardCompare:
+	- uppercaseStringWithLocale:
+	- lowercaseStringWithLocale:
+	- capitalizedStringWithLocale:
+	- enumerateSubstringsInRange:options:usingBlock:
+	- enumerateLinesUsingBlock:
+	- getBytes:maxLength:usedLength:encoding:options:range:remainingRange:
+	- decomposedStringWithCanonicalMapping
+	- precomposedStringWithCanonicalMapping
+	- decomposedStringWithCompatibilityMapping
+	- precomposedStringWithCompatibilityMapping
+	- stringByFoldingWithOptions:locale:
+
+
+	NSStringEnumerationOptions
+
+	- (__strong const char *)cStringUsingEncoding:(NSStringEncoding)encoding NS_RETURNS_INNER_POINTER;
+	- (__strong const char *)UTF8String NS_RETURNS_INNER_POINTER;
+
+-------------------------------------------------------------
+NSURLError:
+	NSURLErrorFailingURLErrorKey 
+	NSURLErrorFailingURLStringErrorKey
+	NSURLErrorFailingURLPeerTrustErrorKey
+
+	NSURLErrorCannotDecodeRawData
+    NSURLErrorCannotDecodeContentData
+    NSURLErrorCannotParseResponse
+    NSURLErrorDataLengthExceedsMaximum
+	NSURLErrorClientCertificateRequired
+	NSURLErrorDownloadDecodingFailedToComplete
+	NSURLErrorInternationalRoamingOff
+	NSURLErrorCallIsActive
+	NSURLErrorDataNotAllowed
+	NSURLErrorRequestBodyStreamExhausted
+-------------------------------------------------------------
