@@ -40,10 +40,14 @@
 #import "common.h"
 #define	EXPOSE_NSHTTPCookie_IVARS	1
 #import "GSURLPrivate.h"
-#import "Foundation/NSSet.h"
-#import "Foundation/NSValue.h"
-#import "Foundation/NSString.h"
+
+#import "Foundation/NSBundle.h"
 #import "Foundation/NSCalendarDate.h"
+#import "Foundation/NSError.h"
+#import "Foundation/NSSet.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSValue.h"
+
 #import "GNUstepBase/Unicode.h"
 #import "GNUstepBase/NSObject+GNUstepBase.h"
 
@@ -113,7 +117,7 @@ static const unsigned char whitespace[32] = {
 
 #define GS_IS_WHITESPACE(X) IS_BIT_SET(whitespace[(X)/8], (X) % 8)
 
-static id GSPropertyListFromCookieFormat(NSString *string, int version);
+static id GSPropertyListFromCookieFormat(NSString *string, NSInteger version, NSError **error);
 static NSRange GSRangeOfCookie(NSString *string);
 
 @implementation NSHTTPCookie
@@ -138,8 +142,8 @@ static NSRange GSRangeOfCookie(NSString *string);
 }
 
 + (NSMutableArray *) _parseField: (NSString *)field 
-		       forHeader: (NSString *)header
-			  andURL: (NSURL *)url
+                       forHeader: (NSString *)header
+                          andURL: (NSURL *)url
 {
   int version;
   NSString *defaultPath, *defaultDomain;
@@ -166,16 +170,17 @@ static NSRange GSRangeOfCookie(NSString *string);
       NSHTTPCookie *cookie;
       NSMutableDictionary *dict;
       NSString *onecookie;
+      NSError *error;
       NSRange range = GSRangeOfCookie(field);
 
       if (range.location == NSNotFound)
 	break;
       onecookie = [field substringWithRange: range];
-      NS_DURING
-	dict = GSPropertyListFromCookieFormat(onecookie, version);
-      NS_HANDLER
-	dict = nil;
-      NS_ENDHANDLER
+      dict = GSPropertyListFromCookieFormat(onecookie, version, &error);
+      if (!dict)
+      {
+        NSLog(@"%@\nCookie string:\n%@", error, onecookie);
+      }
       if ([dict count])
 	{
 	  if ([dict objectForKey: NSHTTPCookiePath] == nil)
@@ -697,7 +702,7 @@ _setCookieKey(NSMutableDictionary *dict, NSString *key, NSString *value)
 }
 
 static id
-GSPropertyListFromCookieFormat(NSString *string, int version)
+GSPropertyListFromCookieFormat(NSString *string, NSInteger version, NSError **error)
 {
   NSMutableDictionary	*dict;
   pldata		_pld;
@@ -803,12 +808,11 @@ GSPropertyListFromCookieFormat(NSString *string, int version)
 	  break;
 	}
     }
-  if (dict == nil && _pld.err != nil)
+  if (dict == nil && _pld.err != nil && error != nil)
     {
-      RELEASE(dict);
-      [NSException raise: NSGenericException
-		  format: @"Parse failed at line %d (char %d) - %@",
-	_pld.lin + 1, _pld.pos + 1, _pld.err];
+        NSString *format = NSLocalizedString(@"Parse failed at line %d (char %d) - %@", @"");
+        NSString *description = [NSString stringWithFormat:format, _pld.lin + 1, _pld.pos + 1, NSLocalizedString(_pld.err, @"")];
+        *error = [NSError errorWithDomain:@"NSHTTPCookieErrorDomain" code:1 userInfo:[NSDictionary dictionaryWithObject:description forKey:NSLocalizedDescriptionKey]];
     }
   return AUTORELEASE(dict);
 }
