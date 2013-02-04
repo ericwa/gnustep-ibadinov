@@ -236,7 +236,7 @@ next_arg(const char *typePtr, NSArgumentInfo *info, char *outTypes)
       case _C_STRUCT_B:
 	{
 	  unsigned int acc_size = 0;
-	  unsigned int def_align = objc_alignof_type(typePtr-1);
+	  unsigned int def_align = (unsigned)objc_alignof_type(typePtr-1);
 	  unsigned int acc_align = def_align;
 	  const char	*ptr = typePtr;
 
@@ -431,7 +431,7 @@ next_arg(const char *typePtr, NSArgumentInfo *info, char *outTypes)
       p = objc_skip_type_qualifiers (p);
       while (p && *p)
 	{
-	  int	size;
+	  NSUInteger	size;
 
 	  _numArgs++;
 	  size = objc_promoted_size (p);

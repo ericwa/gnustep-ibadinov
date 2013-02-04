@@ -29,8 +29,8 @@
 #import "GNUstepBase/NSString+GNUstepBase.h"
 #import "GNUstepBase/NSMutableString+GNUstepBase.h"
 
-static int      XML_ELEMENT_NODE;
-static int      XML_TEXT_NODE;
+static NSInteger      XML_ELEMENT_NODE;
+static NSInteger      XML_TEXT_NODE;
 
 static void
 mergeDictionaries(NSMutableDictionary *dst, NSDictionary *src, BOOL override)

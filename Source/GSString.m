@@ -861,9 +861,9 @@ static void logTinyStringCount(void)
  * Constructs a tiny string.
  */
 static id
-createTinyString(const char *str, int length)
+createTinyString(const char *str, NSUInteger length)
 {
-  unsigned int i;
+  NSUInteger i;
   uintptr_t s = TINY_STRING_MASK;
 
   /* No tiny string support detected at run time, give up

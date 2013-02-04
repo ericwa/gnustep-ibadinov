@@ -301,7 +301,7 @@ static id gs_objc_proxy_lookup(id receiver, SEL op)
  */
 - (id) initWithMethodSignature: (NSMethodSignature*)aSignature
 {
-  int	i;
+  size_t	i;
 
   if (aSignature == nil)
     {
@@ -309,7 +309,7 @@ static id gs_objc_proxy_lookup(id receiver, SEL op)
       return nil;
     }
   _sig = RETAIN(aSignature);
-  _numArgs = [aSignature numberOfArguments];
+  _numArgs = (unsigned)[aSignature numberOfArguments];
   _info = [aSignature methodInfo];
   _frame = cifframe_from_signature(_sig);
   [_frame retain];
@@ -343,10 +343,10 @@ static id gs_objc_proxy_lookup(id receiver, SEL op)
 	      signature: (NSMethodSignature*)aSignature
 {
   cifframe_t *f;
-  int i;
+  size_t i;
 
   _sig = RETAIN(aSignature);
-  _numArgs = [aSignature numberOfArguments];
+  _numArgs = (unsigned)[aSignature numberOfArguments];
   _info = [aSignature methodInfo];
   _frame = (NSMutableData*)frame;
   [_frame retain];

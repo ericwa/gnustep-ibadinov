@@ -45,10 +45,10 @@
 - (NSString*) checkComment: (NSString*)comment
 		      unit: (NSString*)unit
 		      info: (NSMutableDictionary*)d;
-- (unsigned) fitWords: (NSArray*)a
-		 from: (unsigned)start
-		   to: (unsigned)end
-	      maxSize: (unsigned)limit
+- (NSUInteger) fitWords: (NSArray*)a
+		 from: (NSUInteger)start
+		   to: (NSUInteger)end
+	      maxSize: (NSUInteger)limit
 	       output: (NSMutableString*)buf;
 - (NSArray*) output: (NSMutableDictionary*)d;
 - (void) outputDecl: (NSMutableDictionary*)d
@@ -64,8 +64,8 @@
 		   to: (NSMutableString*)str
 		  for: (NSString*)unit;
 - (void) outputUnit: (NSMutableDictionary*)d to: (NSMutableString*)str;
-- (unsigned) reformat: (NSString*)str
-	   withIndent: (unsigned)ind
+- (NSUInteger) reformat: (NSString*)str
+	   withIndent: (NSUInteger)ind
 		   to: (NSMutableString*)buf;
 - (NSArray*) split: (NSString*)str;
 - (NSArray*) informalProtocols;

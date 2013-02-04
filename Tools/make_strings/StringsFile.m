@@ -37,7 +37,7 @@ static NSString *parse_string(NSString **ptr)
 {
   NSString *str=*ptr;
   NSString *ret;
-  int i,c;
+  NSUInteger i,c;
   unichar ch;
 
   c=[str length];
@@ -240,7 +240,7 @@ static NSString *parse_string(NSString **ptr)
 	    [update_list makeObjectsPerformSelector: @selector(setTranslated:) withObject: trans];
 
 	    {
-	      int i,c=[update_list count];
+	      NSUInteger i,c=[update_list count];
 		for (i=0;i<c;i++)
 		  {
 //		    printf("%4i : %@\n",i,[update_list objectAtIndex: i]);
@@ -318,7 +318,7 @@ static NSString *parse_string(NSString **ptr)
 
 -(void) _writeTo: (NSMutableString *)str  manyEntries: (NSMutableArray *)list
 {
-  int i,c;
+  NSUInteger i,c;
   StringsEntry *tr,*cur;
 
   [list sortUsingSelector: @selector(compareFileLine:)];
@@ -358,7 +358,7 @@ static NSString *parse_string(NSString **ptr)
 
 -(BOOL) writeToFile: (NSString *)filename
 {
-  unsigned int i,c;
+  NSUInteger i,c;
   BOOL result;
   NSMutableString *str=[[NSMutableString alloc] initWithCapacity: 32*1024];
   StringsEntry *se;
@@ -529,7 +529,7 @@ static NSString *parse_string(NSString **ptr)
   /* First try to find a match among our unmatched strings. We consider
      two entries to match if they have the same key, file and comment. This
      could be extended, but the risk of errors increases. */
-  int i,c;
+  NSUInteger i,c;
   StringsEntry *se;
 
   c=[strings count];

@@ -222,42 +222,42 @@ static Class   NSInvocation_concrete_class;
 
 #ifdef USE_LIBFFI
 static inline void
-_get_arg(NSInvocation *inv, int index, void *buffer)
+_get_arg(NSInvocation *inv, NSInteger index, void *buffer)
 {
   cifframe_get_arg((cifframe_t *)inv->_cframe, index, buffer,
 		   ((NSArgumentInfo*)inv->_info)[index+1].size);
 }
 
 static inline void
-_set_arg(NSInvocation *inv, int index, void *buffer)
+_set_arg(NSInvocation *inv, NSInteger index, void *buffer)
 {
   cifframe_set_arg((cifframe_t *)inv->_cframe, index, buffer,
 		   ((NSArgumentInfo*)inv->_info)[index+1].size);
 }
 
 static inline void *
-_arg_addr(NSInvocation *inv, int index)
+_arg_addr(NSInvocation *inv, NSInteger index)
 {
   return cifframe_arg_addr((cifframe_t *)inv->_cframe, index);
 }
 
 #elif defined(USE_FFCALL)
 static inline void
-_get_arg(NSInvocation *inv, int index, void *buffer)
+_get_arg(NSInvocation *inv, NSInteger index, void *buffer)
 {
   callframe_get_arg((callframe_t *)inv->_cframe, index, buffer,
 		    ((NSArgumentInfo*)inv->_info)[index+1].size);
 }
 
 static inline void
-_set_arg(NSInvocation *inv, int index, void *buffer)
+_set_arg(NSInvocation *inv, NSInteger index, void *buffer)
 {
   callframe_set_arg((callframe_t *)inv->_cframe, index, buffer,
 		    ((NSArgumentInfo*)inv->_info)[index+1].size);
 }
 
 static inline void *
-_arg_addr(NSInvocation *inv, int index)
+_arg_addr(NSInvocation *inv, NSInteger index)
 {
   return callframe_arg_addr((callframe_t *)inv->_cframe, index);
 }
@@ -265,17 +265,17 @@ _arg_addr(NSInvocation *inv, int index)
 #else
 
 static inline void
-_get_arg(NSInvocation *inv, int index, void *buffer)
+_get_arg(NSInvocation *inv, NSInteger index, void *buffer)
 {
 }
 
 static inline void
-_set_arg(NSInvocation *inv, int index, void *buffer)
+_set_arg(NSInvocation *inv, NSInteger index, void *buffer)
 {
 }
 
 static inline void *
-_arg_addr(NSInvocation *inv, int index)
+_arg_addr(NSInvocation *inv, NSInteger index)
 {
   return 0;
 }
@@ -468,7 +468,7 @@ _arg_addr(NSInvocation *inv, int index)
     }
   else
     {
-      int		i = index+1;	/* Allow for return type in '_inf' */
+      NSInteger		i = index+1;	/* Allow for return type in '_inf' */
       const char	*type = _inf[i].type;
 
       if (_argsRetained && (*type == _C_ID || *type == _C_CHARPTR))
@@ -497,7 +497,7 @@ _arg_addr(NSInvocation *inv, int index)
 		}
 	      else
 		{
-		  int	len;
+		  size_t	len;
 		  char	*tmp;
 
 		  len = strlen(newstr);
@@ -634,7 +634,7 @@ _arg_addr(NSInvocation *inv, int index)
 	      if (str != 0)
 	        {
 		  char  *tmp;
-		  int	len;
+		  size_t	len;
 
 		  len = strlen(str);
 		  tmp = NSZoneMalloc(NSDefaultMallocZone(), len + 1);
@@ -778,6 +778,12 @@ _arg_addr(NSInvocation *inv, int index)
  */
 @implementation NSInvocation (GNUstep)
 
+- (id)initWithMethodSignature:(NSMethodSignature *)aSignature
+{
+    [self subclassResponsibility: _cmd];
+    return nil;
+}
+
 - (BOOL) sendsToSuper
 {
   return _sendToSuper;
@@ -787,6 +793,13 @@ _arg_addr(NSInvocation *inv, int index)
 {
   _sendToSuper = flag;
 }
+
+- (BOOL)encodeWithDistantCoder:(NSCoder *)coder passPointers:(BOOL)passp
+{
+    [self subclassResponsibility: _cmd];
+    return NO;
+}
+
 @end
 
 /**

@@ -453,7 +453,7 @@ printf("  %3i : %i '%s'\n", i, arg_ok[i], args[i]);
 static void
 UpdateTable(NSArray *source_table, NSString *filename)
 {
-  int i, c;
+  NSUInteger i, c;
   StringsFile *sf;
 
   if (verbose)
@@ -570,7 +570,7 @@ int main(int argc, char **argv)
 
   /* Remove any empty language from the list.  */
   {
-    int k;
+    NSInteger k;
 
     for (k = [languages count] - 1; k >= 0; k--)
       {
@@ -605,7 +605,7 @@ int main(int argc, char **argv)
 
   if (!error)
     {
-      int i, c = [languages count];
+      NSUInteger i, c = [languages count];
 
       for (i = 0; i < c; i++)
 	{

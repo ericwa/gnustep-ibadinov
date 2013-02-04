@@ -202,7 +202,7 @@ in the returned dictionary. */
 - (void) log: (NSString*)fmt arguments: (va_list)args
 {
   const char	*msg;
-  int		where;
+  NSInteger		where;
 
   /*
    * Take the current position in the character buffer and
@@ -529,7 +529,7 @@ patata
  * prsence of file header markup, which is extracted into the 'info'
  * dictionary.
  */
-- (unsigned) parseComment
+- (NSUInteger) parseComment
 {
   if (buffer[pos + 1] == '/')
     {
@@ -727,7 +727,7 @@ recheck:
            */
 	  if (commentsRead == NO && comment != nil)
 	    {
-	      unsigned		commentLength = [comment length];
+	      NSUInteger		commentLength = [comment length];
 	      NSMutableArray	*authors;
 	      NSEnumerator	*enumerator;
 	      NSArray		*keys;
@@ -745,7 +745,7 @@ recheck:
 				       range: r];
 		  if (r.length > 0)
 		    {
-		      unsigned	i = r.location;
+		      NSUInteger	i = r.location;
 
 		      r = NSMakeRange(i, commentLength - i);
 		      r = [comment rangeOfString: @"</author>"
@@ -833,7 +833,7 @@ recheck:
 
 		  if (r.length > 0)
 		    {
-		      unsigned	i = NSMaxRange(r);
+		      NSUInteger	i = NSMaxRange(r);
 		      NSString	*line;
 		      NSString	*author;
 
@@ -902,7 +902,7 @@ recheck:
 				       range: r];
 		  if (r.length > 0)
 		    {
-		      unsigned	i = NSMaxRange(r);
+		      NSUInteger	i = NSMaxRange(r);
 		      NSString	*line;
 
 		      r = NSMakeRange(i, commentLength - i);
@@ -1029,7 +1029,7 @@ recheck:
 		  r = [comment rangeOfString: s];
 		  if (r.length > 0)
 		    {
-		      unsigned	i = r.location;
+		      NSUInteger	i = r.location;
 
 		      r = NSMakeRange(i, commentLength - i);
 		      r = [comment rangeOfString: e
@@ -1066,7 +1066,7 @@ recheck:
 					   range: r];
 		      if (r.length > 0)
 			{
-			  unsigned	i = NSMaxRange(r);
+			  NSUInteger	i = NSMaxRange(r);
 			  NSString	*line;
 
 			  r = NSMakeRange(i, commentLength - i);
@@ -1095,7 +1095,7 @@ recheck:
 		  r = [comment rangeOfString: @"$Date:"];
 		  if (r.length > 0)
 		    {
-		      unsigned	i = NSMaxRange(r);
+		      NSUInteger	i = NSMaxRange(r);
 		      NSString	*date;
 
 		      r = NSMakeRange(i, commentLength - i);
@@ -1122,7 +1122,7 @@ recheck:
 		  r = [comment rangeOfString: @"$Revision:"];
 		  if (r.length > 0)
 		    {
-		      unsigned	i = NSMaxRange(r);
+		      NSUInteger	i = NSMaxRange(r);
 		      NSString	*version;
 
 		      r = NSMakeRange(i, commentLength - i);
@@ -1331,7 +1331,7 @@ recheck:
 	{
 	  if ([self skipSpaces] < length && buffer[pos] == '(')
 	    {
-	      unsigned	start = pos;
+	      NSUInteger	start = pos;
 	      NSString	*attr;
 
 	      [self skipBlock];	// Skip the attributes
@@ -1573,7 +1573,7 @@ recheck:
     }
   else if ([a containsObject: @"long"] == YES)
     {
-      unsigned	c = [a count];
+      NSUInteger	c = [a count];
 
       /*
        * There may be more than one 'long' in a type spec
@@ -1671,7 +1671,7 @@ recheck:
 		       options: NSBackwardsSearch|NSLiteralSearch];
 	  if (r.length > 0)
 	    {
-	      unsigned	p = r.location;
+	      NSUInteger	p = r.location;
 
 	      isPointer = YES;
 	      if (isTypedef == NO)
@@ -1705,7 +1705,7 @@ recheck:
 	    }
 	  while (buffer[pos] == '[')
 	    {
-	      unsigned	old = pos;
+	      NSUInteger	old = pos;
 
 	      if ([self skipArray] == old)
 		{
@@ -1763,7 +1763,7 @@ recheck:
 		{
 		  if ([self skipSpaces] < length && buffer[pos] == '(')
 		    {
-		      unsigned	start = pos;
+		      NSUInteger	start = pos;
 		      NSString	*attr;
 
 		      [self skipBlock];	// Skip the attributes
@@ -1797,7 +1797,7 @@ recheck:
 		  [self skipSpaces];
 		  if (pos < length && buffer[pos] == '(')
 		    {
-		      unsigned	start = pos;
+		      NSUInteger	start = pos;
 		      NSString	*attr;
 
 		      [self skipBlock];
@@ -2420,7 +2420,7 @@ fail:
  */
 - (NSString*) parseIdentifier
 {
-  unsigned	start;
+  NSUInteger	start;
 
 try:
   [self parseSpace];
@@ -2625,7 +2625,7 @@ fail:
 	}
       else if (c == '/')
 	{
-	  unsigned	save = pos;
+	  NSUInteger	save = pos;
 
 	  if ([self parseComment] == save)
 	    {
@@ -2735,7 +2735,7 @@ fail:
 	{
 	  if ([self skipSpaces] < length && buffer[pos] == '(')
 	    {
-	      unsigned	start = pos;
+	      NSUInteger	start = pos;
 	      NSString	*attr;
 
 	      [self skipBlock];	// Skip the attributes
@@ -2836,7 +2836,7 @@ fail:
 	  [mname appendString: token];
 	  if (buffer[pos] != term)
 	    {
-	      unsigned	saved = pos;
+	      NSUInteger	saved = pos;
 
 	      /*
 	       * As a special case, try to cope with a method name separated
@@ -2865,7 +2865,7 @@ fail:
 	}
       else
 	{
-	  unsigned	saved = pos;
+	  NSUInteger	saved = pos;
 
 	  /*
 	   * As a special case, try to cope with a method name separated
@@ -3294,7 +3294,7 @@ fail:
  * #ifdef and #ifndef with some well-known constants to tell
  * us which standards are currently supported.
  */
-- (unsigned) parsePreprocessor
+- (NSUInteger) parsePreprocessor
 {
   [self parseSpace: spaces];
   if (pos < length && buffer[pos] != '\n')
@@ -3710,13 +3710,13 @@ fail:
  * Calls parseComment if neccesary, ensuring that any documentation
  * in comments is appended to our 'comment' ivar.
  */
-- (unsigned) parseSpace: (NSCharacterSet*)spaceSet
+- (NSUInteger) parseSpace: (NSCharacterSet*)spaceSet
 {
   BOOL		tryAgain;
 
   do
     {
-      unsigned	start;
+      NSUInteger	start;
 
       tryAgain = NO;
       while (pos < length)
@@ -3725,7 +3725,7 @@ fail:
 
 	  if (c == '/')
 	    {
-	      unsigned	old = pos;
+	      NSUInteger	old = pos;
 
 	      if ([self parseComment] > old)
 		{
@@ -3784,7 +3784,7 @@ fail:
   return pos;
 }
 
-- (unsigned) parseSpace
+- (NSUInteger) parseSpace
 {
   return [self parseSpace: spacenl];
 }
@@ -3792,7 +3792,7 @@ fail:
 - (NSString*) parseVersion
 {
   static NSDictionary   *known = nil;
-  unsigned	        i;
+  NSUInteger	        i;
   NSString	        *str;
   NSString	        *tmp;
 
@@ -4069,7 +4069,7 @@ fail:
 		{
 		  inptr++;
 		  outptr--;
-		  [a addObject: [NSNumber numberWithInt: outptr - buffer]];
+		  [a addObject: [NSNumber numberWithInteger: outptr - buffer]];
 		}
 	      else if (inptr[1] == '\r')
 		{
@@ -4079,7 +4079,7 @@ fail:
 		    {
 		      inptr++;
 		    }
-		  [a addObject: [NSNumber numberWithInt: outptr - buffer]];
+		  [a addObject: [NSNumber numberWithInteger: outptr - buffer]];
 		}
 	    }
 	}
@@ -4100,11 +4100,11 @@ fail:
 	    {
 	      outptr--;		// Ignore trailing carriage return.
 	    }
-	  [a addObject: [NSNumber numberWithInt: outptr - buffer]];
+	  [a addObject: [NSNumber numberWithInteger: outptr - buffer]];
 	}
       else if (c == '\n')
 	{
-	  [a addObject: [NSNumber numberWithInt: outptr - buffer]];
+	  [a addObject: [NSNumber numberWithInteger: outptr - buffer]];
 	}
     }
   length = outptr - buffer;
@@ -4121,7 +4121,7 @@ fail:
  * Expect the current character position to be pointing to the
  * '[' at the start of an array.
  */
-- (unsigned) skipArray
+- (NSUInteger) skipArray
 {
   pos++;
   while ([self parseSpace] < length)
@@ -4157,12 +4157,12 @@ fail:
  * Expect the current character position to be pointing to the
  * bracket at the start of a block.
  */
-- (unsigned) skipBlock
+- (NSUInteger) skipBlock
 {
   return [self skipBlock: 0];
 }
 
-- (unsigned) skipBlock: (BOOL*)isEmpty
+- (NSUInteger) skipBlock: (BOOL*)isEmpty
 {
   unichar	term = '}';
   BOOL		empty = YES;
@@ -4230,7 +4230,7 @@ fail:
   return pos;
 }
 
-- (unsigned) skipLiteral
+- (NSUInteger) skipLiteral
 {
   unichar	term = buffer[pos++];
 
@@ -4250,7 +4250,7 @@ fail:
   return pos;
 }
 
-- (unsigned) skipRemainderOfLine
+- (NSUInteger) skipRemainderOfLine
 {
   while (pos < length)
     {
@@ -4262,7 +4262,7 @@ fail:
   return pos;
 }
 
-- (unsigned) skipSpaces
+- (NSUInteger) skipSpaces
 {
   while (pos < length)
     {
@@ -4282,7 +4282,7 @@ fail:
  * Strictly speaking, we don't skip all statements that way,
  * since we only skip part of an if...else statement.
  */
-- (unsigned) skipStatement
+- (NSUInteger) skipStatement
 {
   while ([self parseSpace] < length)
     {
@@ -4322,7 +4322,7 @@ fail:
  * line it was on, discarding any comments so they don't get used by
  * the next construct that actually needs documenting.
  */
-- (unsigned) skipStatementLine
+- (NSUInteger) skipStatementLine
 {
   [self skipStatement];
   if (buffer[pos-1] == ';' || buffer[pos-1] == '}')
@@ -4333,7 +4333,7 @@ fail:
   return pos;
 }
 
-- (unsigned) skipToEndOfLine
+- (NSUInteger) skipToEndOfLine
 {
   while (pos < length)
     {
@@ -4350,7 +4350,7 @@ fail:
  * Skip until we encounter an '@end' marking the end of an interface,
  * implementation, or protocol.
  */
-- (unsigned) skipUnit
+- (NSUInteger) skipUnit
 {
   while ([self parseSpace] < length)
     {

@@ -35,7 +35,7 @@
  * it as unicode data, we return the location of the first
  * bad character, otherwise return -1;
  */
-static int
+static NSInteger
 firstBadCharacter(NSString *file, NSString *content)
 {
   static NSCharacterSet	*cs = nil;
@@ -108,7 +108,7 @@ main(int argc, char** argv, char **env)
 	    {
 	      NSString	*myString;
 	      id	result;
-	      int	bad;
+	      NSInteger	bad;
 
 	      myString = [NSString stringWithContentsOfFile: file];
 	      if (myString == nil)

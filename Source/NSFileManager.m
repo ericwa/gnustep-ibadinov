@@ -3511,7 +3511,7 @@ static NSSet	*fileKeys = nil;
       if (key == NSFileCreationDate)
 	return [self fileCreationDate];
       if (key == NSFileDeviceIdentifier)
-	return [NSNumber numberWithUnsignedInt: statbuf.st_dev];
+	return [NSNumber numberWithInteger: statbuf.st_dev];
       if (key == NSFileExtensionHidden)
 	return [NSNumber numberWithBool: [self fileExtensionHidden]];
       if (key == NSFileGroupOwnerAccountName)
@@ -3533,7 +3533,7 @@ static NSSet	*fileKeys = nil;
       if (key == NSFilePosixPermissions)
 	return [NSNumber numberWithUnsignedInteger: [self filePosixPermissions]];
       if (key == NSFileReferenceCount)
-	return [NSNumber numberWithUnsignedInt: statbuf.st_nlink];
+	return [NSNumber numberWithInteger: statbuf.st_nlink];
       if (key == NSFileSize)
 	return [NSNumber numberWithUnsignedLongLong: [self fileSize]];
       if (key == NSFileSystemFileNumber)

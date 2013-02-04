@@ -241,7 +241,7 @@ static unsigned pool_number_warning_threshhold = 10000;
 
 
 @interface NSAutoreleasePool (Private)
-+ (unsigned) autoreleaseCountForObject: (id)anObject;
++ (NSUInteger) autoreleaseCountForObject: (id)anObject;
 - (void) _reallyDealloc;
 @end
 
@@ -378,17 +378,17 @@ pop_pool_from_cache (struct autorelease_thread_vars *tv)
   return self;
 }
 
-- (unsigned) autoreleaseCountForObject: (id)anObject
+- (NSUInteger) autoreleaseCountForObject: (id)anObject
 {
   return objc_arc_autorelease_count_for_object_np(anObject);
 }
 
-+ (unsigned) autoreleaseCountForObject: (id)anObject
++ (NSUInteger) autoreleaseCountForObject: (id)anObject
 {
   return objc_arc_autorelease_count_for_object_np(anObject);
 }
 
-- (unsigned) autoreleaseCount
+- (NSUInteger) autoreleaseCount
 {
   return objc_arc_autorelease_count_np();
 }
@@ -472,9 +472,9 @@ pop_pool_from_cache (struct autorelease_thread_vars *tv)
   return self;
 }
 
-- (unsigned) autoreleaseCount
+- (NSUInteger) autoreleaseCount
 {
-  unsigned count = 0;
+  NSUInteger count = 0;
   struct autorelease_array_list *released = _released_head;
   while (released != 0)
     {
@@ -484,11 +484,11 @@ pop_pool_from_cache (struct autorelease_thread_vars *tv)
   return count;
 }
 
-- (unsigned) autoreleaseCountForObject: (id)anObject
+- (NSUInteger) autoreleaseCountForObject: (id)anObject
 {
-  unsigned count = 0;
+  NSUInteger count = 0;
   struct autorelease_array_list *released = _released_head;
-  unsigned int i;
+  NSUInteger i;
 
   while (released != 0)
     {
@@ -500,9 +500,9 @@ pop_pool_from_cache (struct autorelease_thread_vars *tv)
   return count;
 }
 
-+ (unsigned) autoreleaseCountForObject: (id)anObject
++ (NSUInteger) autoreleaseCountForObject: (id)anObject
 {
-  unsigned count = 0;
+  NSUInteger count = 0;
   NSAutoreleasePool *pool = ARP_THREAD_VARS->current_pool;
 
   while (pool)

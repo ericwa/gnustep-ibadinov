@@ -623,7 +623,7 @@ int
 main(int argc, char **argv, char **env)
 {
   NSProcessInfo		*proc;
-  unsigned		i;
+  NSUInteger		i;
   NSDictionary		*argsRecognized;
   NSUserDefaults	*defs;
   NSFileManager		*mgr;
@@ -638,8 +638,8 @@ main(int argc, char **argv, char **env)
   NSDate		*rDate = nil;
   NSString		*refsFile;
   id			obj;
-  unsigned		count;
-  unsigned		firstFile = 1;
+  NSUInteger		count;
+  NSUInteger		firstFile = 1;
   BOOL			generateHtml = YES;
   BOOL			ignoreDependencies = NO;
   BOOL			showDependencies = NO;
@@ -1100,7 +1100,7 @@ main(int argc, char **argv, char **env)
 		  NSMutableString	*ms;
 		  NSEnumerator		*e = [keys objectEnumerator];
 		  NSString		*k;
-		  unsigned		length;
+		  NSUInteger		length;
 
 		  ms = [[NSMutableString alloc] initWithContentsOfFile: path];
 		  if (ms == nil)
@@ -1498,7 +1498,7 @@ main(int argc, char **argv, char **env)
 		}
 	      else
 		{
-		  unsigned	c = [modified count];
+		  NSUInteger	c = [modified count];
 
 		  while (c-- > 0)
 		    {
@@ -2173,8 +2173,8 @@ main(int argc, char **argv, char **env)
 	      NSData		*d;
 	      NSMutableString	*s;
 	      NSRange		r;
-	      unsigned		l;
-	      unsigned		p;
+	      NSUInteger		l;
+	      NSUInteger		p;
 	      AGSHtml		*html;
 
 	      html = AUTORELEASE([AGSHtml new]);
@@ -2206,7 +2206,7 @@ main(int argc, char **argv, char **env)
 				 range: NSMakeRange(p, l - p)];
 		  if (r.length == 0)
 		    {
-		      NSLog(@"Unterminated gsdoc rel at %u", p);
+		      NSLog(@"Unterminated gsdoc rel at %lu", (unsigned long)p);
 		      break;
 		    }
 		  else
@@ -2302,7 +2302,7 @@ main(int argc, char **argv, char **env)
 		    }
 		  if (repstr != nil)
 		    {
-		      int	offset = [repstr length] - replace.length;
+		      NSInteger	offset = [repstr length] - replace.length;
 
 		      p += offset;
 		      l += offset;

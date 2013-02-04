@@ -554,9 +554,9 @@ handle_printf_atsign (FILE *stream,
     {
       if (sizeof(wchar_t) == 4)
         {
-	  unsigned	length = [string_object length];
+	  NSUInteger	length = [string_object length];
 	  wchar_t	buf[length + 1];
-	  unsigned	i;
+	  NSUInteger	i;
 
 	  for (i = 0; i < length; i++)
 	    {

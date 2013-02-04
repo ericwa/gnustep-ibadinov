@@ -370,7 +370,7 @@ GSTLSPull(gnutls_transport_ptr_t handle, void *buffer, size_t len)
   result = [[tls istream] _read: buffer maxLength: len];
   if (result < 0)
     {
-      int       e;
+      NSInteger       e;
 
       if ([[tls istream] streamStatus] == NSStreamStatusError)
         {
@@ -401,7 +401,7 @@ GSTLSPush(gnutls_transport_ptr_t handle, const void *buffer, size_t len)
   result = [[tls ostream] _write: buffer maxLength: len];
   if (result < 0)
     {
-      int       e;
+      NSInteger       e;
 
       if ([[tls ostream] streamStatus] == NSStreamStatusError)
         {

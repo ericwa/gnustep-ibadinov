@@ -164,7 +164,7 @@ main(int argc, char** argv, char **env)
 	    }
 	  else
 	    {
-	      unsigned		l = [myData length];
+	      NSUInteger		l = [myData length];
 	      const unichar	*b = (const unichar*)[myData bytes];
 	      NSStringEncoding	iEnc;
 	      NSStringEncoding	oEnc;
@@ -209,11 +209,11 @@ main(int argc, char** argv, char **env)
 		{
 		  if (eIn == YES)
 		    {
-		      unsigned	l = [myString length];
+		      NSUInteger	l = [myString length];
 		      unichar	*u;
 		      NSZone	*z = NSDefaultMallocZone();
-		      unsigned	i = 0;
-		      unsigned	o = 0;
+		      NSUInteger	i = 0;
+		      NSUInteger	o = 0;
 
 		      u = NSZoneMalloc(z, sizeof(unichar)*l);
 		      [myString getCharacters: u];
@@ -262,12 +262,12 @@ main(int argc, char** argv, char **env)
 		    }
 		  if (eOut == YES)
 		    {
-		      unsigned	l = [myString length];
+		      NSUInteger	l = [myString length];
 		      unichar	*u;
 		      char	*c;
 		      NSZone	*z = NSDefaultMallocZone();
-		      unsigned	o = 0;
-		      unsigned	i;
+		      NSUInteger	o = 0;
+		      NSUInteger	i;
 
 		      u = NSZoneMalloc(z, sizeof(unichar)*l);
 		      c = NSZoneMalloc(z, 6*l);
