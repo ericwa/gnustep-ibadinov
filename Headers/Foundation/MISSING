@@ -1,13 +1,201 @@
-NS_ENUM
-NS_OPTIONS
-NS_AVAILABLE
-NS_RETURNS_INNER_POINTER
+Missing macros:
+	NS_ENUM
+	NS_OPTIONS
+	NS_AVAILABLE
+	NS_RETURNS_INNER_POINTER
+	NS_ENUM_AVAILABLE
+	NS_BLOCKS_AVAILABLE
+	NS_CLASS_AVAILABLE
+	NS_AVAILABLE_MAC
+	NS_ENUM_AVAILABLE_IOS
+	NS_DEPRECATED
 
-NS_FRONTIER_PSYCHIATRIST
+	NS_FRONTIER_PSYCHIATRIST
+
+Missing headers:
+	<NSAppleEventDescriptor.h>
+	<NSAppleEventManager.h>
+	<NSAppleScript.h>
+	<NSByteCountFormatter.h>
+-------------------------------------------------------------
+-------------------------------------------------------------
+Foundation:
+	<NSOrderedSet.h>
+	<NSOrthography.h>
+	<NSPort.h>
+	<NSPropertyList.h>
+	<NSRegularExpression.h>
+	<NSTextCheckingResult.h>
+	<NSByteCountFormatter.h>
+	<NSFileCoordinator.h>
+	<NSFilePresenter.h>
+	<NSFileVersion.h>
+	<NSFileWrapper.h>
+	<NSLinguisticTagger.h>
+	<NSUbiquitousKeyValueStore.h>
+	<NSUUID.h>
+	<NSAppleEventDescriptor.h>
+	<NSAppleEventManager.h>
+	<NSAppleScript.h>
+	<NSHFSFileTypes.h>
+	<NSObjectScripting.h>
+	<NSScriptClassDescription.h>
+	<NSScriptCoercionHandler.h>
+	<NSScriptCommand.h>
+	<NSScriptCommandDescription.h>
+	<NSScriptExecutionContext.h>
+	<NSScriptKeyValueCoding.h>
+	<NSScriptObjectSpecifiers.h>
+	<NSScriptStandardSuiteCommands.h>
+	<NSScriptSuiteRegistry.h>
+	<NSUserNotification.h>
+	<NSUserScriptTask.h>
+	<NSXPCConnection.h>
+-------------------------------------------------------------
+FoundationErrors:
+	NSFileWriteFileExistsError
+	NSFileWriteVolumeReadOnlyError
+	NSFeatureUnsupportedError
+	NSPropertyListReadCorruptError
+    NSPropertyListReadUnknownVersionError
+    NSPropertyListReadStreamError
+    NSPropertyListWriteStreamError
+    NSPropertyListErrorMinimum
+    NSPropertyListErrorMaximum
+    NSXPCConnectionInterrupted
+    NSXPCConnectionInvalid
+    NSXPCConnectionReplyInvalid
+    NSXPCConnectionErrorMinimum
+    NSXPCConnectionErrorMaximum
+-------------------------------------------------------------
+NSArchiver:
+	- encodeRootObject:
+	- encodeConditionalObject:
+	
+-------------------------------------------------------------
+NSAttributedString:
+	NSAttributedStringEnumerationReverse
+  	NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
+
+  	- enumerateAttributesInRange:options:usingBlock:
+	- enumerateAttribute:inRange:options:usingBlock:
+-------------------------------------------------------------
+NSBundle:
+	- bundleURL
+	- resourceURL
+	- executableURL
+	- URLForAuxiliaryExecutable:
+	- privateFrameworksURL
+	- sharedFrameworksURL
+	- sharedSupportURL
+	- builtInPlugInsURL
+	- appStoreReceiptURL
+	- pathForAuxiliaryExecutable:
+	- privateFrameworksPath
+	- sharedFrameworksPath
+	- sharedSupportPath
+	+ URLsForResourcesWithExtension:subdirectory:inBundleWithURL:
+	- URLsForResourcesWithExtension:subdirectory:
+	- URLsForResourcesWithExtension:subdirectory:localization:
+
+	/** Not implemented */ (GNUstep comment)
+	- executableArchitectures;
+-------------------------------------------------------------
+NSByteOrder:
+	NSSwappedFloat — incompatible declaration
+	NSSwappedDouble — incompatible declaration
+-------------------------------------------------------------
+NSCalendar:
+	NSWeekOfMonthCalendarUnit
+	NSWeekOfYearCalendarUnit
+	NSYearForWeekOfYearCalendarUnit
+    NSCalendarCalendarUnit
+    NSTimeZoneCalendarUnit
+
+    - weekOfMonth
+	- weekOfYear
+	- yearForWeekOfYear
+	- isLeapMonth
+	- setWeekOfMonth:
+	- setWeekOfYear:
+	- setYearForWeekOfYear:
+	- setLeapMonth:
+	- date
+-------------------------------------------------------------
+NSCharacterSet:
+
+	NSOpenStepUnicodeReservedBase
+-------------------------------------------------------------
+NSCoder:
+	- requiresSecureCoding
+	- decodeObjectOfClass:forKey:
+	- decodeObjectOfClasses:forKey:
+	- decodePropertyListForKey:
+	- allowedClasses
+	- encodeNXObject:
+	- decodeNXObject:
+-------------------------------------------------------------
+NSComparisonPredicate:
+	NSNormalizedPredicateOption
+-------------------------------------------------------------
+NSConnection:
+	<NSDate.h>
+
+	- dispatchWithComponents:
+	- connection:shouldMakeNewConnection:
+	- createConversationForConnection:
+	- connection:handleRequest:
+	- invocation
+	- connection
+	- conversation
+	- replyWithException
+-------------------------------------------------------------
+NSData:
+	NSDataReadingMappedIfSafe
+    NSDataReadingUncached
+    NSDataReadingMappedAlways
+    NSDataWritingAtomic
+    NSDataWritingWithoutOverwriting
+    NSDataWritingFileProtectionNone
+    NSDataWritingFileProtectionComplete
+    NSDataWritingFileProtectionCompleteUnlessOpen
+    NSDataWritingFileProtectionCompleteUntilFirstUserAuthentication
+    NSDataWritingFileProtectionMask
+    NSDataSearchBackwards
+    NSDataSearchAnchored
+
+    - rangeOfData:options:range:
+    + dataWithContentsOfFile:options:error:
+	+ dataWithContentsOfURL:options:error:
+	- initWithContentsOfFile:options:error:
+	- initWithContentsOfURL:options:error:
+
+	@inteface NSPurgeableData
+-------------------------------------------------------------
+NSDate:
+	NSSystemClockDidChangeNotification
+-------------------------------------------------------------
+NSDebug:
+	<NSAutoreleasePool.h>
+
+	NSObjectAutoreleasedEvent
+	NSObjectExtraRefIncrementedEvent
+	NSObjectExtraRefDecrementedEvent
+	NSObjectInternalRefIncrementedEvent
+	NSObjectInternalRefDecrementedEvent
+	
+	NSDebugEnabled
+	NSKeepAllocationStatistics
+
+	NSIsFreedObject()
+	NSRecordAllocationEvent()
+
+	@interface NSAutoreleasePool (NSAutoreleasePoolDebugging)
+-------------------------------------------------------------
+NSDecimal:
+	NSDecimal — incompatible declaration
 -------------------------------------------------------------
 NSString:
-	<limits.h>
-	<stdarg.h>
 
 	NSParseErrorException
 	NSCharacterConversionException
@@ -48,3 +236,15 @@ NSURLError:
 	NSURLErrorDataNotAllowed
 	NSURLErrorRequestBodyStreamExhausted
 -------------------------------------------------------------
+-------------------------------------------------------------
+
+Good headers:
+	<NSAffineTransform.h>
+	<NSArray.h>
+	<NSAutoreleasePool.h>
+	<NSCache.h>
+	<NSCalendarDate.h>
+	<NSClassDescription.h>
+	<NSCompoundPredicate.h>
+	<NSDateFormatter.h>
+	<NSXMLDTDNode.h>
