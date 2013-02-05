@@ -332,11 +332,11 @@ GSSortUnstableConcurrent(id* buffer, NSRange range, id descriptorOrComparator,
 
 - (NSArray *) sortedArrayUsingDescriptors: (NSArray *) sortDescriptors
 {
-  NSMutableArray *sortedArray = [GSMutableArray arrayWithArray: self];
+  NSMutableArray *sortedArray = [[GSMutableArray alloc] initWithArray: self];
 
   [sortedArray sortUsingDescriptors: sortDescriptors];
 
-  return [sortedArray makeImmutableCopyOnFail: NO];
+  return [[sortedArray makeImmutable] autorelease];
 }
 
 @end

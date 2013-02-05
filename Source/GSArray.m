@@ -631,7 +631,7 @@ static Class	GSInlineArrayClass;
   _version++;
 }
 
-- (id) makeImmutableCopyOnFail: (BOOL)force
+- (id) makeImmutable
 {
   GSClassSwizzle(self, [GSArray class]);
   return self;

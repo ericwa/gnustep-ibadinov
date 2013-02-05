@@ -124,6 +124,13 @@
 #undef id
 #endif
 
+#define INITALIZE_STATIC_OBJECT(name, value)    \
+do {                                            \
+    name = value;                               \
+    [NSObject leakAt:(id *)&name];              \
+    [name release];                             \
+} while (0)
+
 NSString * const NSSystemTimeZoneDidChangeNotification
   = @"NSSystemTimeZoneDidChangeNotification";
 
@@ -663,11 +670,9 @@ static NSMapTable	*absolutes = 0;
 
 + (void) initialize
 {
-  if (self == [GSAbsTimeZone class])
+    if (self == [GSAbsTimeZone class])
     {
-      absolutes = NSCreateMapTable(NSIntegerMapKeyCallBacks,
-	NSNonOwnedPointerMapValueCallBacks, 0);
-      [[NSObject leakAt: (id*)&absolutes] release];
+        INITALIZE_STATIC_OBJECT(absolutes, NSCreateMapTable(NSIntegerMapKeyCallBacks, NSNonOwnedPointerMapValueCallBacks, 0));
     }
 }
 
@@ -1045,7 +1050,7 @@ static NSMapTable	*absolutes = 0;
 		    }
 		}
 	    }
-	  [md makeImmutableCopyOnFail: NO];
+	  md = [md makeImmutable];
 	  abbreviationDictionary = md;
 	}
       [pool drain];
@@ -1091,7 +1096,7 @@ static NSMapTable	*absolutes = 0;
        * Read dictionary from file... fast mechanism because we don't have
        * to create all timezoneas and parse all their data files.
        */
-      md = [NSMutableDictionary dictionaryWithCapacity: 100];
+      md = [[NSMutableDictionary alloc] initWithCapacity: 100];
       path = _time_zone_path (ABBREV_MAP, nil);
       if (path != nil)
 	{
@@ -1192,8 +1197,8 @@ static NSMapTable	*absolutes = 0;
 	  [ma addObject: the_name];
 	}
 
-      [md makeImmutableCopyOnFail: NO];
-      abbreviationMap = RETAIN(md); 
+      md = [md makeImmutable];
+      abbreviationMap = md; 
       [pool drain];
     }
   if (zone_mutex != nil)
@@ -1237,7 +1242,7 @@ static NSMapTable	*absolutes = 0;
 	  [ma addObjectsFromArray: names];
 	}
 
-      [ma makeImmutableCopyOnFail: NO];
+      ma = [ma makeImmutable];
       namesArray = ma;
     }
   if (zone_mutex != nil)
@@ -1335,33 +1340,26 @@ static NSMapTable	*absolutes = 0;
 
 + (void) initialize
 {
-  if (self == [NSTimeZone class])
+    if (self == [NSTimeZone class])
     {
-      NSTimeZoneClass = self;
-      GSPlaceholderTimeZoneClass = [GSPlaceholderTimeZone class];
-      zoneDictionary = [[NSMutableDictionary alloc] init];
-      [[NSObject leakAt: &zoneDictionary] release];
-
-      /*
-       * Set up infrastructure for placeholder timezones.
-       */
-      defaultPlaceholderTimeZone = (GSPlaceholderTimeZone*)
-	NSAllocateObject(GSPlaceholderTimeZoneClass, 0, NSDefaultMallocZone());
-      [[NSObject leakAt: &defaultPlaceholderTimeZone] release];
-      placeholderMap = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
-	NSNonRetainedObjectMapValueCallBacks, 0);
-      [[NSObject leakAt: (id*)&placeholderMap] release];
-
-      localTimeZone = [[NSLocalTimeZone alloc] init];
-      [[NSObject leakAt: (id*)&localTimeZone] release];
-
-      zone_mutex = [GSLazyRecursiveLock new];
-      [[NSObject leakAt: (id*)&zone_mutex] release];
-
-      [[NSNotificationCenter defaultCenter] addObserver: self
-        selector: @selector(_notified:)
-        name: NSUserDefaultsDidChangeNotification
-        object: nil];
+        NSTimeZoneClass = self;
+        GSPlaceholderTimeZoneClass = [GSPlaceholderTimeZone class];
+        INITALIZE_STATIC_OBJECT(zoneDictionary, [[NSMutableDictionary alloc] init]);
+        
+        /*
+         * Set up infrastructure for placeholder timezones.
+         */
+        INITALIZE_STATIC_OBJECT(defaultPlaceholderTimeZone, (GSPlaceholderTimeZone *)NSAllocateObject(GSPlaceholderTimeZoneClass, 0, NSDefaultMallocZone()));
+        INITALIZE_STATIC_OBJECT(placeholderMap, NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks, NSNonRetainedObjectMapValueCallBacks, 0));
+        
+        INITALIZE_STATIC_OBJECT(localTimeZone, [[NSLocalTimeZone alloc] init]);
+        
+        INITALIZE_STATIC_OBJECT(zone_mutex, [GSLazyRecursiveLock new]);
+        
+        [[NSNotificationCenter defaultCenter] addObserver: self
+                                                 selector: @selector(_notified:)
+                                                     name: NSUserDefaultsDidChangeNotification
+                                                   object: nil];
     }
 }
 

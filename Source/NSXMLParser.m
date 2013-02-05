@@ -1700,9 +1700,9 @@ NSLog(@"_processTag <%@%@ %@>", flag?@"/": @"", tag, attributes);
 
           case '<': 
             {
-              NSString                  *tag;
-              NSMutableDictionary       *attributes;
-              NSString                  *arg;
+              NSString                  *tag = nil;
+              NSMutableDictionary       *attributes = nil;
+              NSString                  *arg = nil;
               const unsigned char       *tp = this->cp;  // tag pointer
 	      const unsigned char	*sp = tp - 1;	// Open angle bracket
 
@@ -1887,8 +1887,9 @@ NSLog(@"_processTag <%@%@ %@>", flag?@"/": @"", tag, attributes);
 #endif
                   if (!this->acceptHTML && [arg length] == 0)
                     {
-                      return [self _parseError: @"empty attribute name"
-			code: NSXMLParserAttributeNotStartedError];
+                      [attributes release];
+                      [arg release];
+                      return [self _parseError: @"empty attribute name" code: NSXMLParserAttributeNotStartedError];
                     }
                   c = cget();
                   while (isspace(c))

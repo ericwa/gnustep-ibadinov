@@ -222,7 +222,8 @@ static GC_descr	nodeDesc;	// Type descriptor for map node.
     {
       (*imp)(aCoder, sel, otype, &value);
       (*imp)(aCoder, sel, utype, &valcnt);
-      GSIMapAddPairNoRetain(&map, (GSIMapKey)value, (GSIMapVal)valcnt);
+      GSIMapAddPair(&map, (GSIMapKey)value, (GSIMapVal)valcnt);
+        [value release];
     }
 
   return self;

@@ -2074,7 +2074,7 @@ static NSStringEncoding	defaultEncoding;
                                                     followSymlinks: NO
                                                       justContents: YES
                                                                for: self];
-    content = [NSMutableArray arrayWithCapacity: 128];
+    content = [[NSMutableArray alloc] initWithCapacity: 128];
     
     nxtImp = [direnum methodForSelector: @selector(nextObject)];
     addImp = [content methodForSelector: @selector(addObject:)];
@@ -2085,7 +2085,7 @@ static NSStringEncoding	defaultEncoding;
     }
     RELEASE(direnum);
     
-    return [content makeImmutableCopyOnFail: NO];
+    return [[content makeImmutable] autorelease];
 }
 
 /**
@@ -2135,7 +2135,7 @@ static NSStringEncoding	defaultEncoding;
                                                     followSymlinks: NO
                                                       justContents: NO
                                                                for: self];
-    content = [NSMutableArray arrayWithCapacity: 128];
+    content = [[NSMutableArray alloc] initWithCapacity: 128];
     
     nxtImp = [direnum methodForSelector: @selector(nextObject)];
     addImp = [content methodForSelector: @selector(addObject:)];
@@ -2147,7 +2147,7 @@ static NSStringEncoding	defaultEncoding;
     
     RELEASE(direnum);
     
-    return [content makeImmutableCopyOnFail: NO];
+    return [[content makeImmutable] autorelease];
 }
 
 /**
@@ -2427,13 +2427,11 @@ for: (NSFileManager*)mgr
                               stringWithFileSystemRepresentation: dirbuf->d_name
                               length: strlen(dirbuf->d_name)];
 #endif
-            returnFileName = RETAIN([dir.path stringByAppendingPathComponent:
-                                     returnFileName]);
+            returnFileName = [dir.path stringByAppendingPathComponent:returnFileName];
             
             /* TODO - can this one can be removed ? */
             if (!_flags.justContents)
-                _currentFilePath = RETAIN([_topPath stringByAppendingPathComponent:
-                                           returnFileName]);
+                _currentFilePath = RETAIN([_topPath stringByAppendingPathComponent:returnFileName]);
             
             if (_flags.isRecursive == YES)
             {
@@ -2499,7 +2497,7 @@ for: (NSFileManager*)mgr
             }
         }
     }
-    return AUTORELEASE(returnFileName);
+    return returnFileName;
 }
 
 @end /* NSDirectoryEnumerator */

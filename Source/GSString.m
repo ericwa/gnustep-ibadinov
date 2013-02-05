@@ -4915,7 +4915,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
   return [super lowercaseString];
 }
 
-- (id) makeImmutableCopyOnFail: (BOOL)force
+- (id) makeImmutable
 {
 NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
   if (_flags.wide == 1)

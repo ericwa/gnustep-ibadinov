@@ -2425,7 +2425,7 @@ IF_NO_GC(
   NSMutableArray	*array;
   NSEnumerator	*enumerate;
 
-  array = [NSMutableArray arrayWithCapacity: 2];
+  array = [[NSMutableArray alloc] initWithCapacity: 2];
   enumerate = [preferencesArray objectEnumerator];
   while ((locale = [enumerate nextObject]))
     {
@@ -2435,7 +2435,7 @@ IF_NO_GC(
   /* I guess this is arbitrary if we can't find a match? */
   if ([array count] == 0 && [localizationsArray count] > 0)
     [array addObject: [localizationsArray objectAtIndex: 0]];
-  return [array makeImmutableCopyOnFail: NO];
+  return [[array makeImmutable] autorelease];
 }
 
 - (NSDictionary*) localizedInfoDictionary
@@ -2489,7 +2489,7 @@ IF_NO_GC(
   NSString *locale;
   NSArray *localizations;
   NSEnumerator* enumerate;
-  NSMutableArray *array = [NSMutableArray arrayWithCapacity: 2];
+  NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity: 2];
 
   localizations = [self pathsForResourcesOfType: @"lproj"
 	                            inDirectory: nil];
@@ -2499,7 +2499,7 @@ IF_NO_GC(
       locale = [[locale lastPathComponent] stringByDeletingPathExtension];
       [array addObject: locale];
     }
-  return [array makeImmutableCopyOnFail: NO];
+  return [[array makeImmutable] autorelease];
 }
 
 - (NSArray *) preferredLocalizations

@@ -245,21 +245,18 @@ static Class NSCountedSet_concrete_class;
 
 - (id) unique: (id)anObject
 {
-  id	o = [self member: anObject];
-
-  [self addObject: anObject];
-  if (o == nil)
+    id member = [self member:anObject];
+    if (member != anObject)
     {
-      o = anObject;
+        if (member == nil)
+        {
+            [self addObject:anObject];
+            member = anObject;
+        }
+        RELEASE(anObject);
+        return RETAIN(member);
     }
-#if	!GS_WITH_GC
-  if (o != anObject)
-    {
-      [anObject release];
-      [o retain];
-    }
-#endif
-  return o;
+    return anObject;
 }
 @end
 

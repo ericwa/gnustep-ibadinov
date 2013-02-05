@@ -1043,29 +1043,7 @@ GSIMapCountByEnumeratingWithStateObjectsCount(GSIMapTable map,
 }
 
 #if	GSI_MAP_HAS_VALUE
-static INLINE GSIMapNode
-GSIMapAddPairNoRetain(GSIMapTable map, GSIMapKey key, GSIMapVal value)
-{
-  GSIMapNode	node = map->freeNodes;
-
-  if (node == 0)
-    {
-      GSIMapMoreNodes(map, map->nodeCount < map->increment ? 0: map->increment);
-      node = map->freeNodes;
-      if (node == 0)
-	{
-	  return 0;
-	}
-    }
-  map->freeNodes = node->nextInBucket;
-  GSI_MAP_WRITE_KEY(map, &node->key, key);
-  GSI_MAP_WRITE_VAL(map, &node->value, value);
-  node->nextInBucket = 0;
-  GSIMapRightSizeMap(map, map->nodeCount);
-  GSIMapAddNodeToMap(map, node);
-  return node;
-}
-
+    
 static INLINE GSIMapNode
 GSIMapAddPair(GSIMapTable map, GSIMapKey key, GSIMapVal value)
 {
@@ -1091,27 +1069,6 @@ GSIMapAddPair(GSIMapTable map, GSIMapKey key, GSIMapVal value)
   return node;
 }
 #else
-static INLINE GSIMapNode
-GSIMapAddKeyNoRetain(GSIMapTable map, GSIMapKey key)
-{
-  GSIMapNode	node = map->freeNodes;
-
-  if (node == 0)
-    {
-      GSIMapMoreNodes(map, map->nodeCount < map->increment ? 0: map->increment);
-      node = map->freeNodes;
-      if (node == 0)
-	{
-	  return 0;
-	}
-    }
-  map->freeNodes = node->nextInBucket;
-  GSI_MAP_WRITE_KEY(map, &node->key, key);
-  node->nextInBucket = 0;
-  GSIMapRightSizeMap(map, map->nodeCount);
-  GSIMapAddNodeToMap(map, node);
-  return node;
-}
 
 static INLINE GSIMapNode
 GSIMapAddKey(GSIMapTable map, GSIMapKey key)

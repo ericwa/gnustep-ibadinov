@@ -245,7 +245,8 @@ static Class	mutableSetClass;
       while (count-- > 0)
         {
 	  (*imp)(aCoder, sel, type, &value);
-	  GSIMapAddKeyNoRetain(&map, (GSIMapKey)value);
+	  GSIMapAddKey(&map, (GSIMapKey)value);
+            [value release];
 	}
     }
   return self;
@@ -655,7 +656,7 @@ static Class	mutableSetClass;
     }
 }
 
-- (id) makeImmutableCopyOnFail: (BOOL)force
+- (id) makeImmutable
 {
   GSClassSwizzle(self, [GSSet class]);
   return self;

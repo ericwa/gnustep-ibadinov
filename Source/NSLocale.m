@@ -954,12 +954,18 @@ static NSRecursiveLock *classLock = nil;
   cLocaleId = [_localeId UTF8String];
   localeData = ulocdata_open (cLocaleId, &err);
   if (U_FAILURE(err))
+  {
+    RELEASE(mSet);
     return nil;
+  }
   
   charSet = ulocdata_getExemplarSet (localeData, NULL,
     USET_ADD_CASE_MAPPINGS, ULOCDATA_ES_STANDARD, &err);
   if (U_FAILURE(err))
+  {
+    RELEASE(mSet);
     return nil;
+  }
   ulocdata_close(localeData);
   
   count = uset_getItemCount(charSet);
@@ -1036,7 +1042,7 @@ static NSRecursiveLock *classLock = nil;
   
   result = [[NSCalendar alloc] initWithCalendarIdentifier: calId];
   
-  return result;
+  return [result autorelease];
 #else
   return nil;
 #endif

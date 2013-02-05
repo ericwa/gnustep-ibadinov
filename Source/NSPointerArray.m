@@ -263,7 +263,7 @@ static Class	concreteClass = Nil;
     }
   else
     {
-      GSMutableArray	*a = [GSMutableArray arrayWithCapacity: c];
+      GSMutableArray	*a = [[GSMutableArray alloc] initWithCapacity: c];
 
       for (i = 0; i < _count; i++)
         {
@@ -273,7 +273,7 @@ static Class	concreteClass = Nil;
 	      [a addObject: obj];
 	    }
 	}
-      return [a makeImmutableCopyOnFail: NO]; 
+      return [[a makeImmutable] autorelease]; 
     }
 }
 

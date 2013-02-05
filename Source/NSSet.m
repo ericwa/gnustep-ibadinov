@@ -792,13 +792,13 @@ static Class NSMutableSet_concrete_class;
                   NSEnumerator  *e = [self objectEnumerator];
                   id            o;
 
-                  result = [GSMutableArray array];
+                  result = [[GSMutableArray alloc] init];
                   while ((o = [e nextObject]) != nil)
                     {
                       o = [o valueForKeyPath: rem];
                       [result addObjectsFromArray: o];
                     }
-                  [result makeImmutableCopyOnFail: NO];
+                  result = [[result makeImmutable] autorelease];
                 }
               else
                 {
@@ -812,13 +812,13 @@ static Class NSMutableSet_concrete_class;
                   NSEnumerator  *e = [self objectEnumerator];
                   id            o;
 
-                  result = [GSMutableArray array];
+                  result = [[GSMutableArray alloc] init];
                   while ((o = [e nextObject]) != nil)
                     {
                       o = [o valueForKeyPath: rem];
                       [result addObject: o];
                     }
-                  [result makeImmutableCopyOnFail: NO];
+                  result = [[result makeImmutable] autorelease];
                 }
               else
                 {
@@ -832,13 +832,13 @@ static Class NSMutableSet_concrete_class;
                   NSEnumerator  *e = [self objectEnumerator];
                   id            o;
 
-                  result = [GSMutableArray array];
+                  result = [[GSMutableArray alloc] init];
                   while ((o = [e nextObject]) != nil)
                     {
                       o = [o valueForKeyPath: rem];
                       [result addObjectsFromArray: [o allObjects]];
                     }
-                  [result makeImmutableCopyOnFail: NO];
+                  result = [[result makeImmutable] autorelease];
                 }
               else
                 {
@@ -895,7 +895,7 @@ static Class NSMutableSet_concrete_class;
   id<NSFastEnumeration> enumerator = self;
   NSMutableSet          *resultSet;
 
-  resultSet = [NSMutableSet setWithCapacity: [self count]];
+  resultSet = [[NSMutableSet alloc] initWithCapacity: [self count]];
     
   FOR_IN (id, obj, enumerator)
     {
@@ -912,7 +912,7 @@ static Class NSMutableSet_concrete_class;
     }
   END_FOR_IN(enumerator)
     
-  return [resultSet makeImmutableCopyOnFail: NO];
+  return [[resultSet makeImmutable] autorelease];
 }
 
 /** Return a set formed by adding anObject to the receiver.

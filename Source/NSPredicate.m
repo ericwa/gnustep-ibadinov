@@ -464,7 +464,7 @@ static NSExpression	*evaluatedObjectExpression = nil;
                             predicateWithSubstitutionVariables: variables]];
     }
 
-  return [[[self class] alloc] initWithType: _type subpredicates: esubs];
+  return [[[[self class] alloc] initWithType: _type subpredicates: esubs] autorelease];
 }
 
 - (Class) classForCoder
@@ -1611,7 +1611,7 @@ GSICUStringMatchesRegex(NSString *string, NSString *regex, NSStringCompareOption
   NSEnumerator		*e = [self objectEnumerator];
   id			object;
 
-  result = [NSMutableArray arrayWithCapacity: [self count]];
+  result = [[NSMutableArray alloc] initWithCapacity: [self count]];
   while ((object = [e nextObject]) != nil)
     {
       if ([predicate evaluateWithObject: object] == YES)
@@ -1619,7 +1619,7 @@ GSICUStringMatchesRegex(NSString *string, NSString *regex, NSStringCompareOption
           [result addObject: object];  // passes filter
         }
     }
-  return [result makeImmutableCopyOnFail: NO];
+  return [[result makeImmutable] autorelease];
 }
 
 @end
@@ -1651,7 +1651,7 @@ GSICUStringMatchesRegex(NSString *string, NSString *regex, NSStringCompareOption
   NSEnumerator	*e = [self objectEnumerator];
   id		object;
 
-  result = [NSMutableSet setWithCapacity: [self count]];
+  result = [[NSMutableSet alloc] initWithCapacity: [self count]];
   while ((object = [e nextObject]) != nil)
     {
       if ([predicate evaluateWithObject: object] == YES)
@@ -1659,7 +1659,7 @@ GSICUStringMatchesRegex(NSString *string, NSString *regex, NSStringCompareOption
           [result addObject: object];  // passes filter
         }
     }
-  return [result makeImmutableCopyOnFail: NO];
+  return [[result makeImmutable] autorelease];
 }
 
 @end

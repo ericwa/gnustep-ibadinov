@@ -1445,7 +1445,7 @@ GSRegisterProtocol(Protocol *proto)
 	(GSIMapKey)protocol_getName(proto));
       if (node == 0)
 	{
-	  GSIMapAddPairNoRetain(&protocol_by_name,
+	  GSIMapAddPair(&protocol_by_name,
 	    (GSIMapKey)(void*)protocol_getName(proto),
 	    (GSIMapVal)(void*)proto);
 	}
@@ -1485,7 +1485,7 @@ GSProtocolFromName(const char *name)
 	    {
 	      /* Use the protocol's name to save us from allocating
 		 a copy of the parameter 'name'.  */
-	      GSIMapAddPairNoRetain(&protocol_by_name,
+	      GSIMapAddPair(&protocol_by_name,
 	        (GSIMapKey)(void*)protocol_getName(p),
 		(GSIMapVal)(void*)p);
 	    }

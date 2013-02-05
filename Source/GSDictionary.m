@@ -178,7 +178,9 @@ static SEL	objSel;
         {
 	  (*imp)(aCoder, sel, type, &key);
 	  (*imp)(aCoder, sel, type, &value);
-	  GSIMapAddPairNoRetain(&map, (GSIMapKey)key, (GSIMapVal)value);
+	  GSIMapAddPair(&map, (GSIMapKey)key, (GSIMapVal)value);
+            [key release];
+            [value release];
 	}
     }
   return self;
@@ -288,8 +290,10 @@ static SEL	objSel;
 	    }
 	  else
 	    {
-	      GSIMapAddPairNoRetain(&map, (GSIMapKey)k, (GSIMapVal)o);
+	      GSIMapAddPair(&map, (GSIMapKey)k, (GSIMapVal)o);
+            [o release];
 	    }
+        [k release];
 	}
     }
   return self;
@@ -396,7 +400,7 @@ static SEL	objSel;
   return self;
 }
 
-- (id) makeImmutableCopyOnFail: (BOOL)force
+- (id) makeImmutable
 {
   GSClassSwizzle(self, [GSDictionary class]);
   return self;
@@ -475,10 +479,12 @@ static SEL	objSel;
 
 - (id) initWithDictionary: (NSDictionary*)d
 {
-  [super init];
-  dictionary = (GSDictionary*)RETAIN(d);
-  enumerator = GSIMapEnumeratorForMap(&dictionary->map);
-  return self;
+    if (self = [super init])
+    {
+        dictionary = (GSDictionary*)RETAIN(d);
+        enumerator = GSIMapEnumeratorForMap(&dictionary->map);
+    }
+    return self;
 }
 
 - (id) nextObject

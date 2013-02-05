@@ -59,15 +59,13 @@ extern "C" {
  * Transmutes the receiver into an immutable version of the same object
  * and returns the result.<br />
  * If the receiver is not a mutable object or cannot be simply transmuted,
- * then this method either returns the receiver unchanged or,
- * if the force flag is set to YES, returns an autoreleased copy of the
- * receiver.<br />
+ * then returns a copy of the receiver.<br />
  * Mutable classes should override this default implementation.<br />
  * This method is used in methods which are declared to return immutable
  * objects (eg. an NSArray), but which create and build mutable ones
  * internally.
  */
-- (id) makeImmutableCopyOnFail: (BOOL)force;
+- (id) makeImmutable NS_RETURNS_RETAINED NS_CONSUMES_SELF;
 
 /**
  * Message sent when an implementation wants to explicitly exclude a method

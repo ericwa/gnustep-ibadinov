@@ -655,16 +655,16 @@ static unsigned	encodingVersion;
 		  rep = [obj initWithCoder: self];
 		  if (rep != obj)
 		    {
-		      obj = rep;
-		      GSIArraySetItemAtIndex(_objAry, (GSIArrayItem)obj, xref);
+		      GSIArraySetItemAtIndex(_objAry, (GSIArrayItem)rep, xref);
 		    }
+		  obj = rep;
 
-		  rep = [obj awakeAfterUsingCoder: self];
+		  rep = [rep awakeAfterUsingCoder: self];
 		  if (rep != obj)
 		    {
-		      obj = rep;
-		      GSIArraySetItemAtIndex(_objAry, (GSIArrayItem)obj, xref);
+		      GSIArraySetItemAtIndex(_objAry, (GSIArrayItem)rep, xref);
 		    }
+		  obj = rep;
 		  GS_CONSUMED(rep)
 		}
 	    }
