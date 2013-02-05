@@ -1253,6 +1253,10 @@ const NSMapTableValueCallBacks NSOwnedPointerMapValueCallBacks =
 	     valuePointerFunctions: (NSPointerFunctions*)valueFunctions
 			  capacity: (NSUInteger)initialCapacity
 {
+    if (!(self = [super initWithKeyPointerFunctions:keyFunctions valuePointerFunctions:valueFunctions capacity:initialCapacity]))
+    {
+        return nil;
+    }
   static NSConcretePointerFunctions	*defaultFunctions = nil;
 
   if (defaultFunctions == nil)

@@ -978,6 +978,10 @@ static NSLock	*cached_proxies_gate = nil;
 - (id) initWithReceivePort: (NSPort*)r
 		  sendPort: (NSPort*)s
 {
+    if (!(self = [super init]))
+    {
+        return nil;
+    }
   NSNotificationCenter	*nCenter;
   NSConnection		*parent;
   NSConnection		*conn;
@@ -996,7 +1000,7 @@ static NSLock	*cached_proxies_gate = nil;
 	  NSLog(@"Asked to create connection with nil receive port");
 	}
       DESTROY(self);
-      return self;
+      return nil;
     }
 
   /*
@@ -1016,14 +1020,13 @@ static NSLock	*cached_proxies_gate = nil;
    */
   if (conn != nil)
     {
-      DESTROY(self);
-      self = RETAIN(conn);
       if (debug_connection > 2)
 	{
 	  NSLog(@"Found existing connection (%@) for \n\t%@\n\t%@",
 	    conn, r, s);
 	}
-      return self;
+        DESTROY(self);
+      return RETAIN(conn);
     }
 
   /* Create our private data structure.
@@ -1197,13 +1200,6 @@ static NSLock	*cached_proxies_gate = nil;
 	  DESTROY(self);
 	  return nil;
 	}
-    }
-  /* Here is the GNUstep version, which allows the delegate to specify
-     a substitute.  Note: The delegate is responsible for freeing
-     newConn if it returns something different. */
-  if ([del respondsToSelector: @selector(connection:didConnect:)])
-    {
-      self = [del connection: parent didConnect: self];
     }
 
   nCenter = [NSNotificationCenter defaultCenter];

@@ -974,6 +974,10 @@ const NSHashTableCallBacks NSPointerToStructHashCallBacks =
 - (id) initWithPointerFunctions: (NSPointerFunctions*)functions
 		       capacity: (NSUInteger)initialCapacity
 {
+    if (!(self = [super initWithPointerFunctions:functions capacity:initialCapacity]))
+    {
+        return nil;
+    }
   legacy = NO;
   if (![functions isKindOfClass: [NSConcretePointerFunctions class]])
     {

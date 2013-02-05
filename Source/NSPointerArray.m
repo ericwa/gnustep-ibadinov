@@ -134,8 +134,11 @@ static Class	concreteClass = Nil;
 
 - (id) initWithPointerFunctions: (NSPointerFunctions*)functions
 {
-  [self subclassResponsibility: _cmd];
-  return nil;
+    if ([self class] == [NSPointerArray class]) {
+        [self subclassResponsibility: _cmd];
+        return nil;
+    }
+    return [super init];
 }
 
 - (BOOL) isEqual: (id)other
@@ -436,6 +439,10 @@ static Class	concreteClass = Nil;
 
 - (id) initWithPointerFunctions: (NSPointerFunctions*)functions
 {
+    if (!(self = [super initWithPointerFunctions:functions]))
+    {
+        return nil;
+    }
   if (![functions isKindOfClass: [NSConcretePointerFunctions class]])
     {
       static NSConcretePointerFunctions	*defaultFunctions = nil;

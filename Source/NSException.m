@@ -584,6 +584,10 @@ GSListModules()
 // grab the current stack 
 - (id) init
 {
+    if (!(self = [super init]))
+    {
+        return nil;
+    }
 #if	defined(HAVE_BACKTRACE)
   void		**addr;
   id		*vals;

@@ -151,8 +151,11 @@ static Class	concreteClass = 0;
 	     valuePointerFunctions: (NSPointerFunctions*)valueFunctions
 			  capacity: (NSUInteger)initialCapacity
 {
-  [self subclassResponsibility: _cmd];
-  return nil;
+    if ([self class] == [NSMapTable class]) {
+        [self subclassResponsibility: _cmd];
+        return nil;
+    }
+    return [super init];
 }
 
 - (id) copyWithZone: (NSZone*)aZone

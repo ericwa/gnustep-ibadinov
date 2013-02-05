@@ -273,8 +273,9 @@ appendUIntData(NSMutableData *d, NSUInteger i)
               pos = NSMaxRange(r);
             }
           DESTROY(self);
-          self = [m copy];
+          id result = [m copy];
           RELEASE(m);
+          return result;
         }
     }
   else
@@ -316,8 +317,9 @@ appendUIntData(NSMutableData *d, NSUInteger i)
 		  last = index;
 		}
 	      DESTROY(self);
-	      self = [m copy];
+	      id result = [m copy];
 	      RELEASE(m);
+	      return result;
 	    }
 	}
     }

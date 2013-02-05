@@ -848,7 +848,6 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
     {
       fmt = [NSString stringWithCharacters: format length: formatLen];
     }
-  ASSIGN(_calendar_format, fmt);
 
   //
   // WARNING:
@@ -1455,14 +1454,14 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
 		       timeZone: tz];
       if (self != nil)
 	{
+	  ASSIGN(_calendar_format, fmt);
 	  _seconds_since_ref += ((NSTimeInterval)milliseconds) / 1000.0;
 	}
+    } else
+    {
+        DESTROY(self);
     }
 
-  if (error == YES)
-    {
-      DESTROY(self);
-    }
   return self;
 }
 
@@ -1562,10 +1561,7 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
     {
       _time_zone = RETAIN(aTimeZone);
     }
-  if (_calendar_format == nil)
-    {
-      _calendar_format = cformat;
-    }
+  _calendar_format = cformat;
   _seconds_since_ref = s;
 
   /*
@@ -1611,14 +1607,8 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
 	NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
     }
   _seconds_since_ref = seconds;
-  if (_calendar_format == nil)
-    {
-      _calendar_format = cformat;
-    }
-  if (_time_zone == nil)
-    {
-      _time_zone = localTZ;	// retain is a no-op for the local timezone.
-    }
+  _calendar_format = cformat;
+  _time_zone = localTZ;	// retain is a no-op for the local timezone.
   return self;
 }
 

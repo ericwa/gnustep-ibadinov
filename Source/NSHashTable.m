@@ -100,8 +100,11 @@ static Class	concreteClass = 0;
 - (id) initWithPointerFunctions: (NSPointerFunctions*)functions
 		capacity: (NSUInteger)initialCapacity
 {
-  [self subclassResponsibility: _cmd];
-  return nil;
+    if ([self class] == [NSHashTable class]) {
+        [self subclassResponsibility: _cmd];
+        return nil;
+    }
+    return [super init];
 }
 
 - (void) addObject: (id)object

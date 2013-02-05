@@ -117,7 +117,7 @@ static BOOL     initialized = NO;
          ascending: (BOOL) ascending
           selector: (SEL) selector
 {
-  if ([self init])
+  if (self = [self init])
     {
       if (key == nil)
         {

@@ -237,9 +237,6 @@ GS_NSConnection_IVARS;
  - (BOOL) connection: (NSConnection*)parent
   shouldMakeNewConnection: (NSConnection*)newConnection;
 
-- (NSConnection*) connection: (NSConnection*)ancestorConn
-		  didConnect: (NSConnection*)newConn;
-
 /**
  * An old fashioned synonym for -connection:shouldMakeNewConnection: -
  * don't use this.

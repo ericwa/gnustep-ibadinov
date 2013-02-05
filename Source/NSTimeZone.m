@@ -703,6 +703,10 @@ static NSMapTable	*absolutes = 0;
 
 - (id) initWithOffset: (NSInteger)anOffset name: (NSString*)aName
 {
+  if (!(self = [super initWithName:aName]))
+  {
+      return nil;
+  }
   GSAbsTimeZone	*z;
   NSInteger		extra;
   NSInteger		sign = anOffset >= 0 ? 1 : -1;
@@ -2084,8 +2088,12 @@ localZoneString, [zone name], sign, s/3600, (s/60)%60);
  */
 - (id) initWithName: (NSString*)name data: (NSData*)data
 {
-  [self notImplemented: _cmd];
-  return nil;
+    if ([self class] == NSTimeZoneClass)
+    {
+        [self notImplemented: _cmd];
+        return nil;
+    }
+    return [super init];
 }
 
 /**

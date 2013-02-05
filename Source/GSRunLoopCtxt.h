@@ -80,7 +80,7 @@ typedef struct{
   GSIArray	_trigger;	// Watchers to trigger unconditionally.
   int		fairStart;	// For trying to ensure fair handling.
   BOOL		completed;	// To mark operation as completed.
-#ifdef	HAVE_POLL
+#if defined(HAVE_POLL)
   unsigned int	pollfds_capacity;
   unsigned int	pollfds_count;
   struct pollfd	*pollfds;

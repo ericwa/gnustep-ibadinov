@@ -720,6 +720,10 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
 
 - (id) init
 {
+    if (!(self = [super init]))
+    {
+        return nil;
+    }
   id	o;
   int idx;
   

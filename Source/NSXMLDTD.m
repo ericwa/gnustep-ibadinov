@@ -169,27 +169,28 @@ GS_PRIVATE_INTERNAL(NSXMLDTD)
             options: (NSUInteger)mask
               error: (NSError**)error
 {
-  NSXMLDocument *tempDoc = 
+    NSXMLDocument *tempDoc = 
     [[NSXMLDocument alloc] initWithData: data
                                 options: mask
                                   error: error];
-  if (tempDoc != nil)
+    if (tempDoc == nil)
     {
-      NSArray *children = [tempDoc children];
-      NSEnumerator *enumerator = [children objectEnumerator];
-      NSXMLNode *child;
-
-      self = [self initWithKind: NSXMLDTDKind options: mask];
-      
-      while ((child = [enumerator nextObject]) != nil)
-        {
-          [child detach]; // detach from document.
-          [self addChild: child];
-        }
-      [tempDoc release];
+        return nil;
     }
-
-  return self;
+    NSArray *children = [tempDoc children];
+    NSEnumerator *enumerator = [children objectEnumerator];
+    NSXMLNode *child;
+    
+    self = [self initWithKind: NSXMLDTDKind options: mask];
+    
+    while ((child = [enumerator nextObject]) != nil)
+    {
+        [child detach]; // detach from document.
+        [self addChild: child];
+    }
+    [tempDoc release];
+    
+    return self;
 }
 
 - (id) initWithKind: (NSXMLNodeKind)theKind options: (NSUInteger)theOptions
