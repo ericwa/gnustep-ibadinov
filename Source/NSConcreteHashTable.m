@@ -369,6 +369,15 @@ NSEndHashTableEnumeration(NSHashEnumerator *enumerator)
     }
 }
 
+/*
+ * It exists only to tame static analyzer
+ */
+NS_INLINE void
+NSHashEnumeratorSetNode(NSHashEnumerator *enumerator, id node)
+{
+    enumerator->node = [node retain];
+}
+
 /**
  * Return an enumerator for stepping through a hash table using the
  * NSNextHashEnumeratorPair() function.
@@ -390,8 +399,7 @@ NSEnumerateHashTable(NSHashTable *table)
   else
     {
       NSHashEnumerator	v = {0, 0, 0};
-
-      v.node = (void*)[[table objectEnumerator] retain];
+      NSHashEnumeratorSetNode(&v, [table objectEnumerator]);
       return v;
     }
 }

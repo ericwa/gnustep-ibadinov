@@ -708,6 +708,7 @@ static BOOL skipSpace(pldata *pld)
   return NO;
 }
 
+static inline id parseQuotedString(pldata* pld) NS_RETURNS_RETAINED;
 static inline id parseQuotedString(pldata* pld)
 {
   NSUInteger	start = ++pld->pos;
@@ -911,6 +912,7 @@ static inline id parseQuotedString(pldata* pld)
   return obj;
 }
 
+static inline id parseUnquotedString(pldata *pld) NS_RETURNS_RETAINED;
 static inline id parseUnquotedString(pldata *pld)
 {
   NSUInteger	start = pld->pos;
@@ -950,6 +952,7 @@ static inline id parseUnquotedString(pldata *pld)
   return obj;
 }
 
+static id parsePlItem(pldata* pld) NS_RETURNS_RETAINED;
 static id parsePlItem(pldata* pld)
 {
   id	result = nil;
@@ -1284,6 +1287,7 @@ static id parsePlItem(pldata* pld)
       if (skipSpace(pld) == YES)
 	{
 	  pld->err = @"extra data after parsed string";
+	  RELEASE(result);
 	  result = nil;		// Not at end of string.
 	}
       else

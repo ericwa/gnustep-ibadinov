@@ -2240,16 +2240,35 @@ typedef	struct	_GSEnumeratedDirectory {
     _DIR *pointer;
 } GSEnumeratedDirectory;
 
+static inline void
+GSEnumeratedDirectoryInit(GSEnumeratedDirectory *dir, NSString *path, _DIR *pointer)
+{
+    dir->path = RETAIN(path);
+    dir->pointer = pointer;
+}
 
-static inline void gsedRelease(GSEnumeratedDirectory X)
+static inline NSString *
+GSEnumeratedDirectoryGetPath(GSEnumeratedDirectory *dir)
+{
+    return dir->path;
+}
+
+static inline _DIR *
+GSEnumeratedDirectoryGetPointer(GSEnumeratedDirectory *dir)
+{
+    return dir->pointer;
+}
+
+static inline void
+GSEnumeratedDirectoryRelease(GSEnumeratedDirectory X)
 {
     DESTROY(X.path);
     _CLOSEDIR(X.pointer);
 }
 
-#define GSI_ARRAY_TYPES	0
-#define GSI_ARRAY_TYPE	GSEnumeratedDirectory
-#define GSI_ARRAY_RELEASE(A, X)   gsedRelease(X.ext)
+#define GSI_ARRAY_TYPES         0
+#define GSI_ARRAY_TYPE          GSEnumeratedDirectory
+#define GSI_ARRAY_RELEASE(A, X) GSEnumeratedDirectoryRelease(X.ext)
 #define GSI_ARRAY_RETAIN(A, X)
 
 #include "GNUstepBase/GSIArray.h"
@@ -2310,8 +2329,7 @@ for: (NSFileManager*)mgr
     {
         GSIArrayItem item;
         
-        item.ext.path = @"";
-        item.ext.pointer = dir_pointer;
+        GSEnumeratedDirectoryInit(&item.ext, @"", dir_pointer);
         
         GSIArrayAddItem(_stack, item);
     }
@@ -2400,7 +2418,7 @@ for: (NSFileManager*)mgr
         struct _DIRENT	*dirbuf;
         struct _STATB	statbuf;
         
-        dirbuf = _READDIR(dir.pointer);
+        dirbuf = _READDIR(GSEnumeratedDirectoryGetPointer(&dir));
         
         if (dirbuf)
         {
@@ -2427,7 +2445,7 @@ for: (NSFileManager*)mgr
                               stringWithFileSystemRepresentation: dirbuf->d_name
                               length: strlen(dirbuf->d_name)];
 #endif
-            returnFileName = [dir.path stringByAppendingPathComponent:returnFileName];
+            returnFileName = [GSEnumeratedDirectoryGetPath(&dir) stringByAppendingPathComponent:returnFileName];
             
             /* TODO - can this one can be removed ? */
             if (!_flags.justContents)
@@ -2474,8 +2492,7 @@ for: (NSFileManager*)mgr
                     {
                         GSIArrayItem item;
                         
-                        item.ext.path = RETAIN(returnFileName);
-                        item.ext.pointer = dir_pointer;
+                        GSEnumeratedDirectoryInit(&item.ext, returnFileName, dir_pointer);
                         
                         GSIArrayAddItem(_stack, item);
                     }

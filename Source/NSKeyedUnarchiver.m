@@ -247,25 +247,29 @@ static NSMapTable	*globalClassMap = 0;
       o = [c allocWithZone: _zone];	// Create instance.
       // Store object in map so that decoding of it can be self referential.
       GSIArraySetItemAtIndex(_objMap, (GSIArrayItem)o, index);
+      RETAIN(o);
       r = [o initWithCoder: self];
       if (r != o)
 	{
 	  [_delegate unarchiver: self
 	      willReplaceObject: o
 		     withObject: r];
-	  o = r;
-	  GSIArraySetItemAtIndex(_objMap, (GSIArrayItem)o, index);
+	  GSIArraySetItemAtIndex(_objMap, (GSIArrayItem)r, index);
 	}
+      RELEASE(o);
+      o = r;
+      RETAIN(o);
       r = [o awakeAfterUsingCoder: self];
       if (r != o)
 	{
 	  [_delegate unarchiver: self
 	      willReplaceObject: o
 		     withObject: r];
-	  o = r;
-	  GSIArraySetItemAtIndex(_objMap, (GSIArrayItem)o, index);
+	  
+	  GSIArraySetItemAtIndex(_objMap, (GSIArrayItem)r, index);
 	}
-
+      RELEASE(o);
+      o = r;
       if (_delegate != nil)
 	{
 	  r = [_delegate unarchiver: self didDecodeObject: o];
@@ -274,12 +278,13 @@ static NSMapTable	*globalClassMap = 0;
 	      [_delegate unarchiver: self
 		  willReplaceObject: o
 			 withObject: r];
-	      o = r;
-	      GSIArraySetItemAtIndex(_objMap, (GSIArrayItem)o, index);
+	      RELEASE(o);
+	      o = RETAIN(r);
+	      GSIArraySetItemAtIndex(_objMap, (GSIArrayItem)r, index);
 	    }
 	}
       RELEASE(o);	// Retained in array
-      obj = o;
+      obj = GSIArrayItemAtIndex(_objMap, index).obj;
       _keyMap = savedKeyMap;
       _cursor = savedCursor;
     }

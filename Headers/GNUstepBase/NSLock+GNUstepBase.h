@@ -44,7 +44,7 @@ extern "C" {
  * IDENT is considered uninitialized, if it contains nil.
  * CLASSNAME must be either NSLock, NSRecursiveLock or one
  * of their subclasses.
- * See [NSLock+newLockAt:] for details.
+ * See +[NSLock createLockAt:] for details.
  * This macro is intended for code that cannot insure
  * that a lock can be initialized in thread safe manner otherwise.
  * <example>
@@ -59,8 +59,14 @@ extern "C" {
  *
  * </example>
  */
-#define GS_INITIALIZED_LOCK(IDENT,CLASSNAME) \
-           (IDENT != nil ? (id)IDENT : (id)[CLASSNAME newLockAt: &IDENT])
+#define GS_INITIALIZED_LOCK(IDENT, CLASSNAME)       \
+({                                                  \
+    if (IDENT == nil)                               \
+    {                                               \
+        [CLASSNAME createLockAt:&IDENT];            \
+    }                                               \
+    (id)IDENT;                                      \
+})
 
 @interface NSLock (GNUstepBase)
 /**
@@ -68,7 +74,6 @@ extern "C" {
  * with a new instance of the receiver's class
  * in a thread safe manner, unless
  * it has been previously initialized.
- * Returns the contents pointed to by location.  
  * The location is considered unintialized if it contains nil.
  * <br/>
  * This method is used in the GS_INITIALIZED_LOCK macro
@@ -86,7 +91,7 @@ extern "C" {
  * 
  * </example>
  */
-+ (id) newLockAt: (id *)location;
++ (void)createLockAt:(id *)location;
 @end
 
 @interface NSRecursiveLock (GNUstepBase)
@@ -95,7 +100,6 @@ extern "C" {
  * with a new instance of the receiver's class
  * in a thread safe manner, unless
  * it has been previously initialized.
- * Returns the contents pointed to by location.  
  * The location is considered unintialized if it contains nil.
  * <br/>
  * This method is used in the GS_INITIALIZED_LOCK macro
@@ -113,7 +117,7 @@ extern "C" {
  * 
  * </example>
  */
-+ (id) newLockAt: (id *)location;
++ (void)createLockAt:(id *)location;
 @end
 
 #endif	/* OS_API_VERSION */
