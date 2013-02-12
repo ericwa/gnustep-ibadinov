@@ -319,7 +319,6 @@ typedef struct
 
       collector = [_NSURLConnectionDataCollector new];
       conn = [[self alloc] initWithRequest: request delegate: collector];
-      [collector release];	// retained by connection
       if (nil != conn)
         {
           NSRunLoop	*loop;
@@ -343,8 +342,9 @@ typedef struct
             {
               *error = [[[collector error] retain] autorelease];
             }
-          [conn release];
         }
+      [conn release];
+      [collector release];
     }
   return data;
 }
