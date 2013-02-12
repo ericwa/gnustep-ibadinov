@@ -340,15 +340,15 @@ GS_PRIVATE_INTERNAL(NSConnection)
 - (void) addLocalObject: (NSDistantObject*)anObj;
 - (void) removeLocalObject: (NSDistantObject*)anObj;
 
-- (void) _doneInReply: (NSPortCoder*)c;
-- (void) _doneInRmc: (NSPortCoder*)c;
-- (void) _failInRmc: (NSPortCoder*)c;
-- (void) _failOutRmc: (NSPortCoder*)c;
+- (void) _doneInReply: (NSPortCoder*) NS_CONSUMED c;
+- (void) _doneInRmc: (NSPortCoder*) NS_CONSUMED c;
+- (void) _failInRmc: (NSPortCoder*) NS_CONSUMED c;
+- (void) _failOutRmc: (NSPortCoder*) NS_CONSUMED c;
 - (NSPortCoder*) _getReplyRmc: (int)sn;
-- (NSPortCoder*) _makeInRmc: (NSMutableArray*)components;
-- (NSPortCoder*) _makeOutRmc: (int)sequence generate: (int*)sno reply: (BOOL)f;
+- (NSPortCoder*) _makeInRmc: (NSMutableArray*)components NS_RETURNS_RETAINED;
+- (NSPortCoder*) _makeOutRmc: (int)sequence generate: (int*)sno reply: (BOOL)f NS_RETURNS_RETAINED;
 - (void) _portIsInvalid: (NSNotification*)notification;
-- (void) _sendOutRmc: (NSPortCoder*)c type: (int)msgid;
+- (void) _sendOutRmc: (NSPortCoder*) NS_CONSUMED c type: (int)msgid;
 
 - (void) _service_forwardForProxy: (NSPortCoder*)rmc;
 - (void) _service_release: (NSPortCoder*)rmc;
