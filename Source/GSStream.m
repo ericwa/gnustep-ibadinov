@@ -440,6 +440,12 @@ static RunLoopEventType typeForStream(NSStream *aStream)
 
 - (void) _sendEvent: (NSStreamEvent)event
 {
+#if __has_feature(objc_arc)
+    __strong id myself = self;
+#else
+    [[self retain] autorelease];
+#endif
+
   if (event == NSStreamEventNone)
     {
       return;

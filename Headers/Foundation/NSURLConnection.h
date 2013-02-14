@@ -43,8 +43,7 @@ extern "C" {
 
 /**
  */
-@interface NSURLConnection : NSObject
-{
+@interface NSURLConnection : NSObject {
 #if	GS_EXPOSE(NSURLConnection)
   void *_NSURLConnectionInternal;
 #endif
@@ -57,19 +56,13 @@ extern "C" {
  * changes to the request or changes to the registered protocols
  * etc.
  */
-+ (BOOL) canHandleRequest: (NSURLRequest *)request;
++ (BOOL)canHandleRequest:(NSURLRequest *)request;
 
 /**
  * Allocates and returns the autoreleased instance which it initialises
  * using the -initWithRequest:delegate: method.
  */
-+ (NSURLConnection *) connectionWithRequest: (NSURLRequest *)request
-				   delegate: (id)delegate;
-
-/**
- * Cancel the asynchronous load in progress (if any) for this connection.
- */
-- (void) cancel;
++ (NSURLConnection *)connectionWithRequest:(NSURLRequest *)request delegate:(id)delegate;
 
 /** <init />
  * Initialises the receiver with the specified request (performing
@@ -84,7 +77,16 @@ extern "C" {
  * This method breaks with convention and retains the delegate object,
  * releasing it when the connection finished loading, fails, or is cancelled.
  */
-- (id) initWithRequest: (NSURLRequest *)request delegate: (id)delegate;
+- (id)initWithRequest:(NSURLRequest *)request delegate:(id)delegate;
+
+- (id)initWithRequest:(NSURLRequest *)request delegate:(id)delegate startImmediately:(BOOL)startImmediately;
+
+- (void)start;
+
+/**
+ * Cancel the asynchronous load in progress (if any) for this connection.
+ */
+- (void)cancel;
 
 @end
 

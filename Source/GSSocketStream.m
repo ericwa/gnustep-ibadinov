@@ -1602,7 +1602,13 @@ setNonBlocking(SOCKET fd)
 	    }
 	}
     }
+#else /* __MINGW__ */
+#if __has_feature(objc_arc)
+    __strong id myself = self;
 #else
+    [[self retain] autorelease];
+#endif
+    
   NSStreamEvent myEvent;
 
   if ([self streamStatus] == NSStreamStatusOpening)
@@ -2006,7 +2012,13 @@ setNonBlocking(SOCKET fd)
 	    }
 	}
     }
+#else /* __MINGW__ */
+#if __has_feature(objc_arc)
+    __strong id myself = self;
 #else
+    [[self retain] autorelease];
+#endif
+
   NSStreamEvent myEvent;
 
   if ([self streamStatus] == NSStreamStatusOpening)

@@ -364,203 +364,188 @@ static NSURLProtocol	*placeholder = nil;
 
 + (id) allocWithZone: (NSZone*)z
 {
-  NSURLProtocol	*o;
-
-  if ((self == abstractClass) && (z == 0 || z == NSDefaultMallocZone()))
+    NSURLProtocol	*o;
+    
+    if ((self == abstractClass) && (z == 0 || z == NSDefaultMallocZone()))
     {
-      /* Return a default placeholder instance to avoid the overhead of
-       * creating and destroying instances of the abstract class.
-       */
-      o = placeholder;
+        /* return a default placeholder instance to avoid the overhead of creating and destroying instances of the abstract class */
+        o = placeholder;
     }
-  else
+    else
     {
-      /* Create and return an instance of the concrete subclass.
-       */
-      o = (NSURLProtocol*)NSAllocateObject(self, 0, z);
+        /* Create and return an instance of the concrete subclass */
+        o = (NSURLProtocol*)NSAllocateObject(self, 0, z);
     }
-  return o;
+    return o;
 }
 
 + (void) initialize
 {
-  if (registered == nil)
+    if (registered == nil)
     {
-      abstractClass = [NSURLProtocol class];
-      placeholderClass = [NSURLProtocolPlaceholder class];
-      placeholder = (NSURLProtocol*)NSAllocateObject(placeholderClass, 0,
-	NSDefaultMallocZone());
-      registered = [NSMutableArray new];
-      regLock = [NSLock new];
-      [self registerClass: [_NSHTTPURLProtocol class]];
-      [self registerClass: [_NSHTTPSURLProtocol class]];
-      [self registerClass: [_NSFTPURLProtocol class]];
-      [self registerClass: [_NSFileURLProtocol class]];
-      [self registerClass: [_NSAboutURLProtocol class]];
+        abstractClass = [NSURLProtocol class];
+        placeholderClass = [NSURLProtocolPlaceholder class];
+        placeholder = (NSURLProtocol*)NSAllocateObject(placeholderClass, 0,
+                                                       NSDefaultMallocZone());
+        registered = [NSMutableArray new];
+        regLock = [NSLock new];
+        [self registerClass: [_NSHTTPURLProtocol class]];
+        [self registerClass: [_NSHTTPSURLProtocol class]];
+        [self registerClass: [_NSFTPURLProtocol class]];
+        [self registerClass: [_NSFileURLProtocol class]];
+        [self registerClass: [_NSAboutURLProtocol class]];
     }
 }
 
 + (id) propertyForKey: (NSString *)key inRequest: (NSURLRequest *)request
 {
-  return [request _propertyForKey: key];
+    return [request _propertyForKey: key];
 }
 
 + (BOOL) registerClass: (Class)protocolClass
 {
-  if ([protocolClass isSubclassOfClass: [NSURLProtocol class]] == YES)
+    if ([protocolClass isSubclassOfClass: [NSURLProtocol class]] == YES)
     {
-      [regLock lock];
-      [registered addObject: protocolClass];
-      [regLock unlock];
-      return YES;
+        [regLock lock];
+        [registered addObject: protocolClass];
+        [regLock unlock];
+        return YES;
     }
-  return NO;
+    return NO;
 }
 
 + (Class) _classToHandleRequest:(NSURLRequest *)request
 {
-  Class protoClass = nil;
-  NSInteger count;
-  [regLock lock];
-
-  count = [registered count];
-  while (count-- > 0)
+    Class protoClass = nil;
+    NSInteger count;
+    [regLock lock];
+    
+    count = [registered count];
+    while (count-- > 0)
     {
-      Class	proto = [registered objectAtIndex: count];
-
-      if ([proto canInitWithRequest: request] == YES)
-	{
-	  protoClass = proto;
-	  break;
-	}
+        Class	proto = [registered objectAtIndex: count];
+        
+        if ([proto canInitWithRequest: request] == YES)
+        {
+            protoClass = proto;
+            break;
+        }
     }
-  [regLock unlock];
-  return protoClass;
+    [regLock unlock];
+    return protoClass;
 }
 
 
 + (void) setProperty: (id)value
-	      forKey: (NSString *)key
-	   inRequest: (NSMutableURLRequest *)request
+              forKey: (NSString *)key
+           inRequest: (NSMutableURLRequest *)request
 {
-  [request _setProperty: value forKey: key];
+    [request _setProperty: value forKey: key];
 }
 
 + (void) unregisterClass: (Class)protocolClass
 {
-  [regLock lock];
-  [registered removeObjectIdenticalTo: protocolClass];
-  [regLock unlock];
+    [regLock lock];
+    [registered removeObjectIdenticalTo: protocolClass];
+    [regLock unlock];
 }
 
 - (NSCachedURLResponse *) cachedResponse
 {
-  return this->cachedResponse;
+    return this->cachedResponse;
 }
 
 - (id <NSURLProtocolClient>) client
 {
-  return this->client;
+    return this->client;
 }
 
 - (void) dealloc
 {
-  if (this != 0)
+    if (this != 0)
     {
-      [self stopLoading];
-      if (this->input != nil)
-	{
-	  [this->input setDelegate: nil];
-	  [this->output setDelegate: nil];
-	  [this->input removeFromRunLoop: [NSRunLoop currentRunLoop]
-				 forMode: NSDefaultRunLoopMode];
-	  [this->output removeFromRunLoop: [NSRunLoop currentRunLoop]
-				  forMode: NSDefaultRunLoopMode];
-          [this->input close];
-          [this->output close];
-          DESTROY(this->input);
-          DESTROY(this->output);
-	}
-      DESTROY(this->cachedResponse);
-      DESTROY(this->request);
+        [self stopLoading];
+        
+        DESTROY(this->cachedResponse);
+        DESTROY(this->request);
 #if	USE_ZLIB
-      if (this->compressing == YES)
-	{
-	  deflateEnd(&this->z);
-	}
-      else if (this->decompressing == YES)
-	{
-	  inflateEnd(&this->z);
-	}
-      DESTROY(this->compressed);
+        if (this->compressing == YES)
+        {
+            deflateEnd(&this->z);
+        }
+        else if (this->decompressing == YES)
+        {
+            inflateEnd(&this->z);
+        }
+        DESTROY(this->compressed);
 #endif
-      NSZoneFree([self zone], this);
-      _NSURLProtocolInternal = 0;
+        NSZoneFree([self zone], this);
+        _NSURLProtocolInternal = 0;
     }
-  [super dealloc];
+    [super dealloc];
 }
 
 - (NSString*) description
 {
-  return [NSString stringWithFormat:@"%@ %@",
-    [super description], this ? (id)this->request : nil];
+    return [NSString stringWithFormat:@"%@ %@",
+            [super description], this ? (id)this->request : nil];
 }
 
 - (id) init
 {
-  if ((self = [super init]) != nil)
+    if ((self = [super init]) != nil)
     {
-      Class	c = object_getClass(self);
-
-      if (c != abstractClass && c != placeholderClass)
-	{
-	  _NSURLProtocolInternal = NSZoneCalloc([self zone],
-	    1, sizeof(Internal));
-	}
+        Class	c = object_getClass(self);
+        
+        if (c != abstractClass && c != placeholderClass)
+        {
+            _NSURLProtocolInternal = NSZoneCalloc([self zone],
+                                                  1, sizeof(Internal));
+        }
     }
-  return self;
+    return self;
 }
 
 - (id) initWithRequest: (NSURLRequest *)request
-	cachedResponse: (NSCachedURLResponse *)cachedResponse
-		client: (id <NSURLProtocolClient>)client
+        cachedResponse: (NSCachedURLResponse *)cachedResponse
+                client: (id <NSURLProtocolClient>)client
 {
-  Class	c = object_getClass(self);
-
-  if (c == abstractClass || c == placeholderClass)
+    Class	c = object_getClass(self);
+    
+    if (c == abstractClass || c == placeholderClass)
     {
-      NSUInteger	count;
-
-      DESTROY(self);
-      [regLock lock];
-      count = [registered count];
-      while (count-- > 0)
+        NSUInteger	count;
+        
+        DESTROY(self);
+        [regLock lock];
+        count = [registered count];
+        while (count-- > 0)
         {
-	  Class	proto = [registered objectAtIndex: count];
-
-	  if ([proto canInitWithRequest: request] == YES)
-	    {
-	      self = [proto alloc];
-	      break;
-	    }
-	}
-      [regLock unlock];
-      return [self initWithRequest: request
-		    cachedResponse: cachedResponse
-			    client: client];
+            Class	proto = [registered objectAtIndex: count];
+            
+            if ([proto canInitWithRequest: request] == YES)
+            {
+                self = [proto alloc];
+                break;
+            }
+        }
+        [regLock unlock];
+        return [self initWithRequest: request
+                      cachedResponse: cachedResponse
+                              client: client];
     }
-  if ((self = [self init]) != nil)
+    if ((self = [self init]) != nil)
     {
-      this->request = [request copy];
-      this->cachedResponse = RETAIN(cachedResponse);
-      this->client = client;	// Not retained
+        this->request = [request copy];
+        this->cachedResponse = RETAIN(cachedResponse);
+        this->client = client;	// Not retained
     }
-  return self;
+    return self;
 }
 
 - (NSURLRequest *) request
 {
-  return this->request;
+    return this->request;
 }
 
 /* This method is here so that it's safe to set debug on any NSURLProtocol
@@ -568,7 +553,7 @@ static NSURLProtocol	*placeholder = nil;
  */
 - (void) setDebug: (BOOL)flag
 {
-  return;
+    return;
 }
 
 @end
@@ -614,7 +599,7 @@ static NSURLProtocol	*placeholder = nil;
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request
 {
-    return [[[request URL] scheme] isEqualToString: @"http"];
+    return [[[request URL] scheme] isEqualToString:@"http"];
 }
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request
@@ -624,8 +609,14 @@ static NSURLProtocol	*placeholder = nil;
 
 - (id)init
 {
-    if (nil != (self = [super init]))
+    if (self = [super init])
     {
+        _parser = nil;
+        _body = nil;
+        _writeData = nil;
+        _challenge = nil;
+        _credential = nil;
+        _response = nil;
         _state = NSHTTPURLProtocolStateStopped;
         _debug = GSDebugSet(@"NSURLProtocol");
     }
@@ -634,11 +625,12 @@ static NSURLProtocol	*placeholder = nil;
 
 - (void)dealloc
 {
-    [[NSRunLoop currentRunLoop] cancelPerformSelectorsWithTarget:self];
-    [_parser release];			// received headers
-    [_body release];			// for sending the body
-    [_response release];
+    [_parser release];  /* received headers */
+    [_body release];    /* for sending the body */
+    [_writeData release];
+    [_challenge release];
     [_credential release];
+    [_response release];
     [super dealloc];
 }
 
@@ -811,6 +803,8 @@ PostponeSelector(id self, SEL _cmd, id argument)
         port = [[url scheme] isEqualToString:@"https"] ? 443 : 80;
     }
     
+    /* todo: support keep-alive, check if we already have a connection to this host */
+    
     [NSStream getStreamsToHost:host
                           port:port
                    inputStream:&this->input
@@ -873,25 +867,26 @@ PostponeSelector(id self, SEL _cmd, id argument)
 }
 
 - (void)stopLoading
-{
+{    
     if (_debug == YES)
     {
         NSLog(@"%@ stopLoading", self);
     }
+    
     [[NSRunLoop currentRunLoop] cancelPerformSelectorsWithTarget:self];
     _state = NSHTTPURLProtocolStateStopped;
     DESTROY(_writeData);
-    if (this->input != nil)
-    {
-        [this->input setDelegate:nil];
-        [this->output setDelegate:nil];
-        [this->input removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        [this->output removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        [this->input close];
-        [this->output close];
-        DESTROY(this->input);
-        DESTROY(this->output);
-    }
+    
+    /* todo: support keep-alive, check _shouldClose */
+    
+    [this->input setDelegate:nil];
+    [this->output setDelegate:nil];
+    [this->input removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [this->output removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [this->input close];
+    [this->output close];
+    DESTROY(this->input);
+    DESTROY(this->output);
 }
 
 - (void)_got:(NSStream *)stream
@@ -900,7 +895,7 @@ PostponeSelector(id self, SEL _cmd, id argument)
     NSInteger readCount = [(NSInputStream *)stream read:buffer maxLength:sizeof(buffer)];
     if (readCount < 0)
     {
-        if ([stream  streamStatus] == NSStreamStatusError)
+        if ([stream streamStatus] == NSStreamStatusError)
         {
             NSError *error = [stream streamError];
             if (_debug)
@@ -1303,18 +1298,7 @@ PostponeSelector(id self, SEL _cmd, id argument)
 
 - (void)_handleFinish
 {
-    [this->input removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [this->output removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    
-    if (_shouldClose == YES)
-    {
-        [this->input setDelegate:nil];
-        [this->output setDelegate:nil];
-        [this->input close];
-        [this->output close];
-        DESTROY(this->input);
-        DESTROY(this->output);
-    }
+    [self stopLoading];
 }
 
 - (void)stream:(NSStream *)stream handleEvent:(NSStreamEvent)event
@@ -1323,7 +1307,7 @@ PostponeSelector(id self, SEL _cmd, id argument)
     NSLog(@"stream: %@ handleEvent: %x for: %@ (ip %p, op %p)", stream, event, self, this->input, this->output);
 #endif
     
-    if (stream == this->input) 
+    if (stream == this->input)
     {
         switch(event)
         {
@@ -1553,13 +1537,6 @@ PostponeSelector(id self, SEL _cmd, id argument)
                     if (_debug)
                     {
                         NSLog(@"%@ request sent", self);
-                    }
-                    if (_shouldClose == YES)
-                    {
-                        [this->output setDelegate: nil];
-                        [this->output removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-                        [this->output close];
-                        DESTROY(this->output);
                     }
                 }
                 return;  // done
