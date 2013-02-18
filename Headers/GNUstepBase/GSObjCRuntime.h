@@ -321,7 +321,7 @@ GSGetSizeAndAlignment (const char *type, size_t *sizep, uint8_t *alignp);
   
 #else
     
-  GS_INLINE IMP
+  NS_INLINE IMP
   GSObjCMethodForSelector(id object, SEL selector)
   {
     /* The Apple runtime API would do:
