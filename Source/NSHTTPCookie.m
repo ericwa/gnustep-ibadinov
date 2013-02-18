@@ -783,7 +783,6 @@ GSPropertyListFromCookieFormat(NSString *string, NSInteger version, NSError **er
 	      DESTROY(dict);
 	      break;
 	    }
-          skipSpace(pld);
 	  if (_setCookieKey(dict, key, val) == NO)
 	    {
 	      pld->err = @"invalid cookie pair";
@@ -791,7 +790,7 @@ GSPropertyListFromCookieFormat(NSString *string, NSInteger version, NSError **er
 	    }
 	  RELEASE(key);
 	  RELEASE(val);
-	  if (pld->ptr[pld->pos] == ';')
+	  if (skipSpace(pld) && pld->ptr[pld->pos] == ';')
 	    {
 	      pld->pos++;
 	    }

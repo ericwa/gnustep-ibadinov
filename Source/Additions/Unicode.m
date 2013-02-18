@@ -673,7 +673,7 @@ uni_is_decomp(unichar u)
       unichar	code;
       unichar	count = 0;
       unichar	first = 0;
-      unichar	last = uni_dec_table_size;
+      unichar	last = uni_dec_table_size - 1;
 
       while (first <= last)
 	{

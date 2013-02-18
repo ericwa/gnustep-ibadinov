@@ -369,13 +369,15 @@ typedef struct
     }
 }
 
+#if __has_feature(objc_arc)
+#  define RETAIN_AUTORELEASE(object) __strong id __strong_##object = object;
+#else
+#  define RETAIN_AUTORELEASE(object) [[self retain] autorelease];
+#endif
+
 - (void)URLProtocol:(NSURLProtocol *)protocol wasRedirectedToRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse
 {
-#if __has_feature(objc_arc)
-    __strong id myself = self;
-#else
-    [[self retain] autorelease];
-#endif
+    RETAIN_AUTORELEASE(self);
     
     if (this->_debug)
     {

@@ -252,6 +252,7 @@ static char *buildURL(parsedURL *base, parsedURL *rel, BOOL standardize)
       len += strlen(rel->fragment) + 1;		// #fragment
     }
 
+  len += 1; // '\0' byte
 #if	GS_WITH_GC
   ptr = buf = (char*)NSAllocateCollectable(len, 0);
 #else

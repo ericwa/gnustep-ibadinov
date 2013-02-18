@@ -438,100 +438,57 @@ static RunLoopEventType typeForStream(NSStream *aStream)
   NSEndMapTableEnumeration(&enumerator);
 }
 
+- (void) _scheduleEvent: (NSStreamEvent)anEvent
+{
+  NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
+  NSArray *modes = (NSArray *)NSMapGet(_loops, (void *)currentRunLoop);
+  [currentRunLoop performSelector:@selector(_dispatchEvent:)
+                           target:self
+                         argument:[NSNumber numberWithUnsignedInteger:anEvent]
+                            order:0
+                            modes:modes];
+}
+
+- (void) _dispatchEvent:(NSNumber *)anEvent
+{
+  NSStreamEvent event = (NSStreamEvent)[anEvent unsignedIntegerValue];
+  if ((_events & event) == 0)
+	{
+      _events |= event;
+      if (_delegateValid == YES)
+	    {
+          [_delegate stream:self handleEvent:event];
+	    }
+	}
+}
+
 - (void) _sendEvent: (NSStreamEvent)event
 {
-#if __has_feature(objc_arc)
-    __strong id myself = self;
-#else
-    [[self retain] autorelease];
-#endif
-
-  if (event == NSStreamEventNone)
+  switch (event)
     {
-      return;
-    }
-  else if (event == NSStreamEventOpenCompleted)
-    {
-      if ((_events & event) == 0)
-	{
-	  _events |= NSStreamEventOpenCompleted;
-	  if (_delegateValid == YES)
-	    {
-	      [_delegate stream: self
-		    handleEvent: NSStreamEventOpenCompleted];
-	    }
-	}
-    }
-  else if (event == NSStreamEventHasBytesAvailable)
-    {
-      if ((_events & NSStreamEventOpenCompleted) == 0)
-	{
-	  _events |= NSStreamEventOpenCompleted;
-	  if (_delegateValid == YES)
-	    {
-	      [_delegate stream: self
-		    handleEvent: NSStreamEventOpenCompleted];
-	    }
-	}
-      if ((_events & NSStreamEventHasBytesAvailable) == 0)
-	{
-	  _events |= NSStreamEventHasBytesAvailable;
-	  if (_delegateValid == YES)
-	    {
-	      [_delegate stream: self
-		    handleEvent: NSStreamEventHasBytesAvailable];
-	    }
-	}
-    }
-  else if (event == NSStreamEventHasSpaceAvailable)
-    {
-      if ((_events & NSStreamEventOpenCompleted) == 0)
-	{
-	  _events |= NSStreamEventOpenCompleted;
-	  if (_delegateValid == YES)
-	    {
-	      [_delegate stream: self
-		    handleEvent: NSStreamEventOpenCompleted];
-	    }
-	}
-      if ((_events & NSStreamEventHasSpaceAvailable) == 0)
-	{
-	  _events |= NSStreamEventHasSpaceAvailable;
-	  if (_delegateValid == YES)
-	    {
-	      [_delegate stream: self
-		    handleEvent: NSStreamEventHasSpaceAvailable];
-	    }
-	}
-    }
-  else if (event == NSStreamEventErrorOccurred)
-    {
-      if ((_events & NSStreamEventErrorOccurred) == 0)
-	{
-	  _events |= NSStreamEventErrorOccurred;
-	  if (_delegateValid == YES)
-	    {
-	      [_delegate stream: self
-		    handleEvent: NSStreamEventErrorOccurred];
-	    }
-	}
-    }
-  else if (event == NSStreamEventEndEncountered)
-    {
-      if ((_events & NSStreamEventEndEncountered) == 0)
-	{
-	  _events |= NSStreamEventEndEncountered;
-	  if (_delegateValid == YES)
-	    {
-	      [_delegate stream: self
-		    handleEvent: NSStreamEventEndEncountered];
-	    }
-	}
-    }
-  else
-    {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"Unknown event (%d) passed to _sendEvent:", event];
+      case NSStreamEventNone:
+        {
+          break;
+        }
+      case NSStreamEventErrorOccurred:
+      case NSStreamEventOpenCompleted:
+      case NSStreamEventEndEncountered:
+        {
+          [self _scheduleEvent:event];
+          break;
+        }
+      case NSStreamEventHasBytesAvailable:
+      case NSStreamEventHasSpaceAvailable:
+        {
+          [self _scheduleEvent:NSStreamEventOpenCompleted];
+          [self _scheduleEvent:event];
+          break;
+        }
+      default:
+        {
+          [NSException raise:NSInvalidArgumentException
+                      format:@"Unknown event (%lu) passed to _sendEvent:", (unsigned long)event];
+        }
     }
 }
 

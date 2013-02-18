@@ -1770,9 +1770,15 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
             forKey: NSKeyValueChangeKindKey];
           [pathInfo notifyForKey: aKey ofInstance: [info instance] prior: NO];
         }
-      if (pathInfo->recursion > 0)
+      /* pathInfo may be changed at this point */
+      pathInfo = [info lockReturningPathInfoForKey: aKey];
+      if (pathInfo != nil)
         {
-          pathInfo->recursion--;
+          if (pathInfo->recursion > 0)
+            {
+                pathInfo->recursion--;
+            }
+          [info unlock];
         }
       [info unlock];
     }
