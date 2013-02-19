@@ -970,7 +970,7 @@ execute_xpath(xmlNodePtr node, NSString *xpath_exp, NSDictionary *constants,
   NSXMLElement *e;
   
   e = [[NSXMLElement alloc] initWithName: name stringValue: string];
-  return e;
+  return [e autorelease];
 }
 
 + (NSString*) localNameForName: (NSString*)name

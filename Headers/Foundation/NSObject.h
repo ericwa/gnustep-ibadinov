@@ -28,7 +28,6 @@
 #define __NSObject_h_GNUSTEP_BASE_INCLUDE
 
 #import	<Foundation/NSObjCRuntime.h>
-#import <objc/objc.h>
 #import	<Foundation/NSZone.h>
 
 #ifndef	GS_WITH_GC

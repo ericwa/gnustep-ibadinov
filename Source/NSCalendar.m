@@ -629,10 +629,12 @@ static NSRecursiveLock *classLock = nil;
 {
   NSString	*s = [decoder decodeObject];
 
-  [self initWithCalendarIdentifier: s];
-  [self _setLocaleIdentifier: [decoder decodeObject]];
-  [self setTimeZone: [decoder decodeObject]];
-  
+  if (self = [self initWithCalendarIdentifier: s])
+  {
+      [self _setLocaleIdentifier: [decoder decodeObject]];
+      [self setTimeZone: [decoder decodeObject]];
+  }
+
   return self;
 }
 

@@ -2038,7 +2038,7 @@ static BOOL isPlistObject(id o)
                   (*addImp)(dictRep, addSel, dict);
                 }
 	    }
-          [dictRep makeImmutableCopyOnFail: NO];
+          dictRep = [dictRep makeImmutable];
           _dictionaryRep = dictRep;
         }
       rep = [[_dictionaryRep retain] autorelease];

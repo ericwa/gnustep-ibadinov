@@ -1899,13 +1899,13 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 {
   id copy;
 
-  copy = [[[GSMutableStringClass allocWithZone: NSDefaultMallocZone()]
-    initWithString: self] autorelease];
+  copy = [[GSMutableStringClass allocWithZone: NSDefaultMallocZone()]
+    initWithString: self];
   [copy replaceOccurrencesOfString: replace
                         withString: by
                            options: opts
                              range: searchRange];
-  return [copy makeImmutableCopyOnFail: NO];
+  return [[copy makeImmutable] autorelease];
 }
 
 - (NSString*) stringByReplacingOccurrencesOfString: (NSString*)replace
@@ -1927,10 +1927,10 @@ static UCollator *GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *local
 {
   id	copy;
 
-  copy = [[[GSMutableStringClass allocWithZone: NSDefaultMallocZone()]
-    initWithString: self] autorelease];
+  copy = [[GSMutableStringClass allocWithZone: NSDefaultMallocZone()]
+    initWithString: self];
   [copy replaceCharactersInRange: aRange withString: by];
-  return [copy makeImmutableCopyOnFail: NO];
+  return [[copy makeImmutable] autorelease];
 }
 
 /**

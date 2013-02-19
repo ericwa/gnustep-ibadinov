@@ -93,6 +93,10 @@ static Class	NSDate_class;
 	       userInfo: (id)info
 		repeats: (BOOL)f
 {
+    if (!(self = [super init]))
+    {
+        return nil;
+    }
   if (ti <= 0.0)
     {
       ti = 0.0001;

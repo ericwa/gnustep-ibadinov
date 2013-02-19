@@ -117,7 +117,7 @@ static BOOL     initialized = NO;
          ascending: (BOOL) ascending
           selector: (SEL) selector
 {
-  if ([self init])
+  if (self = [self init])
     {
       if (key == nil)
         {
@@ -332,11 +332,11 @@ GSSortUnstableConcurrent(id* buffer, NSRange range, id descriptorOrComparator,
 
 - (NSArray *) sortedArrayUsingDescriptors: (NSArray *) sortDescriptors
 {
-  NSMutableArray *sortedArray = [GSMutableArray arrayWithArray: self];
+  NSMutableArray *sortedArray = [[GSMutableArray alloc] initWithArray: self];
 
   [sortedArray sortUsingDescriptors: sortDescriptors];
 
-  return [sortedArray makeImmutableCopyOnFail: NO];
+  return [[sortedArray makeImmutable] autorelease];
 }
 
 @end

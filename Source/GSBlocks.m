@@ -21,6 +21,7 @@
    */ 
 
 #import "Foundation/NSObject.h"
+#import "GNUstepBase/GSObjCRuntime.h"
 
 /* 
  * It conflicts with the NeXT runtime (they use const void*), 

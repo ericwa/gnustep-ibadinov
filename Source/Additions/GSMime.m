@@ -3440,7 +3440,7 @@ static NSCharacterSet	*tokenSet = nil;
       NSEnumerator	*e;
       NSString		*k;
 
-      m = [[value mutableCopy] autorelease];
+      m = [value mutableCopy];
       e = [params keyEnumerator];
       while ((k = [e nextObject]) != nil)
 	{
@@ -3452,7 +3452,7 @@ static NSCharacterSet	*tokenSet = nil;
 	  [m appendString: @"="];
 	  [m appendString: v];
 	}
-      return [m makeImmutableCopyOnFail: YES];
+      return [[m makeImmutable] autorelease];
     }
   else
     {
@@ -3597,7 +3597,7 @@ static NSCharacterSet	*tokenSet = nil;
   NSEnumerator		*e;
   NSString		*k;
 
-  m = [NSMutableDictionary dictionaryWithCapacity: [params count]];
+  m = [[NSMutableDictionary alloc] initWithCapacity: [params count]];
   e = [params keyEnumerator];
   if (preserve == YES)
     {
@@ -3613,7 +3613,7 @@ static NSCharacterSet	*tokenSet = nil;
 	  [m setObject: [params objectForKey: k] forKey: [k lowercaseString]];
 	}
     }
-  return [m makeImmutableCopyOnFail: YES];
+  return [[m makeImmutable] autorelease];
 }
 
 static NSUInteger
@@ -7167,6 +7167,7 @@ GS_PRIVATE_INTERNAL(GSMimeSMTPClient)
       if (sep != ' ' && sep != '-')
 	{
 	  NSLog(@"Server made illegal response ... %@", s);
+	  RELEASE(s);
 	  [self _shutdown: [self _response: @"bad format"]];
 	  return;
 	}

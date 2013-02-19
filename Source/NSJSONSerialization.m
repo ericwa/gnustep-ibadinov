@@ -385,7 +385,7 @@ parseString(ParserState *state)
     }
   if (!state->mutableStrings)
     {
-      val = [val makeImmutableCopyOnFail: YES];
+      val = [val makeImmutable];
     }
   // Consume the trailing "
   consumeChar(state);
@@ -508,7 +508,7 @@ parseArray(ParserState *state)
   consumeChar(state);
   if (!state->mutableContainers)
     {
-      array = [array makeImmutableCopyOnFail: YES];
+      array = [array makeImmutable];
     }
   return array;
 }
@@ -569,7 +569,7 @@ parseObject(ParserState *state)
   consumeChar(state);
   if (!state->mutableContainers)
     {
-      dict = [dict makeImmutableCopyOnFail: YES];
+      dict = [dict makeImmutable];
     }
   return dict;
 
@@ -939,6 +939,7 @@ writeObject(id obj, NSMutableString *output, NSInteger tabs)
 	  *error = [NSError errorWithDomain: NSCocoaErrorDomain
 				       code: 0
 				   userInfo: userInfo];
+	  [userInfo release];
 	}
     }
   [str release];

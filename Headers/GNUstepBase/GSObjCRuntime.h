@@ -30,6 +30,7 @@
 #ifndef __GSObjCRuntime_h_GNUSTEP_BASE_INCLUDE
 #define __GSObjCRuntime_h_GNUSTEP_BASE_INCLUDE
 
+#import <Foundation/NSObjCRuntime.h>
 #import <GNUstepBase/GSVersionMacros.h>
 #import <GNUstepBase/GSConfig.h>
 
@@ -64,32 +65,6 @@
 #else
 #  /* We emulate an ObjC2 runtime. */
 #  include <ObjectiveC2/objc/runtime.h>
-#endif
-
-#if !defined(GS_INLINE)
-#  if defined(__GNUC__)
-#    define GS_INLINE static __inline__ __attribute__((always_inline))
-#  elif defined(__cplusplus) || defined(__MWERKS__)
-#    define GS_INLINE static inline
-#  elif defined(_MSC_VER)
-#    define GS_INLINE static __inline
-#  else
-#    define GS_INLINE inline
-#  endif
-#endif
-
-#define NS_INLINE GS_INLINE
-
-#ifndef YES
-#  define YES		1
-#endif
-#
-#ifndef NO
-#  define NO		0
-#endif
-#
-#ifndef nil
-#  define nil		0
 #endif
 
 
@@ -138,10 +113,30 @@
 #  define _C_GCINVISIBLE  '!'
 #endif
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+    
+/* Logging */
+/**
+ *  OpenStep spec states that log messages go to stderr, but just in case
+ *  someone wants them to go somewhere else, they can implement a function
+ *  like this and assign a pointer to it to _NSLog_printf_handler.
+ */
+typedef void NSLog_printf_handler (NSString* message);
+GS_EXPORT NSLog_printf_handler	*_NSLog_printf_handler;
+GS_EXPORT int	_NSLogDescriptor;
+@class NSRecursiveLock;
+GS_EXPORT NSRecursiveLock	*GSLogLock(void);
+    
+#if defined(__clang__) && defined(__OBJC__)
+static inline void gs_consumed(id NS_CONSUMED o) __attribute__ ((unused));
+static inline void gs_consumed(id NS_CONSUMED __attribute__ ((unused))o) { return; }
+#  define GS_CONSUMED(O) gs_consumed(O);
+#else
+#  define GS_CONSUMED(O)
+#endif
+
 
 /* type mangling is compiler independent so we can safely this by hand */
 
@@ -247,13 +242,13 @@ GSObjCParseTypeSpecification (const char *cursor,
                               void *context,
                               unsigned options);
 
-GS_INLINE size_t
+NS_INLINE size_t
 GSObjCPadSize (size_t size, uint8_t alignment)
 {
   return alignment * ((size + alignment - 1) / alignment);
 }
 
-GS_INLINE size_t
+NS_INLINE size_t
 GSObjCGetPadding (size_t size, uint8_t alignment)
 {
   return (alignment - (size & (alignment - 1))) & (alignment - 1);
@@ -265,7 +260,7 @@ GSGetSizeAndAlignment (const char *type, size_t *sizep, uint8_t *alignp);
 
 #if defined(NeXT_RUNTIME)
     
-  GS_INLINE IMP
+  NS_INLINE IMP
   GSObjCMethodForSelector(id object, SEL selector)
   {
     return class_getMethodImplementation (object_getClass(object), 
@@ -326,7 +321,7 @@ GSGetSizeAndAlignment (const char *type, size_t *sizep, uint8_t *alignp);
   
 #else
     
-  GS_INLINE IMP
+  NS_INLINE IMP
   GSObjCMethodForSelector(id object, SEL selector)
   {
     /* The Apple runtime API would do:
@@ -359,10 +354,10 @@ GSObjCFindVariable(id obj, const char *name,
 		   const char **type, size_t *size, ptrdiff_t *offset);
 
 GS_EXPORT void
-GSObjCGetVariable(id obj, int offset, unsigned int size, void *data);
+GSObjCGetVariable(id obj, ptrdiff_t offset, size_t size, void *data);
 
 GS_EXPORT void
-GSObjCSetVariable(id obj, int offset, unsigned int size, const void *data);
+GSObjCSetVariable(id obj, ptrdiff_t offset, size_t size, const void *data);
 
 GS_EXPORT NSArray *
 GSObjCMethodNames(id obj, BOOL recurse);

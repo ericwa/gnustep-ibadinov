@@ -81,13 +81,11 @@
   return class_isMetaClass([self class]) ? NO : YES;
 }
 
-- (id) makeImmutableCopyOnFail: (BOOL)force
+- (id) makeImmutable
 {
-  if (force == YES)
-    {
-      return AUTORELEASE([self copy]);
-    }
-  return self;
+    id result = [self copy];
+    [self release];
+    return self = result;
 }
 
 - (id) notImplemented: (SEL)aSel
@@ -203,6 +201,13 @@ handleExit()
   exited = l;
   [gnustep_global_lock unlock];
   return l->obj;
+}
+
++ (id) leakRetained: (id)anObject
+{
+  id result = [self leak:anObject];
+  [anObject release];
+  return result;
 }
 
 + (BOOL) registerAtExit

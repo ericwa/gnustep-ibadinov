@@ -31,19 +31,6 @@
    Boston, MA 02111 USA.
 */
 
-/* Warning -	[-initWithString:attributes:] is the designated initialiser,
- *		but it doesn't provide any way to perform the function of the
- *		[-initWithAttributedString:] initialiser.
- *		In order to work round this, the string argument of the
- *		designated initialiser has been overloaded such that it
- *		is expected to accept an NSAttributedString here instead of
- *		a string.  If you create an NSAttributedString subclass, you
- *		must make sure that your implementation of the initialiser
- *		copes with either an NSString or an NSAttributedString.
- *		If it receives an NSAttributedString, it should ignore the
- *		attributes argument and use the values from the string.
- */
-
 #import "common.h"
 #import "GNUstepBase/GSLock.h"
 #import "GNUstepBase/NSMutableString+GNUstepBase.h"
@@ -456,50 +443,52 @@ _attributesAtIndexEffectiveRange(
   unlockImp = [attrLock methodForSelector: unlockSel];
 }
 
-- (id) initWithString: (NSString*)aString
-	   attributes: (NSDictionary*)attributes
+- (id)initWithString:(NSString *)aString attributes:(NSDictionary *)attributes
 {
-  NSZone	*z = [self zone];
-
-  if (nil == aString)
+    if (!(self = [super initWithString:aString attributes:attributes]))
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"aString object passed to -[GSAttributedString initWithString:attributes:] is nil"];
+        return nil;
     }
-  if (![aString respondsToSelector: @selector(length)])
-    {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"aString object passed to -[GSAttributedString initWithString:attributes:] does not respond to -length"];
-    }
-
-  _infoArray = [[NSMutableArray allocWithZone: z] initWithCapacity: 1];
-  if (aString != nil && [aString isKindOfClass: [NSAttributedString class]])
-    {
-      NSAttributedString	*as = (NSAttributedString*)aString;
-      NSUInteger          len;
-
-      aString = [as string];
-      len = [aString length];
-      _setAttributesFrom(as, NSMakeRange(0, len), _infoArray);
-    }
-  else
-    {
-      GSAttrInfo	*info;
-
-      if (attributes == nil)
+    
+    NSZone	*zone = [self zone];
+    GSAttrInfo	*info;
+    
+    _infoArray = [[NSMutableArray allocWithZone:zone] initWithCapacity:1];
+    if (attributes == nil)
 	{
-	  attributes = blank;
+        attributes = blank;
 	}
-      attributes = cacheAttributes(attributes);
-      info = NEWINFO(z, attributes, 0);
-      ADDOBJECT(info);
-      RELEASE(info);
+    attributes = cacheAttributes(attributes);
+    info = NEWINFO(zone, attributes, 0);
+    ADDOBJECT(info);
+    RELEASE(info);
+    
+    _textChars = [aString copyWithZone: zone];
+    return self;
+}
+
+- (id)initWithAttributedString:(NSAttributedString *)attributedString
+{
+    if (!(self = [super initWithAttributedString:attributedString]))
+    {
+        return nil;
     }
-  if (aString == nil)
-    _textChars = @"";
-  else
-    _textChars = [aString copyWithZone: z];
-  return self;
+    
+    NSZone *zone = [self zone];
+    NSString *string = [attributedString string];
+    
+    _infoArray = [[NSMutableArray allocWithZone:zone] initWithCapacity:1];
+    _setAttributesFrom(attributedString, NSMakeRange(0, [string length]), _infoArray);
+    
+    if (string == nil)
+    {
+        _textChars = @"";
+    }
+    else
+    {
+        _textChars = [string copyWithZone:zone];
+    }
+    return self;
 }
 
 - (NSString*) string
@@ -541,8 +530,10 @@ _attributesAtIndexEffectiveRange(
 #define	SANITY()	
 #endif
 
-/* We always compile in this method so that it is available from
- * regression test cases.  */
+/*
+ * We always compile in this method so that it is available from
+ * regression test cases.
+ */
 - (void) _sanity
 {
   GSAttrInfo	*info;
@@ -565,61 +556,77 @@ _attributesAtIndexEffectiveRange(
 
 + (void) initialize
 {
-  [GSAttributedString class];	// Ensure immutable class is initialised
+    [GSAttributedString class];	/* Ensure immutable class is initialised */
 }
 
-- (id) initWithString: (NSString*)aString
-	   attributes: (NSDictionary*)attributes
+- (id)initWithString:(NSString *)aString attributes:(NSDictionary *)attributes
 {
-  NSZone	*z = [self zone];
-
-  if (nil == aString)
+    if (!(self = [super initWithString:aString attributes:attributes]))
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"aString object passed to -[GSAttributedString initWithString:attributes:] is nil"];
+        return nil;
     }
-  if (![aString respondsToSelector: @selector(length)])
+  
+    NSZone *zone = [self zone];
+    GSAttrInfo *info;
+    
+    _infoArray = [[NSMutableArray allocWithZone:zone] initWithCapacity:1];
+    if (attributes == nil)
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"aString object passed to -[GSAttributedString initWithString:attributes:] does not respond to -length"];
+        attributes = blank;
     }
+    attributes = cacheAttributes(attributes);
+    info = NEWINFO(zone, attributes, 0);
+    ADDOBJECT(info);
+    RELEASE(info);
+    
+    /*
+     * WARNING!
+     *
+     * NSLayoutManager depends on the fact that we create the _textChars 
+     * instance variable by copying the aString argument to get
+     * its own string subclass into the attributed string.
+     */
+    _textChars = [aString mutableCopyWithZone:zone];
+    SANITY();
+    return self;
+}
 
-  _infoArray = [[NSMutableArray allocWithZone: z] initWithCapacity: 1];
-  if (aString != nil && [aString isKindOfClass: [NSAttributedString class]])
+- (id)initWithAttributedString:(NSAttributedString *)attributedString
+{
+    if (!(self = [super initWithAttributedString:attributedString]))
     {
-      NSAttributedString	*as = (NSAttributedString*)aString;
-
-      aString = [as string];
-      _setAttributesFrom(as, NSMakeRange(0, [aString length]), _infoArray);
+        return nil;
     }
-  else
+    
+    NSZone *zone = [self zone];
+    NSString *string = [attributedString string];
+    
+    _infoArray = [[NSMutableArray allocWithZone:zone] initWithCapacity:1];
+    _setAttributesFrom(attributedString, NSMakeRange(0, [string length]), _infoArray);
+    
+    /*
+     * WARNING!
+     *
+     * NSLayoutManager depends on the fact that we create the _textChars 
+     * instance variable by copying the aString argument to get
+     * its own string subclass into the attributed string.
+     */
+    if (string == nil)
     {
-      GSAttrInfo	*info;
-
-      if (attributes == nil)
-        {
-          attributes = blank;
-        }
-      attributes = cacheAttributes(attributes);
-      info = NEWINFO(z, attributes, 0);
-      ADDOBJECT(info);
-      RELEASE(info);
+        _textChars = [[NSMutableString allocWithZone:zone] init];
     }
-/* WARNING ... NSLayoutManager depends on the fact that we create the
- * _textChars instance variable by copying the aString argument to get
- * its own string subclass into the attributed string.
- */
-  if (aString == nil)
-    _textChars = [[NSMutableString allocWithZone: z] init];
-  else
-    _textChars = [aString mutableCopyWithZone: z];
-SANITY();
-  return self;
+    else
+    {
+        _textChars = [string mutableCopyWithZone:zone];
+    }
+    SANITY();
+    return self;
 }
 
 - (NSString*) string
 {
-  /* NB. This method is SUPPOSED to return a proxy to the mutable string!
+  /*
+   * NB. This method is SUPPOSED to return a proxy to the mutable string!
    * This is a performance feature documented ifor OSX.
    */
   if (_textProxy == nil)
@@ -924,10 +931,12 @@ SANITY();
   [super dealloc];
 }
 
-// The superclass implementation is correct but too slow
+/*
+ * The superclass implementation is correct but too slow
+ */
 - (NSUInteger) length
 {
-  return [_textChars length];
+    return [_textChars length];
 }
 
 @end

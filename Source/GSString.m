@@ -1238,8 +1238,7 @@ fixBOM(unsigned char **bytes, NSUInteger*length, BOOL *owned,
       unichar   *u = 0;
       NSUInteger l = 0;
 
-      if (GSToUnicode(&u, &l, chars.c, length, encoding,
-	[self zone], 0) == NO)
+      if (GSToUnicode(&u, &l, chars.c, length, encoding, [self zone], 0) == NO)
 	{
 	  if (flag == YES && chars.c != 0)
 	    {
@@ -4915,7 +4914,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
   return [super lowercaseString];
 }
 
-- (id) makeImmutableCopyOnFail: (BOOL)force
+- (id) makeImmutable
 {
 NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
   if (_flags.wide == 1)

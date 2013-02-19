@@ -706,7 +706,7 @@ prepareResult(NSRegularExpression *regex,
   utext_close(&txt);
   utext_close(output);
   utext_close(&replacement);
-  return ret;
+  return [ret autorelease];
 }
 
 - (NSString*) replacementStringForResult: (NSTextCheckingResult*)result

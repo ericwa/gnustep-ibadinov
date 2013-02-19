@@ -163,8 +163,12 @@ __attribute__((unused)) static void GSFreeTempBuffer(void **b)
  * Yet the optimization of the stored hash value is currently deemed
  * more important.
  */
-#define GS_REPLACE_CONSTANT_STRING(ID) [(ID = [NSObject \
-  leak: [[NSString alloc] initWithUTF8String: [ID UTF8String]]]) release]
+#define GS_REPLACE_CONSTANT_STRING(string)                                  \
+do {                                                                        \
+    id copy = [[NSString alloc] initWithUTF8String:[string UTF8String]];    \
+    string = [NSObject leak:copy];                                          \
+    [copy release];                                                         \
+} while (0)
 
 /*
  * Type to hold either UTF-16 (unichar) or 8-bit encodings,

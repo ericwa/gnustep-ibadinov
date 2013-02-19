@@ -123,7 +123,7 @@ static const int8_t typeInfoTable[] =
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wchar-subscripts"
 
-GS_INLINE uint8_t
+NS_INLINE uint8_t
 RoundToThePowerOfTwo (uint8_t value)
 {
   --value;
@@ -133,7 +133,7 @@ RoundToThePowerOfTwo (uint8_t value)
   return ++value;
 }
 
-GS_INLINE const char *
+NS_INLINE const char *
 GetNumericValue (const char *cursor, int *value)
 {
   *value = 0;
@@ -144,7 +144,7 @@ GetNumericValue (const char *cursor, int *value)
   return cursor;
 }
 
-GS_INLINE const char *
+NS_INLINE const char *
 SkipName (const char *cursor)
 {
   if (*cursor == '"')
@@ -154,7 +154,7 @@ SkipName (const char *cursor)
   return cursor;
 }
 
-GS_INLINE const char *
+NS_INLINE const char *
 SkipType (const char *cursor)
 {
   unsigned depth = 0;
@@ -189,7 +189,7 @@ SkipType (const char *cursor)
   return cursor;
 }
 
-GS_INLINE const char *
+NS_INLINE const char *
 GetQualifiers (const char *cursor, uint8_t *qualifiers)
 {
   *qualifiers = 0;
@@ -236,7 +236,7 @@ typedef struct __ParserState
  */
 static const unsigned ParserInitialStackSize = 3;
 
-GS_INLINE ParserStackElement * 
+NS_INLINE ParserStackElement * 
 ParserStackTop (ParserState *state)
 {
   return state->stackSize ? &state->stack[state->stackSize - 1] : NULL;
@@ -540,10 +540,10 @@ int
 objc_sizeof_type (const char* type)
 {
   WeirdInfoAccumulator accumulator = {0, 0};
-  type = GSObjCParseTypeSpecification (type,
-                                       (GSObjCTypeParserDelegate)&WeirdInfoAccumulatorAddInfo,
-                                       &accumulator,
-                                       GSObjCReportArrayOnceMask);
+  GSObjCParseTypeSpecification (type,
+                                (GSObjCTypeParserDelegate)&WeirdInfoAccumulatorAddInfo,
+                                &accumulator,
+                                GSObjCReportArrayOnceMask);
   return (int)accumulator.size;
 }
 
@@ -1061,7 +1061,7 @@ GSObjCVariableNames(id obj, BOOL recurse)
  * and you know that the data area provided is the correct size.
  */
 void
-GSObjCGetVariable(id obj, int offset, unsigned int size, void *data)
+GSObjCGetVariable(id obj, ptrdiff_t offset, size_t size, void *data)
 {
   memcpy(data, ((void*)obj) + offset, size);
 }
@@ -1073,7 +1073,7 @@ GSObjCGetVariable(id obj, int offset, unsigned int size, void *data)
  * and you know that the data area provided is the correct size.
  */
 void
-GSObjCSetVariable(id obj, int offset, unsigned int size, const void *data)
+GSObjCSetVariable(id obj, ptrdiff_t offset, size_t size, const void *data)
 {
   memcpy(((void*)obj) + offset, data, size);
 }
@@ -1445,7 +1445,7 @@ GSRegisterProtocol(Protocol *proto)
 	(GSIMapKey)protocol_getName(proto));
       if (node == 0)
 	{
-	  GSIMapAddPairNoRetain(&protocol_by_name,
+	  GSIMapAddPair(&protocol_by_name,
 	    (GSIMapKey)(void*)protocol_getName(proto),
 	    (GSIMapVal)(void*)proto);
 	}
@@ -1485,7 +1485,7 @@ GSProtocolFromName(const char *name)
 	    {
 	      /* Use the protocol's name to save us from allocating
 		 a copy of the parameter 'name'.  */
-	      GSIMapAddPairNoRetain(&protocol_by_name,
+	      GSIMapAddPair(&protocol_by_name,
 	        (GSIMapKey)(void*)protocol_getName(p),
 		(GSIMapVal)(void*)p);
 	    }

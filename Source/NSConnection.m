@@ -340,15 +340,15 @@ GS_PRIVATE_INTERNAL(NSConnection)
 - (void) addLocalObject: (NSDistantObject*)anObj;
 - (void) removeLocalObject: (NSDistantObject*)anObj;
 
-- (void) _doneInReply: (NSPortCoder*)c;
-- (void) _doneInRmc: (NSPortCoder*)c;
-- (void) _failInRmc: (NSPortCoder*)c;
-- (void) _failOutRmc: (NSPortCoder*)c;
+- (void) _doneInReply: (NSPortCoder*) NS_CONSUMED c;
+- (void) _doneInRmc: (NSPortCoder*) NS_CONSUMED c;
+- (void) _failInRmc: (NSPortCoder*) NS_CONSUMED c;
+- (void) _failOutRmc: (NSPortCoder*) NS_CONSUMED c;
 - (NSPortCoder*) _getReplyRmc: (int)sn;
-- (NSPortCoder*) _makeInRmc: (NSMutableArray*)components;
-- (NSPortCoder*) _makeOutRmc: (int)sequence generate: (int*)sno reply: (BOOL)f;
+- (NSPortCoder*) _makeInRmc: (NSMutableArray*)components NS_RETURNS_RETAINED;
+- (NSPortCoder*) _makeOutRmc: (int)sequence generate: (int*)sno reply: (BOOL)f NS_RETURNS_RETAINED;
 - (void) _portIsInvalid: (NSNotification*)notification;
-- (void) _sendOutRmc: (NSPortCoder*)c type: (int)msgid;
+- (void) _sendOutRmc: (NSPortCoder*) NS_CONSUMED c type: (int)msgid;
 
 - (void) _service_forwardForProxy: (NSPortCoder*)rmc;
 - (void) _service_release: (NSPortCoder*)rmc;
@@ -978,6 +978,10 @@ static NSLock	*cached_proxies_gate = nil;
 - (id) initWithReceivePort: (NSPort*)r
 		  sendPort: (NSPort*)s
 {
+    if (!(self = [super init]))
+    {
+        return nil;
+    }
   NSNotificationCenter	*nCenter;
   NSConnection		*parent;
   NSConnection		*conn;
@@ -996,7 +1000,7 @@ static NSLock	*cached_proxies_gate = nil;
 	  NSLog(@"Asked to create connection with nil receive port");
 	}
       DESTROY(self);
-      return self;
+      return nil;
     }
 
   /*
@@ -1016,14 +1020,13 @@ static NSLock	*cached_proxies_gate = nil;
    */
   if (conn != nil)
     {
-      DESTROY(self);
-      self = RETAIN(conn);
       if (debug_connection > 2)
 	{
 	  NSLog(@"Found existing connection (%@) for \n\t%@\n\t%@",
 	    conn, r, s);
 	}
-      return self;
+        DESTROY(self);
+      return RETAIN(conn);
     }
 
   /* Create our private data structure.
@@ -1197,13 +1200,6 @@ static NSLock	*cached_proxies_gate = nil;
 	  DESTROY(self);
 	  return nil;
 	}
-    }
-  /* Here is the GNUstep version, which allows the delegate to specify
-     a substitute.  Note: The delegate is responsible for freeing
-     newConn if it returns something different. */
-  if ([del respondsToSelector: @selector(connection:didConnect:)])
-    {
-      self = [del connection: parent didConnect: self];
     }
 
   nCenter = [NSNotificationCenter defaultCenter];

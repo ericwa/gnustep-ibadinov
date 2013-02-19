@@ -134,8 +134,11 @@ static Class	concreteClass = Nil;
 
 - (id) initWithPointerFunctions: (NSPointerFunctions*)functions
 {
-  [self subclassResponsibility: _cmd];
-  return nil;
+    if ([self class] == [NSPointerArray class]) {
+        [self subclassResponsibility: _cmd];
+        return nil;
+    }
+    return [super init];
 }
 
 - (BOOL) isEqual: (id)other
@@ -263,7 +266,7 @@ static Class	concreteClass = Nil;
     }
   else
     {
-      GSMutableArray	*a = [GSMutableArray arrayWithCapacity: c];
+      GSMutableArray	*a = [[GSMutableArray alloc] initWithCapacity: c];
 
       for (i = 0; i < _count; i++)
         {
@@ -273,7 +276,7 @@ static Class	concreteClass = Nil;
 	      [a addObject: obj];
 	    }
 	}
-      return [a makeImmutableCopyOnFail: NO]; 
+      return [[a makeImmutable] autorelease]; 
     }
 }
 
@@ -436,6 +439,10 @@ static Class	concreteClass = Nil;
 
 - (id) initWithPointerFunctions: (NSPointerFunctions*)functions
 {
+    if (!(self = [super initWithPointerFunctions:functions]))
+    {
+        return nil;
+    }
   if (![functions isKindOfClass: [NSConcretePointerFunctions class]])
     {
       static NSConcretePointerFunctions	*defaultFunctions = nil;

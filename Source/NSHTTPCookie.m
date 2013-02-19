@@ -431,6 +431,7 @@ static BOOL skipSpace(pldata *pld)
   return NO;
 }
 
+static inline id parseQuotedString(pldata* pld) NS_RETURNS_RETAINED;
 static inline id parseQuotedString(pldata* pld)
 {
   NSUInteger	start = ++pld->pos;
@@ -623,8 +624,10 @@ static inline id parseQuotedString(pldata* pld)
   return obj;
 }
 
-/* In cookies, keys are terminated by '=' and values are terminated by ';'
-   or and EOL */
+/*
+ * In cookies, keys are terminated by '=' and values are terminated by ';' or and EOL
+ */
+static inline id parseUnquotedString(pldata *pld, char endChar) NS_RETURNS_RETAINED;
 static inline id parseUnquotedString(pldata *pld, char endChar)
 {
   NSUInteger	start = pld->pos;
@@ -647,12 +650,11 @@ static inline id parseUnquotedString(pldata *pld, char endChar)
       chars[i] = pld->ptr[start + i];
     }
 
-    {
-      obj = [NSString alloc];
-      obj = [obj initWithCharactersNoCopy: chars
-				   length: length
-			     freeWhenDone: YES];
-    }
+
+  obj = [NSString alloc];
+  obj = [obj initWithCharactersNoCopy: chars
+                               length: length
+                         freeWhenDone: YES];
   return obj;
 }
 
@@ -783,7 +785,6 @@ GSPropertyListFromCookieFormat(NSString *string, NSInteger version, NSError **er
 	      DESTROY(dict);
 	      break;
 	    }
-          skipSpace(pld);
 	  if (_setCookieKey(dict, key, val) == NO)
 	    {
 	      pld->err = @"invalid cookie pair";
@@ -791,7 +792,7 @@ GSPropertyListFromCookieFormat(NSString *string, NSInteger version, NSError **er
 	    }
 	  RELEASE(key);
 	  RELEASE(val);
-	  if (pld->ptr[pld->pos] == ';')
+	  if (skipSpace(pld) && pld->ptr[pld->pos] == ';')
 	    {
 	      pld->pos++;
 	    }

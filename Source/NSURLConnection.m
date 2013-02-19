@@ -29,324 +29,310 @@
 #import "Foundation/NSRunLoop.h"
 #import "GSURLPrivate.h"
 
-@interface _NSURLConnectionDataCollector : NSObject
-{
-  NSURLConnection	*_connection;	// Not retained
-  NSMutableData		*_data;
-  NSError		*_error;
-  NSURLResponse		*_response;
-  BOOL			_done;
+@interface _NSURLConnectionDataCollector : NSObject {
+    NSURLConnection	*_connection; /* not retained */
+    NSMutableData   *_data;
+    NSError         *_error;
+    NSURLResponse   *_response;
+    BOOL            _done;
 }
 
-- (NSData*) data;
-- (BOOL) done;
-- (NSError*) error;
-- (NSURLResponse*) response;
-- (void) setConnection: (NSURLConnection *)c;
+- (BOOL)done;
+- (NSData *)data;
+- (NSError *)error;
+- (NSURLResponse *)response;
+
+- (NSURLConnection *)connection;
+- (void)setConnection:(NSURLConnection *)aConnection;
 
 @end
+
 
 @implementation _NSURLConnectionDataCollector
 
-- (void) dealloc
+- (id)init
 {
-  [_data release];
-  [_error release];
-  [_response release];
-  [super dealloc];
-}
-
-- (BOOL) done
-{
-  return _done;
-}
-
-- (NSData*) data
-{
-  return _data;
-}
-
-- (id) init
-{
-  if (nil != (self = [super init]))
+    if (self = [super init])
     {
-      _data = [NSMutableData new];      // Empty data unless we get an error
+        _data = [NSMutableData new]; /* empty data unless we get an error */
     }
-  return self;
+    return self;
 }
 
-- (NSError*) error
+- (void)dealloc
 {
-  return _error;
+    [_data release];
+    [_error release];
+    [_response release];
+    [super dealloc];
 }
 
-- (NSURLResponse*) response
+- (BOOL)done
 {
-  return _response;
+    return _done;
 }
 
-- (void) setConnection: (NSURLConnection*)c
+- (NSData *)data
 {
-  _connection = c;	// Not retained ... the connection retains us
+    return _data;
 }
 
-- (void) connection: (NSURLConnection *)connection
-   didFailWithError: (NSError *)error
+- (NSError *)error
 {
-  ASSIGN(_error, error);
-  DESTROY(_data);       // On error, we make the data nil
-  _done = YES;
+    return _error;
 }
 
-- (void) connection: (NSURLConnection *)connection
- didReceiveResponse: (NSURLResponse*)response
+- (NSURLResponse *)response
 {
-  ASSIGN(_response, response);
+    return _response;
 }
 
-- (void) connectionDidFinishLoading: (NSURLConnection *)connection
+- (NSURLConnection *)connection
 {
-  _done = YES;
+    return _connection;
 }
 
-
-- (void) connection: (NSURLConnection *)connection
-     didReceiveData: (NSData *)data
+- (void)setConnection:(NSURLConnection *)aConnection
 {
-  [_data appendData: data];
+    _connection = aConnection; /* not retained ... the connection retains us */
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    ASSIGN(_error, error);
+    DESTROY(_data); /* on error, we make the data nil */
+    _done = YES;
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    ASSIGN(_response, response);
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    [_data appendData:data];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    _done = YES;
 }
 
 @end
+
 
 typedef struct
 {
-  NSMutableURLRequest		*_request;
-  NSURLProtocol			*_protocol;
-  id				_delegate;	// Not retained
-  BOOL				_debug;
+    NSMutableURLRequest   *_request;
+    NSURLProtocol         *_protocol;
+    id                    _delegate; /* retained */
+    BOOL                  _debug;
 } Internal;
- 
-#define	this	((Internal*)(self->_NSURLConnectionInternal))
-#define	inst	((Internal*)(o->_NSURLConnectionInternal))
+
+#define	this ((Internal*)(self->_NSURLConnectionInternal))
+#define	inst ((Internal*)(o->_NSURLConnectionInternal))
+
 
 @implementation	NSURLConnection
 
-+ (id) allocWithZone: (NSZone*)z
++ (id)allocWithZone:(NSZone *)zone
 {
-  NSURLConnection	*o = [super allocWithZone: z];
-
-  if (o != nil)
+    NSURLConnection	*connection = [super allocWithZone: zone];
+    
+    if (connection != nil)
     {
 #if	GS_WITH_GC
-      o->_NSURLConnectionInternal
-	= NSAllocateCollectable(sizeof(Internal), NSScannedOption);
+        connection->_NSURLConnectionInternal = NSAllocateCollectable(sizeof(Internal), NSScannedOption);
 #else
-      o->_NSURLConnectionInternal = NSZoneCalloc([self zone],
-	1, sizeof(Internal));
+        connection->_NSURLConnectionInternal = NSZoneCalloc([self zone], 1, sizeof(Internal));
 #endif
     }
-  return o;
+    return connection;
 }
 
-+ (BOOL) canHandleRequest: (NSURLRequest *)request
++ (BOOL)canHandleRequest:(NSURLRequest *)request
 {
-  return ([NSURLProtocol _classToHandleRequest: request] != nil);
+    return [NSURLProtocol _classToHandleRequest:request] != nil;
 }
 
-+ (NSURLConnection *) connectionWithRequest: (NSURLRequest *)request
-				   delegate: (id)delegate
++ (NSURLConnection *)connectionWithRequest:(NSURLRequest *)request delegate:(id)delegate
 {
-  NSURLConnection	*o = [self alloc];
-
-  o = [o initWithRequest: request delegate: delegate];
-  return AUTORELEASE(o);
+    return AUTORELEASE([[self alloc] initWithRequest:request delegate:delegate]);
 }
 
-- (void) cancel
+- (id)initWithRequest:(NSURLRequest *)request delegate:(id)delegate startImmediately:(BOOL)startImmediately
 {
-  [this->_protocol stopLoading];
-  DESTROY(this->_protocol);
-  DESTROY(this->_delegate);
-}
-
-- (void) dealloc
-{
-  if (this != 0)
+    if (self = [super init])
     {
-      [self cancel];
-      DESTROY(this->_request);
-      DESTROY(this->_delegate);
-      NSZoneFree([self zone], this);
-      _NSURLConnectionInternal = 0;
+        this->_request = [request mutableCopyWithZone:[self zone]];
+        this->_protocol = nil;
+        /*
+         * According to bug #35686, Cocoa has a bizarre deviation from the convention that delegates are not retained here.
+         * For compatibility we retain the delegate and release it again when the operation is over.
+         */
+        this->_delegate = [delegate retain];
+        this->_debug = GSDebugSet(@"NSURLConnection");
     }
-  [super dealloc];
+    if (startImmediately) {
+        [self start];
+    }
+    return self;
 }
 
-- (void) finalize
+- (id)initWithRequest:(NSURLRequest *)request delegate:(id)delegate
 {
-  if (this != 0)
-    {
-      [self cancel];
-    }
+    return [self initWithRequest:request delegate:delegate startImmediately:YES];
 }
 
-- (id) initWithRequest: (NSURLRequest *)request delegate: (id)delegate
+- (void)dealloc
 {
-  if ((self = [super init]) != nil)
-    {
-      this->_request = [request mutableCopyWithZone: [self zone]];
-
-      /* Enrich the request with the appropriate HTTP cookies,
-       * if desired.
-       */
-      if ([this->_request HTTPShouldHandleCookies] == YES)
-	{
-	  NSArray *cookies;
-
-	  cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage]
-	    cookiesForURL: [this->_request URL]];
-	  if ([cookies count] > 0)
-	    {
-	      NSDictionary	*headers;
-	      NSEnumerator	*enumerator;
-	      NSString		*header;
-
-	      headers = [NSHTTPCookie requestHeaderFieldsWithCookies: cookies];
-	      enumerator = [headers keyEnumerator];
-	      while (nil != (header = [enumerator nextObject]))
-		{
-		  [this->_request addValue: [headers valueForKey: header]
-			forHTTPHeaderField: header];
-		}
-	    }
-	}
-
-      /* According to bug #35686, Cocoa has a bizarre deviation from the
-       * convention that delegates are not retained here.
-       * For compatibility we retain the delegate and release it again
-       * when the operation is over.
-       */
-      this->_delegate = [delegate retain];
-      this->_protocol = [[NSURLProtocol alloc]
-	initWithRequest: this->_request
-	cachedResponse: nil
-	client: (id<NSURLProtocolClient>)self];
-      [this->_protocol startLoading];
-      this->_debug = GSDebugSet(@"NSURLConnection");
-    }
-  return self;
+    [self cancel];
+    DESTROY(this->_request);
+    NSZoneFree([self zone], this);
+    _NSURLConnectionInternal = 0;
+    [super dealloc];
 }
+
+- (void)start
+{
+    /* enrich the request with the appropriate HTTP cookies, if desired */
+    if ([this->_request HTTPShouldHandleCookies] == YES)
+    {
+        NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[this->_request URL]];
+        if ([cookies count] > 0)
+        {
+            NSDictionary *headers = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+            NSEnumerator *enumerator = [headers keyEnumerator];
+            
+            NSString *header;
+            while ((header = [enumerator nextObject]))
+            {
+                [this->_request addValue:[headers valueForKey:header] forHTTPHeaderField:header];
+            }
+        }
+    }
+    this->_protocol = [[NSURLProtocol alloc] initWithRequest:this->_request
+                                              cachedResponse:nil
+                                                      client:(id<NSURLProtocolClient>)self];
+    [this->_protocol startLoading];
+}
+
+- (void)_stop
+{
+    [this->_protocol stopLoading];
+    DESTROY(this->_protocol);
+}
+
+- (void)cancel
+{
+    [self _stop];
+    DESTROY(this->_delegate);
+}
+
+- (void)finalize
+{
+    [self cancel];
+}
+
 
 @end
-
 
 
 @implementation NSObject (NSURLConnectionDelegate)
 
-- (void) connection: (NSURLConnection *)connection
-  didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
+- (void)connection:(NSURLConnection *)connection didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-  return;
+    return;
 }
 
-- (void) connection: (NSURLConnection *)connection
-   didFailWithError: (NSError *)error
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-  return;
+    return;
 }
 
-- (void) connectionDidFinishLoading: (NSURLConnection *)connection
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-  return;
+    return;
 }
 
-- (void) connection: (NSURLConnection *)connection
-  didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
+- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-  [[challenge sender]
-    continueWithoutCredentialForAuthenticationChallenge: challenge];
+    [[challenge sender] continueWithoutCredentialForAuthenticationChallenge:challenge];
 }
 
-- (void) connection: (NSURLConnection *)connection
-     didReceiveData: (NSData *)data
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-  return;
+    return;
 }
 
-- (void) connection: (NSURLConnection *)connection
- didReceiveResponse: (NSURLResponse *)response
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-  return;
+    return;
 }
 
-- (NSCachedURLResponse *) connection: (NSURLConnection *)connection
-  willCacheResponse: (NSCachedURLResponse *)cachedResponse
+- (NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)cachedResponse
 {
-  return cachedResponse;
+    return cachedResponse;
 }
 
-- (NSURLRequest *) connection: (NSURLConnection *)connection
-	      willSendRequest: (NSURLRequest *)request
-	     redirectResponse: (NSURLResponse *)response
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response
 {
-  return request;
+    return request;
 }
 
 @end
 
 
-
 @implementation NSURLConnection (NSURLConnectionSynchronousLoading)
 
-+ (NSData *) sendSynchronousRequest: (NSURLRequest *)request
-		  returningResponse: (NSURLResponse **)response
-			      error: (NSError **)error
++ (NSData *)sendSynchronousRequest:(NSURLRequest *)request returningResponse:(NSURLResponse **)response error:(NSError **)error
 {
-  NSData	*data = nil;
-
-  if (0 != response)
+    NSData *data = nil;
+    
+    if (response)
     {
-      *response = nil;
+        *response = nil;
     }
-  if (0 != error)
+    if (error)
     {
-      *error = nil;
+        *error = nil;
     }
-  if ([self canHandleRequest: request] == YES)
+    if ([self canHandleRequest: request] == YES)
     {
-      _NSURLConnectionDataCollector	*collector;
-      NSURLConnection			*conn;
-
-      collector = [_NSURLConnectionDataCollector new];
-      conn = [[self alloc] initWithRequest: request delegate: collector];
-      [collector release];	// retained by connection
-      if (nil != conn)
+        _NSURLConnectionDataCollector *collector;
+        NSURLConnection *connection;
+        
+        collector = [_NSURLConnectionDataCollector new];
+        connection = [[self alloc] initWithRequest:request delegate:collector];
+        if (connection)
         {
-          NSRunLoop	*loop;
-
-          [collector setConnection: conn];
-          loop = [NSRunLoop currentRunLoop];
-          while ([collector done] == NO)
+            NSRunLoop *loop;
+            
+            [collector setConnection:connection];
+            loop = [NSRunLoop currentRunLoop];
+            while ([collector done] == NO)
             {
-              NSDate	*limit;
-
-              limit = [[NSDate alloc] initWithTimeIntervalSinceNow: 1.0];
-              [loop runMode: NSDefaultRunLoopMode beforeDate: limit];
-              RELEASE(limit);
+                NSDate *limit;
+                
+                limit = [[NSDate alloc] initWithTimeIntervalSinceNow:1.0];
+                [loop runMode:NSDefaultRunLoopMode beforeDate:limit];
+                RELEASE(limit);
             }
-          data = [[[collector data] retain] autorelease];
-          if (0 != response)
+            data = [[[collector data] retain] autorelease];
+            if (response)
             {
-              *response = [[[collector response] retain] autorelease];
+                *response = [[[collector response] retain] autorelease];
             }
-          if (0 != error)
+            if (error)
             {
-              *error = [[[collector error] retain] autorelease];
+                *error = [[[collector error] retain] autorelease];
             }
-          [conn release];
         }
+        [connection release];
+        [collector release];
     }
-  return data;
+    return data;
 }
 
 @end
@@ -354,99 +340,86 @@ typedef struct
 
 @implementation	NSURLConnection (URLProtocolClient)
 
-- (void) URLProtocol: (NSURLProtocol *)protocol
-  cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse
+- (void)URLProtocol:(NSURLProtocol *)protocol cachedResponseIsValid:(NSCachedURLResponse *)cachedResponse
 {
-  return;
+    return;
 }
 
-- (void) URLProtocol: (NSURLProtocol *)protocol
-    didFailWithError: (NSError *)error
+- (void)URLProtocol:(NSURLProtocol *)protocol didFailWithError:(NSError *)error
 {
-  [this->_delegate connection: self didFailWithError: error];
+    [this->_delegate connection: self didFailWithError: error];
 }
 
-- (void) URLProtocol: (NSURLProtocol *)protocol
-	 didLoadData: (NSData *)data
+- (void)URLProtocol:(NSURLProtocol *)protocol didLoadData:(NSData *)data
 {
-  [this->_delegate connection: self didReceiveData: data];
+    [this->_delegate connection:self didReceiveData:data];
 }
 
-- (void) URLProtocol: (NSURLProtocol *)protocol
-  didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
+- (void)URLProtocol: (NSURLProtocol *)protocol didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-  [this->_delegate connection: self
-    didReceiveAuthenticationChallenge: challenge];
+    [this->_delegate connection:self didReceiveAuthenticationChallenge:challenge];
 }
 
-- (void) URLProtocol: (NSURLProtocol *)protocol
-  didReceiveResponse: (NSURLResponse *)response
-  cacheStoragePolicy: (NSURLCacheStoragePolicy)policy
+- (void)URLProtocol:(NSURLProtocol *)protocol didReceiveResponse:(NSURLResponse *)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy
 {
-  [this->_delegate connection: self didReceiveResponse: response];
-  if (policy == NSURLCacheStorageAllowed
-    || policy == NSURLCacheStorageAllowedInMemoryOnly)
+    [this->_delegate connection:self didReceiveResponse:response];
+    if (policy == NSURLCacheStorageAllowed || policy == NSURLCacheStorageAllowedInMemoryOnly)
     {
-      // FIXME ... cache response here?
+        /* FIXME ... cache response here? */
     }
 }
 
-- (void) URLProtocol: (NSURLProtocol *)protocol
-  wasRedirectedToRequest: (NSURLRequest *)request
-  redirectResponse: (NSURLResponse *)redirectResponse
+#if __has_feature(objc_arc)
+#  define RETAIN_AUTORELEASE(object) __strong id __strong_##object = object;
+#else
+#  define RETAIN_AUTORELEASE(object) [[self retain] autorelease];
+#endif
+
+- (void)URLProtocol:(NSURLProtocol *)protocol wasRedirectedToRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse
 {
-  if (this->_debug)
+    RETAIN_AUTORELEASE(self);
+    
+    if (this->_debug)
     {
-      NSLog(@"%@ tell delegate %@ about redirect to %@ as a result of %@",
-        self, this->_delegate, request, redirectResponse);
+        NSLog(@"%@ tell delegate %@ about redirect to %@ as a result of %@", self, this->_delegate, request, redirectResponse);
     }
-  request = [this->_delegate connection: self
-			willSendRequest: request
-		       redirectResponse: redirectResponse];
-  if (this->_protocol == nil)
+    request = [this->_delegate connection:self willSendRequest:request redirectResponse:redirectResponse];
+    if (this->_protocol != nil)
     {
-      if (this->_debug)
-	{
-          NSLog(@"%@ delegate cancelled request", self);
-	}
-      /* Our protocol is nil, so we have been cancelled by the delegate.
-       */
-      return;
+        if (request != nil)
+        {
+            if (this->_debug)
+            {
+                NSLog(@"%@ delegate allowed redirect to %@", self, request);
+            }
+            /* follow the redirect ... stop the old load and start a new one */
+            [self _stop];
+            ASSIGNCOPY(this->_request, request);
+            [self start];
+        }
+        else if (this->_debug)
+        {
+            NSLog(@"%@ delegate cancelled redirect", self);
+        }
     }
-  if (request != nil)
+    else
     {
-      if (this->_debug)
-	{
-          NSLog(@"%@ delegate allowed redirect to %@", self, request);
-	}
-      /* Follow the redirect ... stop the old load and start a new one.
-       */
-      [this->_protocol stopLoading];
-      DESTROY(this->_protocol);
-      ASSIGNCOPY(this->_request, request);
-      this->_protocol = [[NSURLProtocol alloc]
-	initWithRequest: this->_request
-	cachedResponse: nil
-	client: (id<NSURLProtocolClient>)self];
-      [this->_protocol startLoading];
-    }
-  else if (this->_debug)
-    {
-      NSLog(@"%@ delegate cancelled redirect", self);
+        /* our protocol is nil, so we have been cancelled by the delegate */
+        if (this->_debug)
+        {
+            NSLog(@"%@ delegate cancelled request", self);
+        }
     }
 }
 
-- (void) URLProtocolDidFinishLoading: (NSURLProtocol *)protocol
+- (void)URLProtocolDidFinishLoading:(NSURLProtocol *)protocol
 {
-  [this->_delegate connectionDidFinishLoading: self];
+    [this->_delegate connectionDidFinishLoading:self];
 }
 
-- (void) URLProtocol: (NSURLProtocol *)protocol
-  didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
+- (void)URLProtocol:(NSURLProtocol *)protocol didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-  [this->_delegate connection: self
-  didCancelAuthenticationChallenge: challenge];
+    [this->_delegate connection:self didCancelAuthenticationChallenge:challenge];
 }
 
 @end
-

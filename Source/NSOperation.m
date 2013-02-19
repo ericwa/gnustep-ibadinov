@@ -65,6 +65,7 @@
 #import "Foundation/NSKeyValueObserving.h"
 #import "Foundation/NSThread.h"
 #import "GSPrivate.h"
+#import "GNUstepBase/NSObject+GNUstepBase.h"
 
 #define	GSInternal	NSOperationInternal
 #include	"GSInternal.h"
@@ -91,7 +92,7 @@ static NSArray	*empty = nil;
 
 + (void) initialize
 {
-  empty = [NSArray new];
+  empty = [NSObject leakRetained:[NSArray new]];
 }
 
 - (void) addDependency: (NSOperation *)op
@@ -916,6 +917,7 @@ static NSOperationQueue *mainQueue = nil;
 
   for (;;)
     {
+      NSAutoreleasePool	*opPool = [NSAutoreleasePool new];
       NSOperation	*op;
       NSDate		*when;
       BOOL		found;
@@ -925,6 +927,7 @@ static NSOperationQueue *mainQueue = nil;
       [when release];
       if (NO == found)
 	{
+        [opPool release];
 	  break;	// Idle for 5 seconds ... exit thread.
 	}
 
@@ -953,14 +956,11 @@ static NSOperationQueue *mainQueue = nil;
 	{
           NS_DURING
 	    {
-	      NSAutoreleasePool	*opPool = [NSAutoreleasePool new];
-
 	      if (NO == [op isCancelled])
 		{
 		  [NSThread setThreadPriority: [op threadPriority]];
 		  [op main];
 		}
-	      [opPool release];
 	    }
           NS_HANDLER
 	    {
@@ -970,6 +970,7 @@ static NSOperationQueue *mainQueue = nil;
           NS_ENDHANDLER
 	  [op _finish];
 	}
+      [opPool release];
     }
 
   [internal->lock lock];

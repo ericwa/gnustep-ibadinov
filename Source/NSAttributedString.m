@@ -34,19 +34,6 @@
    $Date$ $Revision$
 */
 
-/* Warning -	[-initWithString:attributes:] is the designated initialiser,
- *		but it doesn't provide any way to perform the function of the
- *		[-initWithAttributedString:] initialiser.
- *		In order to work round this, the string argument of the
- *		designated initialiser has been overloaded such that it
- *		is expected to accept an NSAttributedString here instead of
- *		a string.  If you create an NSAttributedString subclass, you
- *		must make sure that your implementation of the initialiser
- *		copes with either an NSString or an NSAttributedString.
- *		If it receives an NSAttributedString, it should ignore the
- *		attributes argument and use the values from the string.
- */
-
 #import "common.h"
 #import "GNUstepBase/Unicode.h"
 
@@ -286,8 +273,9 @@ appendUIntData(NSMutableData *d, NSUInteger i)
               pos = NSMaxRange(r);
             }
           DESTROY(self);
-          self = [m copy];
+          id result = [m copy];
           RELEASE(m);
+          return result;
         }
     }
   else
@@ -329,8 +317,9 @@ appendUIntData(NSMutableData *d, NSUInteger i)
 		  last = index;
 		}
 	      DESTROY(self);
-	      self = [m copy];
+	      id result = [m copy];
 	      RELEASE(m);
+	      return result;
 	    }
 	}
     }
@@ -380,20 +369,48 @@ appendUIntData(NSMutableData *d, NSUInteger i)
 /**
  *  Initialize to copy of attributedString.
  */
-- (id) initWithAttributedString: (NSAttributedString*)attributedString
+- (id)initWithAttributedString:(NSAttributedString *)attributedString
 {
-  return [self initWithString: (NSString*)attributedString attributes: nil];
+    if (nil == attributedString)
+    {
+        [NSException raise: NSInvalidArgumentException
+                    format: @"attributedString object passed to -[NSAttributedString initWithAttributedString:] is nil"];
+    }
+    if (![attributedString isKindOfClass: [NSAttributedString class]])
+    {
+        [NSException raise: NSInvalidArgumentException
+                    format: @"attributedString object passed to -[NSAttributedString initWithAttributedString:] is not NSAttributedString instance"];
+    }
+    if ([self class] == NSAttributedStringClass)
+    {
+        [self subclassResponsibility: _cmd]; /* Primitive method! */
+        return nil;
+    }
+    return [super init];
 }
 
 /**
  *  Initialize to aString with given attributes applying over full range of
  *  string.
  */
-- (id) initWithString: (NSString*)aString attributes: (NSDictionary*)attributes
+- (id)initWithString:(NSString *)aString attributes:(NSDictionary *)attributes
 {
-  //This is the designated initializer
-  [self subclassResponsibility: _cmd];/* Primitive method! */
-  return nil;
+    if (nil == aString)
+    {
+        [NSException raise: NSInvalidArgumentException
+                    format: @"aString object passed to -[NSAttributedString initWithString:attributes:] is nil"];
+    }
+    if (![aString respondsToSelector: @selector(length)]) /* todo: correct type check or remove it */
+    {
+        [NSException raise: NSInvalidArgumentException
+                    format: @"aString object passed to -[NSAttributedString initWithString:attributes:] does not respond to -length"];
+    }
+    if ([self class] == NSAttributedStringClass)
+    {
+        [self subclassResponsibility: _cmd]; /* Primitive method! */
+        return nil;
+    }
+    return [super init];
 }
 
 - (NSString*) description
@@ -731,6 +748,33 @@ appendUIntData(NSMutableData *d, NSUInteger i)
     return NSAllocateObject(GSMutableAttributedStringClass, 0, z);
   else
     return NSAllocateObject(self, 0, z);
+}
+
+/**
+ *  Initialize to copy of attributedString.
+ */
+- (id)initWithAttributedString:(NSAttributedString *)attributedString
+{
+    if ([self class] == NSMutableAttributedStringClass)
+    {
+        [self subclassResponsibility: _cmd]; /* Primitive method! */
+        return nil;
+    }
+    return [super initWithAttributedString:attributedString];
+}
+
+/**
+ *  Initialize to aString with given attributes applying over full range of
+ *  string.
+ */
+- (id)initWithString:(NSString *)aString attributes:(NSDictionary *)attributes
+{
+    if ([self class] == NSMutableAttributedStringClass)
+    {
+        [self subclassResponsibility: _cmd]; /* Primitive method! */
+        return nil;
+    }
+    return [super initWithString:aString attributes:attributes];
 }
 
 - (Class) classForCoder

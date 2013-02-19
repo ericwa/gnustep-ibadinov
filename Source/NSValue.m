@@ -101,14 +101,12 @@ static NSLock			*placeholderLock;
       /*
        * Set up infrastructure for placeholder values.
        */
-      defaultPlaceholderValue = (GSPlaceholderValue*)
-	NSAllocateObject(GSPlaceholderValueClass, 0, NSDefaultMallocZone());
-      [[NSObject leakAt: (id*)&defaultPlaceholderValue] release];
-      placeholderMap = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
-	NSNonRetainedObjectMapValueCallBacks, 0);
-      [[NSObject leakAt: (id*)&placeholderMap] release];
+      defaultPlaceholderValue = (GSPlaceholderValue *)NSAllocateObject(GSPlaceholderValueClass, 0, NSDefaultMallocZone());
+      [NSObject leakAt: (id*)&defaultPlaceholderValue];
+      placeholderMap = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks, NSNonRetainedObjectMapValueCallBacks, 0);
+      [NSObject leakAt: (id*)&placeholderMap];
       placeholderLock = [NSLock new];
-      [[NSObject leakAt: (id*)&placeholderLock] release];
+      [NSObject leakAt: (id*)&placeholderLock];
     }
 }
 

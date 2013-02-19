@@ -734,14 +734,12 @@ static NSRecursiveLock *classLock = nil;
   NSLocale	*newLocale;
   NSString	*localeId;
 #if	GS_USE_ICU == 1
-  int32_t	length;
   char cLocaleId[ULOC_FULLNAME_CAPACITY];
   UErrorCode error = U_ZERO_ERROR;
   
   localeId = [NSLocale canonicalLocaleIdentifierFromString: string];
   // Normalize locale ID
-  length = uloc_canonicalize ([localeId UTF8String], cLocaleId,
-    ULOC_FULLNAME_CAPACITY, &error);
+  uloc_canonicalize ([localeId UTF8String], cLocaleId, ULOC_FULLNAME_CAPACITY, &error);
   if (U_FAILURE(error))
     {
       [self release];
@@ -758,22 +756,27 @@ static NSRecursiveLock *classLock = nil;
       return nil;
     }
 
+  id result;
   [classLock lock];
   newLocale = [allLocales objectForKey: localeId];
   if (nil == newLocale)
     {
-      _localeId = [localeId copy];
-      _components = [[NSMutableDictionary alloc] initWithCapacity: 0];
-      [allLocales setObject: self forKey: localeId];
+        if (self = [super init])
+        {
+            _localeId = [localeId copy];
+            _components = [[NSMutableDictionary alloc] initWithCapacity: 0];
+            [allLocales setObject: self forKey: localeId];
+        }
+        result = self;
     }
   else
     {
       [self release];
-      self = [newLocale retain];
+      result = [newLocale retain];
     }
   [classLock unlock];
 
-  return self;
+  return result;
 }
 
 - (NSString *) localeIdentifier
@@ -954,12 +957,18 @@ static NSRecursiveLock *classLock = nil;
   cLocaleId = [_localeId UTF8String];
   localeData = ulocdata_open (cLocaleId, &err);
   if (U_FAILURE(err))
+  {
+    RELEASE(mSet);
     return nil;
+  }
   
   charSet = ulocdata_getExemplarSet (localeData, NULL,
     USET_ADD_CASE_MAPPINGS, ULOCDATA_ES_STANDARD, &err);
   if (U_FAILURE(err))
+  {
+    RELEASE(mSet);
     return nil;
+  }
   ulocdata_close(localeData);
   
   count = uset_getItemCount(charSet);
@@ -1036,7 +1045,7 @@ static NSRecursiveLock *classLock = nil;
   
   result = [[NSCalendar alloc] initWithCalendarIdentifier: calId];
   
-  return result;
+  return [result autorelease];
 #else
   return nil;
 #endif

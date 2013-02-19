@@ -916,7 +916,7 @@ static SEL	rlSel;
 - (NSArray *) objectsAtIndexes: (NSIndexSet *)indexes
 {
   //FIXME: probably slow!
-  NSMutableArray *group = [NSMutableArray arrayWithCapacity: [indexes count]];
+  NSMutableArray *group = [[NSMutableArray alloc] initWithCapacity: [indexes count]];
 
   NSUInteger i = [indexes firstIndex];
   while (i != NSNotFound)
@@ -925,7 +925,7 @@ static SEL	rlSel;
       i = [indexes indexGreaterThanIndex: i];
     }
 
-  return [group makeImmutableCopyOnFail: NO];
+  return [[group makeImmutable] autorelease];
 }
 
 - (BOOL) isEqual: (id)anObject
@@ -1096,11 +1096,11 @@ compare(id elem1, id elem2, void* context)
 {
   NSMutableArray	*sortedArray;
 
-  sortedArray = [[[NSMutableArrayClass allocWithZone:
-    NSDefaultMallocZone()] initWithArray: self copyItems: NO] autorelease];
+  sortedArray = [[NSMutableArrayClass allocWithZone:
+    NSDefaultMallocZone()] initWithArray: self copyItems: NO];
   [sortedArray sortUsingFunction: comparator context: context];
 
-  return [sortedArray makeImmutableCopyOnFail: NO];
+  return [[sortedArray makeImmutable] autorelease];
 }
 
 
@@ -1109,11 +1109,11 @@ compare(id elem1, id elem2, void* context)
 {
   NSMutableArray	*sortedArray;
 
-  sortedArray = [[[NSMutableArrayClass allocWithZone:
-    NSDefaultMallocZone()] initWithArray: self copyItems: NO] autorelease];
+  sortedArray = [[NSMutableArrayClass allocWithZone:
+    NSDefaultMallocZone()] initWithArray: self copyItems: NO];
   [sortedArray sortWithOptions: options usingComparator: comparator];
 
-  return [sortedArray makeImmutableCopyOnFail: NO];
+  return [[sortedArray makeImmutable] autorelease];
 }
 
 - (NSArray*) sortedArrayUsingComparator: (NSComparator)comparator
@@ -1212,7 +1212,7 @@ compare(id elem1, id elem2, void* context)
   NSUInteger		c = [self count];
   NSMutableString	*s;
 
-  s = [[[NSMutableString alloc] initWithCapacity: c] autorelease];
+  s = [[NSMutableString alloc] initWithCapacity: c];
   if (c > 0)
     {
       NSUInteger	l = [separator length];
@@ -1228,7 +1228,7 @@ compare(id elem1, id elem2, void* context)
 	  [s appendString: [[self objectAtIndex: i] description]];
 	}
     }
-  return [s makeImmutableCopyOnFail: NO];
+  return [[s makeImmutable] autorelease];
 }
 
 /**
@@ -1239,7 +1239,7 @@ compare(id elem1, id elem2, void* context)
 - (NSArray*) pathsMatchingExtensions: (NSArray*)extensions
 {
   NSUInteger i, c = [self count];
-  NSMutableArray *a = [[[NSMutableArray alloc] initWithCapacity: 1] autorelease];
+  NSMutableArray *a = [[NSMutableArray alloc] initWithCapacity: 1];
   Class	cls = [NSString class];
   IMP	get = [self methodForSelector: oaiSel];
   IMP	add = [a methodForSelector: addSel];
@@ -1256,7 +1256,7 @@ compare(id elem1, id elem2, void* context)
 	    }
 	}
     }
-  return [a makeImmutableCopyOnFail: NO];
+  return [[a makeImmutable] autorelease];
 }
 
 /**
@@ -1665,13 +1665,13 @@ compare(id elem1, id elem2, void* context)
                   NSEnumerator  *e = [self objectEnumerator];
                   id            o;
 
-                  result = [GSMutableArray array];
+                  result = [[GSMutableArray alloc] init];
                   while ((o = [e nextObject]) != nil)
                     {
                       o = [o valueForKeyPath: rem];
                       [result addObjectsFromArray: o];
                     }
-                  [result makeImmutableCopyOnFail: NO];
+                  result = [[result makeImmutable] autorelease];
                 }
               else
                 {
@@ -1685,13 +1685,13 @@ compare(id elem1, id elem2, void* context)
                   NSEnumerator  *e = [self objectEnumerator];
                   id            o;
 
-                  result = [GSMutableArray array];
+                  result = [[GSMutableArray alloc] init];
                   while ((o = [e nextObject]) != nil)
                     {
                       o = [o valueForKeyPath: rem];
                       [result addObject: o];
                     }
-                  [result makeImmutableCopyOnFail: NO];
+                  result = [[result makeImmutable] autorelease];
                 }
               else
                 {
@@ -1705,13 +1705,13 @@ compare(id elem1, id elem2, void* context)
                   NSEnumerator  *e = [self objectEnumerator];
                   id            o;
 
-                  result = [GSMutableArray array];
+                  result = [[GSMutableArray alloc] init];
                   while ((o = [e nextObject]) != nil)
                     {
                       o = [o valueForKeyPath: rem];
                       [result addObjectsFromArray: [o allObjects]];
                     }
-                  [result makeImmutableCopyOnFail: NO];
+                  result = [[result makeImmutable] autorelease];
                 }
               else
                 {

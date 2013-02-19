@@ -87,7 +87,8 @@ static Class concreteBrowserClass;
                  type: (NSString *) type
                  name: (NSString *) name
 {
-  return [self subclassResponsibility: _cmd];
+    [self subclassResponsibility: _cmd];
+    return nil;
 }
 
 - (id) initWithDomain: (NSString *) domain
@@ -95,7 +96,8 @@ static Class concreteBrowserClass;
                  name: (NSString *) name
                  port: (NSInteger) port
 {
-  return [self subclassResponsibility: _cmd];
+    [self subclassResponsibility: _cmd];
+    return nil;
 }
 
 - (void) removeFromRunLoop: (NSRunLoop *) aRunLoop
@@ -268,8 +270,8 @@ static Class concreteBrowserClass;
                          forKey: [parts objectAtIndex: 0]];
         }
       END_FOR_IN(array)
-    [self setTXTRecordData:
-      [[self class] dataFromTXTRecordDictionary: dictionary]];
+      [self setTXTRecordData:[[self class] dataFromTXTRecordDictionary: dictionary]];
+      RELEASE(dictionary);
     }
 }
 

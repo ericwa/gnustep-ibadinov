@@ -704,16 +704,16 @@ static unsigned	encodingVersion;
 		  rep = [obj initWithCoder: self];
 		  if (rep != obj)
 		    {
-		      obj = rep;
-		      GSIArraySetItemAtIndex(objMap, (GSIArrayItem)obj, xref);
+		      GSIArraySetItemAtIndex(objMap, (GSIArrayItem)rep, xref);
 		    }
+		  obj = rep;
 
 		  rep = [obj awakeAfterUsingCoder: self];
 		  if (rep != obj)
 		    {
-		      obj = rep;
-		      GSIArraySetItemAtIndex(objMap, (GSIArrayItem)obj, xref);
+		      GSIArraySetItemAtIndex(objMap, (GSIArrayItem)rep, xref);
 		    }
+		  obj = rep;
 		  /*
 		   * The objMap does not retain objects, so in order to
 		   * be sure that a decoded object is not deallocated by

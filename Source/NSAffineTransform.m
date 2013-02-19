@@ -634,7 +634,8 @@ static NSAffineTransformStruct identityTransform = {
                 {
                   // FIXME
                   NSLog(@"Got type %d for affine transform", data[0]);
-                  return [self notImplemented: _cmd];
+                  [self notImplemented: _cmd];
+                  return nil;
                 }
             }
           else if (16 == length)
@@ -669,7 +670,8 @@ static NSAffineTransformStruct identityTransform = {
             {
               // FIXME
               NSLog(@"Got data %@ len %d for affine transform", d, (int)length);
-              return [self notImplemented: _cmd];
+              [self notImplemented: _cmd];
+              return nil;
             }
         }
     }

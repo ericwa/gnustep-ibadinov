@@ -310,8 +310,11 @@ ihandler(int sig)
 
 - (id) init
 {
-  queue = [[NSMutableArray alloc] initWithCapacity: 1];
-  return self;
+    if (self = [super init])
+    {
+        queue = [[NSMutableArray alloc] initWithCapacity: 1];
+    }
+    return self;
 }
 @end
 
@@ -404,6 +407,10 @@ ihandler(int sig)
 
 - (id) init
 {
+    if (!(self = [super init]))
+    {
+        return nil;
+    }
   NSString		*hostname;
   NSString		*service;
   BOOL			isNetwork = NO;

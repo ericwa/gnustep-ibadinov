@@ -1602,7 +1602,7 @@ setNonBlocking(SOCKET fd)
 	    }
 	}
     }
-#else
+#else /* __MINGW__ */    
   NSStreamEvent myEvent;
 
   if ([self streamStatus] == NSStreamStatusOpening)
@@ -2006,7 +2006,7 @@ setNonBlocking(SOCKET fd)
 	    }
 	}
     }
-#else
+#else /* __MINGW__ */
   NSStreamEvent myEvent;
 
   if ([self streamStatus] == NSStreamStatusOpening)

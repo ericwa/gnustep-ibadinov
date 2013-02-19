@@ -1132,111 +1132,109 @@ static void DNSSD_API
                type: (uint16_t) rrtype
           interface: (uint32_t) interfaceIndex
 {
-  Service	*service;
-  
-  INTERNALTRACE;
-  
-  service = (Service *) _reserved;
-  
-  LOCK(service);
-  {
-    NSData		*data = nil;
-    NSMutableArray	*addresses = nil;
-    struct sockaddr	*address = { 0 };
-    size_t		length = 0;
-    const unsigned char	*rd = rdata;
-    char		rdb[INET6_ADDRSTRLEN];
+    Service	*service;
     
-    memset(rdb, 0, sizeof rdb);
+    INTERNALTRACE;
     
-    addresses = [service->info objectForKey: @"Addresses"];
+    service = (Service *) _reserved;
     
-    if (nil == addresses)
-      {
-	addresses = [[NSMutableArray alloc] initWithCapacity: 1];
-      }
-    
-    switch(rrtype)
-      {
-	case kDNSServiceType_A:		// AF_INET
-	  {
-	    struct sockaddr_in	ip4;
-	    
-	    // oogly
-	    snprintf(rdb, sizeof(rdb),
-	      "%d.%d.%d.%d", rd[0], rd[1], rd[2], rd[3]);
-	    LOG(@"Found IPv4 <%s> on port %d", rdb, ntohs(service->port));
-	    
-	    length = sizeof (struct sockaddr_in);
-	    memset(&ip4, 0, length);
-	    
-	    inet_pton(AF_INET, rdb, &ip4.sin_addr);
-	    ip4.sin_family = AF_INET;
-	    ip4.sin_port = service->port;
-	    
-	    address = (struct sockaddr *) &ip4;
-	  }
-	  break;
-	
-  #if defined(AF_INET6)
-	case kDNSServiceType_AAAA:	// AF_INET6
-	case kDNSServiceType_A6:		// deprecates AAAA
-	  {
-	    struct sockaddr_in6	ip6;
-	    
-	    // Even more oogly
-	    snprintf(rdb, sizeof(rdb),
-	      "%x%x:%x%x:%x%x:%x%x:%x%x:%x%x:%x%x:%x%x",
-	      rd[0], rd[1], rd[2], rd[3],
-	      rd[4], rd[5], rd[6], rd[7],
-	      rd[8], rd[9], rd[10], rd[11],
-	      rd[12], rd[13], rd[14], rd[15]);
-	    LOG(@"Found IPv6 <%s> on port %d", rdb, ntohs(service->port));
-	    
-	    length = sizeof (struct sockaddr_in6);
-	    memset(&ip6, 0, length);
-	    
-	    inet_pton(AF_INET6, rdb, &ip6.sin6_addr);
+    LOCK(service);
+    {
+        NSData		*data = nil;
+        NSMutableArray	*addresses = nil;
+        struct sockaddr	*address = { 0 };
+        size_t		length = 0;
+        const unsigned char	*rd = rdata;
+        char		rdb[INET6_ADDRSTRLEN];
+        
+        memset(rdb, 0, sizeof rdb);
+        
+        addresses = [service->info objectForKey: @"Addresses"];
+        
+        if (nil == addresses)
+        {
+            addresses = [NSMutableArray arrayWithCapacity:1];
+        }
+        
+        switch(rrtype)
+        {
+            case kDNSServiceType_A:		// AF_INET
+            {
+                struct sockaddr_in	ip4;
+                
+                // oogly
+                snprintf(rdb, sizeof(rdb),
+                         "%d.%d.%d.%d", rd[0], rd[1], rd[2], rd[3]);
+                LOG(@"Found IPv4 <%s> on port %d", rdb, ntohs(service->port));
+                
+                length = sizeof (struct sockaddr_in);
+                memset(&ip4, 0, length);
+                
+                inet_pton(AF_INET, rdb, &ip4.sin_addr);
+                ip4.sin_family = AF_INET;
+                ip4.sin_port = service->port;
+                
+                address = (struct sockaddr *) &ip4;
+            }
+                break;
+                
+#if defined(AF_INET6)
+            case kDNSServiceType_AAAA:	// AF_INET6
+            case kDNSServiceType_A6:		// deprecates AAAA
+            {
+                struct sockaddr_in6	ip6;
+                
+                // Even more oogly
+                snprintf(rdb, sizeof(rdb),
+                         "%x%x:%x%x:%x%x:%x%x:%x%x:%x%x:%x%x:%x%x",
+                         rd[0], rd[1], rd[2], rd[3],
+                         rd[4], rd[5], rd[6], rd[7],
+                         rd[8], rd[9], rd[10], rd[11],
+                         rd[12], rd[13], rd[14], rd[15]);
+                LOG(@"Found IPv6 <%s> on port %d", rdb, ntohs(service->port));
+                
+                length = sizeof (struct sockaddr_in6);
+                memset(&ip6, 0, length);
+                
+                inet_pton(AF_INET6, rdb, &ip6.sin6_addr);
 #if defined(HAVE_SA_LEN)
-	    ip6.sin6_len = sizeof ip6;
+                ip6.sin6_len = sizeof ip6;
 #endif
-	    ip6.sin6_family = AF_INET6;
-	    ip6.sin6_port = service->port;
-	    ip6.sin6_flowinfo = 0;
-	    ip6.sin6_scope_id = interfaceIndex;
-	    
-	    address = (struct sockaddr *) &ip6;
-	  }
-	  break;
+                ip6.sin6_family = AF_INET6;
+                ip6.sin6_port = service->port;
+                ip6.sin6_flowinfo = 0;
+                ip6.sin6_scope_id = interfaceIndex;
+                
+                address = (struct sockaddr *) &ip6;
+            }
+                break;
 #endif /* AF_INET6 */      
-	
-	default:
-	  LOG(@"Unkown type of length <%d>", rdlen);
-	  break;
-      }
+                
+            default:
+                LOG(@"Unkown type of length <%d>", rdlen);
+                break;
+        }
+        
+        // check for duplicate entries
+        if ([self addAddress: rdb])
+        {
+            // add it
+            data = [NSData dataWithBytes: address
+                                  length: length];
+            
+            [addresses addObject: data];
+            [service->info setObject:addresses forKey:@"Addresses"];
+            
+            // notify the delegate
+            [self netServiceDidResolveAddress: self];
+            
+            // got it, so invalidate the timeout
+            [service->timeout invalidate];
+            service->timeout = nil;
+        }
+    }
     
-    // check for duplicate entries
-    if ([self addAddress: rdb])
-      {
-	// add it
-	data = [NSData dataWithBytes: address
-			      length: length];
-	
-	[addresses addObject: data];
-	[service->info setObject: [addresses retain]
-			  forKey: @"Addresses"];
-	
-	// notify the delegate
-	[self netServiceDidResolveAddress: self];
-	
-	[addresses release];
-	
-	// got it, so invalidate the timeout
-	[service->timeout invalidate];
-	service->timeout = nil;
-      }
-  }
-  UNLOCK(service);
+    UNLOCK(service);
 }
 
 /**
@@ -1480,124 +1478,123 @@ static void DNSSD_API
 
 + (NSData *) dataFromTXTRecordDictionary: (NSDictionary *) txtDictionary
 {
-  NSMutableData	*result = nil;
-  NSArray       *keys   = nil;
-  NSArray       *values = nil;
-  NSUInteger    count   = 0;
-  
-  INTERNALTRACE;
-  
-  count = [txtDictionary count];
-  
-  if (count)
+    NSMutableData	*result = nil;
+    NSArray       *keys   = nil;
+    NSArray       *values = nil;
+    NSUInteger    count   = 0;
+    
+    INTERNALTRACE;
+    
+    count = [txtDictionary count];
+    
+    if (count)
     {
-      keys = [txtDictionary allKeys];
-      values = [txtDictionary allValues];
-      
-      if (keys && values)
+        keys = [txtDictionary allKeys];
+        values = [txtDictionary allValues];
+        
+        if (keys && values)
         {
-          TXTRecordRef  txt;
-          NSUInteger		i = 0;
-          char          key[256];
-          
-          TXTRecordCreate(&txt, 0, NULL);
-          
-          for (; i < count; i++)
+            TXTRecordRef  txt;
+            NSUInteger		i = 0;
+            char          key[256];
+            
+            TXTRecordCreate(&txt, 0, NULL);
+            
+            for (; i < count; i++)
             {
-              size_t length = 0;
-              size_t used = 0;
-              DNSServiceErrorType err = kDNSServiceErr_Unknown;
-              
-              if (![[keys objectAtIndex: i] isKindOfClass: [NSString class]])
+                size_t length = 0;
+                size_t used = 0;
+                DNSServiceErrorType err = kDNSServiceErr_Unknown;
+                
+                if (![[keys objectAtIndex: i] isKindOfClass: [NSString class]])
                 {
-                  LOG(@"%@ is not a string", [keys objectAtIndex: i]);
-                  break;
+                    LOG(@"%@ is not a string", [keys objectAtIndex: i]);
+                    break;
                 }
-              
+                
                 length = [[keys objectAtIndex: i] length];
                 [[keys objectAtIndex: i] getCString: key
                                           maxLength: sizeof key];
                 used = strlen(key);
-              
+                
                 if (!length || (used >= sizeof key))
-                  {
+                {
                     LOG(@"incorrect length %d - %d - %d",
                         length, used, sizeof key);
                     break;
-                  }
-              
-              if ([[values objectAtIndex: i] isKindOfClass: [NSString class]])
+                }
+                
+                if ([[values objectAtIndex: i] isKindOfClass: [NSString class]])
                 {
-                  char	value[256];
-                  
-                  length = [[values objectAtIndex: i] length];
-                  [[values objectAtIndex: i] getCString: value
-                                              maxLength: sizeof value];
-                  used = strlen(value);
-                  
-                  if (used >= sizeof value)
+                    char	value[256];
+                    
+                    [[values objectAtIndex: i] getCString: value
+                                                maxLength: sizeof value];
+                    used = strlen(value);
+                    
+                    if (used >= sizeof value)
                     {
-                      LOG(@"incorrect length %d - %d - %d",
-                          length, used, sizeof value);
-                      break;
+                        LOG(@"incorrect length %d - %d - %d",
+                            length, used, sizeof value);
+                        break;
                     }
-                  
-                  err = TXTRecordSetValue(&txt,
-                                          (const char *) key,
-                                          used,
-                                          value);
+                    
+                    err = TXTRecordSetValue(&txt,
+                                            (const char *) key,
+                                            used,
+                                            value);
                 }
-              else if ([[values objectAtIndex: i] isKindOfClass: [NSData class]]
-                       && [[values objectAtIndex: i] length] < 256
-                       && [[values objectAtIndex: i] length] > 0)
+                else if ([[values objectAtIndex: i] isKindOfClass: [NSData class]]
+                         && [[values objectAtIndex: i] length] < 256
+                         && [[values objectAtIndex: i] length] > 0)
                 {
-                  err = TXTRecordSetValue(&txt,
-                                          (const char *) key,
-                                          [[values objectAtIndex: i] length],
-                                          [[values objectAtIndex: i] bytes]);
+                    err = TXTRecordSetValue(&txt,
+                                            (const char *) key,
+                                            [[values objectAtIndex: i] length],
+                                            [[values objectAtIndex: i] bytes]);
                 }
-              else if ([values objectAtIndex: i] == [NSNull null])
+                else if ([values objectAtIndex: i] == [NSNull null])
                 {
-                  err = TXTRecordSetValue(&txt,
-                                          (const char *) key,
-                                          0,
-                                          NULL);
+                    err = TXTRecordSetValue(&txt,
+                                            (const char *) key,
+                                            0,
+                                            NULL);
                 }
-              else
+                else
                 {
-                  LOG(@"unknown value type");
-                  break;
+                    LOG(@"unknown value type");
+                    break;
                 }
-              
-              if (err != kDNSServiceErr_NoError)
+                
+                if (err != kDNSServiceErr_NoError)
                 {
-                  LOG(@"error creating data type");
-                  break;
+                    LOG(@"error creating data type");
+                    break;
                 }
             }
-          
-          if (i == count)
+            
+            if (i == count)
             {
-              result = [NSData dataWithBytes: TXTRecordGetBytesPtr(&txt)
-                    length: TXTRecordGetLength(&txt)];
+                result = [NSData dataWithBytes: TXTRecordGetBytesPtr(&txt)
+                                        length: TXTRecordGetLength(&txt)];
             }
-          
-          TXTRecordDeallocate(&txt);
+            
+            TXTRecordDeallocate(&txt);
         }
-      else
+        else
         {
-          LOG(@"No keys or values");
+            LOG(@"No keys or values");
         }
-          
-      // both are autorelease'd
-      keys = nil;
-      values = nil;
+        
+        // both are autorelease'd
+        keys = nil;
+        values = nil;
     }
-  else
+    else
     {
-      LOG(@"Dictionary seems empty");
+        LOG(@"Dictionary seems empty");
     }
-  return result;
+    return result;
 }
 
 /**
@@ -1907,12 +1904,12 @@ static void DNSSD_API
 
 - (void) publishWithOptions: (NSNetServiceOptions)options
 {
-  DNSServiceFlags flags = 0;
-  if (options & NSNetServiceNoAutoRename)
-  {
-    flags = flags | kDNSServiceFlagsNoAutoRename;
-  }
-  [self publishWithFlags: flags];
+    DNSServiceFlags flags = 0;
+    if (options & NSNetServiceNoAutoRename)
+    {
+        flags = kDNSServiceFlagsNoAutoRename;
+    }
+    [self publishWithFlags: flags];
 }
 
 - (void) publish
@@ -2565,61 +2562,61 @@ static void DNSSD_API
 
 - (void) start
 {
-  Monitor	*monitor;
-  
-  INTERNALTRACE;
-  
-  monitor = (Monitor *) _reserved;
-  
-  LOCK(monitor);
-  {
-    DNSServiceErrorType	err = kDNSServiceErr_NoError;
-    DNSServiceFlags	flags = kDNSServiceFlagsLongLivedQuery;
-    NSString		*fullname = nil;
+    Monitor	*monitor;
     
-    do
-      {
-	if (! _delegate)
-	  {
-	    err = NSNetServicesInvalidError;
-	    break;
-	  }
-	
-	if (monitor->timer)
-	  {
-	    err = NSNetServicesActivityInProgress;
-	    break;
-	  }
-	
-	fullname = [NSString stringWithFormat: @"%@.%@%@",
-	  [_delegate name], [_delegate type], [_delegate domain]];
-	
-	err = DNSServiceQueryRecord((DNSServiceRef *) &_netServiceMonitor,
-	  flags,
-	  0,
-	  [fullname UTF8String],
-	  kDNSServiceType_TXT,
-	  kDNSServiceClass_IN,
-	  QueryCallback,
-	  self);
-	
-	if (kDNSServiceErr_NoError == err)
-	  {
-	    monitor->timer = [NSTimer timerWithTimeInterval: INTERVAL
-						     target: self
-						   selector: @selector(loop:)
-						   userInfo: nil
-						    repeats: YES];
-
-	    [monitor->runloop addTimer: monitor->timer
-			       forMode: monitor->runloopmode];
-	    
-	    [monitor->timer fire];
-	  }
-      }
-    while (0);
-  }
-  UNLOCK(monitor);
+    INTERNALTRACE;
+    
+    monitor = (Monitor *) _reserved;
+    
+    LOCK(monitor);
+    {
+        DNSServiceErrorType	err = kDNSServiceErr_NoError;
+        DNSServiceFlags	flags = kDNSServiceFlagsLongLivedQuery;
+        NSString		*fullname = nil;
+        
+        do
+        {
+            if (! _delegate)
+            {
+                // err = NSNetServicesInvalidError;
+                break;
+            }
+            
+            if (monitor->timer)
+            {
+                // err = NSNetServicesActivityInProgress;
+                break;
+            }
+            
+            fullname = [NSString stringWithFormat: @"%@.%@%@",
+                        [_delegate name], [_delegate type], [_delegate domain]];
+            
+            err = DNSServiceQueryRecord((DNSServiceRef *) &_netServiceMonitor,
+                                        flags,
+                                        0,
+                                        [fullname UTF8String],
+                                        kDNSServiceType_TXT,
+                                        kDNSServiceClass_IN,
+                                        QueryCallback,
+                                        self);
+            
+            if (kDNSServiceErr_NoError == err)
+            {
+                monitor->timer = [NSTimer timerWithTimeInterval: INTERVAL
+                                                         target: self
+                                                       selector: @selector(loop:)
+                                                       userInfo: nil
+                                                        repeats: YES];
+                
+                [monitor->runloop addTimer: monitor->timer
+                                   forMode: monitor->runloopmode];
+                
+                [monitor->timer fire];
+            }
+        }
+        while (0);
+    }
+    UNLOCK(monitor);
 }
 
 /**
