@@ -385,10 +385,13 @@ static NSURLProtocol	*placeholder = nil;
     {
         abstractClass = [NSURLProtocol class];
         placeholderClass = [NSURLProtocolPlaceholder class];
-        placeholder = (NSURLProtocol*)NSAllocateObject(placeholderClass, 0,
-                                                       NSDefaultMallocZone());
-        registered = [NSMutableArray new];
-        regLock = [NSLock new];
+        
+        placeholder = (NSURLProtocol*)NSAllocateObject(placeholderClass, 0, NSDefaultMallocZone());
+        placeholder = [NSObject leakRetained:placeholder];
+        
+        registered = [NSObject leakRetained:[NSMutableArray new]];
+        regLock = [NSObject leakRetained:[NSLock new]];
+        
         [self registerClass: [_NSHTTPURLProtocol class]];
         [self registerClass: [_NSHTTPSURLProtocol class]];
         [self registerClass: [_NSFTPURLProtocol class]];

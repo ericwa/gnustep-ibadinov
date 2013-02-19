@@ -203,6 +203,13 @@ handleExit()
   return l->obj;
 }
 
++ (id) leakRetained: (id)anObject
+{
+  id result = [self leak:anObject];
+  [anObject release];
+  return result;
+}
+
 + (BOOL) registerAtExit
 {
   return [self registerAtExit: @selector(atExit)];

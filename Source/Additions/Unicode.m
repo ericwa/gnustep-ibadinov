@@ -1397,7 +1397,7 @@ tables:
 		  else
 		    {
 		      result = NO;
-		      goto done;
+		      break;
 		    }
 		}
 	    } while (!done || rval != 0);

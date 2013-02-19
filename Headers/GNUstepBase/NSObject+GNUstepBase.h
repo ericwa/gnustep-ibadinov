@@ -144,6 +144,11 @@ extern "C" {
  */
 + (id) leak: (id)anObject;
 
+/**
+ * Same as above, but does not retain anObject
+ */
++ (id) leakRetained: (id) NS_CONSUMED anObject;
+
 /** This method retains the object at *anAddress so that it will never be
  * deallocated during normal operation, but keeps track of the address
  * so that the object is released and the address is zeroed during process
