@@ -3044,8 +3044,8 @@ AC_SUBST(HAVE_LIBXML)
 
 # GNUTLS is linked to Apple's CoreFoundation on OSX, which renders it unusable there
 case "$target_os" in
-    darwin*) AC_ARG_ENABLE(gnutls, [  --enable-gnutls           Enable use of GNUTLS], enable_gnutls=yes, )  ;;
-    *)       AC_ARG_ENABLE(gnutls, [  --disable-gnutls          Disable use of GNUTLS], , enable_gnutls=yes) ;;
+    darwin*) AC_ARG_ENABLE(gnutls, [  --enable-gnutls           Enable use of GNUTLS], enable_gnutls="$enableval", enable_gnutls=no)   ;;
+    *)       AC_ARG_ENABLE(gnutls, [  --disable-gnutls          Disable use of GNUTLS], enable_gnutls="$enableval", enable_gnutls=yes) ;;
 esac
 
 AC_MSG_CHECKING(whether we should try to use GNUTLS for SSL/TLS support)

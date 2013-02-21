@@ -10929,12 +10929,14 @@ fi
 case "$target_os" in
     darwin*) # Check whether --enable-gnutls was given.
 if test "${enable_gnutls+set}" = set; then :
-  enableval=$enable_gnutls; enable_gnutls=yes
+  enableval=$enable_gnutls; enable_gnutls="$enableval"
+else
+  enable_gnutls=no
 fi
-  ;;
+   ;;
     *)       # Check whether --enable-gnutls was given.
 if test "${enable_gnutls+set}" = set; then :
-  enableval=$enable_gnutls;
+  enableval=$enable_gnutls; enable_gnutls="$enableval"
 else
   enable_gnutls=yes
 fi
