@@ -297,6 +297,7 @@ typedef uint8_t NSHTTPURLProtocolState;
 
 @interface _NSHTTPURLProtocol (Private)
 
+- (void)_continueLoading;
 - (void)_processNewData;
 - (BOOL)_processHeadersAndCreateReditrectedRequest:(NSURLRequest **)aRequest error:(NSError **)error;
 - (NSURLAuthenticationChallenge *)_handleAuthenticationChallenge;
@@ -780,6 +781,55 @@ PostponeSelector(id self, SEL _cmd, id argument)
     _state = NSHTTPURLProtocolStateStarted;
     _response = nil;
     
+    /* FIXME!
+     * This code is currently no.op. because it's impossible to create NSURL object
+     * with query and without a leading slash (e.g. http://example.com?id=123 )
+     */
+    if ([[[this->request URL] fullPath] length] == 0)
+    {
+        NSString *urlString = [[this->request URL] absoluteString];
+        
+        if ([urlString rangeOfString:@"?"].length > 0)
+        {
+            urlString = [urlString stringByReplacingString:@"?" withString:@"/?"];
+        }
+        else if ([urlString rangeOfString:@"#"].length > 0)
+        {
+            urlString = [urlString stringByReplacingString:@"#" withString:@"/#"];
+        }
+        else
+        {
+            urlString = [urlString stringByAppendingString:@"/"];
+        }
+        
+        NSURL *url = [NSURL URLWithString:urlString];
+        if (url == nil)
+        {
+            [self _didFailWithErrorDescription:@"Invalid URL" code:NSURLErrorBadURL];
+            return;
+        }
+        
+        NSMutableURLRequest *request = [this->request mutableCopy];
+        [request setURL:url];
+        [this->request release];
+        this->request = request;
+        
+        /* Inform client, required for compatibility with Apple's implementation */
+        PostponeSelector(self, @selector(_continueLoading), nil);
+        [this->client URLProtocol:self wasRedirectedToRequest:this->request redirectResponse:nil];
+        return;
+    }
+    [self _continueLoading];
+}
+    
+- (void)_continueLoading
+{
+    /* check if the client cancelled URL loading */
+    if (_state == NSHTTPURLProtocolStateStopped)
+    {
+        return;
+    }
+    
     if (0 && this->cachedResponse)
     {
         /* todo: handle cachedResponse */
@@ -1143,7 +1193,7 @@ PostponeSelector(id self, SEL _cmd, id argument)
     /* get redirect location, if any */
     if ((s = [[document headerNamed:@"location"] value]) != nil)
     {
-        NSURL *url = [NSURL URLWithString:s];
+        NSURL *url = [NSURL URLWithString:s relativeToURL:[this->request URL]];
         
         if (url == nil)
         {   
@@ -1155,7 +1205,7 @@ PostponeSelector(id self, SEL _cmd, id argument)
         }
         
         NSMutableURLRequest	*request = [this->request mutableCopy];
-        [request setURL: url];
+        [request setURL:url];
         *aRequest = [request autorelease];
         return YES;
     }

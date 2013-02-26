@@ -163,6 +163,11 @@ typedef struct
 
 - (id)initWithRequest:(NSURLRequest *)request delegate:(id)delegate startImmediately:(BOOL)startImmediately
 {
+    /* If request is nil, Apple's implemenation will produce seg.fault. We should crash too, but may do it more gracefully. */
+    if (!request)
+    {
+        [NSException raise:NSInvalidArgumentException format:@"Tried to init NSURLConnection with nil request"];
+    }
     if (self = [super init])
     {
         this->_request = [request mutableCopyWithZone:[self zone]];
