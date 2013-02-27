@@ -1367,7 +1367,9 @@ fixBOM(unsigned char **bytes, NSUInteger*length, BOOL *owned,
    * Now set up 'f' as a GSMutableString object whose initial buffer is
    * allocated on the stack.  The GSPrivateFormat function can write into it.
    */
-  f = (GSStr)alloca(class_getInstanceSize(GSMutableStringClass));
+  size_t instanceSize = class_getInstanceSize(GSMutableStringClass);
+  f = (GSStr)alloca(instanceSize);
+  memset(f, 0, instanceSize);
   object_setClass(f, GSMutableStringClass);
   f->_zone = NSDefaultMallocZone();
   f->_contents.c = buf;

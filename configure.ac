@@ -3041,11 +3041,16 @@ AC_SUBST(HAVE_LIBXML)
 # Check recent libgnutls for SSL streams.
 # See DEPENDENCIES POLICY at the start of this file.
 #--------------------------------------------------------------------
-AC_ARG_ENABLE(tls,
-  [  --disable-tls			Disable use of GNUTLS],,
-  enable_tls=yes)
 
-if test $enable_tls = yes; then
+# GNUTLS is linked to Apple's CoreFoundation on OSX, which renders it unusable there
+case "$target_os" in
+    darwin*) AC_ARG_ENABLE(gnutls, [  --enable-gnutls           Enable use of GNUTLS], enable_gnutls="$enableval", enable_gnutls=no)   ;;
+    *)       AC_ARG_ENABLE(gnutls, [  --disable-gnutls          Disable use of GNUTLS], enable_gnutls="$enableval", enable_gnutls=yes) ;;
+esac
+
+AC_MSG_CHECKING(whether we should try to use GNUTLS for SSL/TLS support)
+if test "$enable_gnutls" = yes; then
+  AC_MSG_RESULT(yes)
   HAVE_GNUTLS=0
   # Save CFLAGS and LIBS as AM_PATH_TLS clobbers these variables regardless
   # of the success of the macro.
@@ -3102,13 +3107,38 @@ if test $enable_tls = yes; then
     fi
   fi
 else
-  AC_MSG_WARN([Disabled support for TLS funtionality.])
+  AC_MSG_RESULT(no)
   HAVE_GNUTLS=0
 fi
 if test $HAVE_GNUTLS = 1; then
   AC_DEFINE_UNQUOTED(HAVE_GNUTLS,$HAVE_GNUTLS,[Define if libgnutls available])
 fi
 AC_SUBST(HAVE_GNUTLS)
+
+#--------------------------------------------------------------------
+# If there's no GNUTLS support, try using OpenSSL instead.
+#--------------------------------------------------------------------
+
+AC_MSG_CHECKING(whether we should try to use OpenSSL instead of GNUTLS)
+if test $HAVE_GNUTLS = 0; then
+  AC_MSG_RESULT(yes)
+  
+  # Configure flags from sub-configure runs, so they show up in our help file.
+  AC_ARG_ENABLE(openssl,
+    [  --disable-openssl		Disable support for openssl in URL classes],,
+    enable_openssl=yes)
+  HAVE_GNUTLS=0
+  AC_ARG_WITH(openssl-include,
+    [  --with-openssl-include=PATH  include path for openssl headers],
+    openssl_incdir="$withval", openssl_incdir="no")
+  AC_ARG_WITH(openssl-library,
+    [  --with-openssl-library=PATH  library path for openssl libraries],
+    openssl_libdir="$withval", openssl_libdir="no")
+  
+  AC_CONFIG_SUBDIRS(SSL)
+else
+  AC_MSG_RESULT(no)
+fi
 
 #--------------------------------------------------------------------
 # Check for NSNetServices
@@ -3384,29 +3414,6 @@ else
 fi
 
 AC_SUBST(GNUSTEP_INSTALL_GDOMAP_AS_SETUID)
-
-# If there's no TLS support ... try to get some limited functionality
-# by using OpenSSL instead.
-
-if test "$HAVE_TLS" = "0"; then
-
-#--------------------------------------------------------------------
-# Configure flags from sub-configure runs, so they show up in our
-# help file.
-#--------------------------------------------------------------------
-AC_ARG_ENABLE(openssl,
-  [  --disable-openssl		Disable support for openssl in URL classes],,
-  enable_openssl=yes)
-  HAVE_GNUTLS=0
-AC_ARG_WITH(openssl-include,
-  [  --with-openssl-include=PATH  include path for openssl headers],
-  openssl_incdir="$withval", openssl_incdir="no")
-AC_ARG_WITH(openssl-library,
-  [  --with-openssl-library=PATH  library path for openssl libraries],
-  openssl_libdir="$withval", openssl_libdir="no")
-
-AC_CONFIG_SUBDIRS(SSL)
-fi
 
 #--------------------------------------------------------------------
 # Record the version

@@ -627,7 +627,6 @@ SUBMINOR_VERSION
 MINOR_VERSION
 MAJOR_VERSION
 VERSION
-subdirs
 GNUSTEP_INSTALL_GDOMAP_AS_SETUID
 GNUSTEP_GDOMAP_PORT_OVERRIDE
 WARN_FLAGS
@@ -640,6 +639,7 @@ ICU_LIBS
 ICU_CONFIG
 HAVE_AVAHI
 HAVE_MDNS
+subdirs
 HAVE_GNUTLS
 TLS_LIBS
 TLS_CFLAGS
@@ -811,9 +811,12 @@ enable_xml
 with_xml_prefix
 enable_xmltest
 enable_xslt
-enable_tls
+enable_gnutls
 with_tls_prefix
 enable_tlstest
+enable_openssl
+with_openssl_include
+with_openssl_library
 enable_zeroconf
 with_zeroconf_api
 enable_icu
@@ -825,9 +828,6 @@ with_gmp_library
 with_sort_algorithm
 with_gdomap_port
 enable_setuid_gdomap
-enable_openssl
-with_openssl_include
-with_openssl_library
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1497,8 +1497,10 @@ Optional Features:
   --disable-xml			Build even if XML-dependencies are not met
   --disable-xmltest		Do not try to compile and run a test XML program
   --disable-xslt		Build even if XSLT-dependency is not met
-  --disable-tls			Disable use of GNUTLS
+  --enable-gnutls           Enable use of GNUTLS
+  --disable-gnutls          Disable use of GNUTLS
   --disable-tlstest		Do not try to compile and run a test TLS program
+  --disable-openssl		Disable support for openssl in URL classes
   --disable-zeroconf		Disable NSNetServices support
   --disable-icu			Disable International Components for Unicode
   --disable-icu-config		Do not use the icu-config script to check
@@ -1514,7 +1516,6 @@ Optional Features:
                                 option if you are happy having the program
                                 started automatically on demand.
 
-  --disable-openssl		Disable support for openssl in URL classes
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1574,6 +1575,8 @@ Optional Packages:
   --with-libiconv-library=PATH  Library path for libiconv libraries
   --with-xml-prefix=PFX    Prefix where libxml is installed (optional)
   --with-tls-prefix=PFX    Prefix where libgnutls is installed (optional)
+  --with-openssl-include=PATH  include path for openssl headers
+  --with-openssl-library=PATH  library path for openssl libraries
   --with-zeroconf-api=API  force use of a specific zeroconf API (mdns or avahi)
   --with-icu-library=PATH  	library path for ICU libraries (only checked
 				if not using icu-config)
@@ -1583,8 +1586,6 @@ Optional Packages:
 				Possible values are timsort, quicksort, and shellsort.
 				Defaults to shellsort (others broken).
   --with-gdomap-port=PORT  alternative port for gdomap
-  --with-openssl-include=PATH  include path for openssl headers
-  --with-openssl-library=PATH  library path for openssl libraries
 
 Some influential environment variables:
   CC          C compiler command
@@ -10923,15 +10924,30 @@ fi
 # Check recent libgnutls for SSL streams.
 # See DEPENDENCIES POLICY at the start of this file.
 #--------------------------------------------------------------------
-# Check whether --enable-tls was given.
-if test "${enable_tls+set}" = set; then :
-  enableval=$enable_tls;
+
+# GNUTLS is linked to Apple's CoreFoundation on OSX, which renders it unusable there
+case "$target_os" in
+    darwin*) # Check whether --enable-gnutls was given.
+if test "${enable_gnutls+set}" = set; then :
+  enableval=$enable_gnutls; enable_gnutls="$enableval"
 else
-  enable_tls=yes
+  enable_gnutls=no
 fi
+   ;;
+    *)       # Check whether --enable-gnutls was given.
+if test "${enable_gnutls+set}" = set; then :
+  enableval=$enable_gnutls; enable_gnutls="$enableval"
+else
+  enable_gnutls=yes
+fi
+ ;;
+esac
 
-
-if test $enable_tls = yes; then
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we should try to use GNUTLS for SSL/TLS support" >&5
+$as_echo_n "checking whether we should try to use GNUTLS for SSL/TLS support... " >&6; }
+if test "$enable_gnutls" = yes; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
   HAVE_GNUTLS=0
   # Save CFLAGS and LIBS as AM_PATH_TLS clobbers these variables regardless
   # of the success of the macro.
@@ -11253,8 +11269,8 @@ $as_echo "$as_me: WARNING: Missing support for thread-safe error handling in GNU
     fi
   fi
 else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Disabled support for TLS funtionality." >&5
-$as_echo "$as_me: WARNING: Disabled support for TLS funtionality." >&2;}
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
   HAVE_GNUTLS=0
 fi
 if test $HAVE_GNUTLS = 1; then
@@ -11265,6 +11281,51 @@ _ACEOF
 
 fi
 
+
+#--------------------------------------------------------------------
+# If there's no GNUTLS support, try using OpenSSL instead.
+#--------------------------------------------------------------------
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we should try to use OpenSSL instead of GNUTLS" >&5
+$as_echo_n "checking whether we should try to use OpenSSL instead of GNUTLS... " >&6; }
+if test $HAVE_GNUTLS = 0; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+  # Configure flags from sub-configure runs, so they show up in our help file.
+  # Check whether --enable-openssl was given.
+if test "${enable_openssl+set}" = set; then :
+  enableval=$enable_openssl;
+else
+  enable_openssl=yes
+fi
+
+  HAVE_GNUTLS=0
+
+# Check whether --with-openssl-include was given.
+if test "${with_openssl_include+set}" = set; then :
+  withval=$with_openssl_include; openssl_incdir="$withval"
+else
+  openssl_incdir="no"
+fi
+
+
+# Check whether --with-openssl-library was given.
+if test "${with_openssl_library+set}" = set; then :
+  withval=$with_openssl_library; openssl_libdir="$withval"
+else
+  openssl_libdir="no"
+fi
+
+
+
+
+subdirs="$subdirs SSL"
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
 
 #--------------------------------------------------------------------
 # Check for NSNetServices
@@ -12057,46 +12118,6 @@ $as_echo "no" >&6; };
 fi
 
 
-
-# If there's no TLS support ... try to get some limited functionality
-# by using OpenSSL instead.
-
-if test "$HAVE_TLS" = "0"; then
-
-#--------------------------------------------------------------------
-# Configure flags from sub-configure runs, so they show up in our
-# help file.
-#--------------------------------------------------------------------
-# Check whether --enable-openssl was given.
-if test "${enable_openssl+set}" = set; then :
-  enableval=$enable_openssl;
-else
-  enable_openssl=yes
-fi
-
-  HAVE_GNUTLS=0
-
-# Check whether --with-openssl-include was given.
-if test "${with_openssl_include+set}" = set; then :
-  withval=$with_openssl_include; openssl_incdir="$withval"
-else
-  openssl_incdir="no"
-fi
-
-
-# Check whether --with-openssl-library was given.
-if test "${with_openssl_library+set}" = set; then :
-  withval=$with_openssl_library; openssl_libdir="$withval"
-else
-  openssl_libdir="no"
-fi
-
-
-
-
-subdirs="$subdirs SSL"
-
-fi
 
 #--------------------------------------------------------------------
 # Record the version

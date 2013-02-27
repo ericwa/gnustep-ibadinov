@@ -929,7 +929,12 @@ extern char **__libc_argv;
       _gnu_process_args(__libc_argc, __libc_argv, environ);
     }
 }
+#elif defined (__APPLE__)
 
++ (void)initialize
+{
+    GSInitializeProcess(*_NSGetArgc(), *_NSGetArgv(), *_NSGetEnviron());
+}
 
 #else
 #ifndef GS_PASS_ARGUMENTS
