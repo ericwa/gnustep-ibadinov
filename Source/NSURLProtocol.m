@@ -810,13 +810,13 @@ PostponeSelector(id self, SEL _cmd, id argument)
         }
         
         NSMutableURLRequest *request = [this->request mutableCopy];
-        [request setURL:url];
         [this->request release];
+        [request setURL:url];
         this->request = request;
         
         /* Inform client, required for compatibility with Apple's implementation */
         PostponeSelector(self, @selector(_continueLoading), nil);
-        [this->client URLProtocol:self wasRedirectedToRequest:this->request redirectResponse:nil];
+        [this->client URLProtocol:self wasRedirectedToRequest:[[request retain] autorelease] redirectResponse:nil];
         return;
     }
     [self _continueLoading];
