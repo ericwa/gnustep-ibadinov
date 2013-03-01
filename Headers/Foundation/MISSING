@@ -13,8 +13,6 @@ Missing macros:
 	NS_AUTOMATED_REFCOUNT_WEAK_UNAVAILABLE
 	NS_AVAILABLE_IOS
 
-	NS_FRONTIER_PSYCHIATRIST
-
 Missing headers:
 	<NSAppleEventDescriptor.h>
 	<NSAppleEventManager.h>
