@@ -25,9 +25,12 @@
 #import "common.h"
 
 #define	EXPOSE_NSURLConnection_IVARS	1
+#import "Foundation/NSBundle.h"
 #import "Foundation/NSError.h"
 #import "Foundation/NSRunLoop.h"
 #import "GSURLPrivate.h"
+#import "GNUstepBase/NSURL+GNUstepBase.h"
+#import "GNUstepBase/NSString+GNUstepBase.h"
 
 @interface _NSURLConnectionDataCollector : NSObject {
     NSURLConnection	*_connection; /* not retained */
@@ -133,6 +136,11 @@ typedef struct
 #define	this ((Internal*)(self->_NSURLConnectionInternal))
 #define	inst ((Internal*)(o->_NSURLConnectionInternal))
 
+#if __has_feature(objc_arc)
+#  define RETAIN_AUTORELEASE(object) __strong id __strong_##object = object;
+#else
+#  define RETAIN_AUTORELEASE(object) [[self retain] autorelease];
+#endif
 
 @implementation	NSURLConnection
 
@@ -199,6 +207,18 @@ typedef struct
     [super dealloc];
 }
 
+- (NSError *)_errorWithCode:(NSInteger)errorCode description:(NSString *)description
+{
+    NSURL *url = [this->_request URL];
+    NSString *urlString = [url absoluteString];
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:NSLocalizedString(description, @"") forKey:NSLocalizedDescriptionKey];
+    [userInfo setObject:url forKey:NSURLErrorKey];
+    [userInfo setObject:url forKey:@"NSURLErrorFailingURLErrorKey"]; /* deprecated in Mac' Foundation */
+    [userInfo setObject:urlString forKey:NSErrorFailingURLStringKey];
+    [userInfo setObject:urlString forKey:@"NSURLErrorFailingURLStringErrorKey"]; /* deprecated in Mac' Foundation */
+    return [NSError errorWithDomain:NSURLErrorDomain code:errorCode userInfo:userInfo];
+}
+
 - (void)start
 {
     /* enrich the request with the appropriate HTTP cookies, if desired */
@@ -217,10 +237,54 @@ typedef struct
             }
         }
     }
-    this->_protocol = [[NSURLProtocol alloc] initWithRequest:this->_request
-                                              cachedResponse:nil
-                                                      client:(id<NSURLProtocolClient>)self];
-    [this->_protocol startLoading];
+    
+    /* FIXME!
+     * This code is currently no.op. because it's impossible to create NSURL object
+     * with query and without a leading slash (e.g. http://example.com?id=123 )
+     */
+    if ([[[this->_request URL] fullPath] length] == 0)
+    {
+        NSString *urlString = [[this->_request URL] absoluteString];
+        
+        if ([urlString rangeOfString:@"?"].length > 0)
+        {
+            urlString = [urlString stringByReplacingString:@"?" withString:@"/?"];
+        }
+        else if ([urlString rangeOfString:@"#"].length > 0)
+        {
+            urlString = [urlString stringByReplacingString:@"#" withString:@"/#"];
+        }
+        else
+        {
+            urlString = [urlString stringByAppendingString:@"/"];
+        }
+        
+        NSURL *url = [NSURL URLWithString:urlString];
+        if (url == nil)
+        {
+            [this->_delegate connection:self didFailWithError:[self _errorWithCode:NSURLErrorBadURL description:@"Invalid URL"]];
+            return;
+        }
+        
+        NSMutableURLRequest *request = [this->_request mutableCopy];
+        [this->_request release];
+        [request setURL:url];
+        this->_request = request;
+    }
+    
+    RETAIN_AUTORELEASE(self);
+    
+    /* Required for compatiblity with Apple's implementation */
+    NSURLRequest *request = [this->_delegate connection:self willSendRequest:this->_request redirectResponse:nil];
+    if (this->_delegate != nil && request != nil)
+    {
+        ASSIGNCOPY(this->_request, request); /* use new request */
+        this->_protocol = [[NSURLProtocol alloc] initWithRequest:this->_request
+                                                  cachedResponse:nil
+                                                          client:(id<NSURLProtocolClient>)self];
+        
+        [this->_protocol startLoading];
+    }
 }
 
 - (void)_stop
@@ -373,12 +437,6 @@ typedef struct
         /* FIXME ... cache response here? */
     }
 }
-
-#if __has_feature(objc_arc)
-#  define RETAIN_AUTORELEASE(object) __strong id __strong_##object = object;
-#else
-#  define RETAIN_AUTORELEASE(object) [[self retain] autorelease];
-#endif
 
 - (void)URLProtocol:(NSURLProtocol *)protocol wasRedirectedToRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse
 {

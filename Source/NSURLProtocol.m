@@ -297,7 +297,6 @@ typedef uint8_t NSHTTPURLProtocolState;
 
 @interface _NSHTTPURLProtocol (Private)
 
-- (void)_continueLoading;
 - (void)_processNewData;
 - (BOOL)_processHeadersAndCreateReditrectedRequest:(NSURLRequest **)aRequest error:(NSError **)error;
 - (NSURLAuthenticationChallenge *)_handleAuthenticationChallenge;
@@ -780,55 +779,6 @@ PostponeSelector(id self, SEL _cmd, id argument)
     _eof = NO;
     _state = NSHTTPURLProtocolStateStarted;
     _response = nil;
-    
-    /* FIXME!
-     * This code is currently no.op. because it's impossible to create NSURL object
-     * with query and without a leading slash (e.g. http://example.com?id=123 )
-     */
-    if ([[[this->request URL] fullPath] length] == 0)
-    {
-        NSString *urlString = [[this->request URL] absoluteString];
-        
-        if ([urlString rangeOfString:@"?"].length > 0)
-        {
-            urlString = [urlString stringByReplacingString:@"?" withString:@"/?"];
-        }
-        else if ([urlString rangeOfString:@"#"].length > 0)
-        {
-            urlString = [urlString stringByReplacingString:@"#" withString:@"/#"];
-        }
-        else
-        {
-            urlString = [urlString stringByAppendingString:@"/"];
-        }
-        
-        NSURL *url = [NSURL URLWithString:urlString];
-        if (url == nil)
-        {
-            [self _didFailWithErrorDescription:@"Invalid URL" code:NSURLErrorBadURL];
-            return;
-        }
-        
-        NSMutableURLRequest *request = [this->request mutableCopy];
-        [this->request release];
-        [request setURL:url];
-        this->request = request;
-        
-        /* Inform client, required for compatibility with Apple's implementation */
-        PostponeSelector(self, @selector(_continueLoading), nil);
-        [this->client URLProtocol:self wasRedirectedToRequest:[[request retain] autorelease] redirectResponse:nil];
-        return;
-    }
-    [self _continueLoading];
-}
-    
-- (void)_continueLoading
-{
-    /* check if the client cancelled URL loading */
-    if (_state == NSHTTPURLProtocolStateStopped)
-    {
-        return;
-    }
     
     if (0 && this->cachedResponse)
     {
