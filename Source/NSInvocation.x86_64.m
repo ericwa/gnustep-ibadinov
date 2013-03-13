@@ -732,9 +732,9 @@ GSMethodSignatureForForwarding (id receiver, SEL forward, SEL sel)
       
   if (class_respondsToSelector(cls, @selector(methodSignatureForSelector:)))
     {
-      sig = [receiver methodSignatureForSelector: sel];
+      sig = [receiver methodSignatureForSelector:sel];
     }
-  else
+  if (nil == sig)
     {
         [NSException raise: NSInvalidArgumentException
                     format: @"%c[%s %s]: unrecognized selector sent to instance %p",
