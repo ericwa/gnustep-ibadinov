@@ -292,11 +292,10 @@ static NSRange GSRangeOfCookie(NSString *string);
   if ((self = [super init]) == nil)
     return nil;
 
-  /* Check a few values.  Based on Mac OS X tests. */
+  /* Check a few values. Based on Mac OS X tests. */
   if (![self _isValidProperty: [properties objectForKey: NSHTTPCookiePath]] 
     || ![self _isValidProperty: [properties objectForKey: NSHTTPCookieDomain]]
     || ![self _isValidProperty: [properties objectForKey: NSHTTPCookieName]]
-    || ![self _isValidProperty: [properties objectForKey: NSHTTPCookieValue]]
     )
     {
       [self release];
@@ -658,17 +657,38 @@ static inline id parseUnquotedString(pldata *pld, char endChar)
   return obj;
 }
 
-static BOOL
+/**
+ * RFC 6265 specifies cookie value as following:
+ *   cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
+ *   cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
+ *                         ; US-ASCII characters excluding CTLs,
+ *                         ; whitespace DQUOTE, comma, semicolon,
+ *                         ; and backslash
+ * But Apple's implementation allows whitespace, comma and backslash
+ * to be present in value and trims it before the first denied character.
+ */
+static NSString *
+_validCookieValue(NSString *aValue)
+{
+    const char *bytes = [aValue UTF8String];
+    NSUInteger length = [aValue length];
+    NSUInteger index = 0;
+    /* DQUOTE and semicolon are handled by parsing algorithm */
+    while (index < length && bytes[index] >= 0x20 && bytes[index] <= 0x7E) {
+        ++index;
+    }
+    return [aValue substringWithRange:(NSRange){0, index}];
+}
+
+static void
 _setCookieKey(NSMutableDictionary *dict, NSString *key, NSString *value)
 {
   if ([dict count] == 0)
     {
-      /* This must be the name=value pair */
-      if ([value length] == 0)
-	return NO;
+      /* this is a name-value pair */
+      value = _validCookieValue(value);
       [dict setObject: key forKey: NSHTTPCookieName];
       [dict setObject: value forKey: NSHTTPCookieValue];
-      return YES;
     }
   if ([[key lowercaseString] isEqual: @"comment"])
     [dict setObject: value forKey: NSHTTPCookieComment];
@@ -700,7 +720,6 @@ _setCookieKey(NSMutableDictionary *dict, NSString *key, NSString *value)
 	     forKey: NSHTTPCookieSecure];
   else if ([[key lowercaseString] isEqual: @"version"])
     [dict setObject: value forKey: NSHTTPCookieVersion];
-  return YES;
 }
 
 static id
@@ -755,11 +774,7 @@ GSPropertyListFromCookieFormat(NSString *string, NSInteger version, NSError **er
       if (moreCharacters == NO || pld->ptr[pld->pos] == ';')
 	{
 	  pld->pos++;
-	  if (_setCookieKey(dict, key, @"") == NO)
-	    {
-	      pld->err = @"invalid cookie pair";
-	      DESTROY(dict);
-	    }
+	  _setCookieKey(dict, key, @"");
 	  RELEASE(key);
 	}
       else if (pld->ptr[pld->pos] == '=')
@@ -785,11 +800,7 @@ GSPropertyListFromCookieFormat(NSString *string, NSInteger version, NSError **er
 	      DESTROY(dict);
 	      break;
 	    }
-	  if (_setCookieKey(dict, key, val) == NO)
-	    {
-	      pld->err = @"invalid cookie pair";
-	      DESTROY(dict);
-	    }
+	  _setCookieKey(dict, key, val);
 	  RELEASE(key);
 	  RELEASE(val);
 	  if (skipSpace(pld) && pld->ptr[pld->pos] == ';')

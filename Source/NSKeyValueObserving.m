@@ -186,6 +186,7 @@ setup()
 - (id) initWithInstance: (NSObject*)i;
 - (NSObject*) instance;
 - (BOOL) isUnobserved;
+- (void) lock;
 - (void) unlock;
 
 @end
@@ -1103,6 +1104,11 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
   return pathInfo;
 }
 
+- (void) lock
+{
+    [iLock lock];
+}
+
 - (void) unlock
 {
   [iLock unlock];
@@ -1515,7 +1521,17 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
       [self setObservationInfo: info];
       object_setClass(self, [r replacement]);
     }
-
+  [kvoLock unlock];
+  /*
+   * At this point info may be removed from infoTable by another thread,
+   * but we can't acquire info lock while handling kvoLock for it causes
+   * deadlocks (addObserver and removeObserver may be called from observer's
+   * observeValueForKeyPath and in this case of recursion info lock is acquired
+   * before kvoLock, or it may be called directly causing kvoLock to be 
+   * locked first). To deal with this issue properly, KVO system should refrain
+   * from holding any locks while calling observeValueForKeyPath.
+   */
+  [info lock];
   /*
    * Now add the observer.
    */
@@ -1540,8 +1556,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
                 options: options
                 context: aContext];
     }
-
-  [kvoLock unlock];
+  [info unlock];
 }
 
 - (void) removeObserver: (NSObject*)anObserver forKeyPath: (NSString*)aPath
@@ -1549,16 +1564,17 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
   GSKVOInfo	*info;
   id forwarder;
 
-  setup();
-  [kvoLock lock];
   /*
    * Get the observation information and remove this observation.
    */
   info = (GSKVOInfo*)[self observationInfo];
+  [info lock];
   forwarder = [info contextForObserver: anObserver ofKeyPath: aPath];
   [info removeObserver: anObserver forKeyPath: aPath];
   if ([info isUnobserved] == YES)
     {
+      setup();
+      [kvoLock lock];
       /*
        * The instance is no longer being observed ... so we can
        * turn off key-value-observing for it.
@@ -1566,8 +1582,9 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
       object_setClass(self, [self class]);
       IF_NO_GC(AUTORELEASE(info);)
       [self setObservationInfo: nil];
+      [kvoLock unlock];
     }
-  [kvoLock unlock];
+  [info unlock];
   if ([aPath rangeOfString:@"."].location != NSNotFound)
     [forwarder finalize];
 }
