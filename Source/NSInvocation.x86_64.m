@@ -202,7 +202,7 @@ NSInvocationForwardHandler_stret();
 {
   if (self = [super init])
     {
-      retainTarget = NO;
+      retainTarget = YES;
       sendToSuper = NO;
       retainArguments = NO;
       retainedArguments = (uint32_t)0 - 1;
@@ -426,18 +426,24 @@ NSInvocationForwardHandler_stret();
 
 - (void)retainArgument:(void *)value atIndex:(NSInteger)index
 {
+  if (index == 0 && !retainTarget)
+    {
+      return;
+    }
   const char *type = [signature getArgumentTypeAtIndex:index];
   type = objc_skip_type_qualifiers(type);
   if (*type == '@')
     {
-      [pool replaceObjectAtIndex:index withObject:*(id *)value];
+      id object = *(id *)value;
+      object = object != nil ? object : [NSNull null];
+      [pool replaceObjectAtIndex:index withObject:object];
     }
   retainedArguments |= (uint32_t)1 << index;
 }
 
 - (void)setArgument:(void *)value atIndex:(NSInteger)index
 {
-  if (retainArguments || (index == 0 && retainTarget))
+  if (retainArguments)
     {
       [self retainArgument:value atIndex:index];
     }
@@ -540,17 +546,18 @@ NSInvocationForwardHandler_stret();
   retainArguments = YES;
   if (retainedArguments != (uint32_t)0 - 1)
     {
-      for (uint8_t index = 0; index < argumentCount; ++index) {
-        uint32_t flag = (uint32_t)1 << index;
-        if (!(retainedArguments & flag))
-          {
-            ArgumentInfo info = argumentInfo[index]; 
-            if (info.size && info.size == WordSize)
-              {
-                [self retainArgument:(arguments + info.offset) atIndex:index];
-              }
-          }
-      }
+      for (uint8_t index = 0; index < argumentCount; ++index)
+        {
+          uint32_t flag = (uint32_t)1 << index;
+          if (!(retainedArguments & flag))
+            {
+              ArgumentInfo info = argumentInfo[index]; 
+              if (info.size && info.size == WordSize)
+                {
+                  [self retainArgument:(arguments + info.offset) atIndex:index];
+                }
+            }
+        }
     }
 }
 
@@ -573,6 +580,7 @@ NSInvocationForwardHandler_stret();
 - (void)retainArgumentsIncludingTarget:(BOOL)retainTargetFlag
 {
   retainTarget = retainTargetFlag;
+  [self retainArguments];
 }
 
 - (BOOL)sendsToSuper
