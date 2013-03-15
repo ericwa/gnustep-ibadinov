@@ -103,7 +103,7 @@ int main()
   id obj = [Foo new]; 
   id one, two, three, four, five, six, seven, eight;
   id bar;
-  int rc;
+  NSUInteger rc;
 
   one = @"one";
   two = @"two";
