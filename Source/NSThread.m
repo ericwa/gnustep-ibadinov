@@ -1266,7 +1266,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
       GSPerformHolder   *h;
       NSConditionLock	*l = nil;
 
-      if ([t isFinished] == YES)
+      if ([aThread isFinished] == YES)
         {
           [NSException raise: NSInternalInconsistencyException
                       format: @"perform on finished thread"];

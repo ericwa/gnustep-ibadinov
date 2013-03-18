@@ -49,7 +49,7 @@ Class _FooConstantStringClassReference;
 #else /* new NeXT_RUNTIME */
 
 /* Define our custom constant string class */
-@interface FooConstantString
+GS_OBJC_ROOT_CLASS @interface FooConstantString
 {
    Class isa;
    char *c_string;

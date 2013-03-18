@@ -845,6 +845,10 @@ static void logTinyStringCount(void)
 {
   return self;
 }
+- (NSUInteger) retainCount
+{
+  return UINT_MAX;
+}
 
 - (id) autorelease
 {
@@ -3398,50 +3402,48 @@ transmute(GSStr self, NSString *aString)
 {
   if (self->_flags.hash == 0)
     {
-      NSUInteger ret = 0;
-      NSUInteger len = self->_count;
+      uint32_t      ret = 0;
+      NSUInteger    len = (int)self->_count;
 
       if (len > 0)
 	{
-	  register unsigned	index = 0;
-
 	  if (self->_flags.wide)
 	    {
-	      register const unichar	*p = self->_contents.u;
+	      const unichar	*p = self->_contents.u;
 
-	      while (index < len)
-		{
-		  ret = (ret << 5) + ret + p[index++];
-		}
+              ret = GSPrivateHash(0, p, len * sizeof(unichar));
 	    }
-	  else
+	  else if (len > 64)
+            {
+              return (self->_flags.hash = (unsigned int)[super hash]);
+            }
+          else
 	    {
-	      register const unsigned char	*p = self->_contents.c;
+              unichar                   buf[64];
+              NSUInteger	                index;
+	      const unsigned char	*p = self->_contents.c;
 
 	      if (internalEncoding == NSISOLatin1StringEncoding)
 		{
-		  while (index < len)
-		    {
-		      ret = (ret << 5) + ret + p[index++];
-		    }
-		}
+                  for (index = 0; index < len; index++)
+                    {
+                      buf[index] = p[index];
+                    }
+                }
 	      else
 		{
-		  while (index < len)
-		    {
-		      unichar	u = p[index++];
+                  for (index = 0; index < len; index++)
+                    {
+		      unichar	u = p[index];
 
-		      if (u > 127)
-			{
-			  unsigned char	c = (unsigned char)u;
-			  NSUInteger    s = 1;
-			  unichar      *d = &u;
-
-			  GSToUnicode(&d, &s, &c, 1, internalEncoding, 0, 0);
-			}
-		      ret = (ret << 5) + ret + u;
-		    }
+                      if (u > 127)
+                        {
+                          return (self->_flags.hash = (unsigned int)[super hash]);
+                        }
+                      buf[index] = u;
+                    }
 		}
+              ret = GSPrivateHash(0, buf, len * sizeof(unichar));
 	    }
 
 	  /*
@@ -5715,37 +5717,53 @@ GSPrivateStrExternalize(GSStr s)
     }
 }
 
-/*
+/* 
  * Must match the implementation in NSString
+ * To avoid allocating memory, we build the hash incrementally.
  */
 - (NSUInteger)hash
 {
     if (numBytes > 0)
     {
-        unsigned	ret = 0;
-        unichar	n = 0;
-        unsigned	i = 0;
-        unichar	c;
+        uint32_t    s0 = 0;
+        uint32_t    s1 = 0;
+        unichar     chunk[64];
+        uint32_t    ret;
+        unichar     n = 0;
+        unsigned    i = 0;
+        int         l = 0;
+        uint32_t    t = 0;
         
         while (i < numBytes)
-        {
-            c = nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
-            ret = (ret << 5) + ret + c;
-        }
+	{
+            chunk[l++] = nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
+            if (64 == l)
+            {
+                GSPrivateIncrementalHash(&s0, &s1, chunk, l * sizeof(unichar));
+                t += l;
+                l = 0;
+            }
+	}
         if (0 != n)
+	{
+            chunk[l++] = n; /* add final character */
+	}
+        if (l > 0)
         {
-            ret = (ret << 5) + ret + n;	// Add final character
+            GSPrivateIncrementalHash(&s0, &s1, chunk, l * sizeof(unichar));
+            t += l;
         }
+        ret = GSPrivateFinishHash(s0, s1, t * sizeof(unichar));
         ret &= 0x0fffffff;
         if (ret == 0)
-        {
+	{
             ret = 0x0fffffff;
-        }
+	}
         return ret;
     }
     else
     {
-        return 0x0ffffffe;	/* Hash for an empty string.	*/
+        return 0x0ffffffe; /* hash for an empty string */
     }
 }
 
@@ -5791,7 +5809,7 @@ GSPrivateStrExternalize(GSStr s)
                 buf[pos] = nextUTF8((const uint8_t *)bytes, numBytes, &i, &n);
             }
             index = stop;
-            while (index-- > 0)
+            while (index-- > start)
             {
                 if ((*mImp)(aSet, @selector(characterIsMember:), buf[--pos]))
                 {
@@ -5912,24 +5930,44 @@ NSCFStringCharacterAtIndex(NSCFConstantString *self, NSUInteger index)
     return NSCFStringCharacterAtIndex(self, index);
 }
 
-/*
+/* 
  * Must match the implementation in NSString
+ * To avoid allocating memory, we build the hash incrementally.
  */
 - (NSUInteger)hash
 {
     if (numBytes == 0)
     {
-        return 0x0ffffffe;	/* Hash for an empty string */
+        return 0x0ffffffe; /* hash for an empty string */
     }
     
-    NSUInteger	result = 0;
-    unsigned	index = 0;
+    NSUInteger  result;
+    unsigned    index = 0;
+    unsigned    length = 0;
+    unsigned    totalLength = 0;
+    
+    uint32_t    s0 = 0;
+    uint32_t    s1 = 0;
+    unichar     chunk[64];
     
     while (index < numBytes)
     {
-        result = (result << 5) + result + NSCFStringCharacterAtIndex(self, index);
+        chunk[length++] = NSCFStringCharacterAtIndex(self, index);
+        if (64 == length)
+        {
+            GSPrivateIncrementalHash(&s0, &s1, chunk, length * sizeof(unichar));
+            totalLength += length;
+            length = 0;
+        }
         ++index;
     }
+    if (length > 0)
+    {
+        GSPrivateIncrementalHash(&s0, &s1, chunk, length * sizeof(unichar));
+        totalLength += length;
+    }
+    result = GSPrivateFinishHash(s0, s1, totalLength * sizeof(unichar));
+    
     result &= 0x0fffffff;
     if (result == 0)
     {

@@ -340,6 +340,7 @@
 		18641D201678AD39003C6E11 /* GSSocks5Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D111678AD04003C6E11 /* GSSocks5Parser.m */; };
 		18641D211678AD41003C6E11 /* GSSocksParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D131678AD04003C6E11 /* GSSocksParser.m */; };
 		18641D221678AD46003C6E11 /* GSSocksParserPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D151678AD04003C6E11 /* GSSocksParserPrivate.m */; };
+		1890B34116F3BC3300187826 /* GSPrivateHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890B34016F3BC3300187826 /* GSPrivateHash.m */; };
 		18D8BEA4164B5FF800942A5D /* NSInvocation.x86_64.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */; };
 /* End PBXBuildFile section */
 
@@ -935,6 +936,7 @@
 		1890701B1610BF3C0003C892 /* NSUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUserDefaults.m; sourceTree = "<group>"; };
 		1890701C1610BF3C0003C892 /* win32-def.top */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "win32-def.top"; sourceTree = "<group>"; };
 		1890701D1610BF3C0003C892 /* win32-load.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "win32-load.h"; sourceTree = "<group>"; };
+		1890B34016F3BC3300187826 /* GSPrivateHash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSPrivateHash.m; sourceTree = "<group>"; };
 		18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInvocation.x86_64.m; sourceTree = "<group>"; };
 		18FE1E12162716A200389A13 /* ChangeLog */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog; sourceTree = SOURCE_ROOT; };
 		18FE1E13162716A200389A13 /* ChangeLog.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = ChangeLog.1; sourceTree = SOURCE_ROOT; };
@@ -1594,6 +1596,7 @@
 				18906F551610BF3C0003C892 /* GSMDNSNetServices.m */,
 				18906F5C1610BF3C0003C892 /* GSQuickSort.m */,
 				18906F5F1610BF3C0003C892 /* GSRunLoopWatcher.m */,
+				1890B34016F3BC3300187826 /* GSPrivateHash.m */,
 				18906F601610BF3C0003C892 /* GSSet.m */,
 				18906F611610BF3C0003C892 /* GSShellSort.m */,
 				18906F631610BF3C0003C892 /* GSSocketStream.m */,
@@ -3810,6 +3813,7 @@
 				18394C7A1610EB8000335E85 /* NSXMLNode.m in Sources */,
 				18394C7B1610EB8000335E85 /* NSXMLParser.m in Sources */,
 				18394C7C1610EB8000335E85 /* NSZone.m in Sources */,
+				1890B34116F3BC3300187826 /* GSPrivateHash.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

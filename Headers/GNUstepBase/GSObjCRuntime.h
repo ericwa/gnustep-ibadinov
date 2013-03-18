@@ -130,8 +130,8 @@ GS_EXPORT int	_NSLogDescriptor;
 GS_EXPORT NSRecursiveLock	*GSLogLock(void);
     
 #if defined(__clang__) && defined(__OBJC__)
-static inline void gs_consumed(id NS_CONSUMED o) __attribute__ ((unused));
-static inline void gs_consumed(id NS_CONSUMED __attribute__ ((unused))o) { return; }
+static inline void gs_consumed(id NS_CONSUMED o) GS_UNUSED_FUNC;
+static inline void gs_consumed(id NS_CONSUMED GS_UNUSED_ARG o) { return; }
 #  define GS_CONSUMED(O) gs_consumed(O);
 #else
 #  define GS_CONSUMED(O)

@@ -221,6 +221,35 @@
 #import <GNUstepBase/GSConfig.h>
 #endif
 
+
+/* Attribute definitions for attributes which may or may not be supported
+ * depending on the compiler being used.
+ * NB we currently expect gcc to be version 4 or later.
+ *
+ * The definition should be of the form GS_XXX_CONTEXT where XXX is the
+ * name of the attribute and CONTEXT is one of FUNC, METH, or IVAR
+ * depending on where the attribute can be applied.
+ */
+
+#if __GNUC__*10+__GNUC_MINOR__ >= 31
+#  define GS_DEPRECATED_FUNC __attribute__ ((deprecated))
+#else
+#  define GS_DEPRECATED_FUNC
+#endif
+
+#define GS_UNUSED_ARG __attribute__((unused))
+
+#define GS_UNUSED_FUNC __attribute__((unused))
+
+// FIXME ... what version of gcc?
+#if __clang__
+#  define GS_UNUSED_IVAR __attribute__((unused))
+#else
+#  define GS_UNUSED_IVAR 
+#endif
+
+
+
 #ifndef __has_feature
 #define __has_feature(x) 0
 #endif
@@ -281,57 +310,8 @@
 #  endif
 #endif
 
-
-
-#if	defined(GNUSTEP_WITH_DLL)
-
-#if BUILD_libgnustep_base_DLL
-#
-# if defined(__MINGW__)
-  /* On Mingw, the compiler will export all symbols automatically, so
-   * __declspec(dllexport) is not needed.
-   */
-#  define GS_EXPORT  extern
-#  define GS_DECLARE
-# else
-#  define GS_EXPORT  __declspec(dllexport)
-#  define GS_DECLARE __declspec(dllexport)
-# endif
-#else
-#  define GS_EXPORT  extern __declspec(dllimport)
-#  define GS_DECLARE __declspec(dllimport)
-#endif
-
-#else /* GNUSTEP_WITH[OUT]_DLL */
-
-#  define GS_EXPORT extern
-#  define GS_DECLARE
-
-#endif
-
-/* Attribute definitions for attributes which may or may not be supported
- * depending on the compiler being used.
- * The definition should be of the form GS_XXX_CONTEXT where XXX is the
- * name of the attribute and CONTEXT is one of FUNC, METH, or IVAR
- * depending on where the attribute can be applied.
- */
-
-#if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1))
-#  define GS_DEPRECATED_FUNC __attribute__ ((deprecated))
-#else
-#  define GS_DEPRECATED_FUNC
-#endif
-
-#ifdef __clang__
-#  define GS_UNUSED_IVAR __attribute__((unused))
-#else
-#  define GS_UNUSED_IVAR
-#endif
-
-
-/*
- * Attribute definition for root classes, annotates the interface declaration of
- * the class.
+/* Attribute definition for root classes, annotates the interface declaration
+ * of the class.
  */
 #ifndef GS_ROOT_CLASS
 #  if GS_HAVE_OBJC_ROOT_CLASS_ATTR || __has_feature(attribute_objc_root_class)
@@ -340,5 +320,31 @@
 #    define GS_ROOT_CLASS
 #  endif
 #endif
+
+
+
+/* Define appropriate export and import macros.
+ * On Mingw, the compiler will export all symbols automatically, 
+ * so __declspec(dllexport) is not needed while building Foundation.
+ */
+#if	defined(GNUSTEP_WITH_DLL)
+#  if BUILD_libgnustep_base_DLL
+#    if defined(__MINGW__)
+#      define GS_EXPORT  extern
+#      define GS_DECLARE
+#    else
+#      define GS_EXPORT  __declspec(dllexport)
+#      define GS_DECLARE __declspec(dllexport)
+#    endif
+#  else /* BUILD_libgnustep_base_DLL */
+#    define GS_EXPORT  extern __declspec(dllimport)
+#    define GS_DECLARE __declspec(dllimport)
+#  endif /* BUILD_libgnustep_base_DLL */
+#else /* GNUSTEP_WITH_DLL */
+#  define GS_EXPORT extern
+#  define GS_DECLARE
+#endif /* GNUSTEP_WITH_DLL */
+
+
 
 #endif /* __GNUSTEP_GSVERSIONMACROS_H_INCLUDED_ */
