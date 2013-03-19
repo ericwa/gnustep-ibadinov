@@ -3248,7 +3248,7 @@ static NSSet	*fileKeys = nil;
 #if	defined(__MINGW__)
     DWORD		returnCode = 0;
     PSID		sidOwner;
-    BOOL		result = TRUE;
+    int                 result = TRUE;
     _CHAR		account[BUFSIZ];
     _CHAR		domain[BUFSIZ];
     DWORD		accountSize = 1024;
@@ -3405,7 +3405,7 @@ static NSSet	*fileKeys = nil;
 #if	defined(__MINGW__)
     DWORD		returnCode = 0;
     PSID		sidOwner;
-    BOOL		result = TRUE;
+    int                 result = TRUE;
     _CHAR		account[BUFSIZ];
     _CHAR		domain[BUFSIZ];
     DWORD		accountSize = 1024;
