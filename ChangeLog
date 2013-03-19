@@ -1,3 +1,165 @@
+2012-03-17  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/GSSet.m: Some optimisation for set intersection.
+
+2013-03-16  Fred Kiefer <FredKiefer@gmx.de>
+
+	* Tests/base/NSLocale/general.m,
+	* Tests/base/NSTimeZone/use.m: Mark more tests that depend on
+	locale setting as hopes.
+	* Tests/base/GSXML/basic.m: Set the timezone of the GSXMLRPC to
+	get the same date string in the output.
+
+2012-03-16  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* NSTimeZones/NSTimeZones.tar:
+	* Tools/gsdoc-1_0_0.dtd:
+	* Tools/gsdoc-1_0_1.dtd:
+	* Tools/gsdoc-1_0_2.dtd:
+	* Tools/gsdoc-1_0_3.dtd:
+	* Tools/gsdoc-0_6_5.dtd:
+	* Tools/gsdoc-0_6_6.dtd:
+	* Tools/gsdoc-0_6_7.dtd:
+	* Tools/plist-0_9.dtd:
+        Update/correct FSF address.
+
+2012-03-16  reussandras@gmail.com
+
+        * base/Source/NSCalendar.m:
+        Add simple quarter calculation.
+        * base/Source/NSPathUtilities.m:
+        Fix bug handling defaults dir config (was treating absolute path
+        as relative).
+
+2012-03-16  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* NSTimeZones/NSTimeZones.tar: Update timezone information
+
+2012-03-16  Emmanuel Maillard <mailing-lists@e-maillard.com>
+
+        * configure.ac: checks for pthread library and password structure
+        * Headers/GNUstepBase/config.h.in: new define for password field
+        * Source/NSPathUtilities.m: use new define
+        * configure: regenerate
+        Changes for Android build
+
+2012-03-12  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/GSPrivate.h: Change hash function args and add new functions
+        * for incremental hash.
+        * Source/NSString.m: Update to use the private hash function introduced
+        for NSSortdescriptor.
+        * Source/GSString.m: ditto.
+        * Source/NSSortDescriptor.m: Update for new function arguments.
+        * Source/GSPrivateHash.m: Add alternative version of hash functions
+        (old code plus new public domain murmurhash3 code).
+        * Source/GNUmakefile: Build alternative hash functions.
+        build with OLDHASH defined to 0 to get new alternatives.
+
+2012-03-10  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/NSFileManager.m:
+        Fix some autorelease pool management issues.
+
+2013-03-09 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* Tests/base/NSFileManager/general.m
+	  remove accidently snucked in header
+
+2013-03-08 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+
+        * Headers/Foundation/NSFileManager.h:
+        * Source/NSFileManager.m:
+        * Tests/base/NSFileManager/general.m:
+        Implement methods forcoping/moving file URLs
+
+2013-03-05  Larry Campbell <lcampbel@akamai.com>
+
+        * Source/NSFileManager.m: Fix for ([-contentsEqualAtPath:andPath:])
+        compare contents of regular files in subdirectories.
+
+2013-03-05 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+
+        * Source/NSFileManager.m:
+        * Headers/Foundation/NSFileManager.h:
+        ([createDirectoryAtURL:withIntermediateDirectories:attributes:error:])
+        implemented.
+        Also, for OSX compatibility, RFM 'fixed' the ...error: methods to
+        leave the error value unmodified in the case where no error occurs.
+
+2013-03-03 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+
+	* Source/NSKeyValueObserving.m
+	* Source/NSXMLParser.m
+	  char is unsigned on macppc, so don't compare it 
+	  against negative values
+
+2013-03-01  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Version ... bump subminor number in preparation for next release.
+
+2013-02-28  Richard Frith-Macdonald <rfm@gnu.org>
+
+        Make release
+	* Version:
+	* Source/NSRegularExpression.m:
+	* Source/NSURLResponse.m:
+	* Source/NSString.m:
+	* Source/DocMakefile:
+	* Source/GSNetServices.h:
+	* Documentation/news.texi:
+	* Documentation/ReleaseNotes.gsdoc:
+	* Headers/GNUstepBase/GSVersionMacros.h:
+	* Headers/Foundation/NSNetServices.h:
+	* Headers/Foundation/NSBundle.h:
+	* Headers/Foundation/NSXMLDocument.h:
+	* Headers/Foundation/NSXMLNode.h:
+	* Headers/Foundation/NSObjCRuntime.h:
+	* Headers/Foundation/NSXMLDTD.h:
+	* Headers/Foundation/NSXMLDTDNode.h:
+	* Headers/Foundation/NSXMLElement.h:
+	* Headers/Foundation/NSXMLParser.h:
+	* Tools/DocMakefile:
+	* Tools/AGSParser.m:
+        Bump version for new release, add release notes, clean up documentation.
+
+2013-02-28  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Tests/base/NSString/test00.m: Add a few tests for searching subrange
+        of a string.
+        * Source/GSString.m: ([rangeOfCharacterFromSet:options:range:])
+        Fix for overrun when searching backwards ... spotted by Fred.
+ 
+2013-02-17  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/GSAvahiRunLoopIntegration.m: Remove code which was clearing
+        bitmask values needed to track whether watcher needed to be removed
+        from run loop.
+
+2013-02-16  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/NSURL.m: a data url ignores any base URL.
+        * Source/GSAvahiClient.m: remove self from runloop on dealloc.
+
+2013-02-15  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/NSPredicate.m: updates to output correct predicate format
+        for binary operators.
+        * Source/NSURL.m: unescape data for -relativePath
+
+2013-02-10  Marcus Muller <znek@mulle-kybernetik.com>
+
+        * Source/GSMDNSNetServices.m: enable whether a delegate is set or not.
+
+2013-02-10  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/NSURL.m: For OSX compatibility, if we are creating a relative
+        URL and the base URL has a different scheme from the base, then we
+        ignore the base URL rather than raising an exception.
+
+2013-02-03  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Source/NSThread.m: Fix error in check for perform on finished thread.
+
 2013-01-24  Richard Frith-Macdonald <rfm@gnu.org>
 
         * Source/NSCalendar.m: (-[dateByAddingComponents:toDate:options:]),

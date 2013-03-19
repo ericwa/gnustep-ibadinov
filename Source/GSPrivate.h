@@ -372,34 +372,6 @@ GSPrivateIsByteEncoding(NSStringEncoding encoding);// GS_ATTRIB_PRIVATE;
 BOOL
 GSPrivateIsEncodingSupported(NSStringEncoding encoding);// GS_ATTRIB_PRIVATE;
 
-/* Hash function to hash up to limit bytes from data of specified length.
- * If the flag is NO then a result of 0 is mapped to 0xffffffff.
- * This is a pretty useful general purpose hash function.
- */
-static inline NSUInteger
-GSPrivateHash(const void *data, NSUInteger length, NSUInteger limit, BOOL zero)
-  __attribute__((unused));
-static inline NSUInteger
-GSPrivateHash(const void *data, NSUInteger length, NSUInteger limit, BOOL zero)
-{
-  NSUInteger	ret = length;
-  NSUInteger	l = length;
-
-  if (limit < length)
-    {
-      l = limit;
-    }
-  while (l-- > 0)
-    {
-      ret = (ret << 5) + ret + ((const unsigned char*)data)[l];
-    }
-  if (ret == 0 && zero == NO)
-    {
-       ret = 0xffffffff;
-    }
-  return ret;
-}
-
 /* load a module into the runtime
  */
 long
@@ -554,6 +526,27 @@ id
 GSPropertyListFromStringsFormat(NSString *string);
 
 BOOL
-GSScanDouble(unichar *buf, NSUInteger length, double *result);
+GSScanDouble(unichar *buffer, NSUInteger length, double *result);
+
+/* Generate a 32bit hash from supplied byte data.
+ */
+uint32_t
+GSPrivateHash(uint32_t seed, const void *bytes, NSUInteger length) GS_ATTRIB_PRIVATE;
+
+/* Incorporate 'length' bytes of data from the buffer pointed to by 'bytes' into
+ * the hash state information pointed to by p0 and p1.
+ * The hash state variables should have been initialised to zero before
+ * the first call to this function, and the result should be produced
+ * by calling the GSPrivateFinishHash() function.
+ */
+void
+GSPrivateIncrementalHash(uint32_t *p0, uint32_t *p1, const void *bytes, NSUInteger length) GS_ATTRIB_PRIVATE;
+
+/* Generate a 32bit hash from supplied state variables resulting from
+ * calls to the GSPrivateIncrementalHash() function.
+ */
+uint32_t
+GSPrivateFinishHash(uint32_t s0, uint32_t s1, NSUInteger totalLength) GS_ATTRIB_PRIVATE;
+
 
 #endif /* _GSPrivate_h_ */

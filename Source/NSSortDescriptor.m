@@ -105,7 +105,7 @@ static BOOL     initialized = NO;
 {
   const char	*sel = sel_getName(_selector);
 
-  return _ascending + GSPrivateHash(sel, strlen(sel), 16, YES) + [_key hash];
+  return _ascending + GSPrivateHash(0, sel, strlen(sel)) + [_key hash];
 }
 
 - (id) initWithKey: (NSString *) key ascending: (BOOL) ascending
