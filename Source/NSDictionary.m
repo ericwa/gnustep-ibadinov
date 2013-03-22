@@ -318,9 +318,9 @@ static SEL	appSel;
 	    {
 	      NSString	*s;
 
-	      s = [NSString stringWithFormat: @"NS.key.%u", i];
+	      s = [NSString stringWithFormat: @"NS.key.%lu", (unsigned long)i];
 	      [aCoder encodeObject: key forKey: s];
-	      s = [NSString stringWithFormat: @"NS.object.%u", i];
+	      s = [NSString stringWithFormat: @"NS.object.%lu", (unsigned long)i];
 	      [aCoder encodeObject: [self objectForKey: key] forKey: s];
 	      i++;
 	    }

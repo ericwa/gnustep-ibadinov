@@ -141,13 +141,13 @@ enum proxyLocation
 
 
 /*
- *	The GSDistantObjectPlaceHolder class is simply used as a placeholder
- *	for an NSDistantObject so we can manage efficient allocation and
- *	initialisation - in most cases when we ask for an NSDistantObject
- *	instance, we will get a pre-existing one, so we don't want to go
- *	allocating the memory for a new instance unless absolutely necessary.
+ * The GSDistantObjectPlaceHolder class is simply used as a placeholder
+ * for an NSDistantObject so we can manage efficient allocation and
+ * initialisation - in most cases when we ask for an NSDistantObject
+ * instance, we will get a pre-existing one, so we don't want to go
+ * allocating the memory for a new instance unless absolutely necessary.
  */
-GS_ROOT_CLASS @interface	GSDistantObjectPlaceHolder
+GS_ROOT_CLASS @interface GSDistantObjectPlaceHolder
 + (id) initWithCoder: (NSCoder*)aCoder;
 + (id) initWithLocal: (id)anObject connection: (NSConnection*)aConnection;
 + (id) initWithTarget: (unsigned)target connection: (NSConnection*)aConnection;

@@ -27,17 +27,17 @@
 
 /* By default we defined NO_GNUSTEP to 0 so that we will include extensions.
  */
-#if	!defined(NO_GNUSTEP)
+#if !defined(NO_GNUSTEP)
 #  define	NO_GNUSTEP	0
 #endif
 
 /* Check consistency of definitions for system compatibility.
  */
-#if	defined(STRICT_OPENSTEP)
+#if defined(STRICT_OPENSTEP)
 #  define	GS_OPENSTEP_V	 10000
 #  undef	NO_GNUSTEP
 #  define	NO_GNUSTEP	1
-#elif	defined(STRICT_MACOS_X)
+#elif defined(STRICT_MACOS_X)
 #  define	GS_OPENSTEP_V	100600
 #  undef	NO_GNUSTEP
 #  define	NO_GNUSTEP	1
@@ -81,19 +81,19 @@
  * fail, and the  implementation of the library relies on the functionality 
  * introduced up to 10.7 API version and everything goes bad.
  *
- * So, just disable it.
+ * So, just disable it for now.
  */
 #if 0
 
 #ifndef	GS_OPENSTEP_V
-# ifdef	MAC_OS_X_VERSION_MIN_ALLOWED
-#   define	GS_OPENSTEP_V	MAC_OS_X_VERSION_MIN_ALLOWED
-# else
-#   ifdef	MAC_OS_X_VERSION_MAX_ALLOWED
-#     define	GS_OPENSTEP_V	MAC_OS_X_VERSION_MAX_ALLOWED
-#   endif	/* MAC_OS_X_VERSION_MAX_ALLOWED */
-# endif	/* MAC_OS_X_VERSION_MIN_ALLOWED */
-#endif	/* GS_OPENSTEP_V */
+#  ifdef MAC_OS_X_VERSION_MIN_ALLOWED
+#    define GS_OPENSTEP_V       MAC_OS_X_VERSION_MIN_ALLOWED
+#  else
+#    ifdef MAC_OS_X_VERSION_MAX_ALLOWED
+#      define GS_OPENSTEP_V     MAC_OS_X_VERSION_MAX_ALLOWED
+#    endif /* MAC_OS_X_VERSION_MAX_ALLOWED */
+#  endif /* MAC_OS_X_VERSION_MIN_ALLOWED */
+#endif /* GS_OPENSTEP_V */
 
 #endif /* 0 */
 
@@ -215,10 +215,10 @@
 #define	GS_API_MACOSX	MAC_OS_X_VERSION_10_0
 
 
-#if	defined(GNUSTEP_BASE_INTERNAL)
-#import "GNUstepBase/GSConfig.h"
+#if defined(GNUSTEP_BASE_INTERNAL)
+#  import "GNUstepBase/GSConfig.h"
 #else
-#import <GNUstepBase/GSConfig.h>
+#  import <GNUstepBase/GSConfig.h>
 #endif
 
 
@@ -251,7 +251,11 @@
 
 
 #ifndef __has_feature
-#define __has_feature(x) 0
+#  define __has_feature(x) 0
+#endif
+
+#ifndef __has_attribute
+#  define __has_attribute(x) 0
 #endif
 
 /* The following is for deciding whether private instance variables
@@ -266,13 +270,13 @@
  * in the class source itsself
  */
 
-#if	GS_MIXEDABI
+#if GS_MIXEDABI
 #  undef	GS_NONFRAGILE
 #  define	GS_NONFRAGILE	0	/* Mixed is treated as fragile */
 #else
 #  if (__has_feature(objc_nonfragile_abi))
 #    if	!GS_NONFRAGILE
-#      if	defined(GNUSTEP_BASE_INTERNAL)
+#      if defined(GNUSTEP_BASE_INTERNAL)
 #        error "You are building gnustep-base using the objc-nonfragile-abi but your gnustep-base was not configured to use it."
 #      endif
 #    endif
@@ -299,7 +303,7 @@
  * support or not.
  */
 #if __has_feature(blocks)
-#  if	OBJC2RUNTIME
+#  if OBJC2RUNTIME
 #    if defined(__APPLE__)
 #      include <Block.h>
 #    else
@@ -314,7 +318,7 @@
  * of the class.
  */
 #ifndef GS_ROOT_CLASS
-#  if GS_HAVE_OBJC_ROOT_CLASS_ATTR || __has_feature(attribute_objc_root_class)
+#  if GS_HAVE_OBJC_ROOT_CLASS_ATTR || __has_attribute(objc_root_class)
 #    define GS_ROOT_CLASS __attribute__((objc_root_class))
 #  else
 #    define GS_ROOT_CLASS
@@ -327,7 +331,7 @@
  * On Mingw, the compiler will export all symbols automatically, 
  * so __declspec(dllexport) is not needed while building Foundation.
  */
-#if	defined(GNUSTEP_WITH_DLL)
+#if defined(GNUSTEP_WITH_DLL)
 #  if BUILD_libgnustep_base_DLL
 #    if defined(__MINGW__)
 #      define GS_EXPORT  extern

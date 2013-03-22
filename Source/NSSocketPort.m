@@ -687,8 +687,7 @@ static Class	runLoopClass;
 
 - (NSString*) description
 {
-  return [NSString stringWithFormat: @"Handle (%d) to %s:%d",
-    desc, GSPrivateSockaddrName(&sockAddr)];
+  return [NSString stringWithFormat: @"Handle (%d) to %@", desc, GSPrivateSockaddrName(&sockAddr)];
 }
 
 - (int) descriptor

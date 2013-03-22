@@ -1416,8 +1416,8 @@ GSPropertyListFromStringsFormat(NSString *string)
     {
       RELEASE(dict);
       [NSException raise: NSGenericException
-		  format: @"Parse failed at line %d (char %d) - %@",
-	_pld.lin + 1, _pld.pos + 1, _pld.err];
+		  format: @"Parse failed at line %lu (char %lu) - %@",
+	(unsigned long)_pld.lin + 1, (unsigned long)_pld.pos + 1, _pld.err];
     }
   return AUTORELEASE(dict);
 }
@@ -2648,8 +2648,8 @@ GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
             if (_pld.err != nil)
               {
                 errorStr = [NSString stringWithFormat:
-		  @"Parse failed at line %d (char %d) - %@",
-		  _pld.lin + 1, _pld.pos + 1, _pld.err];
+		  @"Parse failed at line %lu (character %lu) - %@",
+		  (unsigned long)_pld.lin + 1, (unsigned long)_pld.pos + 1, _pld.err];
               }
           }
           break;
@@ -2836,7 +2836,7 @@ GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
 
 	  DESTROY(self);	// Bad format
 	  [NSException raise: NSGenericException
-		      format: @"Unknown offset size %d", saved];
+		      format: @"Unknown offset size %lu", (unsigned long)saved];
 	}
       else if (index_size < 1 || index_size > 4)
 	{
@@ -2844,7 +2844,7 @@ GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
 
 	  DESTROY(self);	// Bad format
 	  [NSException raise: NSGenericException
-		      format: @"Unknown table size %d", saved];
+		      format: @"Unknown table size %lu", (unsigned long)saved];
 	}
       else if (table_start + object_count * offset_size > _length)
         {
@@ -2876,7 +2876,7 @@ GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
   if (index >= object_count)
     {
       [NSException raise: NSRangeException
-		   format: @"Object table index out of bounds %d.", index];
+                  format: @"Object table index out of bounds %lu", (unsigned long)index];
       return 0; /* Not reached */
     }
   else
@@ -3437,13 +3437,13 @@ isEqualFunc(const void *item1, const void *item2,
   if (oid <= 0)
     {
       [NSException raise: NSGenericException
-		   format: @"Unknown object %@.", object];
+                  format: @"Unknown object %@", object];
     }
   oid--;
   if (oid >= table_size)
     {
       [NSException raise: NSRangeException
-		   format: @"Object table index out of bounds %d.", oid];
+                  format: @"Object table index out of bounds %ld", (long)oid];
     }
 
   table[oid] = (unsigned) offset;
@@ -3481,7 +3481,7 @@ isEqualFunc(const void *item1, const void *item2,
   else
     {
       [NSException raise: NSRangeException
-	format: @"Object table offset out of bounds %d.", last_offset];
+                  format: @"Object table offset out of bounds %lu", (unsigned long)last_offset];
     }
 
   len = [objectList count];

@@ -3306,8 +3306,8 @@ fatalErrorFunction(void *ctx, const unsigned char *msg, ...)
        colNumber: (NSInteger)colNumber
       lineNumber: (NSInteger)lineNumber
 {
-  e = [NSString stringWithFormat: @"at line: %d column: %d ... %@",
-    lineNumber, colNumber, e];
+  e = [NSString stringWithFormat: @"at line: %ld column: %ld ... %@",
+    (long)lineNumber, (long)colNumber, e];
   [self warning: e];
 }
 
@@ -3318,8 +3318,8 @@ fatalErrorFunction(void *ctx, const unsigned char *msg, ...)
      colNumber: (NSInteger)colNumber
     lineNumber: (NSInteger)lineNumber
 {
-  e = [NSString stringWithFormat: @"at line: %d column: %d ... %@",
-    lineNumber, colNumber, e];
+  e = [NSString stringWithFormat: @"at line: %ld column: %ld ... %@",
+    (long)lineNumber, (long)colNumber, e];
   [self error: e];
 }
 
@@ -3330,8 +3330,8 @@ fatalErrorFunction(void *ctx, const unsigned char *msg, ...)
           colNumber: (NSInteger)colNumber
          lineNumber: (NSInteger)lineNumber
 {
-  e = [NSString stringWithFormat: @"at line: %d column: %d ... %@",
-    lineNumber, colNumber, e];
+  e = [NSString stringWithFormat: @"at line: %ld column: %ld ... %@",
+    (long)lineNumber, (long)colNumber, e];
   [self fatalError: e];
 }
 
@@ -3791,7 +3791,7 @@ fatalErrorFunction(void *ctx, const unsigned char *msg, ...)
 }
 - (NSString *) description
 {
-  return [NSString_class stringWithFormat: @"NodeSet (count %u)", [self count]];
+  return [NSString_class stringWithFormat: @"NodeSet (count %lu)", (unsigned long)[self count]];
 }
 @end
 

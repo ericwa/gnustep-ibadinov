@@ -288,19 +288,19 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
         [super description]];
     }
   m = [NSMutableString stringWithFormat:
-    @"%@[number of indexes: %u (in %u ranges), indexes:",
-    [super description], [self count], c];
+    @"%@[number of indexes: %lu (in %lu ranges), indexes:",
+    [super description], (unsigned long)[self count], (unsigned long)c];
   for (i = 0; i < c; i++)
     {
       NSRange	r = GSIArrayItemAtIndex(_array, i).ext;
 
       if (r.length > 1)
         {
-          [m appendFormat: @" (%u-%u)", r.location, NSMaxRange(r) - 1];
+          [m appendFormat: @" (%lu-%lu)", (unsigned long)r.location, (unsigned long)NSMaxRange(r) - 1];
 	}
       else
         {
-          [m appendFormat: @" %u", r.location];
+          [m appendFormat: @" %lu", (unsigned long)r.location];
 	}
     }
   [m appendString: @"]"];

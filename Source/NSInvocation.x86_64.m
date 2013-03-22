@@ -196,6 +196,7 @@ NSInvocationForwardHandler_stret();
     }
   [signature release];
   [pool release];
+  [super dealloc];
 }
 
 - (id)init

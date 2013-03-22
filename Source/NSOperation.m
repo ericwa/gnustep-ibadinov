@@ -719,9 +719,9 @@ static NSOperationQueue *mainQueue = nil;
       if (YES == invalidArg)
 	{
 	  [NSException raise: NSInvalidArgumentException
-	    format: @"[%@-%@] object at index %u is not an NSOperation",
+	    format: @"[%@-%@] object at index %lu is not an NSOperation",
 	    NSStringFromClass([self class]), NSStringFromSelector(_cmd),
-	    index];
+	    (unsigned long)index];
 	}
     }
   if (YES == shouldWait)
@@ -814,8 +814,8 @@ static NSOperationQueue *mainQueue = nil;
     && cnt != NSOperationQueueDefaultMaxConcurrentOperationCount)
     {
       [NSException raise: NSInvalidArgumentException
-		  format: @"[%@-%@] cannot set negative (%d) count",
-	NSStringFromClass([self class]), NSStringFromSelector(_cmd), cnt];
+		  format: @"[%@-%@] cannot set negative (%ld) count",
+	NSStringFromClass([self class]), NSStringFromSelector(_cmd), (long)cnt];
     }
   [internal->lock lock];
   if (cnt != internal->count)

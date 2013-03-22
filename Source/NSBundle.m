@@ -452,10 +452,11 @@ bundle_object_name(NSString *path, NSString* executable)
       path = [path stringByDeletingLastPathComponent];
     }
   
+  NSString *pathWithTargetDirectory = [path stringByAppendingPathComponent:gnustep_target_dir];
   paths = [NSArray arrayWithObjects:path,
            [path stringByAppendingPathComponent:@"Contents/MacOS"],
-           (path = [path stringByAppendingPathComponent:gnustep_target_dir]),
-           (path = [path stringByAppendingPathComponent:library_combo]),
+           pathWithTargetDirectory,
+           [pathWithTargetDirectory stringByAppendingPathComponent:library_combo],
            nil];
   
   NSEnumerator *enumerator = [paths reverseObjectEnumerator];

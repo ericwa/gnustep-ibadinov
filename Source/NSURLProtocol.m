@@ -1429,7 +1429,7 @@ PostponeSelector(id self, SEL _cmd, id argument)
                 }
                 if (l >= 0 && [this->request valueForHTTPHeaderField: @"Content-Length"] == nil)
                 {
-                    [m appendFormat: @"Content-Length: %d\r\n", l];
+                    [m appendFormat: @"Content-Length: %ld\r\n", (long)l];
                 }
                 [m appendString: @"\r\n"];	// End of headers
                 _writeData = RETAIN([m dataUsingEncoding: NSASCIIStringEncoding]);

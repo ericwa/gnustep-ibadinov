@@ -122,8 +122,7 @@ static BOOL     initialized = NO;
       if (key == nil)
         {
           [NSException raise: NSInvalidArgumentException
-                      format: _(@"Passed nil key when initializing "
-            @"an NSSortDescriptor.")];
+                      format: @"%@", _(@"Passed nil key when initializing a NSSortDescriptor")];
         }
       if (selector == NULL)
         {

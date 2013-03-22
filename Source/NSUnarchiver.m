@@ -587,8 +587,8 @@ static unsigned	encodingVersion;
   if (count != expected)
     {
       [NSException raise: NSInternalInconsistencyException
-		  format: @"expected array count %u and got %u",
-			expected, count];
+		  format: @"expected array count %lu and got %lu",
+			(unsigned long)expected, (unsigned long)count];
     }
 
   switch (*type)

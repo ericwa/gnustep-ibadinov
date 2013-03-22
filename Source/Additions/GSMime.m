@@ -1300,7 +1300,7 @@ wordData(NSString *word)
 {
   NSMutableString	*desc;
 
-  desc = [NSMutableString stringWithFormat: @"GSMimeParser <%0x> -\n", self];
+  desc = [NSMutableString stringWithFormat: @"GSMimeParser <%0lx> -\n", (unsigned long)self];
   [desc appendString: [document description]];
   return desc;
 }
@@ -3419,7 +3419,7 @@ static NSCharacterSet	*tokenSet = nil;
 {
   NSMutableString	*desc;
 
-  desc = [NSMutableString stringWithFormat: @"GSMimeHeader <%0x> -\n", self];
+  desc = [NSMutableString stringWithFormat: @"GSMimeHeader <%0lx> -\n", (unsigned long)self];
   [desc appendFormat: @"  name: %@\n", [self name]];
   [desc appendFormat: @"  value: %@\n", [self value]];
   [desc appendFormat: @"  params: %@\n", [self parameters]];
@@ -5438,7 +5438,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
   NSMutableString	*desc;
   NSDictionary		*locale;
 
-  desc = [NSMutableString stringWithFormat: @"GSMimeDocument <%0x> -\n", self];
+  desc = [NSMutableString stringWithFormat: @"GSMimeDocument <%0lx> -\n", (unsigned long)self];
   locale = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
   [desc appendString: [headers descriptionWithLocale: locale]];
   [desc appendFormat: @"\nDocument content -\n%@", content];

@@ -342,9 +342,9 @@ static id ValueForKey(NSObject *self, const char *key, size_t size)
     }
 #endif
   [NSException raise: NSInvalidArgumentException
-    format: @"%@ -- %@ 0x%x: Given nil value to set for key \"%@\"",
+    format: @"%@ -- %@ 0x%lx: Given nil value to set for key \"%@\"",
     NSStringFromSelector(_cmd), NSStringFromClass([self class]),
-    self, aKey];
+    (unsigned long)self, aKey];
 }
 
 
@@ -899,8 +899,8 @@ static id ValueForKey(NSObject *self, const char *key, size_t size)
 {
   GSOnceMLog(@"This method is deprecated, use -setNilValueForKey:");
   [NSException raise: NSInvalidArgumentException
-	      format: @"%@ -- %@ 0x%x: Given nil value to set for key \"%@\"",
-    NSStringFromSelector(_cmd), NSStringFromClass([self class]), self, aKey];
+	      format: @"%@ -- %@ 0x%lx: Given nil value to set for key \"%@\"",
+    NSStringFromSelector(_cmd), NSStringFromClass([self class]), (unsigned long)self, aKey];
 }
 
 

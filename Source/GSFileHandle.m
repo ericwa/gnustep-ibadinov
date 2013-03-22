@@ -1173,7 +1173,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
   if (len > 0x7fffffff)
     {
       [NSException raise: NSInvalidArgumentException
-                  format: @"length (%u) too large", len];
+                  format: @"length (%lu) too large", (unsigned long)len];
     }
   readMax = len;
   RELEASE(readInfo);

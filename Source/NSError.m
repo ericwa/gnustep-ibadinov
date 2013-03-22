@@ -158,7 +158,7 @@ NSString* const NSCocoaErrorDomain = @"NSCocoaErrorDomain";
 
   if (desc == nil)
     {
-      desc = [NSString stringWithFormat: @"%@ %d", _domain, _code];
+      desc = [NSString stringWithFormat: @"%@ %ld", _domain, (long)_code];
     }
   return desc;
 }

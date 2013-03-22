@@ -78,10 +78,10 @@
             }
             
             NSMutableData *result = [NSMutableData dataWithLength:16];
-            uint8_t *bytes = [result mutableBytes];
+            uint16_t *bytes = [result mutableBytes];
             sscanf([address UTF8String], "%hx:%hx:%hx:%hx:%hx:%hx:%hx:%hx",
-                   &bytes[0], &bytes[2], &bytes[4], &bytes[6],
-                   &bytes[8], &bytes[10], &bytes[12], &bytes[14]);
+                   &bytes[0], &bytes[1], &bytes[2], &bytes[3],
+                   &bytes[4], &bytes[5], &bytes[6], &bytes[7]);
             return result;
         }
         case GSSocksAddressTypeDomain:

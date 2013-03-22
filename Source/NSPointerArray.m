@@ -238,8 +238,8 @@ static Class	concreteClass = Nil;
     self, @"Array", nil, nil];
 
   reason = [NSString stringWithFormat:
-    @"Index %d is out of range %d (in '%@')",
-    index, _count, NSStringFromSelector(sel)];
+    @"Index %lu is out of range %lu (in '%@')",
+    (unsigned long)index, (unsigned long)_count, NSStringFromSelector(sel)];
 
   exception = [NSException exceptionWithName: NSRangeException
 		                      reason: reason

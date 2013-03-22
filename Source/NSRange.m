@@ -88,8 +88,8 @@ NSString *
 NSStringFromRange(NSRange range)
 {
   setupCache();
-  return [NSStringClass stringWithFormat: @"{location=%d, length=%d}",
-    range.location, range.length];
+  return [NSStringClass stringWithFormat: @"{location=%lu, length=%lu}",
+    (unsigned long)range.location, (unsigned long)range.length];
 }
 
 GS_EXPORT void _NSRangeExceptionRaise ()
