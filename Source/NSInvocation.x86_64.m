@@ -601,7 +601,7 @@ NSInvocationForwardHandler_stret();
 - (BOOL)encodeWithDistantCoder:(NSCoder *)coder passPointers:(BOOL)passp
 {
   BOOL        outParameters = NO;
-  const char	*type = [signature methodType];
+  const char  *type = [signature methodType];
   uint32_t    smallBuffer[4];
   
   [coder encodeValueOfObjCType:@encode(char*) at:&type];
@@ -610,8 +610,9 @@ NSInvocationForwardHandler_stret();
     {
       const char  *type = [signature getArgumentTypeAtIndex:argumentIndex];
       unsigned    qualifiers = objc_get_type_qualifiers(type);
-      void        *datum;
-      
+      type = objc_skip_type_qualifiers(type);
+
+      void *datum;
       if (argumentInfo[argumentIndex].size != 0)
         {
           datum = arguments + argumentInfo[argumentIndex].offset;

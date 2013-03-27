@@ -137,7 +137,8 @@ id __object = (object); (__object != nil) ? [__object autorelease] : nil; })
  */
 #define	ASSIGN(object,value)	({\
   id __object = object; \
-  object = [(value) retain]; \
+  id __value = value; \
+  object = [__value retain]; \
   [__object release]; \
 })
 #endif
@@ -150,7 +151,8 @@ id __object = (object); (__object != nil) ? [__object autorelease] : nil; })
  */
 #define	ASSIGNCOPY(object,value)	({\
   id __object = object; \
-  object = [(value) copy];\
+  id __value = value; \
+  object = [__value copy];\
   [__object release]; \
 })
 #endif
