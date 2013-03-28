@@ -952,6 +952,15 @@ _find_main_bundle_for_tool(NSString *toolName)
 
 #if defined (NeXT_RUNTIME)
 
+static NSString * RealPath(NSString *path)
+{
+    char result[PATH_MAX + 1];
+    if (realpath([path UTF8String], result) == NULL) {
+        return nil;
+    }
+    return [NSString stringWithUTF8String:result];
+}
+
 static NSString * StripLastPathComponentIfEqual(NSString *path, NSString *component)
 {
     if ([[path lastPathComponent] isEqualToString:component]) {
@@ -962,6 +971,10 @@ static NSString * StripLastPathComponentIfEqual(NSString *path, NSString *compon
 
 + (NSBundle *) _createBundleWithExecutablePath:(NSString *)path
 {
+    path = RealPath(path);
+    if (!path) {
+        [NSException raise:NSInternalInconsistencyException format:@"Could not resolve real path for: %@", path];
+    }
     NSString *bundlePath = [path stringByDeletingLastPathComponent];
     bundlePath = StripLastPathComponentIfEqual(bundlePath, library_combo);
     bundlePath = StripLastPathComponentIfEqual(bundlePath, gnustep_target_os);
