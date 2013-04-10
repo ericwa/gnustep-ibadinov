@@ -123,9 +123,14 @@ IVARS
 - (void) _schedule;
 
 /**
- * send an event to delegate
+ * schedule an event message to delegate
  */
 - (void) _sendEvent: (NSStreamEvent)event;
+
+/**
+ * actually dispatch event message to delegate
+ */
+- (void) _dispatchEvent: (NSNumber *)anEvent;
 
 /**
  * setter for IO event reference (file descriptor, file handle etc )

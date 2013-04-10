@@ -548,5 +548,10 @@ GSPrivateIncrementalHash(uint32_t *p0, uint32_t *p1, const void *bytes, NSUInteg
 uint32_t
 GSPrivateFinishHash(uint32_t s0, uint32_t s1, NSUInteger totalLength) GS_ATTRIB_PRIVATE;
 
+NSDictionary *
+GSPrivateParseGSSOCKS(NSString *gsSocks) GS_ATTRIB_PRIVATE;
+
+NSDictionary *
+GSPrivateGetGlobalSOCKSProxyConfiguration(void) GS_ATTRIB_PRIVATE;
 
 #endif /* _GSPrivate_h_ */

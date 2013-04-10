@@ -38,6 +38,7 @@
 #import "Foundation/NSByteOrder.h"
 #import "Foundation/NSProcessInfo.h"
 #import "Foundation/NSUserDefaults.h"
+#import "Foundation/NSValue.h"
 #import "GSPrivate.h"
 #import "GSNetwork.h"
 #import "GNUstepBase/NSObject+GNUstepBase.h"
@@ -107,7 +108,7 @@ static NSString *const SocksConnectNotification = @"SocksConnectNotification";
 static NSString *const SocksReadNotification    = @"SocksReadNotification";
 static NSString *const SocksWriteNotification   = @"SocksWriteNotification";
 
-static NSString *gsSocks = nil;
+static NSDictionary *GlobalSOCKSProxyConfiguration = nil;
 
 // Key to info dictionary for operation mode.
 static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
@@ -350,9 +351,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
                  forModes:(NSArray  *)aModes
 {
     if (descriptor >= 0) {
-        if (closeOnDealloc) {
-            close(descriptor);
-        }
+        close(descriptor);
         descriptor = -1;
     }
     
@@ -363,9 +362,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
         return NO;
     }
     [self setAddr:&socketAddress]; /* Store the address of the remote end */
-    
-    /* Don't use SOCKS if we are contacting the local host */
-    
+
     if ((descriptor = socket(socketAddress.sa_family, SOCK_STREAM, PF_UNSPEC)) == -1) {
         NSLog(@"unable to create socket - %@", [NSError _last]);
         return NO;
@@ -376,6 +373,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
     setsockopt(descriptor, SOL_SOCKET, SO_KEEPALIVE, (char *)&status, sizeof(status));
     
     if (localAddress) {
+        setsockopt(descriptor, SOL_SOCKET, SO_REUSEADDR, (char *)&status, sizeof(status));
         struct sockaddr localSocketAddress;
         if (!GSPrivateSockaddrSetup(localAddress, 0, localService, aProtocol, &localSocketAddress)) {
             NSLog(@"bad bind address specification");
@@ -419,15 +417,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
 
 + (void)initialize
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    gsSocks = [[defaults stringForKey:@"GSSOCKS"] copy];
-    if (!gsSocks) {
-        NSDictionary *environment = [[NSProcessInfo processInfo] environment];
-        gsSocks = [[environment objectForKey:@"SOCKS5_SERVER"] copy];
-        if (!gsSocks) {
-            gsSocks = [[environment objectForKey:@"SOCKS_SERVER"] copy];
-        }
-    }
+    GlobalSOCKSProxyConfiguration = [GSPrivateGetGlobalSOCKSProxyConfiguration() copy];
 }
 
 - (id)initAsClientInBackgroundAtAddress:(NSString *)anAddress
@@ -435,6 +425,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
                                protocol:(NSString *)aProtocol
                                forModes:(NSArray  *)modes
 {
+    /* dirty trick: init with /dev/null and close it immediately  */
     if (!(self = [self init])) {
         return nil;
     }
@@ -448,40 +439,19 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
         return nil;
     }
     
-    NSString *socksHost = nil;
-    NSString *socksPort = nil;
-    NSString *socksUser = nil;
-    NSString *socksPass = nil;
-    if ([aProtocol hasPrefix:@"socks-"]) {
-        socksHost = [aProtocol substringFromIndex:6];
-    } else if (gsSocks) {
-        socksHost = gsSocks;
-    }
-    if (socksHost && [socksHost length]) {
-        NSRange range = [socksHost rangeOfString:@"@"];
-        if (range.location != NSNotFound) {
-            socksUser = [socksHost substringToIndex:range.location];
-            socksHost = [socksHost substringFromIndex:NSMaxRange(range)];
-            range = [socksUser rangeOfString:@":"];
-            if (range.location != NSNotFound) {
-                socksPass = [socksUser substringFromIndex:NSMaxRange(range)];
-                socksUser = [socksUser substringToIndex:range.location];
-            }
+    NSDictionary *socksConfiguration = nil;
+    NSHost *host = [NSHost hostWithName:anAddress];
+    /* Don't use SOCKS if we are contacting the local host */
+    if (![host isEqualToHost:[NSHost currentHost]] && ![host isEqualToHost:[NSHost localHost]]) {
+        if ([aProtocol hasPrefix:@"socks-"]) {
+            socksConfiguration = GSPrivateParseGSSOCKS([aProtocol substringFromIndex:6]);
+        } else if (GlobalSOCKSProxyConfiguration) {
+            socksConfiguration = GlobalSOCKSProxyConfiguration;
         }
-        range = [socksHost rangeOfString:@":"];
-        if (range.location != NSNotFound) {
-            socksPort = [socksHost substringFromIndex:NSMaxRange(range)];
-            socksHost = [socksHost substringToIndex:range.location];
-        } else
-            socksPort = @"1080";
-        aProtocol = @"tcp";
-        
-        NSHost *host = [NSHost hostWithName:anAddress];
-        if ([host isEqualToHost:[NSHost currentHost]] || [host isEqualToHost:[NSHost localHost]]) {
-            socksHost = socksPort = nil;
+        if (socksConfiguration) {
+            aProtocol = @"tcp";
         }
-    }
-    
+    }    
     
     NSString *localAddress = nil;
     NSString *localService = nil;
@@ -498,20 +468,12 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
     }
     
     NSString *dstHost, *dstService, *notification;
-    if (socksHost) {
-        dstHost = socksHost;
-        dstService = socksPort;
+    if (socksConfiguration) {
+        dstHost = [socksConfiguration objectForKey:NSStreamSOCKSProxyHostKey];
+        dstService = [socksConfiguration objectForKey:NSStreamSOCKSProxyPortKey];
         notification = SocksConnectNotification;
         
-        NSMutableDictionary *configuration = [NSMutableDictionary dictionaryWithObject:NSStreamSOCKSProxyVersion5
-                                                                                forKey:NSStreamSOCKSProxyVersionKey];
-        if (socksUser) {
-            [configuration setObject:socksUser forKey:NSStreamSOCKSProxyUserKey];
-            if (socksPass) {
-                [configuration setObject:socksPass forKey:NSStreamSOCKSProxyPasswordKey];
-            }
-        }
-        parser = [[GSSocksParser alloc] initWithConfiguration:configuration
+        parser = [[GSSocksParser alloc] initWithConfiguration:socksConfiguration
                                                       address:anAddress
                                                          port:[aService integerValue]];
         
@@ -540,19 +502,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
     return self;
 }
 
-- (void)_postNotificationWithInfo:(NSDictionary *)userInfo
-{
-    NSNotification *noification = [NSNotification notificationWithName:[userInfo objectForKey:NotificationKey]
-                                                                object:self
-                                                              userInfo:userInfo];
-
-    [[NSNotificationQueue defaultQueue] enqueueNotification:noification
-                                               postingStyle:NSPostASAP
-                                               coalesceMask:NSNotificationNoCoalescing
-                                                   forModes:[userInfo objectForKey:NSFileHandleNotificationMonitorModes]];
-}
-
-- (void)_postNotificationWithSocksError:(NSString *)error
+- (void)_postNotificationWithSocksError:(NSError *)error
                                userInfo:(NSDictionary *)userInfo
 {
     NSDebugMLLog(@"NSFileHandle", @"%@ SOCKS error: %@", self, error);
@@ -560,10 +510,27 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
     /* Error in the initial connection. Notify everybody */
     NSMutableDictionary *info = [userInfo mutableCopy];
     [info setObject:GSFileHandleConnectCompletionNotification forKey:NotificationKey];
-    [info setObject:error forKey:GSFileHandleNotificationError];
+    [info setObject:[[error userInfo] objectForKey:NSLocalizedDescriptionKey] forKey:GSFileHandleNotificationError];
+    NSInteger errorCode = [error domain] == NSPOSIXErrorDomain ? [error code] : EPROTO;
+    [info setObject:[NSNumber numberWithInteger:errorCode] forKey:@"NSFileHandleError"];
     
-    [self _postNotificationWithInfo:info];
+    NSNotification *noification = [NSNotification notificationWithName:[info objectForKey:NotificationKey]
+                                                                object:self
+                                                              userInfo:info];
+    
+    [[NSNotificationQueue defaultQueue] enqueueNotification:noification
+                                               postingStyle:NSPostASAP
+                                               coalesceMask:NSNotificationNoCoalescing
+                                                   forModes:[info objectForKey:NSFileHandleNotificationMonitorModes]];
     RELEASE(info);
+    readOK = NO;
+    writeOK = NO;
+}
+
+- (NSError *)_errorWithCode:(NSInteger)errorCode description:(NSString *)description
+{
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:NSLocalizedString(description, nil) forKey:NSLocalizedDescriptionKey];
+    return [NSError errorWithDomain:NSPOSIXErrorDomain code:errorCode userInfo:userInfo];
 }
 
 - (void)_handleSocksNotification:(NSNotification *)aNotification
@@ -576,7 +543,8 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
     NSDictionary *userInfo = [aNotification userInfo];
     NSString *error = [userInfo objectForKey:GSFileHandleNotificationError];
     if (error) {
-        [self _postNotificationWithSocksError:error userInfo:userInfo];
+        [self _postNotificationWithSocksError:[self _errorWithCode:ECONNABORTED description:error]
+                                     userInfo:userInfo];
     }
     
     if (notificationName == SocksConnectNotification) { 
@@ -585,7 +553,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
     } else if (notificationName == SocksReadNotification) {
         NSData *chunk = [userInfo objectForKey:NSFileHandleNotificationDataItem];
         if (![chunk length]) {
-            [self _postNotificationWithSocksError:@"Connection to SOCKS server has been closed prematurely"
+            [self _postNotificationWithSocksError:[self _errorWithCode:EPIPE description:@"Connection to SOCKS server has been closed prematurely"]
                                          userInfo:userInfo];
             return;
         }
@@ -620,7 +588,7 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
     [parser setDelegate:nil];
     [parser release];
     parser = nil;
-    if ([anAddress isEqualToString:address] && aPort == [service integerValue]) {
+    if ([anAddress isEqualToString:address]) { /* do not check port, usually it's a garbage value */
         /* Success. Notify everybody */
         NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:4];
         [info setObject:self forKey:NSFileHandleNotificationFileHandleItem];
@@ -639,19 +607,18 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
                              observeNotification:GSFileHandleConnectCompletionNotification
                                         forModes:[readInfo objectForKey:NSFileHandleNotificationMonitorModes]];
         if (!connected) {
-            [self _postNotificationWithSocksError:@"Failed to reconnect to SOCKS server"
-                                         userInfo:readInfo];
+            NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:4];
+            [self _postNotificationWithSocksError:[self _errorWithCode:EHOSTUNREACH description:@"Failed to reconnect to SOCKS server"]
+                                         userInfo:info];
+            RELEASE(info);
         }
     }
 }
 
 - (void)parser:(GSSocksParser *)aParser encounteredError:(NSError *)anError
 {
-    NSMutableDictionary *info = [readInfo mutableCopy];
-    [info setObject:GSFileHandleConnectCompletionNotification forKey:NotificationKey];
-    [info setObject:anError forKey:@"NSFileHandleError"];
-    
-    [self _postNotificationWithInfo:info];
+    NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:4];
+    [self _postNotificationWithSocksError:anError userInfo:info];
     RELEASE(info);
 }
 

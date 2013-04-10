@@ -26,6 +26,7 @@
 #define	EXPOSE_NSError_IVARS	1
 #import	"Foundation/NSDictionary.h"
 #import	"Foundation/NSError.h"
+#import "Foundation/NSException.h"
 #import	"Foundation/NSCoder.h"
 
 NSString* const NSFilePathErrorKey = @"NSFilePath";
@@ -139,11 +140,9 @@ NSString* const NSCocoaErrorDomain = @"NSCocoaErrorDomain";
 {
   if (aDomain == nil)
     {
-      NSLog(@"[%@-%@] with nil domain",
-	NSStringFromClass([self class]), NSStringFromSelector(_cmd));
-      DESTROY(self);
+      [NSException raise:NSInvalidArgumentException format:@"Invalid domain=nil in -[NSError initWithDomain:code:userInfo:]"];
     }
-  else if ((self = [super init]) != nil)
+  if (self = [super init])
     {
       ASSIGN(_domain, aDomain);
       _code = aCode;
