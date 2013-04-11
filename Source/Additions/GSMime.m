@@ -1533,7 +1533,7 @@ wordData(NSString *word)
       return NO;		/* Want no more data	*/
     }
 
-  NSDebugMLLog(@"GSMime", @"Parse %u bytes - '%*.*s'", l, l, l, [d bytes]);
+  NSDebugMLLog(@"GSMime", @"Parse %lu bytes - '%*.*s'", (unsigned long)l, (int)l, (int)l, [d bytes]);
 
   r = [self _endOfHeaders: d];
   if (r.location == NSNotFound)
@@ -1620,8 +1620,7 @@ wordData(NSString *word)
                * This is an intermediary response ... so we have
                * to restart the parsing operation!
                */
-              NSDebugMLLog(@"GSMime",
-                @"Parsed http continuation", "");
+              NSDebugMLLog(@"GSMime", @"Parsed http continuation");
               flags.inBody = 0;
               if ([d length] == 0)
                 {
@@ -2411,10 +2410,10 @@ NSDebugMLLog(@"GSMime", @"Header parsed - %@", info);
 	}
       context = [self contextFor: hdr];
       IF_NO_GC([context retain];)
-      NSDebugMLLog(@"GSMime", @"Parse body expects %u bytes", expect);
+      NSDebugMLLog(@"GSMime", @"Parse body expects %lu bytes", (unsigned long)expect);
     }
 
-  NSDebugMLLog(@"GSMime", @"Parse %u bytes - '%*.*s'", l, l, l, [d bytes]);
+  NSDebugMLLog(@"GSMime", @"Parse %lu bytes - '%*.*s'", (unsigned long)l, (int)l, (int)l, [d bytes]);
   // NSDebugMLLog(@"GSMime", @"Boundary - '%*.*s'", [boundary length], [boundary length], [boundary bytes]);
 
   if ([context atEnd] == YES)
@@ -2470,7 +2469,7 @@ NSDebugMLLog(@"GSMime", @"Header parsed - %@", info);
 	      flags.inBody = 0;
 	      flags.complete = 1;
 
-	      NSDebugMLLog(@"GSMime", @"Parse body complete", "");
+	      NSDebugMLLog(@"GSMime", @"Parse body complete");
 	      /*
 	       * If no content type is supplied, we assume text ... unless
 	       * we have something that's known to be a file.
@@ -3825,7 +3824,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
   if (ok == NO)
     {
       NSDebugMLLog(@"GSMime",
-	@"Value for '%@' too long for folding at %u in header", n, fold);
+	@"Value for '%@' too long for folding at %lu in header", n, (unsigned long)fold);
     }
 
   while ((k = [e nextObject]) != nil)
@@ -3843,16 +3842,16 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
       if (ok == NO)
         {
 	  NSDebugMLLog(@"GSMime",
-	    @"Parameter name '%@' in '%@' too long for folding at %u",
-            k, n, fold);
+	    @"Parameter name '%@' in '%@' too long for folding at %lu",
+            k, n, (unsigned long)fold);
         }
       offset = appendBytes(md, offset, fold, "=", 1);
       offset = appendString(md, offset, fold, v, &ok);
       if (ok == NO)
         {
 	  NSDebugMLLog(@"GSMime",
-	    @"Parameter value for '%@' in '%@' too long for folding at %u",
-            k, n, fold);
+	    @"Parameter value for '%@' in '%@' too long for folding at %lu",
+            k, n, (unsigned long)fold);
         }
     }
   [md appendBytes: "\r\n" length: 2];
