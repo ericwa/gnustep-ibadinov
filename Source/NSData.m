@@ -2578,8 +2578,8 @@ getBytes(void* dst, void* src, NSUInteger len, NSUInteger limit, NSUInteger *pos
   if (*pos > limit || len > limit || len+*pos > limit)
     {
       [NSException raise: NSRangeException
-		  format: @"Range: (%u, %u) Size: %d",
-			*pos, len, limit];
+		  format: @"Range: (%lu, %lu) Size: %lu",
+			(unsigned long)*pos, (unsigned long)len, (unsigned long)limit];
     }
   memcpy(dst, src + *pos, len);
   *pos += len;
@@ -2843,12 +2843,12 @@ getBytes(void* dst, void* src, NSUInteger len, NSUInteger limit, NSUInteger *pos
 
 - (void) deserializeTypeTag: (unsigned char*)tag
 		andCrossRef: (unsigned int*)ref
-		   atCursor: (unsigned int*)cursor
+		   atCursor: (NSUInteger*)cursor
 {
   if (*cursor >= length)
     {
       [NSException raise: NSRangeException
-		  format: @"Range: (%u, 1) Size: %d", *cursor, length];
+		  format: @"Range: (%lu, 1) Size: %lu", (unsigned long)*cursor, (unsigned long)length];
     }
   *tag = *((unsigned char*)bytes + (*cursor)++);
   if (*tag & _GSC_MAYX)
@@ -2864,8 +2864,8 @@ getBytes(void* dst, void* src, NSUInteger len, NSUInteger limit, NSUInteger *pos
 	      if (*cursor >= length)
 		{
 		  [NSException raise: NSRangeException
-			      format: @"Range: (%u, 1) Size: %d",
-			  *cursor, length];
+			      format: @"Range: (%lu, 1) Size: %lu",
+			  (unsigned long)*cursor, (unsigned long)length];
 		}
 	      *ref = (unsigned int)*((unsigned char*)bytes + (*cursor)++);
 	      return;
@@ -2877,8 +2877,8 @@ getBytes(void* dst, void* src, NSUInteger len, NSUInteger limit, NSUInteger *pos
 	      if (*cursor >= length-1)
 		{
 		  [NSException raise: NSRangeException
-			      format: @"Range: (%u, 1) Size: %d",
-			  *cursor, length];
+			      format: @"Range: (%lu, 1) Size: %lu",
+			  (unsigned long)*cursor, (unsigned long)length];
 		}
 #if NEED_WORD_ALIGNMENT
 	      if ((*cursor % __alignof__(uint16_t)) != 0)
@@ -2897,8 +2897,8 @@ getBytes(void* dst, void* src, NSUInteger len, NSUInteger limit, NSUInteger *pos
 	      if (*cursor >= length-3)
 		{
 		  [NSException raise: NSRangeException
-			      format: @"Range: (%u, 1) Size: %d",
-			  *cursor, length];
+			      format: @"Range: (%lu, 1) Size: %lu",
+			  (unsigned long)*cursor, (unsigned long)length];
 		}
 #if NEED_WORD_ALIGNMENT
 	      if ((*cursor % __alignof__(uint32_t)) != 0)
@@ -3734,7 +3734,7 @@ getBytes(void* dst, void* src, NSUInteger len, NSUInteger limit, NSUInteger *pos
       if (tmp == 0)
 	{
 	  [NSException raise: NSMallocException
-	    format: @"Unable to set data capacity to '%d'", size];
+	    format: @"Unable to set data capacity to '%lu'", (unsigned long)size];
 	}
       if (bytes)
 	{
@@ -3928,8 +3928,8 @@ getBytes(void* dst, void* src, NSUInteger len, NSUInteger limit, NSUInteger *pos
       if (newid == -1)			/* Created memory? */
 	{
 	  [NSException raise: NSMallocException
-	    format: @"Unable to create shared memory segment (size:%u) - %@.",
-	    size, [NSError _last]];
+	    format: @"Unable to create shared memory segment (size:%lu) - %@.",
+	    (unsigned long)size, [NSError _last]];
 	}
       tmp = shmat(newid, 0, 0);
       if ((intptr_t)tmp == -1)			/* Attached memory? */

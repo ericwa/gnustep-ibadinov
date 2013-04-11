@@ -576,7 +576,7 @@ GSListModules()
     {
       NSString	*line = [s objectAtIndex: i];
 
-      [result appendFormat: @"%3d: %@\n", i, line];
+      [result appendFormat: @"%3lu: %@\n", (unsigned long)i, line];
     }
   return result;
 }

@@ -67,7 +67,7 @@ GSPrivateSockaddrLength(struct sockaddr *addr)
 {
   switch (addr->sa_family) {
     case AF_INET:       return sizeof(struct sockaddr_in);
-#ifdef	AF_INET6
+#ifdef AF_INET6
     case AF_INET6:      return sizeof(struct sockaddr_in6);
 #endif
 #ifndef	__MINGW__
@@ -82,7 +82,7 @@ GSPrivateSockaddrHost(struct sockaddr *addr)
 {
   char		buf[40];
 
-#if     defined(AF_INET6)
+#if defined(AF_INET6)
   if (AF_INET6 == addr->sa_family)
     {
       struct sockaddr_in6	*addr6 = (struct sockaddr_in6*)(void*)addr;
@@ -109,7 +109,7 @@ GSPrivateSockaddrPort(struct sockaddr *addr)
 {
   uint16_t	port;
 
-#if     defined(AF_INET6)
+#if defined(AF_INET6)
   if (AF_INET6 == addr->sa_family)
     {
       struct sockaddr_in6	*addr6 = (struct sockaddr_in6*)(void*)addr;
@@ -162,7 +162,7 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
 	}
       else
 	{
-#if     defined(AF_INET6)
+#if defined(AF_INET6)
 	  struct sockaddr_in6	*addr6 = (struct sockaddr_in6*)(void*)sin;
 
 	  sin->sa_family = AF_INET6;
@@ -215,7 +215,7 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
 	    }
 	  else if (strcmp(ptr, "gdomap") == 0)
 	    {
-#ifdef	GDOMAP_PORT_OVERRIDE
+#ifdef GDOMAP_PORT_OVERRIDE
 	      port = GDOMAP_PORT_OVERRIDE;
 #else
 	      port = 538;	// IANA allocated port
@@ -232,7 +232,7 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
 	}
     }
 
-#if     defined(AF_INET6)
+#if defined(AF_INET6)
   if (AF_INET6 == sin->sa_family)
     {
       ((struct sockaddr_in6*)(void*)sin)->sin6_port = GSSwapHostI16ToBig(port);
@@ -245,6 +245,66 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
   ((struct sockaddr_ind*)sin)->sin6_port = GSSwapHostI16ToBig(port);
 #endif
   return YES;
+}
+
+NS_INLINE void 
+SetObjectForKey(NSMutableDictionary *dictionary, id object, id key)
+{
+    if (object) {
+        [dictionary setObject:object forKey:key];
+    }
+}
+
+NSDictionary *
+GSPrivateParseGSSOCKS(NSString *gsSocks)
+{
+    if (!gsSocks && ![gsSocks length]) {
+        return nil;
+    }
+    NSString *socksHost = gsSocks;
+    NSString *socksPort = nil;
+    NSString *socksUser = nil;
+    NSString *socksPass = nil;
+    
+    NSRange range = [socksHost rangeOfString:@"@"];
+    if (range.location != NSNotFound) {
+        socksUser = [socksHost substringToIndex:range.location];
+        socksHost = [socksHost substringFromIndex:NSMaxRange(range)];
+        range = [socksUser rangeOfString:@":"];
+        if (range.location != NSNotFound) {
+            socksPass = [socksUser substringFromIndex:NSMaxRange(range)];
+            socksUser = [socksUser substringToIndex:range.location];
+        }
+    }
+    range = [socksHost rangeOfString:@":"];
+    if (range.location != NSNotFound) {
+        socksPort = [socksHost substringFromIndex:NSMaxRange(range)];
+        socksHost = [socksHost substringToIndex:range.location];
+    } else
+        socksPort = @"1080";
+    
+    NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:5];
+    SetObjectForKey(result, socksHost, NSStreamSOCKSProxyHostKey);
+    SetObjectForKey(result, socksPort, NSStreamSOCKSProxyPortKey);
+    SetObjectForKey(result, socksUser, NSStreamSOCKSProxyUserKey);
+    SetObjectForKey(result, socksPass, NSStreamSOCKSProxyPasswordKey);
+    SetObjectForKey(result, NSStreamSOCKSProxyVersion5, NSStreamSOCKSProxyVersionKey);
+    return result;
+}
+
+NSDictionary *
+GSPrivateGetGlobalSOCKSProxyConfiguration()
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *gsSocks = [defaults stringForKey:@"GSSOCKS"];
+    if (!gsSocks) {
+        NSDictionary *environment = [[NSProcessInfo processInfo] environment];
+        gsSocks = [environment objectForKey:@"SOCKS5_SERVER"];
+        if (!gsSocks) {
+            gsSocks = [environment objectForKey:@"SOCKS_SERVER"];
+        }
+    }
+    return GSPrivateParseGSSOCKS(gsSocks);
 }
 
 /** The GSStreamHandler abstract class defines the methods used to
@@ -260,7 +320,7 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
  * -_read:maxLength: and _write:maxLength: methods instead of the public
  * methods).
  */
-@interface      GSStreamHandler : NSObject
+@interface GSStreamHandler : NSObject
 {
   GSSocketInputStream   *istream;	// Not retained
   GSSocketOutputStream  *ostream;       // Not retained
@@ -349,9 +409,9 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
 
 @end
 
-#if     defined(HAVE_GNUTLS)
+#if defined(HAVE_GNUTLS)
 
-@interface      GSTLSHandler : GSStreamHandler
+@interface GSTLSHandler : GSStreamHandler
 {
 @public
   GSTLSSession  *session;
@@ -380,7 +440,7 @@ GSTLSPull(gnutls_transport_ptr_t handle, void *buffer, size_t len)
         {
           e = EAGAIN;	// Tell GNUTLS this would block.
         }
-#if	HAVE_GNUTLS_TRANSPORT_SET_ERRNO
+#if HAVE_GNUTLS_TRANSPORT_SET_ERRNO
       gnutls_transport_set_errno (tls->session->session, e);
 #else
       errno = e;	// Not thread-safe
@@ -411,7 +471,7 @@ GSTLSPush(gnutls_transport_ptr_t handle, const void *buffer, size_t len)
         {
           e = EAGAIN;	// Tell GNUTLS this would block.
         }
-#if	HAVE_GNUTLS_TRANSPORT_SET_ERRNO
+#if HAVE_GNUTLS_TRANSPORT_SET_ERRNO
       gnutls_transport_set_errno (tls->session->session, e);
 #else
       errno = e;	// Not thread-safe
@@ -648,12 +708,14 @@ static NSArray  *keys = nil;
 
 @end
 
-#else   /* HAVE_GNUTLS */
+#else /* HAVE_GNUTLS */
 
-/* GNUTLS not available ...
+/*
+ * GNUTLS not available ...
  */
-@interface      GSTLSHandler : GSStreamHandler
+@interface GSTLSHandler : GSStreamHandler
 @end
+
 @implementation GSTLSHandler
 + (void) tryInput: (GSSocketInputStream*)i output: (GSSocketOutputStream*)o
 {
@@ -680,10 +742,10 @@ static NSArray  *keys = nil;
 }
 @end
 
-#endif   /* HAVE_GNUTLS */
+#endif /* HAVE_GNUTLS */
 
 
-@interface	GSSOCKS : GSStreamHandler<GSSocksParserDelegate> {
+@interface GSSOCKS : GSStreamHandler<GSSocksParserDelegate> {
     GSSocksParser   *parser;
     NSData          *request;
     NSMutableData   *response;
@@ -694,7 +756,14 @@ static NSArray  *keys = nil;
 
 @end
 
+static NSDictionary *GlobalSOCKSProxyConfiguration = nil;
+
 @implementation	GSSOCKS
+
++ (void)initialize
+{
+    GlobalSOCKSProxyConfiguration = [GSPrivateGetGlobalSOCKSProxyConfiguration() copy];
+}
 
 + (void)tryInput:(GSSocketInputStream *)input output:(GSSocketOutputStream *)output
 {
@@ -711,7 +780,13 @@ static NSArray  *keys = nil;
     }
     
     if (configuration == nil) {
-        return;
+        if (GlobalSOCKSProxyConfiguration != nil) {
+            configuration = GlobalSOCKSProxyConfiguration;
+            [input setProperty:configuration forKey:NSStreamSOCKSProxyConfigurationKey];
+            [output setProperty:configuration forKey:NSStreamSOCKSProxyConfigurationKey];
+        } else {
+            return;
+        }
     }
     
     id handler = [[self alloc] initWithInput:input output:output];
@@ -952,7 +1027,7 @@ static NSArray  *keys = nil;
 static inline BOOL
 socketError(int result)
 {
-#if	defined(__MINGW__)
+#if defined(__MINGW__)
   return (result == SOCKET_ERROR) ? YES : NO;
 #else
   return (result < 0) ? YES : NO;
@@ -969,7 +1044,7 @@ socketWouldBlock()
 static void
 setNonBlocking(SOCKET fd)
 {
-#if	defined(__MINGW__)
+#if defined(__MINGW__)
   unsigned long dummy = 1;
 
   if (ioctlsocket(fd, FIONBIO, &dummy) == SOCKET_ERROR)
@@ -1009,7 +1084,7 @@ setNonBlocking(SOCKET fd)
       _sibling = nil;
       _closing = NO;
       _passive = NO;
-#if	defined(__MINGW__)
+#if defined(__MINGW__)
       _loopID = WSA_INVALID_EVENT;
 #else
       _loopID = (void*)(intptr_t)-1;
@@ -1076,26 +1151,26 @@ setNonBlocking(SOCKET fd)
   return -1;
 }
 
-- (void) _sendEvent: (NSStreamEvent)event
+- (void) _dispatchEvent:(NSNumber *)anEvent
 {
-  /* If the receiver has a TLS handshake in progress,
-   * we must send events to the TLS handler rather than
-   * the stream delegate.
-   */
-  if (_handler != nil && [_handler handshake] == YES)
+    /* If the receiver has a TLS handshake in progress,
+     * we must send events to the TLS handler rather than
+     * the stream delegate.
+     */
+    if (_handler != nil && [_handler handshake] == YES)
     {
-      id        del = _delegate;
-      BOOL      val = _delegateValid;
-
-      _delegate = _handler;
-      _delegateValid = YES;
-      [super _sendEvent: event];
-      _delegate = del;
-      _delegateValid = val;
+        id        del = _delegate;
+        BOOL      val = _delegateValid;
+        
+        _delegate = _handler;
+        _delegateValid = YES;
+        [super _dispatchEvent: anEvent];
+        _delegate = del;
+        _delegateValid = val;
     }
-  else
+    else
     {
-      [super _sendEvent: event];
+        [super _dispatchEvent: anEvent];
     }
 }
 
@@ -1129,7 +1204,7 @@ setNonBlocking(SOCKET fd)
             }
         }
 
-#if	defined(AF_INET6)
+#if defined(AF_INET6)
       case AF_INET6:
         {
           int           ptonReturn;
@@ -1153,7 +1228,7 @@ setNonBlocking(SOCKET fd)
         }
 #endif
 
-#ifndef	__MINGW__
+#ifndef __MINGW__
       case AF_LOCAL:
 	{
 	  struct sockaddr_un	peer;
@@ -1187,7 +1262,7 @@ setNonBlocking(SOCKET fd)
 
 - (void) _setLoopID: (void *)ref
 {
-#if	!defined(__MINGW__)
+#if !defined(__MINGW__)
   _sock = (SOCKET)(intptr_t)ref;        // On gnu/linux _sock is _loopID
 #endif
   _loopID = ref;
@@ -1218,7 +1293,7 @@ setNonBlocking(SOCKET fd)
    * monitored, and on mswindows systems we create an event object to be
    * monitored (the socket events are assoociated with this object later).
    */
-#if	defined(__MINGW__)
+#if defined(__MINGW__)
   _loopID = CreateEvent(NULL, NO, NO, NULL);
 #else
   _loopID = (void*)(intptr_t)sock;      // On gnu/linux _sock is _loopID

@@ -450,7 +450,7 @@ static SEL	rlSel;
 	    {
 	      NSString	*key;
 
-	      key = [NSString stringWithFormat: @"NS.object.%u", i];
+	      key = [NSString stringWithFormat: @"NS.object.%lu", (unsigned long)i];
 	      [(NSKeyedArchiver*)aCoder encodeObject: [self objectAtIndex: i]
 					      forKey: key];
 	    }
@@ -718,14 +718,14 @@ static SEL	rlSel;
 	  id		val;
 
 	  array = [NSMutableArray arrayWithCapacity: 2];
-	  key = [NSString stringWithFormat: @"NS.object.%u", i];
+	  key = [NSString stringWithFormat: @"NS.object.%lu", (unsigned long)i];
 	  val = [(NSKeyedUnarchiver*)aCoder decodeObjectForKey: key];
 
 	  while (val != nil)
 	    {
 	      [array addObject: val];
 	      i++;
-	      key = [NSString stringWithFormat: @"NS.object.%u", i];
+	      key = [NSString stringWithFormat: @"NS.object.%lu", (unsigned long)i];
 	      val = [(NSKeyedUnarchiver*)aCoder decodeObjectForKey: key];
 	    }
 	}

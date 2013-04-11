@@ -244,7 +244,7 @@ static NSString	*library_combo =
 
 /*
  * Try to find the absolute path of an executable.
- * Search all the directoried in the PATH.
+ * Search all the directories in the PATH.
  * The atLaunch flag determines whether '.' is considered to be
  * the  current working directory or the working directory at the
  * time when the program was launched (technically the directory
@@ -452,10 +452,11 @@ bundle_object_name(NSString *path, NSString* executable)
       path = [path stringByDeletingLastPathComponent];
     }
   
+  NSString *pathWithTargetDirectory = [path stringByAppendingPathComponent:gnustep_target_dir];
   paths = [NSArray arrayWithObjects:path,
            [path stringByAppendingPathComponent:@"Contents/MacOS"],
-           (path = [path stringByAppendingPathComponent:gnustep_target_dir]),
-           (path = [path stringByAppendingPathComponent:library_combo]),
+           pathWithTargetDirectory,
+           [pathWithTargetDirectory stringByAppendingPathComponent:library_combo],
            nil];
   
   NSEnumerator *enumerator = [paths reverseObjectEnumerator];
@@ -623,7 +624,7 @@ _find_main_bundle_for_tool(NSString *toolName)
 @interface NSBundle (Private)
 + (NSString *) _absolutePathOfExecutable: (NSString *)path;
 + (NSBundle*) _addFrameworkFromClass: (Class)frameworkClass;
-+ (NSMutableArray*) _addFrameworks;
++ (NSUInteger) _addFrameworks;
 + (NSString*) _gnustep_target_cpu;
 + (NSString*) _gnustep_target_dir;
 + (NSString*) _gnustep_target_os;
@@ -949,13 +950,93 @@ _find_main_bundle_for_tool(NSString *toolName)
   return [bundle autorelease];
 }
 
-+ (NSMutableArray*) _addFrameworks
+#if defined (NeXT_RUNTIME)
+
+static NSString * RealPath(NSString *path)
 {
-  int                   i;
-  int                   numClasses = 0;
-  int                   newNumClasses;
-  Class                 *classes = NULL;
-  NSMutableArray        *added = nil;
+    char result[PATH_MAX + 1];
+    if (realpath([path UTF8String], result) == NULL) {
+        return nil;
+    }
+    return [NSString stringWithUTF8String:result];
+}
+
+static NSString * StripLastPathComponentIfEqual(NSString *path, NSString *component)
+{
+    if ([[path lastPathComponent] isEqualToString:component]) {
+        return [path stringByDeletingLastPathComponent];
+    }
+    return path;
+}
+
++ (NSBundle *) _createBundleWithExecutablePath:(NSString *)path
+{
+    path = RealPath(path);
+    if (!path) {
+        [NSException raise:NSInternalInconsistencyException format:@"Could not resolve real path for: %@", path];
+    }
+    NSString *bundlePath = [path stringByDeletingLastPathComponent];
+    bundlePath = StripLastPathComponentIfEqual(bundlePath, library_combo);
+    bundlePath = StripLastPathComponentIfEqual(bundlePath, gnustep_target_os);
+    bundlePath = StripLastPathComponentIfEqual(bundlePath, gnustep_target_cpu);
+
+    NSString *version = nil;
+    if ([[[bundlePath stringByDeletingLastPathComponent] lastPathComponent] isEqualToString:@"Versions"]) {
+        version = [bundlePath lastPathComponent];
+        bundlePath = [[bundlePath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
+    }
+    NSBundle *result = [[self alloc] initWithPath:bundlePath];
+    result->_codeLoaded = YES;
+    result->_frameworkVersion = version;
+    return [result autorelease];
+}
+
++ (NSUInteger) _addFrameworks
+{
+    static unsigned classCount = 0;
+    static unsigned imageCount = 0;
+
+    [load_lock lock];
+
+    unsigned currentClassCount = objc_getClassList(NULL, 0);
+    unsigned currentImageCount = imageCount;
+    if (classCount != currentClassCount) {
+        classCount = currentClassCount;
+
+        const char **images = objc_copyImageNames(&currentImageCount);
+        for (unsigned imageIndex = imageCount; imageIndex < currentImageCount; ++imageIndex) {
+            NSBundle *bundle = [self _createBundleWithExecutablePath:[NSString stringWithUTF8String:images[imageIndex]]];
+            if (!bundle) {
+                continue;
+            }
+            unsigned int classCount;
+            const char **classes = objc_copyClassNamesForImage(images[imageIndex], &classCount);
+            bundle->_bundleClasses = [[NSMutableArray alloc] initWithCapacity:classCount];
+            for (unsigned classIndex = 0; classIndex < classCount; ++classIndex) {
+                Class class = objc_getClass(classes[classIndex]);
+                NSMapInsert(_byClass, class, bundle);
+                [bundle->_bundleClasses addObject:[NSValue valueWithPointer:(void*)class]];
+            }
+            free(classes);
+        }
+        free(images);
+    }
+
+    NSUInteger result = currentImageCount - imageCount;
+    imageCount = currentImageCount;
+
+    [load_lock unlock];
+    return result;
+}
+
+#else /* NeXT_RUNTIME */
+
++ (NSUInteger) _addFrameworks
+{
+  unsigned loaded = 0;
+  unsigned numClasses = 0;
+  unsigned newNumClasses;
+  Class *classes = NULL;
 
   newNumClasses = objc_getClassList(NULL, 0);
   while (numClasses < newNumClasses)
@@ -964,22 +1045,20 @@ _find_main_bundle_for_tool(NSString *toolName)
       classes = realloc(classes, sizeof(Class) * numClasses);
       newNumClasses = objc_getClassList(classes, numClasses);
     }
-  for (i = 0; i < numClasses; i++)
+  for (unsigned index = 0; index < numClasses; ++index)
     {
-      NSBundle  *bundle = [self _addFrameworkFromClass: classes[i]];
+      NSBundle  *bundle = [self _addFrameworkFromClass: classes[index]];
 
       if (nil != bundle)
         {
-          if (nil == added)
-            {
-              added = [NSMutableArray arrayWithCapacity: 100];
-            }
-          [added addObject: bundle];
+          ++loaded;
         }
     }
   free(classes);
-  return added;
+  return loaded;
 }
+
+#endif /* NeXT_RUNTIME */
 
 + (NSString*) _gnustep_target_cpu
 {
@@ -1566,7 +1645,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
 	   * and return the mainBundle instead.
 	   */
 	  bundle = [NSBundle bundleForLibrary: lib];
-          if (nil == bundle && [[self _addFrameworks] count] > 0)
+          if (nil == bundle && [self _addFrameworks] > 0)
             {
               bundle = (NSBundle *)NSMapGet(_byClass, aClass);
               if ((id)bundle == (id)[NSNull null])

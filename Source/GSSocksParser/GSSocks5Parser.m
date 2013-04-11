@@ -134,8 +134,8 @@ typedef enum GSSocks5ResponseStatus {
             NSMutableData *request = [NSMutableData dataWithCapacity:bytes[1] + bytes[2] + 3];
             [request appendBytes:bytes length:2];
             [request appendBytes:[username UTF8String] length:bytes[1]];
+            [request appendBytes:&bytes[2] length:1];
             [request appendBytes:[password UTF8String] length:bytes[2]];
-            [request appendBytes:bytes + 2 length:1];
             
             state = GSSocks5ParserStateAuthenticationResponse;
             [delegate parser:self formedRequest:request];

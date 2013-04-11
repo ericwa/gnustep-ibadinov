@@ -265,8 +265,8 @@ parseError(ParserState *state)
    */
   NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:
     _(@"JSON Parse error"), NSLocalizedDescriptionKey,
-    _(([NSString stringWithFormat: @"Unexpected character %c at index %d",
-        (char)currentChar(state), state->sourceIndex])), 
+    _(([NSString stringWithFormat: @"Unexpected character %c at index %ld",
+        (char)currentChar(state), (long)state->sourceIndex])), 
       NSLocalizedFailureReasonErrorKey,
     nil];
   state->error = [NSError errorWithDomain: NSCocoaErrorDomain

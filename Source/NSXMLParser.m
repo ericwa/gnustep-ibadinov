@@ -1395,7 +1395,7 @@ NSLog(@"_processTag <%@%@ %@>", flag?@"/": @"", tag, attributes);
               // &#xhh; hex value
               if (result != 0)
                 {
-                  *result = [[NSString alloc] initWithFormat: @"%C", val];
+                  *result = [[NSString alloc] initWithFormat: @"%C", (unsigned short)val];
                 }
               return YES;
             }
@@ -1404,7 +1404,7 @@ NSLog(@"_processTag <%@%@ %@>", flag?@"/": @"", tag, attributes);
               // &ddd; decimal value
               if (result != 0)
                 {
-                  *result = [[NSString alloc] initWithFormat: @"%C", val];
+                  *result = [[NSString alloc] initWithFormat: @"%C", (unsigned short)val];
                 }
               return YES;
             }

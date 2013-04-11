@@ -208,8 +208,8 @@ static Class	gcClass = 0;
   if (index >= _count)
     {
       [NSException raise: NSRangeException
-		  format: @"[%@-%@]: index: %u",
-	NSStringFromClass([self class]), NSStringFromSelector(_cmd), index];
+		  format: @"[%@-%@]: index: %lu",
+	NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned long)index];
     }
   return _contents[index];
 }
@@ -333,8 +333,8 @@ static Class	gcClass = 0;
   if (index > _count)
     {
       [NSException raise: NSRangeException
-		  format: @"[%@-%@]: bad index %u",
-	NSStringFromClass([self class]), NSStringFromSelector(_cmd), index];
+		  format: @"[%@-%@]: bad index %lu",
+	NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned long)index];
     }
 
   if (_count == _maxCount)
@@ -419,8 +419,8 @@ static Class	gcClass = 0;
   if (index >= _count)
     {
       [NSException raise: NSRangeException
-		  format: @"[%@-%@]: bad index %u",
-	NSStringFromClass([self class]), NSStringFromSelector(_cmd), index];
+		  format: @"[%@-%@]: bad index %lu",
+	NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned long)index];
     }
   ASSIGN(_contents[index], anObject);
   _isGCObject[index] = [anObject isKindOfClass: gcClass];

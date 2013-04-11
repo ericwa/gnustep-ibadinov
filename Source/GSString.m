@@ -1908,7 +1908,7 @@ cString_u(GSStr self, NSStringEncoding enc)
       if ((l = GSUnicode(self->_contents.u, c, 0, 0)) != c)
 	{
 	  [NSException raise: NSCharacterConversionException
-		      format: @"NSString is not legal UTF-16 at %u", l];
+		      format: @"NSString is not legal UTF-16 at %lu", (unsigned long)l];
 	}
       tmp = (unichar*)NSZoneMalloc(NSDefaultMallocZone(), (c + 1)*2);
       memcpy(tmp, self->_contents.u, c*2);
@@ -5693,8 +5693,8 @@ GSPrivateStrExternalize(GSStr s)
     
     if (NSNotFound == aRange.location)
         [NSException raise: NSRangeException
-                    format: @"in %s, range { %u, %u } extends beyond string",
-         GSNameFromSelector(_cmd), aRange.location, aRange.length];
+                    format: @"in %s, range { %lu, %lu } extends beyond string",
+         GSNameFromSelector(_cmd), (unsigned long)aRange.location, (unsigned long)aRange.length];
     
     while (index < aRange.location && (i < numBytes || n > 0))
     {
@@ -5712,8 +5712,8 @@ GSPrivateStrExternalize(GSStr s)
     if (index != max)
     {
         [NSException raise: NSRangeException
-                    format: @"in %s, range { %u, %u } extends beyond string",
-         GSNameFromSelector(_cmd), aRange.location, aRange.length];
+                    format: @"in %s, range { %lu, %lu } extends beyond string",
+         GSNameFromSelector(_cmd), (unsigned long)aRange.location, (unsigned long)aRange.length];
     }
 }
 
@@ -5980,7 +5980,7 @@ NSCFStringCharacterAtIndex(NSCFConstantString *self, NSUInteger index)
 {
     if (NSNotFound == aRange.location || NSMaxRange(aRange) > numBytes) {
         [NSException raise:NSRangeException
-                    format:@"in %s, range { %u, %u } extends beyond string", GSNameFromSelector(_cmd), aRange.location, aRange.length];
+                    format:@"in %s, range { %lu, %lu } extends beyond string", GSNameFromSelector(_cmd), (unsigned long)aRange.location, (unsigned long)aRange.length];
     }
     if (NSCFStringIsUnicode(self)) {
         memcpy(buffer, bytes + aRange.location * 2, aRange.length * 2);

@@ -916,8 +916,7 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
 			error = YES;
 			NSDebugMLog(
 			  @"Expected literal '%%' but got end of string parsing"
-			  @"'%@' using '%@'", source[sourceIdx],
-			  description, fmt);
+			  @"'%@' using '%@'", description, fmt);
 		      }
 		    break;
 

@@ -2295,7 +2295,7 @@ GSICUStringMatchesRegex(NSString *string, NSString *regex, NSStringCompareOption
 	{
 	  [self setCharactersToBeSkipped: skip];
           [NSException raise: NSInvalidArgumentException 
-                      format: @"Invalid double quoted literal at %u", location];
+                      format: @"Invalid double quoted literal at %lu", (unsigned long)location];
 	}
       [self setCharactersToBeSkipped: skip];
       [self scanString: @"\"" intoString: NULL];
@@ -2312,7 +2312,7 @@ GSICUStringMatchesRegex(NSString *string, NSString *regex, NSStringCompareOption
 	{
 	  [self setCharactersToBeSkipped: skip];
           [NSException raise: NSInvalidArgumentException 
-                      format: @"Invalid single quoted literal at %u", location];
+                      format: @"Invalid single quoted literal at %lu", (unsigned long)location];
 	}
       [self setCharactersToBeSkipped: skip];
       [self scanString: @"'" intoString: NULL];

@@ -203,8 +203,8 @@ unCacheAttributes(NSDictionary *attrs)
 
 - (NSString*) description
 {
-  return [NSString stringWithFormat: @"Attributes at %u are - %@",
-    loc, attrs];
+  return [NSString stringWithFormat: @"Attributes at %lu are - %@",
+    (unsigned long)loc, attrs];
 }
 
 - (void) encodeWithCoder: (NSCoder*)aCoder

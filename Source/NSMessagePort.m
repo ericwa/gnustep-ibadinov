@@ -358,7 +358,7 @@ static Class	runLoopClass;
   const unsigned char *name;
 
   M_LOCK(myLock);
-  NSDebugMLLog(@"NSMessagePort", @"Connecting on 0x%x before %@", self, when);
+  NSDebugMLLog(@"NSMessagePort", @"Connecting on 0x%lx before %@", (unsigned long)self, when);
   if (state != GS_H_UNCON)
     {
       BOOL	result;
@@ -507,7 +507,7 @@ static Class	runLoopClass;
 		    type: ET_WDESC
 		 forMode: nil
 		     all: YES];
-	  NSDebugMLLog(@"NSMessagePort", @"invalidated 0x%x", self);
+	  NSDebugMLLog(@"NSMessagePort", @"invalidated 0x%lx", (unsigned long)self);
 	  [[self recvPort] removeHandle: self];
 	  [[self sendPort] removeHandle: self];
 	}
@@ -534,8 +534,8 @@ static Class	runLoopClass;
 	       forMode: (NSString*)mode
 {
   NSDebugMLLog(@"NSMessagePort_details",
-    @"received %s event on 0x%x",
-    type != ET_WDESC ? "read" : "write", self);
+    @"received %s event on 0x%lx",
+    type != ET_WDESC ? "read" : "write", (unsigned long)self);
   /*
    * If we have been invalidated (desc < 0) then we should ignore this
    * event and remove ourself from the runloop.
@@ -594,7 +594,7 @@ static Class	runLoopClass;
 	{
 	  if (res == 0)
 	    {
-	      NSDebugMLLog(@"NSMessagePort", @"read eof on 0x%x", self);
+	      NSDebugMLLog(@"NSMessagePort", @"read eof on 0x%lx", (unsigned long)self);
 	      M_UNLOCK(myLock);
 	      [self invalidate];
 	      return;
@@ -610,7 +610,7 @@ static Class	runLoopClass;
 	  res = 0;	/* Interrupted - continue	*/
 	}
       NSDebugMLLog(@"NSMessagePort_details",
-	@"read %d bytes on 0x%x", res, self);
+	@"read %zd bytes on 0x%lx", res, (unsigned long)self);
       rLength += res;
 
       while (valid == YES && rLength >= rWant)
@@ -868,7 +868,7 @@ static Class	runLoopClass;
 	      rId = 0;
 	      DESTROY(rItems);
 	      NSDebugMLLog(@"NSMessagePort_details",
-		@"got message %@ on 0x%x", pm, self);
+		@"got message %@ on 0x%lx", pm, (unsigned long)self);
 	      IF_NO_GC([rp retain];)
 	      M_UNLOCK(myLock);
 	      NS_DURING
@@ -916,7 +916,7 @@ static Class	runLoopClass;
 	      if (len == (int)[d length])
 		{
 		  NSDebugMLLog(@"NSMessagePort_details",
-		    @"wrote %d bytes on 0x%x", len, self);
+		    @"wrote %zd bytes on 0x%lx", len, (unsigned long)self);
 		  state = GS_H_CONNECTED;
 		}
 	      else
@@ -966,7 +966,7 @@ static Class	runLoopClass;
 	  else
 	    {
 	      NSDebugMLLog(@"NSMessagePort_details",
-		@"wrote %d bytes on 0x%x", res, self);
+		@"wrote %zd bytes on 0x%lx", res, (unsigned long)self);
 	      wLength += res;
 	      if (wLength == l)
 		{
@@ -991,7 +991,7 @@ static Class	runLoopClass;
 		       * message completed - remove from list.
 		       */
 		      NSDebugMLLog(@"NSMessagePort_details",
-			@"completed 0x%x on 0x%x", components, self);
+			@"completed 0x%lx on 0x%lx", (unsigned long)components, (unsigned long)self);
 		      wData = nil;
 		      wItem = 0;
 		      [wMsgs removeObjectAtIndex: 0];
@@ -1011,8 +1011,8 @@ static Class	runLoopClass;
 
   NSAssert([components count] > 0, NSInternalInconsistencyException);
   NSDebugMLLog(@"NSMessagePort_details",
-    @"Sending message 0x%x %@ on 0x%x(%d) before %@",
-    components, components, self, desc, when);
+    @"Sending message 0x%lx %@ on 0x%lx(%d) before %@",
+    (unsigned long)components, components, (unsigned long)self, desc, when);
   M_LOCK(myLock);
   [wMsgs addObject: components];
 
@@ -1053,7 +1053,7 @@ static Class	runLoopClass;
     }
   M_UNLOCK(myLock);
   NSDebugMLLog(@"NSMessagePort_details",
-    @"Message send 0x%x on 0x%x status %d", components, self, sent);
+    @"Message send 0x%lx on 0x%lx status %d", (unsigned long)components, (unsigned long)self, sent);
   RELEASE(self);
   return sent;
 }
@@ -1412,7 +1412,7 @@ typedef	struct {
 
 - (void) finalize
 {
-  NSDebugMLLog(@"NSMessagePort", @"NSMessagePort 0x%x finalized", self);
+  NSDebugMLLog(@"NSMessagePort", @"NSMessagePort 0x%lx finalized", (unsigned long)self);
   [self invalidate];
   if (_internal != 0)
     {
@@ -1579,12 +1579,12 @@ typedef	struct {
   if (d == nil)
     {
       NSDebugMLLog(@"NSMessagePort",
-	@"No delegate to handle incoming message", 0);
+	@"No delegate to handle incoming message");
       return;
     }
   if ([d respondsToSelector: @selector(handlePortMessage:)] == NO)
     {
-      NSDebugMLLog(@"NSMessagePort", @"delegate doesn't handle messages", 0);
+      NSDebugMLLog(@"NSMessagePort", @"delegate doesn't handle messages");
       return;
     }
   [d handlePortMessage: m];

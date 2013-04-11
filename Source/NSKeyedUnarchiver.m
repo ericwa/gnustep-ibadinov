@@ -429,13 +429,13 @@ static NSMapTable	*globalClassMap = 0;
     {
       [NSException raise: NSInvalidUnarchiveOperationException
 		  format: @"[%@ +%@]: type missmatch",
-	NSStringFromClass([self class]), NSStringFromSelector(_cmd), o];
+	NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
     }
   if ([o count] != expected)
     {
       [NSException raise: NSInvalidUnarchiveOperationException
 		  format: @"[%@ +%@]: count missmatch",
-	NSStringFromClass([self class]), NSStringFromSelector(_cmd), o];
+	NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
     }
   NSGetSizeAndAlignment(type, 0, &size);
   memcpy(buf, [o bytes], expected * size);

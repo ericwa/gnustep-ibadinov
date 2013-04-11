@@ -366,6 +366,10 @@ static RunLoopEventType typeForStream(NSStream *aStream)
 {
 }
 
+- (void) _dispatchEvent: (NSNumber *)anEvent
+{
+}
+
 - (void) _setLoopID: (void *)ref
 {
 }

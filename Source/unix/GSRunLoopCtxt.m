@@ -816,8 +816,8 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
                       port_fd_array = malloc(sizeof(NSInteger)*port_fd_size);
                       [port getFds: port_fd_array count: &port_fd_count];
                     }
-		  NSDebugMLLog(@"NSRunLoop", @"listening to %d port sockets",
-		    port_fd_count);
+		  NSDebugMLLog(@"NSRunLoop", @"listening to %ld port sockets",
+		    (long)port_fd_count);
 		  while (port_fd_count--)
 		    {
 		      fd = (int) port_fd_array[port_fd_count];

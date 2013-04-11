@@ -97,8 +97,8 @@ NSString *const NSAssertionHandlerKey = @"NSAssertionHandler";
   va_start(ap, format);
   message =
     [NSString
-      stringWithFormat: @"%@:%d  Assertion failed in %@.  %@",
-      fileName, line, functionName, format];
+      stringWithFormat: @"%@:%ld  Assertion failed in %@.  %@",
+      fileName, (long)line, functionName, format];
   NSLogv(message, ap);
 
   [NSException raise: NSInternalInconsistencyException
@@ -125,8 +125,8 @@ NSString *const NSAssertionHandlerKey = @"NSAssertionHandler";
   va_start(ap, format);
   message =
     [NSString
-      stringWithFormat: @"%@:%d  Assertion failed in %@(%@), method %@.  %@",
-      fileName, line, NSStringFromClass([object class]),
+      stringWithFormat: @"%@:%ld  Assertion failed in %@(%@), method %@.  %@",
+      fileName, (long)line, NSStringFromClass([object class]),
       class_isMetaClass([object class]) ? @"class" : @"instance",
       NSStringFromSelector(aSelector), format];
   NSLogv(message, ap);

@@ -769,8 +769,8 @@ static NSMapTable	*absolutes = 0;
 	       * Should never happen now we round to the minute
 	       * for MacOS-X compatibnility.
 	       */
-	      name = [[NSString alloc] initWithFormat: @"NSAbsoluteTimeZone:%d",
-		anOffset];
+	      name = [[NSString alloc] initWithFormat: @"NSAbsoluteTimeZone:%ld",
+		(long)anOffset];
 	    }
 	}
       else
@@ -2294,10 +2294,10 @@ localZoneString, [zone name], sign, s/3600, (s/60)%60);
 
 - (NSString*) description
 {
-  return [NSString stringWithFormat: @"%@(%@, %s%d)", [self name],
+  return [NSString stringWithFormat: @"%@(%@, %s%ld)", [self name],
     [self timeZoneAbbreviation],
     ([self isDaylightSavingTimeZone]? "IS_DST, ": ""),
-    [self timeZoneSecondsFromGMT]];
+    (long)[self timeZoneSecondsFromGMT]];
 }
 
 /**
