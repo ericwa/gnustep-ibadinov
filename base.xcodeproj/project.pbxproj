@@ -938,6 +938,18 @@
 		1890701D1610BF3C0003C892 /* win32-load.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "win32-load.h"; sourceTree = "<group>"; };
 		1890B34016F3BC3300187826 /* GSPrivateHash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSPrivateHash.m; sourceTree = "<group>"; };
 		18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInvocation.x86_64.m; sourceTree = "<group>"; };
+		18F8D04217244FE900420DA5 /* ChangeStack.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ChangeStack.plist; sourceTree = "<group>"; };
+		18F8D04317244FE900420DA5 /* ComplexDependency.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ComplexDependency.plist; sourceTree = "<group>"; };
+		18F8D04417244FE900420DA5 /* DependencyObservance.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = DependencyObservance.plist; sourceTree = "<group>"; };
+		18F8D04517244FE900420DA5 /* DependentNestedProperty.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = DependentNestedProperty.plist; sourceTree = "<group>"; };
+		18F8D04617244FE900420DA5 /* NestedProperty.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = NestedProperty.plist; sourceTree = "<group>"; };
+		18F8D04717244FE900420DA5 /* NestedPropertyDependency.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = NestedPropertyDependency.plist; sourceTree = "<group>"; };
+		18F8D04817244FE900420DA5 /* NestedPropertyLevels.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = NestedPropertyLevels.plist; sourceTree = "<group>"; };
+		18F8D04917244FE900420DA5 /* Observance.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Observance.plist; sourceTree = "<group>"; };
+		18F8D04A17244FE900420DA5 /* ObservanceStack.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ObservanceStack.plist; sourceTree = "<group>"; };
+		18F8D04B17244FE900420DA5 /* StackCorruption.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = StackCorruption.plist; sourceTree = "<group>"; };
+		18F8D04C17244FE900420DA5 /* TestInfo */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestInfo; sourceTree = "<group>"; };
+		18F8D04D17244FE900420DA5 /* test00.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = test00.m; sourceTree = "<group>"; };
 		18FE1E12162716A200389A13 /* ChangeLog */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog; sourceTree = SOURCE_ROOT; };
 		18FE1E13162716A200389A13 /* ChangeLog.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = ChangeLog.1; sourceTree = SOURCE_ROOT; };
 		18FE1E14162716A200389A13 /* ChangeLog.2 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog.2; sourceTree = SOURCE_ROOT; };
@@ -2193,6 +2205,25 @@
 			path = win32;
 			sourceTree = "<group>";
 		};
+		18F8D04117244FE900420DA5 /* KVO */ = {
+			isa = PBXGroup;
+			children = (
+				18F8D04217244FE900420DA5 /* ChangeStack.plist */,
+				18F8D04317244FE900420DA5 /* ComplexDependency.plist */,
+				18F8D04417244FE900420DA5 /* DependencyObservance.plist */,
+				18F8D04517244FE900420DA5 /* DependentNestedProperty.plist */,
+				18F8D04617244FE900420DA5 /* NestedProperty.plist */,
+				18F8D04717244FE900420DA5 /* NestedPropertyDependency.plist */,
+				18F8D04817244FE900420DA5 /* NestedPropertyLevels.plist */,
+				18F8D04917244FE900420DA5 /* Observance.plist */,
+				18F8D04A17244FE900420DA5 /* ObservanceStack.plist */,
+				18F8D04B17244FE900420DA5 /* StackCorruption.plist */,
+				18F8D04C17244FE900420DA5 /* TestInfo */,
+				18F8D04D17244FE900420DA5 /* test00.m */,
+			);
+			path = KVO;
+			sourceTree = "<group>";
+		};
 		18FE1E271628550000389A13 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -2213,6 +2244,7 @@
 				18FE1E4B1628550000389A13 /* GarbageCollection */,
 				18FE1E4F1628550000389A13 /* GenericTests */,
 				18FE1E531628550000389A13 /* KVC */,
+				18F8D04117244FE900420DA5 /* KVO */,
 				18FE1E5A1628550000389A13 /* NSAffineTransform */,
 				18FE1E5D1628550000389A13 /* NSArchiver */,
 				18FE1E621628550000389A13 /* NSArray */,
