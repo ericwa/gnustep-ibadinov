@@ -1,0 +1,38 @@
+(
+    {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = 4096;
+        path = "account.uploaded";
+    },
+        {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = 0;
+        path = "account.downloaded";
+    },
+        {
+        kind = 1;
+        new = 0;
+        old = 0;
+        path = "account.downloaded";
+    },
+        {
+        kind = 1;
+        new = 0;
+        old = 4096;
+        path = "account.uploaded";
+    },
+        {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = 0;
+        path = "account.downloaded";
+    },
+        {
+        kind = 1;
+        new = 512;
+        old = 0;
+        path = "account.downloaded";
+    }
+)

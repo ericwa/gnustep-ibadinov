@@ -1,0 +1,24 @@
+(
+    {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = James;
+        path = firstName;
+    },
+    {
+        kind = 1;
+        new = John;
+        old = James;
+        path = firstName;
+    },
+    {
+        kind = 1;
+        new = John;
+        path = firstName;
+    },
+    {
+        kind = 1;
+        new = Emma;
+        path = firstName;
+    }
+)
