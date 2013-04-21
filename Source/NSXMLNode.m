@@ -2035,11 +2035,8 @@ execute_xpath(xmlNodePtr node, NSString *xpath_exp, NSDictionary *constants,
       xmlBufferFree(buffer);
       return nil;
     }
-#if LIBXML_VERSION < 20900
+
   string = StringFromXMLString(buffer->content, buffer->use);
-#else
-  string = StringFromXMLString(xmlBufContent(buffer), xmlBufUse(buffer));
-#endif
   xmlBufferFree(buffer);
 
   if ([self kind] == NSXMLTextKind)
