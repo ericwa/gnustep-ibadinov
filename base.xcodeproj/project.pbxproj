@@ -191,7 +191,6 @@
 		18394C2E1610EB7F00335E85 /* NSInvocation.ff.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA01610BF3C0003C892 /* NSInvocation.ff.m */; };
 		18394C2F1610EB7F00335E85 /* NSJSONSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA11610BF3C0003C892 /* NSJSONSerialization.m */; };
 		18394C301610EB7F00335E85 /* NSKeyValueCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA21610BF3C0003C892 /* NSKeyValueCoding.m */; };
-		18394C331610EB7F00335E85 /* NSKeyValueObserving.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA51610BF3C0003C892 /* NSKeyValueObserving.m */; };
 		18394C341610EB7F00335E85 /* NSKeyedArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA61610BF3C0003C892 /* NSKeyedArchiver.m */; };
 		18394C361610EB7F00335E85 /* NSLocale.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA81610BF3C0003C892 /* NSLocale.m */; };
 		18394C371610EB7F00335E85 /* NSLock.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA91610BF3C0003C892 /* NSLock.m */; };
@@ -265,6 +264,9 @@
 		18394C7F1610EC5E00335E85 /* NSConcretePointerFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F831610BF3C0003C892 /* NSConcretePointerFunctions.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		18394C801610EC5E00335E85 /* NSNumberMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906FB61610BF3C0003C892 /* NSNumberMethods.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		18394C811610EC5E00335E85 /* NSXMLPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906FF01610BF3C0003C892 /* NSXMLPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		18408FF217271D3E00CFD080 /* NSKeyValueObserving.m in Sources */ = {isa = PBXBuildFile; fileRef = 18408FF017271D3D00CFD080 /* NSKeyValueObserving.m */; };
+		18408FF617271EAE00CFD080 /* NSArray+KVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 18408FF417271EAD00CFD080 /* NSArray+KVO.m */; };
+		18408FFA1727200100CFD080 /* NSSet+KVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 18408FF81727200100CFD080 /* NSSet+KVO.m */; };
 		184915A5163056E800B0ED83 /* libffi.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 184915A4163056E800B0ED83 /* libffi.dylib */; };
 		1852894F161243FC0016729B /* NSObjCRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FB71610BF3C0003C892 /* NSObjCRuntime.m */; };
 		185289511613861E0016729B /* GSObjCRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F131610BF3C0003C892 /* GSObjCRuntime.m */; };
@@ -342,6 +344,21 @@
 		18641D221678AD46003C6E11 /* GSSocksParserPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D151678AD04003C6E11 /* GSSocksParserPrivate.m */; };
 		1890B34116F3BC3300187826 /* GSPrivateHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890B34016F3BC3300187826 /* GSPrivateHash.m */; };
 		18D8BEA4164B5FF800942A5D /* NSInvocation.x86_64.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */; };
+		18F8D05D1724534E00420DA5 /* NSKeyValueNestedProperty.h in Headers */ = {isa = PBXBuildFile; fileRef = 18F8D0501724534E00420DA5 /* NSKeyValueNestedProperty.h */; };
+		18F8D05E1724534E00420DA5 /* NSKeyValueNestedProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F8D0511724534E00420DA5 /* NSKeyValueNestedProperty.m */; };
+		18F8D05F1724534E00420DA5 /* NSKeyValueObservance.h in Headers */ = {isa = PBXBuildFile; fileRef = 18F8D0521724534E00420DA5 /* NSKeyValueObservance.h */; };
+		18F8D0601724534E00420DA5 /* NSKeyValueObservance.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F8D0531724534E00420DA5 /* NSKeyValueObservance.m */; };
+		18F8D0611724534E00420DA5 /* NSKeyValueObservationInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 18F8D0541724534E00420DA5 /* NSKeyValueObservationInfo.h */; };
+		18F8D0621724534E00420DA5 /* NSKeyValueObservationInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F8D0551724534E00420DA5 /* NSKeyValueObservationInfo.m */; };
+		18F8D0631724534E00420DA5 /* NSKeyValueObservingPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 18F8D0561724534E00420DA5 /* NSKeyValueObservingPrivate.h */; };
+		18F8D0641724534E00420DA5 /* NSKeyValueObservingPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F8D0571724534E00420DA5 /* NSKeyValueObservingPrivate.m */; };
+		18F8D0651724534E00420DA5 /* NSKeyValueProperty.h in Headers */ = {isa = PBXBuildFile; fileRef = 18F8D0581724534E00420DA5 /* NSKeyValueProperty.h */; };
+		18F8D0661724534E00420DA5 /* NSKeyValueProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F8D0591724534E00420DA5 /* NSKeyValueProperty.m */; };
+		18F8D0671724534E00420DA5 /* NSKeyValueUnnestedProperty.h in Headers */ = {isa = PBXBuildFile; fileRef = 18F8D05A1724534E00420DA5 /* NSKeyValueUnnestedProperty.h */; };
+		18F8D0681724534E00420DA5 /* NSKeyValueUnnestedProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F8D05B1724534E00420DA5 /* NSKeyValueUnnestedProperty.m */; };
+		18F8D0691724534E00420DA5 /* NSObject+KVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F8D05C1724534E00420DA5 /* NSObject+KVO.m */; };
+		18F8D06C1725919A00420DA5 /* NSKVONotifying.h in Headers */ = {isa = PBXBuildFile; fileRef = 18F8D06A1725919700420DA5 /* NSKVONotifying.h */; };
+		18F8D06D1725919A00420DA5 /* NSKVONotifying.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F8D06B1725919800420DA5 /* NSKVONotifying.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -464,6 +481,9 @@
 		18394BF91610E85A00335E85 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		18394BFB1610E8FB00335E85 /* libicui18n.48.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicui18n.48.1.dylib; path = /opt/local/lib/libicui18n.48.1.dylib; sourceTree = "<absolute>"; };
 		18394BFD1610E97A00335E85 /* libicuuc.48.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicuuc.48.1.dylib; path = /opt/local/lib/libicuuc.48.1.dylib; sourceTree = "<absolute>"; };
+		18408FF017271D3D00CFD080 /* NSKeyValueObserving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueObserving.m; sourceTree = "<group>"; };
+		18408FF417271EAD00CFD080 /* NSArray+KVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+KVO.m"; sourceTree = "<group>"; };
+		18408FF81727200100CFD080 /* NSSet+KVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSSet+KVO.m"; sourceTree = "<group>"; };
 		184915A4163056E800B0ED83 /* libffi.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libffi.dylib; path = usr/lib/libffi.dylib; sourceTree = SDKROOT; };
 		18528980161397F40016729B /* libgnutls.26.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgnutls.26.dylib; path = /opt/local/lib/libgnutls.26.dylib; sourceTree = "<absolute>"; };
 		185289981613996F0016729B /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
@@ -828,7 +848,6 @@
 		18906FA21610BF3C0003C892 /* NSKeyValueCoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueCoding.m; sourceTree = "<group>"; };
 		18906FA31610BF3C0003C892 /* NSKeyValueMutableArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueMutableArray.m; sourceTree = "<group>"; };
 		18906FA41610BF3C0003C892 /* NSKeyValueMutableSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueMutableSet.m; sourceTree = "<group>"; };
-		18906FA51610BF3C0003C892 /* NSKeyValueObserving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueObserving.m; sourceTree = "<group>"; };
 		18906FA61610BF3C0003C892 /* NSKeyedArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyedArchiver.m; sourceTree = "<group>"; };
 		18906FA71610BF3C0003C892 /* NSKeyedUnarchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyedUnarchiver.m; sourceTree = "<group>"; };
 		18906FA81610BF3C0003C892 /* NSLocale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSLocale.m; sourceTree = "<group>"; };
@@ -950,6 +969,21 @@
 		18F8D04B17244FE900420DA5 /* StackCorruption.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = StackCorruption.plist; sourceTree = "<group>"; };
 		18F8D04C17244FE900420DA5 /* TestInfo */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestInfo; sourceTree = "<group>"; };
 		18F8D04D17244FE900420DA5 /* test00.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = test00.m; sourceTree = "<group>"; };
+		18F8D0501724534E00420DA5 /* NSKeyValueNestedProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSKeyValueNestedProperty.h; sourceTree = "<group>"; };
+		18F8D0511724534E00420DA5 /* NSKeyValueNestedProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueNestedProperty.m; sourceTree = "<group>"; };
+		18F8D0521724534E00420DA5 /* NSKeyValueObservance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSKeyValueObservance.h; sourceTree = "<group>"; };
+		18F8D0531724534E00420DA5 /* NSKeyValueObservance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueObservance.m; sourceTree = "<group>"; };
+		18F8D0541724534E00420DA5 /* NSKeyValueObservationInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSKeyValueObservationInfo.h; sourceTree = "<group>"; };
+		18F8D0551724534E00420DA5 /* NSKeyValueObservationInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueObservationInfo.m; sourceTree = "<group>"; };
+		18F8D0561724534E00420DA5 /* NSKeyValueObservingPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSKeyValueObservingPrivate.h; sourceTree = "<group>"; };
+		18F8D0571724534E00420DA5 /* NSKeyValueObservingPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueObservingPrivate.m; sourceTree = "<group>"; };
+		18F8D0581724534E00420DA5 /* NSKeyValueProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSKeyValueProperty.h; sourceTree = "<group>"; };
+		18F8D0591724534E00420DA5 /* NSKeyValueProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueProperty.m; sourceTree = "<group>"; };
+		18F8D05A1724534E00420DA5 /* NSKeyValueUnnestedProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSKeyValueUnnestedProperty.h; sourceTree = "<group>"; };
+		18F8D05B1724534E00420DA5 /* NSKeyValueUnnestedProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueUnnestedProperty.m; sourceTree = "<group>"; };
+		18F8D05C1724534E00420DA5 /* NSObject+KVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+KVO.m"; sourceTree = "<group>"; };
+		18F8D06A1725919700420DA5 /* NSKVONotifying.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSKVONotifying.h; sourceTree = "<group>"; };
+		18F8D06B1725919800420DA5 /* NSKVONotifying.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKVONotifying.m; sourceTree = "<group>"; };
 		18FE1E12162716A200389A13 /* ChangeLog */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog; sourceTree = SOURCE_ROOT; };
 		18FE1E13162716A200389A13 /* ChangeLog.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = ChangeLog.1; sourceTree = SOURCE_ROOT; };
 		18FE1E14162716A200389A13 /* ChangeLog.2 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog.2; sourceTree = SOURCE_ROOT; };
@@ -1662,6 +1696,7 @@
 		18394BFF1610E9D600335E85 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				18F8D04F1724534E00420DA5 /* KVO */,
 				18906F701610BF3C0003C892 /* NSAffineTransform.m */,
 				18906F711610BF3C0003C892 /* NSArchiver.m */,
 				18906F721610BF3C0003C892 /* NSArray.m */,
@@ -1714,7 +1749,6 @@
 				18906FA21610BF3C0003C892 /* NSKeyValueCoding.m */,
 				18906FA31610BF3C0003C892 /* NSKeyValueMutableArray.m */,
 				18906FA41610BF3C0003C892 /* NSKeyValueMutableSet.m */,
-				18906FA51610BF3C0003C892 /* NSKeyValueObserving.m */,
 				18906FA61610BF3C0003C892 /* NSKeyedArchiver.m */,
 				18906FA71610BF3C0003C892 /* NSKeyedUnarchiver.m */,
 				18906FA81610BF3C0003C892 /* NSLocale.m */,
@@ -2220,6 +2254,31 @@
 				18F8D04B17244FE900420DA5 /* StackCorruption.plist */,
 				18F8D04C17244FE900420DA5 /* TestInfo */,
 				18F8D04D17244FE900420DA5 /* test00.m */,
+			);
+			path = KVO;
+			sourceTree = "<group>";
+		};
+		18F8D04F1724534E00420DA5 /* KVO */ = {
+			isa = PBXGroup;
+			children = (
+				18408FF417271EAD00CFD080 /* NSArray+KVO.m */,
+				18F8D0501724534E00420DA5 /* NSKeyValueNestedProperty.h */,
+				18F8D0511724534E00420DA5 /* NSKeyValueNestedProperty.m */,
+				18F8D0521724534E00420DA5 /* NSKeyValueObservance.h */,
+				18F8D0531724534E00420DA5 /* NSKeyValueObservance.m */,
+				18F8D0541724534E00420DA5 /* NSKeyValueObservationInfo.h */,
+				18F8D0551724534E00420DA5 /* NSKeyValueObservationInfo.m */,
+				18408FF017271D3D00CFD080 /* NSKeyValueObserving.m */,
+				18F8D0561724534E00420DA5 /* NSKeyValueObservingPrivate.h */,
+				18F8D0571724534E00420DA5 /* NSKeyValueObservingPrivate.m */,
+				18F8D0581724534E00420DA5 /* NSKeyValueProperty.h */,
+				18F8D0591724534E00420DA5 /* NSKeyValueProperty.m */,
+				18F8D05A1724534E00420DA5 /* NSKeyValueUnnestedProperty.h */,
+				18F8D05B1724534E00420DA5 /* NSKeyValueUnnestedProperty.m */,
+				18F8D06A1725919700420DA5 /* NSKVONotifying.h */,
+				18F8D06B1725919800420DA5 /* NSKVONotifying.m */,
+				18F8D05C1724534E00420DA5 /* NSObject+KVO.m */,
+				18408FF81727200100CFD080 /* NSSet+KVO.m */,
 			);
 			path = KVO;
 			sourceTree = "<group>";
@@ -3562,6 +3621,13 @@
 				18394C801610EC5E00335E85 /* NSNumberMethods.h in Headers */,
 				18394C811610EC5E00335E85 /* NSXMLPrivate.h in Headers */,
 				18394B341610D95600335E85 /* Foundation-Prefix.pch in Headers */,
+				18F8D05D1724534E00420DA5 /* NSKeyValueNestedProperty.h in Headers */,
+				18F8D05F1724534E00420DA5 /* NSKeyValueObservance.h in Headers */,
+				18F8D0611724534E00420DA5 /* NSKeyValueObservationInfo.h in Headers */,
+				18F8D0631724534E00420DA5 /* NSKeyValueObservingPrivate.h in Headers */,
+				18F8D0651724534E00420DA5 /* NSKeyValueProperty.h in Headers */,
+				18F8D0671724534E00420DA5 /* NSKeyValueUnnestedProperty.h in Headers */,
+				18F8D06C1725919A00420DA5 /* NSKVONotifying.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3771,7 +3837,6 @@
 				180DFAEB165BF98C00573635 /* NSInvocation.x86_64.S in Sources */,
 				18394C2F1610EB7F00335E85 /* NSJSONSerialization.m in Sources */,
 				18394C301610EB7F00335E85 /* NSKeyValueCoding.m in Sources */,
-				18394C331610EB7F00335E85 /* NSKeyValueObserving.m in Sources */,
 				18394C341610EB7F00335E85 /* NSKeyedArchiver.m in Sources */,
 				185391931625FD0C0015BDFA /* NSKeyedUnarchiver.m in Sources */,
 				18394C361610EB7F00335E85 /* NSLocale.m in Sources */,
@@ -3846,6 +3911,17 @@
 				18394C7B1610EB8000335E85 /* NSXMLParser.m in Sources */,
 				18394C7C1610EB8000335E85 /* NSZone.m in Sources */,
 				1890B34116F3BC3300187826 /* GSPrivateHash.m in Sources */,
+				18F8D05E1724534E00420DA5 /* NSKeyValueNestedProperty.m in Sources */,
+				18F8D0601724534E00420DA5 /* NSKeyValueObservance.m in Sources */,
+				18F8D0621724534E00420DA5 /* NSKeyValueObservationInfo.m in Sources */,
+				18F8D0641724534E00420DA5 /* NSKeyValueObservingPrivate.m in Sources */,
+				18F8D0661724534E00420DA5 /* NSKeyValueProperty.m in Sources */,
+				18F8D0681724534E00420DA5 /* NSKeyValueUnnestedProperty.m in Sources */,
+				18F8D0691724534E00420DA5 /* NSObject+KVO.m in Sources */,
+				18F8D06D1725919A00420DA5 /* NSKVONotifying.m in Sources */,
+				18408FF217271D3E00CFD080 /* NSKeyValueObserving.m in Sources */,
+				18408FF617271EAE00CFD080 /* NSArray+KVO.m in Sources */,
+				18408FFA1727200100CFD080 /* NSSet+KVO.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
