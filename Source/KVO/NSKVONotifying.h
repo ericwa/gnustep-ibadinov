@@ -29,10 +29,6 @@
 
 @interface NSKVONotifying : NSObject
 
-+ (Class)_createSubclassOfClass:(Class)aClass;
-
-+ (void)_replaceSetterForKey:(NSString *)key;
-
 - (BOOL)_isNSKVONotifying;
 
 @end

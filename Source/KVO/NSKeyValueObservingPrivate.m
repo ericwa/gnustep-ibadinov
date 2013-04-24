@@ -93,7 +93,7 @@ void _NSKVOObjectAddObervance(id self, SEL _cmd, NSObject *observer, NSString *k
     if (!info) {
         info = [NSKeyValueObservationInfo new];
         [self setObservationInfo:info];
-        [info release];
+        [info release]; /* todo: containter should not retain info */
     }
     [info addObservance:observance];
     
@@ -220,23 +220,148 @@ void _NSKVOObjectSetObservationInfo(id self, void *observationInfo)
         [kvoTable removeObjectForKey:self];
 }
 
+static BOOL NSKVOGetNotifyingSetterForKey(Class class, NSString *key, SEL *originalSetter, SEL *notifyingSetter)
+{
+    NSString *capitalizedName = [key capitalizedString];
+    const char *type = NULL;
+    
+    SEL selector = sel_getUid([[NSString stringWithFormat:@"set%@:", capitalizedName] UTF8String]);
+    NSMethodSignature *signature = [class instanceMethodSignatureForSelector:selector];
+    if (!signature) {
+        selector = sel_getUid([[NSString stringWithFormat:@"_set%@:", capitalizedName] UTF8String]);
+        signature = [class instanceMethodSignatureForSelector:selector];
+    }
+    if (!signature) {
+        /* if direct access is enables for this property, KVC will notify */
+        return NO;
+    }
+    type = [signature getArgumentTypeAtIndex:3];
+    const char *selectorName;
+    switch (type[0]) {
+        case GSObjCTypeChar:
+        case GSObjCTypeUnsignedChar:
+            selectorName = "_setterChar";
+        case GSObjCTypeShort:
+        case GSObjCTypeUnsignedShort:
+            selectorName = "_setterShort";
+        case GSObjCTypeInt:
+        case GSObjCTypeUnsignedInt:
+            selectorName = "_setterInt";
+        case GSObjCTypeLong:
+        case GSObjCTypeUnsignedLong:
+            selectorName = "_setterLong";
+        case GSObjCTypeLongLong:
+        case GSObjCTypeUnsignedLongLong:
+            selectorName = "_setterLongLong";
+        case GSObjCTypeId:
+        case GSObjCTypePointer:
+        case GSObjCTypeCharPointer:
+            selectorName = "_setter";
+            break;
+        case GSObjCTypeStructureBegin:
+            /* todo: use valid type comparison function */
+            if (strcmp(type, @encode(NSRange)) == 0) {
+                selectorName = "_setterRange";
+                break;
+            }
+            if (strcmp(type, @encode(NSPoint)) == 0) {
+                selectorName = "_setterPoint";
+                break;
+            }
+            if (strcmp(type, @encode(NSSize)) == 0) {
+                selectorName = "_setterSize";
+                break;
+            }
+            if (strcmp(type, @encode(NSRect)) == 0) {
+                selectorName = "_setterRect";
+                break;
+            }
+        default:
+            [NSException raise:NSInvalidArgumentException format:@"%@: this class is not key value coding-compliant for the key %@", class, key];
+            return NO;
+    }
+    if (originalSetter) {
+        *originalSetter = selector;
+    }
+    if (notifyingSetter) {
+        *notifyingSetter = sel_getUid(selectorName);
+    }
+    return YES;
+}
+
+/*
+ * NOTE!
+ * From "Ensuring KVC compliance": (... requires that your class:) Implement a method
+ * named -<key>, -is<Key>,  or have an instance variable <key> or _<key>
+ */
+static BOOL NSKVOGetIvarNameForKey(Class class, NSString *key, NSString **ivarName)
+{
+    NSUInteger length = [key length];
+    char *name = alloca(length + 2);
+    memcpy(name + 1, [key UTF8String], length);
+    name[0] = '_';
+    name[length + 1] = '\0';
+    
+    for (int probe = 0; probe < 2; ++probe) {
+        for (int offset = 0; offset < 2; ++offset) {
+            if (class_getInstanceVariable(class, name + offset)) {
+                if (ivarName) {
+                    *ivarName = [NSString stringWithUTF8String:name + offset];
+                }
+                return YES;
+            }
+        }
+        name[1] = tolower(name[1]);
+    }
+    
+    return NO;
+}
+
+/*
+ * NOTE!
+ * Should only be called while holding kvoLock
+ */
+static Class NSKVOMakeNotifyingSubclassOfClass(Class class)
+{
+    Class prototype = [NSKVONotifying class];
+    Class subclass = NSMapGet(replacementTable, class);
+    
+    if (!subclass) {
+        subclass = objc_allocateClassPair(class, [[NSString stringWithFormat:@"NSKVONotifying_%s", class_getName(class)] UTF8String], 0);
+        
+        static int const SelectorCount = 4;
+        SEL selectors[SelectorCount] = {@selector(dealloc), @selector(class), @selector(superclass), @selector(_isNSKVONotifying)};
+        for (int index = 0; index < SelectorCount; ++index) {
+            Method method = class_getInstanceMethod(prototype, selectors[index]);
+            class_replaceMethod(subclass, selectors[index], method_getImplementation(method), method_getTypeEncoding(method));
+        }
+        
+        objc_registerClassPair(subclass);
+        NSMapInsert(replacementTable, class, subclass);
+    }
+    return subclass;
+}
+
 Class _NSKVOGetNotifyingSubclassOfClass(Class class)
 {
     Class subclass;
     [kvoLock lock];
     subclass = NSMapGet(replacementTable, class);
     [kvoLock unlock];
-    return subclass;
+    return subclass ? subclass : class;
 }
 
 void _NSKVOEnableAutomaticNotificationForKey(Class class, NSString *key)
 {
     [kvoLock lock];
-    Class subclass = NSMapGet(replacementTable, class);
-    if (!subclass) {
-        subclass = [NSKVONotifying _createSubclassOfClass:class];
-        NSMapInsert(replacementTable, class, subclass);
+    SEL originalSetter, notifyingSetter;
+    if (NSKVOGetNotifyingSetterForKey(class, key, &originalSetter, &notifyingSetter)) {
+        Class subclass = NSKVOMakeNotifyingSubclassOfClass(class);
+        Method method = class_getInstanceMethod([NSKVONotifying class], notifyingSetter);
+        class_replaceMethod(subclass, originalSetter, method_getImplementation(method), method_getTypeEncoding(method));
+    } else if (NSKVOGetIvarNameForKey(class, key, nil)) {
+        /* a hack in KVC relies on _isKVONotifying method presence */
+        NSKVOMakeNotifyingSubclassOfClass(class);
     }
-    [subclass _replaceSetterForKey:key];
     [kvoLock unlock];
 }
