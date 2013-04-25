@@ -44,16 +44,17 @@ static struct objc_super GetSuper(id self)
     return (struct objc_super){ self, class_getSuperclass(object_getClass(self)) };
 }
 
-#define Setter(value)                               \
-do {                                                \
-    NSString *key = CreateKeyFromSelector(_cmd);    \
-    [self willChangeValueForKey:key];               \
-                                                    \
-    struct objc_super super = GetSuper(self);       \
-    objc_msgSendSuper(&super, _cmd, value);         \
-                                                    \
-    [self didChangeValueForKey:key];                \
-    [key release];                                  \
+#define Setter(value)                                                       \
+do {                                                                        \
+    NSString *key = CreateKeyFromSelector(_cmd);                            \
+    [self willChangeValueForKey:key];                                       \
+                                                                            \
+    struct objc_super super = GetSuper(self);                               \
+    typedef void(*ImpType)(struct objc_super *, SEL, __typeof__(value));    \
+    ((ImpType)&objc_msgSendSuper)(&super, _cmd, value);                     \
+                                                                            \
+    [self didChangeValueForKey:key];                                        \
+    [key release];                                                          \
 } while (0)
 
 

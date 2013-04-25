@@ -1353,6 +1353,16 @@ GSSelectorTypesMatch(const char *types1, const char *types2)
               types2++;
             }
 	}
+    
+      /* Ignore field names */
+      if (*types1 == '"')
+        {
+            for (++types1; *types1++ != '"';);
+        }
+      if (*types2 == '"')
+        {
+            for (++types2; *types2++ != '"';);
+        }
 
       if (*types1 != *types2)
         {
@@ -1669,6 +1679,19 @@ GSObjCAddClassOverride(Class receiver, Class override)
 #import	"Foundation/NSKeyValueCoding.h"
 #endif
 
+/*
+ * NSPoint and NSSize are equal using GSSelectorTypesMatch(),
+ * but corresponding NSValue instances are not.
+ * This function compares only "{<name>=" part of type encoding.
+ */
+static BOOL StructureTypesMatch(const char *type1, const char *type2)
+{
+    while (*type1 != '\0' && type2 != '\0' && *type1 == *type2 && *type1 != '=' && *type2 != '=') {
+        ++type1;
+        ++type2;
+    }
+    return *type1 == *type2;
+}
 
 /**
  * This is used internally by the key-value coding methods, to get a
@@ -1974,7 +1997,7 @@ GSObjCGetVal(NSObject *self, const char *key, SEL sel,
             break;
 
           case _C_STRUCT_B:
-            if (GSSelectorTypesMatch(@encode(NSPoint), type))
+            if (StructureTypesMatch(@encode(NSPoint), type))
               {
                 NSPoint	v;
 
@@ -1991,7 +2014,7 @@ GSObjCGetVal(NSObject *self, const char *key, SEL sel,
                   }
                 val = [NSValue valueWithPoint: v];
               }
-            else if (GSSelectorTypesMatch(@encode(NSRange), type))
+            else if (StructureTypesMatch(@encode(NSRange), type))
               {
                 NSRange	v;
 
@@ -2008,7 +2031,7 @@ GSObjCGetVal(NSObject *self, const char *key, SEL sel,
                   }
                 val = [NSValue valueWithRange: v];
               }
-            else if (GSSelectorTypesMatch(@encode(NSRect), type))
+            else if (StructureTypesMatch(@encode(NSRect), type))
               {
                 NSRect	v;
 
@@ -2025,7 +2048,7 @@ GSObjCGetVal(NSObject *self, const char *key, SEL sel,
                   }
                 val = [NSValue valueWithRect: v];
               }
-            else if (GSSelectorTypesMatch(@encode(NSSize), type))
+            else if (StructureTypesMatch(@encode(NSSize), type))
               {
                 NSSize	v;
 
@@ -2420,7 +2443,7 @@ GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
 	    break;
 
           case _C_STRUCT_B:
-            if (GSSelectorTypesMatch(@encode(NSPoint), type))
+            if (StructureTypesMatch(@encode(NSPoint), type))
               {
                 NSPoint	v = [val pointValue];
 
@@ -2438,7 +2461,7 @@ GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
                     (*imp)(self, sel, v);
                   }
               }
-            else if (GSSelectorTypesMatch(@encode(NSRange), type))
+            else if (StructureTypesMatch(@encode(NSRange), type))
               {
                 NSRange	v = [val rangeValue];
 
@@ -2456,7 +2479,7 @@ GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
                     (*imp)(self, sel, v);
                   }
               }
-            else if (GSSelectorTypesMatch(@encode(NSRect), type))
+            else if (StructureTypesMatch(@encode(NSRect), type))
               {
                 NSRect	v = [val rectValue];
 
@@ -2474,7 +2497,7 @@ GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
                     (*imp)(self, sel, v);
                   }
               }
-            else if (GSSelectorTypesMatch(@encode(NSSize), type))
+            else if (StructureTypesMatch(@encode(NSSize), type))
               {
                 NSSize	v = [val sizeValue];
 

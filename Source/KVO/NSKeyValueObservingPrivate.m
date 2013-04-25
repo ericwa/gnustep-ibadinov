@@ -132,6 +132,7 @@ void _NSKVOObjectRemoveObservance(id self, BOOL contextMatters, NSObject *observ
     
     if (![info hasObservances]) {
         [self setObservationInfo:nil];
+        object_setClass(self, [self class]);
     }
     
     [kvoLock unlock];
@@ -222,58 +223,80 @@ void _NSKVOObjectSetObservationInfo(id self, void *observationInfo)
 
 static BOOL NSKVOGetNotifyingSetterForKey(Class class, NSString *key, SEL *originalSetter, SEL *notifyingSetter)
 {
-    NSString *capitalizedName = [key capitalizedString];
+    NSUInteger length = [key length];
+    NSUInteger size = length + 6;
+    char *setter = alloca(size);
+    memcpy(setter + 4, [key UTF8String], length);
+    setter[0] = '_';
+    setter[1] = 's';
+    setter[2] = 'e';
+    setter[3] = 't';
+    setter[4] = toupper(setter[4]);
+    setter[size - 2] = ':';
+    setter[size - 1] = '\0';
+    
     const char *type = NULL;
     
-    SEL selector = sel_getUid([[NSString stringWithFormat:@"set%@:", capitalizedName] UTF8String]);
+    SEL selector = sel_getUid(setter + 1);
     NSMethodSignature *signature = [class instanceMethodSignatureForSelector:selector];
     if (!signature) {
-        selector = sel_getUid([[NSString stringWithFormat:@"_set%@:", capitalizedName] UTF8String]);
+        selector = sel_getUid(setter);
         signature = [class instanceMethodSignatureForSelector:selector];
     }
     if (!signature) {
         /* if direct access is enables for this property, KVC will notify */
         return NO;
     }
-    type = [signature getArgumentTypeAtIndex:3];
+    type = [signature getArgumentTypeAtIndex:2];
     const char *selectorName;
     switch (type[0]) {
         case GSObjCTypeChar:
         case GSObjCTypeUnsignedChar:
-            selectorName = "_setterChar";
+            selectorName = "_setterChar:";
+            break;
         case GSObjCTypeShort:
         case GSObjCTypeUnsignedShort:
-            selectorName = "_setterShort";
+            selectorName = "_setterShort:";
+            break;
         case GSObjCTypeInt:
         case GSObjCTypeUnsignedInt:
-            selectorName = "_setterInt";
+            selectorName = "_setterInt:";
+            break;
         case GSObjCTypeLong:
         case GSObjCTypeUnsignedLong:
-            selectorName = "_setterLong";
+            selectorName = "_setterLong:";
+            break;
         case GSObjCTypeLongLong:
         case GSObjCTypeUnsignedLongLong:
-            selectorName = "_setterLongLong";
+            selectorName = "_setterLongLong:";
+            break;
         case GSObjCTypeId:
         case GSObjCTypePointer:
         case GSObjCTypeCharPointer:
-            selectorName = "_setter";
+            selectorName = "_setter:";
+            break;
+        case GSObjCTypeFloat:
+            selectorName = "_setterFloat:";
+            break;
+        case GSObjCTypeDouble:
+            selectorName = "_setterDouble:";
             break;
         case GSObjCTypeStructureBegin:
             /* todo: use valid type comparison function */
             if (strcmp(type, @encode(NSRange)) == 0) {
-                selectorName = "_setterRange";
+                selectorName = "_setterRange:";
                 break;
             }
             if (strcmp(type, @encode(NSPoint)) == 0) {
-                selectorName = "_setterPoint";
+                selectorName = "_setterPoint:";
                 break;
             }
             if (strcmp(type, @encode(NSSize)) == 0) {
-                selectorName = "_setterSize";
+                selectorName = "_setterSize:";
                 break;
             }
             if (strcmp(type, @encode(NSRect)) == 0) {
-                selectorName = "_setterRect";
+                selectorName = "_setterRect:";
                 break;
             }
         default:
@@ -357,8 +380,9 @@ void _NSKVOEnableAutomaticNotificationForKey(Class class, NSString *key)
     SEL originalSetter, notifyingSetter;
     if (NSKVOGetNotifyingSetterForKey(class, key, &originalSetter, &notifyingSetter)) {
         Class subclass = NSKVOMakeNotifyingSubclassOfClass(class);
-        Method method = class_getInstanceMethod([NSKVONotifying class], notifyingSetter);
-        class_replaceMethod(subclass, originalSetter, method_getImplementation(method), method_getTypeEncoding(method));
+        Method notifyingMethod = class_getInstanceMethod([NSKVONotifying class], notifyingSetter);
+        Method originalMethod = class_getInstanceMethod(class, originalSetter); /* to preserve type encoding */
+        class_replaceMethod(subclass, originalSetter, method_getImplementation(notifyingMethod), method_getTypeEncoding(originalMethod));
     } else if (NSKVOGetIvarNameForKey(class, key, nil)) {
         /* a hack in KVC relies on _isKVONotifying method presence */
         NSKVOMakeNotifyingSubclassOfClass(class);
