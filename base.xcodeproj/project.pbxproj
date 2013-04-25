@@ -956,17 +956,18 @@
 		1890701C1610BF3C0003C892 /* win32-def.top */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "win32-def.top"; sourceTree = "<group>"; };
 		1890701D1610BF3C0003C892 /* win32-load.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "win32-load.h"; sourceTree = "<group>"; };
 		1890B34016F3BC3300187826 /* GSPrivateHash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSPrivateHash.m; sourceTree = "<group>"; };
+		18D882491729B64E0067E486 /* ChangeStack.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ChangeStack.plist; sourceTree = "<group>"; };
+		18D8824A1729B64E0067E486 /* ComplexDependency.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ComplexDependency.plist; sourceTree = "<group>"; };
+		18D8824B1729B64E0067E486 /* DependencyObservance.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = DependencyObservance.plist; sourceTree = "<group>"; };
+		18D8824C1729B64E0067E486 /* DependentNestedProperty.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = DependentNestedProperty.plist; sourceTree = "<group>"; };
+		18D8824D1729B64E0067E486 /* NestedProperty.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = NestedProperty.plist; sourceTree = "<group>"; };
+		18D8824E1729B64E0067E486 /* NestedPropertyDependency.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = NestedPropertyDependency.plist; sourceTree = "<group>"; };
+		18D8824F1729B64E0067E486 /* NestedPropertyLevels.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = NestedPropertyLevels.plist; sourceTree = "<group>"; };
+		18D882501729B64E0067E486 /* Observance.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Observance.plist; sourceTree = "<group>"; };
+		18D882511729B64E0067E486 /* ObservanceStack.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ObservanceStack.plist; sourceTree = "<group>"; };
+		18D882521729B64E0067E486 /* StackCorruption.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = StackCorruption.plist; sourceTree = "<group>"; };
+		18D882531729B64E0067E486 /* test01.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test01.m; sourceTree = "<group>"; };
 		18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInvocation.x86_64.m; sourceTree = "<group>"; };
-		18F8D04217244FE900420DA5 /* ChangeStack.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ChangeStack.plist; sourceTree = "<group>"; };
-		18F8D04317244FE900420DA5 /* ComplexDependency.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ComplexDependency.plist; sourceTree = "<group>"; };
-		18F8D04417244FE900420DA5 /* DependencyObservance.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = DependencyObservance.plist; sourceTree = "<group>"; };
-		18F8D04517244FE900420DA5 /* DependentNestedProperty.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = DependentNestedProperty.plist; sourceTree = "<group>"; };
-		18F8D04617244FE900420DA5 /* NestedProperty.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = NestedProperty.plist; sourceTree = "<group>"; };
-		18F8D04717244FE900420DA5 /* NestedPropertyDependency.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = NestedPropertyDependency.plist; sourceTree = "<group>"; };
-		18F8D04817244FE900420DA5 /* NestedPropertyLevels.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = NestedPropertyLevels.plist; sourceTree = "<group>"; };
-		18F8D04917244FE900420DA5 /* Observance.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Observance.plist; sourceTree = "<group>"; };
-		18F8D04A17244FE900420DA5 /* ObservanceStack.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ObservanceStack.plist; sourceTree = "<group>"; };
-		18F8D04B17244FE900420DA5 /* StackCorruption.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = StackCorruption.plist; sourceTree = "<group>"; };
 		18F8D04C17244FE900420DA5 /* TestInfo */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestInfo; sourceTree = "<group>"; };
 		18F8D04D17244FE900420DA5 /* test00.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = test00.m; sourceTree = "<group>"; };
 		18F8D0501724534E00420DA5 /* NSKeyValueNestedProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSKeyValueNestedProperty.h; sourceTree = "<group>"; };
@@ -2239,19 +2240,28 @@
 			path = win32;
 			sourceTree = "<group>";
 		};
+		18D882481729B64E0067E486 /* test00 */ = {
+			isa = PBXGroup;
+			children = (
+				18D882491729B64E0067E486 /* ChangeStack.plist */,
+				18D8824A1729B64E0067E486 /* ComplexDependency.plist */,
+				18D8824B1729B64E0067E486 /* DependencyObservance.plist */,
+				18D8824C1729B64E0067E486 /* DependentNestedProperty.plist */,
+				18D8824D1729B64E0067E486 /* NestedProperty.plist */,
+				18D8824E1729B64E0067E486 /* NestedPropertyDependency.plist */,
+				18D8824F1729B64E0067E486 /* NestedPropertyLevels.plist */,
+				18D882501729B64E0067E486 /* Observance.plist */,
+				18D882511729B64E0067E486 /* ObservanceStack.plist */,
+				18D882521729B64E0067E486 /* StackCorruption.plist */,
+			);
+			path = test00;
+			sourceTree = "<group>";
+		};
 		18F8D04117244FE900420DA5 /* KVO */ = {
 			isa = PBXGroup;
 			children = (
-				18F8D04217244FE900420DA5 /* ChangeStack.plist */,
-				18F8D04317244FE900420DA5 /* ComplexDependency.plist */,
-				18F8D04417244FE900420DA5 /* DependencyObservance.plist */,
-				18F8D04517244FE900420DA5 /* DependentNestedProperty.plist */,
-				18F8D04617244FE900420DA5 /* NestedProperty.plist */,
-				18F8D04717244FE900420DA5 /* NestedPropertyDependency.plist */,
-				18F8D04817244FE900420DA5 /* NestedPropertyLevels.plist */,
-				18F8D04917244FE900420DA5 /* Observance.plist */,
-				18F8D04A17244FE900420DA5 /* ObservanceStack.plist */,
-				18F8D04B17244FE900420DA5 /* StackCorruption.plist */,
+				18D882481729B64E0067E486 /* test00 */,
+				18D882531729B64E0067E486 /* test01.m */,
 				18F8D04C17244FE900420DA5 /* TestInfo */,
 				18F8D04D17244FE900420DA5 /* test00.m */,
 			);
