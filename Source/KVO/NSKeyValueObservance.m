@@ -109,7 +109,9 @@ NS_INLINE NSString *BooleanDescription(BOOL value)
 - (NSDictionary *)popChange
 {
     NSDictionary *change = [prior lastObject];
-    [prior removeLastObject];
+    if (change) {
+        [prior removeLastObject];
+    }
     return change;
 }
 

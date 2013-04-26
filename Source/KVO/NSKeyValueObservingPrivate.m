@@ -106,7 +106,8 @@ void _NSKVOObjectAddObervance(id self, SEL _cmd, NSObject *observer, NSString *k
         NSMutableDictionary *change = [[NSMutableDictionary alloc] initWithCapacity:2];
         [change setObject:[NSNumber numberWithUnsignedInteger:NSKeyValueChangeSetting] forKey:NSKeyValueChangeKindKey];
         if (options & NSKeyValueObservingOptionNew) {
-            [change setObject:[self valueForKey:keyPath] forKey:NSKeyValueChangeNewKey];
+            id value = [self valueForKey:keyPath];
+            [change setObject:(value ? value : [NSNull null]) forKey:NSKeyValueChangeNewKey];
         }
         NSKeyValueNotifyObserver(self, observance, keyPath, change);
         [change release];
@@ -300,7 +301,6 @@ static BOOL NSKVOGetNotifyingSetterForKey(Class class, NSString *key, SEL *origi
                 break;
             }
         default:
-            [NSException raise:NSInvalidArgumentException format:@"%@: this class is not key value coding-compliant for the key %@", class, key];
             return NO;
     }
     if (originalSetter) {
