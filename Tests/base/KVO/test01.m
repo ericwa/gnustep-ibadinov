@@ -41,6 +41,7 @@
     NSPoint point;
     NSSize  size;
     NSRect  rect;
+    id      manual;
 }
 
 @end
@@ -70,6 +71,14 @@
 - (NSString *)description
 {
     return @"direct property access";
+}
+
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)aKey
+{
+    if ([aKey isEqualToString:@"manual"]) {
+        return NO;
+    }
+    return [super automaticallyNotifiesObserversForKey:aKey];
 }
 
 @end
@@ -239,9 +248,13 @@ int main()
                        nil];
     id observable;
     
-    NSLog(@"%s", object_getClassName([NSValue valueWithSize:NSMakeSize(0, CGFLOAT_MAX)]));
-    
     observable = [DirectObservable new];
+    Observer *observer = [Observer new];
+    [observable addObserver:observer forKeyPath:@"manual" options:NSKeyValueObservingOptionPrior context:NULL];
+    [observable setValue:keys forKey:@"manual"];
+    [observable removeObserver:observer forKeyPath:@"manual"];
+    PASS([[observer log] count] == 0, "Direct property access respects +[automaticallyNotifiesObserversForKey:]");
+    [observer release];
     TestAutoKVO(observable, keys, values);
     [observable release];
     

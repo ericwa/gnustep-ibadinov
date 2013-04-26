@@ -10,7 +10,6 @@
 		180878891618537A006EBD74 /* objc-load.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890700B1610BF3C0003C892 /* objc-load.m */; };
 		180DFAEB165BF98C00573635 /* NSInvocation.x86_64.S in Sources */ = {isa = PBXBuildFile; fileRef = 180DFAE9165BF94E00573635 /* NSInvocation.x86_64.S */; };
 		1837DA141652D18400197E53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
-		1837DA1B1652D19600197E53 /* gdnc.m in Sources */ = {isa = PBXBuildFile; fileRef = 1837D9DE1652D0FF00197E53 /* gdnc.m */; };
 		18394B341610D95600335E85 /* Foundation-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 18394B321610D95600335E85 /* Foundation-Prefix.pch */; settings = {ATTRIBUTES = (Private, ); }; };
 		18394B351610D9D000335E85 /* Foundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906E681610BF3C0003C892 /* Foundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B361610D9D000335E85 /* FoundationErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906E691610BF3C0003C892 /* FoundationErrors.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -344,6 +343,7 @@
 		18641D221678AD46003C6E11 /* GSSocksParserPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D151678AD04003C6E11 /* GSSocksParserPrivate.m */; };
 		1890B34116F3BC3300187826 /* GSPrivateHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890B34016F3BC3300187826 /* GSPrivateHash.m */; };
 		18D8BEA4164B5FF800942A5D /* NSInvocation.x86_64.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */; };
+		18EFCC1F172B0B9A003304CA /* gdnc.m in Sources */ = {isa = PBXBuildFile; fileRef = 1837D9DE1652D0FF00197E53 /* gdnc.m */; };
 		18F8D05D1724534E00420DA5 /* NSKeyValueNestedProperty.h in Headers */ = {isa = PBXBuildFile; fileRef = 18F8D0501724534E00420DA5 /* NSKeyValueNestedProperty.h */; };
 		18F8D05E1724534E00420DA5 /* NSKeyValueNestedProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F8D0511724534E00420DA5 /* NSKeyValueNestedProperty.m */; };
 		18F8D05F1724534E00420DA5 /* NSKeyValueObservance.h in Headers */ = {isa = PBXBuildFile; fileRef = 18F8D0521724534E00420DA5 /* NSKeyValueObservance.h */; };
@@ -968,6 +968,17 @@
 		18D882521729B64E0067E486 /* StackCorruption.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = StackCorruption.plist; sourceTree = "<group>"; };
 		18D882531729B64E0067E486 /* test01.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test01.m; sourceTree = "<group>"; };
 		18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInvocation.x86_64.m; sourceTree = "<group>"; };
+		18EFCC00172AF0F0003304CA /* ItemInsertion.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ItemInsertion.plist; sourceTree = "<group>"; };
+		18EFCC01172AF0F0003304CA /* ItemRemoval.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ItemRemoval.plist; sourceTree = "<group>"; };
+		18EFCC02172AF0F0003304CA /* ItemReplacement.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ItemReplacement.plist; sourceTree = "<group>"; };
+		18EFCC03172AF0F0003304CA /* NilValue.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = NilValue.plist; sourceTree = "<group>"; };
+		18EFCC04172AF0F0003304CA /* SetComplementation.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = SetComplementation.plist; sourceTree = "<group>"; };
+		18EFCC05172AF0F0003304CA /* SetIntersection.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = SetIntersection.plist; sourceTree = "<group>"; };
+		18EFCC07172AF0F0003304CA /* SetUnion.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = SetUnion.plist; sourceTree = "<group>"; };
+		18EFCC08172AF0F0003304CA /* test02.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test02.m; sourceTree = "<group>"; };
+		18EFCC11172B01B9003304CA /* SetSettingEmpty.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = SetSettingEmpty.plist; sourceTree = "<group>"; };
+		18EFCC12172B01B9003304CA /* SetSettingNil.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = SetSettingNil.plist; sourceTree = "<group>"; };
+		18EFCC13172B01B9003304CA /* SetSettingNotEmpty.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = SetSettingNotEmpty.plist; sourceTree = "<group>"; };
 		18F8D04C17244FE900420DA5 /* TestInfo */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestInfo; sourceTree = "<group>"; };
 		18F8D04D17244FE900420DA5 /* test00.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = test00.m; sourceTree = "<group>"; };
 		18F8D0501724534E00420DA5 /* NSKeyValueNestedProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSKeyValueNestedProperty.h; sourceTree = "<group>"; };
@@ -2257,13 +2268,32 @@
 			path = test00;
 			sourceTree = "<group>";
 		};
+		18EFCBFF172AF0F0003304CA /* test02 */ = {
+			isa = PBXGroup;
+			children = (
+				18EFCC00172AF0F0003304CA /* ItemInsertion.plist */,
+				18EFCC01172AF0F0003304CA /* ItemRemoval.plist */,
+				18EFCC02172AF0F0003304CA /* ItemReplacement.plist */,
+				18EFCC03172AF0F0003304CA /* NilValue.plist */,
+				18EFCC04172AF0F0003304CA /* SetComplementation.plist */,
+				18EFCC05172AF0F0003304CA /* SetIntersection.plist */,
+				18EFCC11172B01B9003304CA /* SetSettingEmpty.plist */,
+				18EFCC12172B01B9003304CA /* SetSettingNil.plist */,
+				18EFCC13172B01B9003304CA /* SetSettingNotEmpty.plist */,
+				18EFCC07172AF0F0003304CA /* SetUnion.plist */,
+			);
+			path = test02;
+			sourceTree = "<group>";
+		};
 		18F8D04117244FE900420DA5 /* KVO */ = {
 			isa = PBXGroup;
 			children = (
 				18D882481729B64E0067E486 /* test00 */,
-				18D882531729B64E0067E486 /* test01.m */,
+				18EFCBFF172AF0F0003304CA /* test02 */,
 				18F8D04C17244FE900420DA5 /* TestInfo */,
 				18F8D04D17244FE900420DA5 /* test00.m */,
+				18D882531729B64E0067E486 /* test01.m */,
+				18EFCC08172AF0F0003304CA /* test02.m */,
 			);
 			path = KVO;
 			sourceTree = "<group>";
@@ -3725,7 +3755,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1837DA1B1652D19600197E53 /* gdnc.m in Sources */,
+				18EFCC1F172B0B9A003304CA /* gdnc.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -27,6 +27,7 @@
 
 #import "Foundation/NSKeyValueObserving.h"
 #import "Foundation/NSException.h"
+#import "GNUstepBase/NSObject+GNUstepBase.h" /* for notImplemented: */
 
 @implementation NSArray (NSKeyValueObserverRegistration)
 

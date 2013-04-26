@@ -35,8 +35,7 @@
     NSKeyValueProperty  *property;
     NSObject            *observable;
     void                *context;
-    NSDictionary        *prior;
-    NSUInteger          recursion;
+    NSMutableArray      *prior;
     NSUInteger          options;
     BOOL                isValid;
 }

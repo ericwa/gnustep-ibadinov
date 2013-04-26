@@ -68,15 +68,15 @@
 - (void)object:(NSObject *)object didAddObservance:(NSKeyValueObservance *)observance
 {
     NSKeyValueObservingOptions options = [observance options] & NSKeyValueObservingOptionPrior;
-    for (NSString *path in affectingKeyPaths) {
-        [object addObserver:self forKeyPath:path options:options context:observance];
+    for (NSUInteger index = 0, count = [affectingKeyPaths count]; index < count; ++index) {
+        [object addObserver:self forKeyPath:[affectingKeyPaths objectAtIndex:index] options:options context:observance];
     }
 }
 
 - (void)object:(NSObject *)object didRemoveObservance:(NSKeyValueObservance *)observance
 {
-    for (NSString *path in affectingKeyPaths) {
-        [object removeObserver:self forKeyPath:path context:observance];
+    for (NSUInteger index = 0, count = [affectingKeyPaths count]; index < count; ++index) {
+        [object removeObserver:self forKeyPath:[affectingKeyPaths objectAtIndex:index] context:observance];
     }
 }
 

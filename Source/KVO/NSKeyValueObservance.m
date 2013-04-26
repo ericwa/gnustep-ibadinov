@@ -43,8 +43,7 @@ NS_INLINE NSString *BooleanDescription(BOOL value)
         observable = anObservable;
         options = someOptions;
         context = aContext;
-        recursion = 0;
-        prior = nil;
+        prior = [NSMutableArray new];
         isValid = YES;
     }
     return self;
@@ -104,21 +103,14 @@ NS_INLINE NSString *BooleanDescription(BOOL value)
 
 - (void)pushChange:(NSDictionary *)aChange
 {
-    if (!recursion) {
-        id backup = prior;
-        prior = [aChange retain];
-        [backup release];
-    }
-    ++recursion;
+    [prior addObject:aChange];
 }
 
 - (NSDictionary *)popChange
 {
-    if (!recursion) {
-        return nil;
-    }
-    --recursion;
-    return prior;
+    NSDictionary *change = [prior lastObject];
+    [prior removeLastObject];
+    return change;
 }
 
 - (NSString *)description

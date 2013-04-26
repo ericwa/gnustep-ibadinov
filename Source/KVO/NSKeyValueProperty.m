@@ -104,12 +104,15 @@
     if ((prior = [observance popChange])) {
         NSMutableDictionary *prepared = [[NSMutableDictionary alloc] initWithDictionary:change];
         
+        id object;
         NSKeyValueObservingOptions options = [observance options];
         if (!(options & NSKeyValueObservingOptionNew)) {
             [prepared removeObjectForKey:NSKeyValueChangeNewKey];
+        } else if (![prepared objectForKey:NSKeyValueChangeNewKey] && (object = [prior objectForKey:NSKeyValueChangeNewKey])) {
+            [prepared setObject:object forKey:NSKeyValueChangeNewKey];
         }
-        if (options & NSKeyValueObservingOptionOld) {
-            [prepared setObject:[prior objectForKey:NSKeyValueChangeOldKey] forKey:NSKeyValueChangeOldKey];
+        if (options & NSKeyValueObservingOptionOld && (object = [prior objectForKey:NSKeyValueChangeOldKey])) {
+            [prepared setObject:object forKey:NSKeyValueChangeOldKey];
         }
         
         /* if observer is a property, call appropriate method */

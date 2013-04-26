@@ -67,19 +67,21 @@
 
 - (void)willChangeValueForKey:(NSString *)key
 {
+    id value = [self valueForKey:key];
     NSDictionary *change = [NSDictionary dictionaryWithObjectsAndKeys:
                             [NSNumber numberWithUnsignedInteger:NSKeyValueChangeSetting], NSKeyValueChangeKindKey,
                             [NSNumber numberWithBool:YES], NSKeyValueChangeNotificationIsPriorKey,
-                            [self valueForKey:key], NSKeyValueChangeOldKey,
+                            (value ? value : [NSNull null]), NSKeyValueChangeOldKey,
                             nil];
     NSKeyValueWillChange(self, key, change);
 }
 
 - (void)didChangeValueForKey:(NSString *)key
 {
+    id value = [self valueForKey:key];
     NSDictionary *change = [NSDictionary dictionaryWithObjectsAndKeys:
                             [NSNumber numberWithUnsignedInteger:NSKeyValueChangeSetting], NSKeyValueChangeKindKey,
-                            [self valueForKey:key], NSKeyValueChangeNewKey,
+                            (value ? value : [NSNull null]), NSKeyValueChangeNewKey,
                             nil];
     NSKeyValueDidChange(self, key, change);
 }
@@ -111,64 +113,85 @@
 
 - (void)willChangeValueForKey:(NSString *)key withSetMutation:(NSKeyValueSetMutationKind)mutationKind usingObjects:(NSSet *)objects
 {
-    objects = objects ? objects : [self valueForKey:key];
-    NSDictionary *change = [NSDictionary dictionaryWithObjectsAndKeys:
-                            [NSNumber numberWithUnsignedInteger:NSKeyValueChangeSetting], NSKeyValueChangeKindKey,
-                            [NSNumber numberWithBool:YES], NSKeyValueChangeNotificationIsPriorKey,
-                            objects, NSKeyValueChangeOldKey,
-                            nil];
+    NSMutableDictionary *change = [NSMutableDictionary dictionaryWithCapacity:4];
+    NSKeyValueChange changeKind;
+    switch (mutationKind) {
+        case NSKeyValueUnionSetMutation:
+            if (objects) {
+                NSSet *old = [self valueForKey:key];
+                if (old) {
+                    objects = [objects mutableCopy];
+                    [(NSMutableSet *)objects minusSet:old];
+                    [change setObject:objects forKey:NSKeyValueChangeNewKey];
+                    [objects release];
+                }
+            }
+            changeKind = NSKeyValueChangeInsertion;
+            break;
+        case NSKeyValueMinusSetMutation:
+            if (objects) {
+                NSMutableSet *old = [[self valueForKey:key] mutableCopy];
+                if (old) {
+                    [old intersectSet:objects];
+                    [change setObject:old forKey:NSKeyValueChangeOldKey];
+                }
+                [old release];
+            }
+            changeKind = NSKeyValueChangeRemoval;
+            break;
+        case NSKeyValueIntersectSetMutation:
+            if (objects) {
+                NSMutableSet *old = [[self valueForKey:key] mutableCopy];
+                if (old) {
+                    [old minusSet:objects];
+                    [change setObject:old forKey:NSKeyValueChangeOldKey];
+                }
+                [old release];
+            }
+            changeKind = NSKeyValueChangeRemoval;
+            break;
+        case NSKeyValueSetSetMutation:
+            if (objects) {
+                [change setObject:objects forKey:NSKeyValueChangeNewKey];
+            }
+            if ((objects = [self valueForKey:key])) {
+                [change setObject:objects forKey:NSKeyValueChangeOldKey];
+            }
+            changeKind = NSKeyValueChangeReplacement;
+            break;
+        default:
+            [NSException raise:NSInvalidArgumentException format:@"Unsupported set mutation kind: %lu", (unsigned long)mutationKind];
+            return;
+    }
+    [change setObject:[NSNumber numberWithUnsignedInteger:changeKind] forKey:NSKeyValueChangeKindKey];
+    [change setObject:[NSNumber numberWithBool:YES]  forKey:NSKeyValueChangeNotificationIsPriorKey];
+    
     NSKeyValueWillChange(self, key, change);
 }
 
 - (void)didChangeValueForKey:(NSString *)key withSetMutation:(NSKeyValueSetMutationKind)mutationKind usingObjects:(NSSet *)objects
 {
-    NSMutableDictionary *change = [NSMutableDictionary dictionaryWithCapacity:3];
-    objects = objects ? objects : [self valueForKey:key];
-    NSSet *old = nil; /* todo: get it */
+    NSMutableDictionary *change = [NSMutableDictionary dictionaryWithCapacity:2];
+    NSKeyValueChange changeKind;
     switch (mutationKind) {
         case NSKeyValueUnionSetMutation:
-        {
-            NSMutableSet *new = [objects mutableCopy];
-            [new minusSet:old];
-            
-            [change setValue:[NSNumber numberWithInt: NSKeyValueChangeInsertion] forKey:NSKeyValueChangeKindKey];
-            [change setValue:new forKey:NSKeyValueChangeNewKey];
-            
-            [new release];
+            changeKind = NSKeyValueChangeInsertion;
             break;
-        }
         case NSKeyValueMinusSetMutation:
+            changeKind = NSKeyValueChangeRemoval;
+            break;
         case NSKeyValueIntersectSetMutation:
-        {
-            old = [old mutableCopy];
-            [(NSMutableSet *)old minusSet:objects];
-            
-            [change setValue:[NSNumber numberWithInt: NSKeyValueChangeRemoval] forKey:NSKeyValueChangeKindKey];
-            [change setValue:old forKey:NSKeyValueChangeOldKey];
-            
-            [old release];
+            changeKind = NSKeyValueChangeRemoval;
             break;
-        }
         case NSKeyValueSetSetMutation:
-        {
-            old = [old mutableCopy];
-            [(NSMutableSet *)old minusSet: objects];
-            
-            NSMutableSet *new = [objects mutableCopy];
-            [new minusSet: old];
-            
-            [change setValue:[NSNumber numberWithInt: NSKeyValueChangeReplacement] forKey:NSKeyValueChangeKindKey];
-            [change setValue:old forKey:NSKeyValueChangeOldKey];
-            [change setValue:new forKey:NSKeyValueChangeNewKey];
-            
-            [old release];
-            [new release];
+            changeKind = NSKeyValueChangeReplacement;
             break;
-        }
         default:
-            /* todo: raise an exception */
-            break;
+            [NSException raise:NSInvalidArgumentException format:@"Unsupported set mutation kind: %lu", (unsigned long)mutationKind];
+            return;
     }
+    [change setObject:[NSNumber numberWithUnsignedInteger:changeKind] forKey:NSKeyValueChangeKindKey];
+    
     NSKeyValueDidChange(self, key, change);
 }
 

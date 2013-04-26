@@ -1,0 +1,17 @@
+(
+    {
+        kind = 2;
+        new = (
+            e,
+            f
+        );
+        notificationIsPrior = 1;
+    },
+    {
+        kind = 2;
+        new = (
+            e,
+            f
+        );
+    }
+)
