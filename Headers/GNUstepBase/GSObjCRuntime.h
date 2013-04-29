@@ -344,6 +344,20 @@ GSGetSizeAndAlignment (const char *type, size_t *sizep, uint8_t *alignp);
 @class	NSValue;
 
 /*
+ * Any malloc() implementation is required to return pointers aligned suitably
+ * to be used as a pointer to any posible primitive data type (bigest-possible
+ * aligment). So the padding size can be easily determined.
+ */
+NS_INLINE NSUInteger GSPointerHash(uintptr_t pointer)
+{
+  #define __MALLOC_ALIGNMENT (__alignof__(_Complex long double))
+
+  static uintptr_t const shift = __MALLOC_ALIGNMENT == 16 ? 4 : (__MALLOC_ALIGNMENT == 8 ? 3 : 2);
+  /* Compiled as "rolq $60, %rdi" or "rol $28, %eax" */
+  return (NSUInteger)((pointer >> shift) | (pointer << (sizeof(uintptr_t) * 8 - shift)));
+}
+
+/*
  * Functions for accessing instance variables directly -
  * We can copy an ivar into arbitrary data,
  * Get the type encoding for a named ivar,
