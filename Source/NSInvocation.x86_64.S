@@ -1,3 +1,29 @@
+/*
+ * Implementation of NSInvocation logic for x86_64 System V ABI
+ *
+ * Copyright (C) 2012-2013 Free Software Foundation, Inc.
+ *
+ * Written by Marat Ibadinov <ibadinov@me.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 #if defined (NeXT_RUNTIME) && (defined (__x86_64__) || defined (__x86_64))
 
 .macro GSAssemblyFunction
@@ -84,6 +110,9 @@ _forwardSelector: .quad 0
  *
  * void NSInvocationForwardHandler(id receiver, SEL _cmd);
  *
+ * Forwarding via -forward:: seems to be fixed in last versions of
+ * Apple's ObjC runtime (10.8), so it may be possible to #ifdef this.
+ *
  ********************************************************************/
 
 GSAssemblyFunction _NSInvocationForwardHandler
@@ -100,7 +129,7 @@ GSAssemblyFunction _NSInvocationForwardHandler
   // %rdi is already the receiver
   movq	%rsp, %rcx                    // marg_list
   movq	%rsi, %rdx                    // sel
-  movq	_forwardSelector(%rip), %rsi	// forward::
+  movq	_forwardSelector(%rip), %rsi  // forward::
 
   call	_objc_msgSend
 
@@ -128,7 +157,7 @@ GSAssemblyFunction _NSInvocationForwardHandler_stret
   // Call [receiver forward:(SEL) :(marg_list)]
   // %rdx is already the selector
   movq	%rsi, %rdi                    // receiver
-  movq	_forwardSelector(%rip), %rsi	// forward::
+  movq	_forwardSelector(%rip), %rsi  // forward::
   movq	%rsp, %rcx                    // marg_list
 
   call	_objc_msgSend                 // forward:: is NOT struct-return
