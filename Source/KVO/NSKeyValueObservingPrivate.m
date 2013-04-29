@@ -29,6 +29,7 @@
 #import "NSKeyValueProperty.h"
 #import "NSKeyValueUnnestedProperty.h" /* to support deprecated +[NSObject setKeys:triggerChangeNotificationsForDependentKey:] */
 #import "NSKVONotifying.h"
+#import "GNUstepBase/GSObjCRuntime.h" /* for GSSelectorTypesMatch() */
 
 static NSRecursiveLock *kvoLock = nil;
 static NSMapTable *kvoTable = nil;
@@ -38,7 +39,7 @@ static NSMapTable *replacementTable = nil;
 void _NSKVOIntialize(void)
 {
     kvoLock = [NSRecursiveLock new];
-    kvoTable = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks, NSObjectMapValueCallBacks, 1024);
+    kvoTable = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks, NSNonRetainedObjectMapValueCallBacks, 1024);
     propertyTable = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks, NSObjectMapValueCallBacks, 1024);
     replacementTable = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks, NSNonOwnedPointerMapValueCallBacks, 64);
 }
@@ -77,6 +78,7 @@ void _NSKVORegisterUnnestedProperty(Class class, NSString *key, NSArray *affecti
         [propertyTable setObject:classProperties forKey:class];
     }
     [classProperties setObject:property forKey:key];
+    [property release];
     
     [kvoLock unlock];
 }
@@ -93,7 +95,6 @@ void _NSKVOObjectAddObervance(id self, SEL _cmd, NSObject *observer, NSString *k
     if (!info) {
         info = [NSKeyValueObservationInfo new];
         [self setObservationInfo:info];
-        [info release]; /* todo: containter should not retain info */
     }
     [info addObservance:observance];
     
@@ -101,7 +102,6 @@ void _NSKVOObjectAddObervance(id self, SEL _cmd, NSObject *observer, NSString *k
     [[observance property] object:self didAddObservance:observance];
     
     
-    [observance lock]; /* todo: should we lock here? */
     if (options & NSKeyValueObservingOptionInitial) {
         NSMutableDictionary *change = [[NSMutableDictionary alloc] initWithCapacity:2];
         [change setObject:[NSNumber numberWithUnsignedInteger:NSKeyValueChangeSetting] forKey:NSKeyValueChangeKindKey];
@@ -112,7 +112,6 @@ void _NSKVOObjectAddObervance(id self, SEL _cmd, NSObject *observer, NSString *k
         NSKeyValueNotifyObserver(self, observance, keyPath, change);
         [change release];
     }
-    [observance unlock];
     [observance release];
 }
 
@@ -133,6 +132,7 @@ void _NSKVOObjectRemoveObservance(id self, BOOL contextMatters, NSObject *observ
     
     if (![info hasObservances]) {
         [self setObservationInfo:nil];
+        [info release];
         object_setClass(self, [self class]);
     }
     
@@ -154,28 +154,27 @@ void _NSKVOObjectDeallocate(id self)
               @"Set a breakpoint on NSKVODeallocateBreak to stop here in the debugger. "
               @"Here's the current observation info:\n%@", (unsigned long)self, NSStringFromClass([self class]),info);
         NSKVODeallocateBreak();
-        abort();
     }
     [kvoLock unlock];
 }
 
 void NSKVODeallocateBreak()
 {
+    abort();
 }
 
 void NSKeyValueNotifyObserver(id self, NSKeyValueObservance *observance, NSString *keyPath, NSDictionary *change)
 {
     [observance lock];
     if ([observance isValid]) {
-        [self retain];
         [[observance observer] observeValueForKeyPath:keyPath ofObject:self change:change context:[observance context]];
-        [self release];
     }
     [observance unlock];
 }
 
 void NSKeyValueWillChange(id self, NSString *keyPath, NSDictionary *change)
 {
+    [self retain];
     NSArray *observances;
     [kvoLock lock];
     NSKeyValueObservationInfo *info = [self observationInfo];
@@ -189,10 +188,12 @@ void NSKeyValueWillChange(id self, NSString *keyPath, NSDictionary *change)
         [property object:self withObservance:observance willChangeValue:change forKeyPath:keyPath];
     }
     [observances release];
+    [self release];
 }
 
 void NSKeyValueDidChange(id self, NSString *keyPath, NSDictionary *change)
 {
+    [self retain];
     NSArray *observances;
     [kvoLock lock];
     NSKeyValueObservationInfo *info = [self observationInfo];
@@ -207,6 +208,7 @@ void NSKeyValueDidChange(id self, NSString *keyPath, NSDictionary *change)
     }
     
     [observances release];
+    [self release];
 }
 
 void *_NSKVOObjectGetObservationInfo(id self)
@@ -283,20 +285,19 @@ static BOOL NSKVOGetNotifyingSetterForKey(Class class, NSString *key, SEL *origi
             selectorName = "_setterDouble:";
             break;
         case GSObjCTypeStructureBegin:
-            /* todo: use valid type comparison function */
-            if (strcmp(type, @encode(NSRange)) == 0) {
+            if (GSSelectorTypesMatch(type, @encode(NSRange))) {
                 selectorName = "_setterRange:";
                 break;
             }
-            if (strcmp(type, @encode(NSPoint)) == 0) {
+            if (GSSelectorTypesMatch(type, @encode(NSPoint))) {
                 selectorName = "_setterPoint:";
                 break;
             }
-            if (strcmp(type, @encode(NSSize)) == 0) {
+            if (GSSelectorTypesMatch(type, @encode(NSSize))) {
                 selectorName = "_setterSize:";
                 break;
             }
-            if (strcmp(type, @encode(NSRect)) == 0) {
+            if (GSSelectorTypesMatch(type, @encode(NSRect))) {
                 selectorName = "_setterRect:";
                 break;
             }

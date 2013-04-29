@@ -85,7 +85,6 @@ static NSKeyValueObservingOptions const ObservingOptions = NSKeyValueObservingOp
     /* if value for self.key has changed, register self as tail observer once again and take it's value */
     if (object == [observance observable]) {
         if (keyPathTail) {
-            /* todo: deal with recursive change of self.key */
             [[change objectForKey:NSKeyValueChangeOldKey] removeObserver:self forKeyPath:keyPathTail context:observance];
             [[change objectForKey:NSKeyValueChangeNewKey] addObserver:self forKeyPath:keyPathTail options:ObservingOptions context:observance];
         }

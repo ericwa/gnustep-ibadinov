@@ -34,10 +34,9 @@
 {
     if (self = [super initWithClass:aClass keyPath:aPath]) {
         affectingKeyPaths = [paths retain];
-    }
-    if ([aClass automaticallyNotifiesObserversForKey:aPath]) {
-        /* todo: decide a code path for properties with no setter */
-        _NSKVOEnableAutomaticNotificationForKey(containingClass, keyPath);
+        if ([aClass automaticallyNotifiesObserversForKey:aPath]) {
+            _NSKVOEnableAutomaticNotificationForKey(containingClass, keyPath);
+        }
     }
     return self;
 }
