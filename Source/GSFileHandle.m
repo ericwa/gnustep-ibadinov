@@ -588,31 +588,16 @@ static NSString*	NotificationKey = @"NSFileHandleNotificationKey";
     [parser setDelegate:nil];
     [parser release];
     parser = nil;
-    if ([anAddress isEqualToString:address]) { /* do not check port, usually it's a garbage value */
-        /* Success. Notify everybody */
-        NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:4];
-        [info setObject:self forKey:NSFileHandleNotificationFileHandleItem];
-        [info setObject:address forKey:NSFileHandleNotificationDataItem];
-        [info setObject:GSFileHandleConnectCompletionNotification forKey:NotificationKey];
-        
-        [writeInfo addObject:info];
-        [self postWriteNotification];
-        RELEASE(info);
-    } else {
-        BOOL connected = [self _connectToService:[NSString stringWithFormat:@"%ld", (long)aPort]
-                                          atHost:anAddress
-                                   usingProtocol:@"tcp"
-                                     fromAddress:[self socketLocalAddress]
-                                         service:[self socketLocalService]
-                             observeNotification:GSFileHandleConnectCompletionNotification
-                                        forModes:[readInfo objectForKey:NSFileHandleNotificationMonitorModes]];
-        if (!connected) {
-            NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:4];
-            [self _postNotificationWithSocksError:[self _errorWithCode:EHOSTUNREACH description:@"Failed to reconnect to SOCKS server"]
-                                         userInfo:info];
-            RELEASE(info);
-        }
-    }
+    
+    /* Success. Notify everybody */
+    NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:4];
+    [info setObject:self forKey:NSFileHandleNotificationFileHandleItem];
+    [info setObject:address forKey:NSFileHandleNotificationDataItem];
+    [info setObject:GSFileHandleConnectCompletionNotification forKey:NotificationKey];
+    
+    [writeInfo addObject:info];
+    [self postWriteNotification];
+    RELEASE(info);
 }
 
 - (void)parser:(GSSocksParser *)aParser encounteredError:(NSError *)anError
