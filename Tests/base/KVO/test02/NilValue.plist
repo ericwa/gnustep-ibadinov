@@ -1,0 +1,22 @@
+(
+    {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = "<null>";
+    },
+    {
+        kind = 1;
+        new = Observable;
+        old = "<null>";
+    },
+    {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = Observable;
+    },
+    {
+        kind = 1;
+        new = "<null>";
+        old = Observable;
+    }
+)

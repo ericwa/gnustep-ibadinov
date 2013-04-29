@@ -1,0 +1,42 @@
+(
+    {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = (
+        );
+    },
+    {
+        kind = 4;
+        new = (
+            a,
+            b,
+            c,
+            d
+        );
+        notificationIsPrior = 1;
+        old = (
+        );
+    },
+        {
+        kind = 4;
+        new = (
+            a,
+            b,
+            c,
+            d
+        );
+        old = (
+        );
+    },
+        {
+        kind = 1;
+        new = (
+            a,
+            b,
+            c,
+            d
+        );
+        old = (
+        );
+    }
+)

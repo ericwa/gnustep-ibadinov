@@ -147,7 +147,22 @@ SetValueForKey(NSObject *self, id anObject, const char *key, size_t size)
 	    }
 	}
     }
-  GSObjCSetVal(self, key, anObject, sel, type, size, off);
+  /* KVO support for properties with direct access, that are observed */
+  if (off && class_respondsToSelector(object_getClass(self), @selector(_isNSKVONotifying)))
+    {
+      NSString *keyString = [[NSString alloc] initWithUTF8String:key];
+      if ([[self class] automaticallyNotifiesObserversForKey:keyString])
+        {
+          [self willChangeValueForKey:keyString];
+          GSObjCSetVal(self, key, anObject, sel, type, size, off);
+          [self didChangeValueForKey:keyString];
+        }
+      [keyString release];
+    }
+    else
+    {
+      GSObjCSetVal(self, key, anObject, sel, type, size, off);
+    }
 }
 
 static id ValueForKey(NSObject *self, const char *key, size_t size)
