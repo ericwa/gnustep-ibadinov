@@ -1686,7 +1686,7 @@ GSObjCAddClassOverride(Class receiver, Class override)
  */
 static BOOL StructureTypesMatch(const char *type1, const char *type2)
 {
-    while (*type1 != '\0' && type2 != '\0' && *type1 == *type2 && *type1 != '=' && *type2 != '=') {
+    while (*type1 != '\0' && *type2 != '\0' && *type1 == *type2 && *type1 != '=' && *type2 != '=') {
         ++type1;
         ++type2;
     }
