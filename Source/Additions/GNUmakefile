@@ -64,6 +64,9 @@ Additions_OBJC_FILES =\
 
 Additions_OBJC_FILES += Unicode.m
 
+Additions_C_FILES = \
+        GSTypeEncoding.c
+
 -include Makefile.preamble
 
 include $(GNUSTEP_MAKEFILES)/subproject.make

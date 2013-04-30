@@ -343,6 +343,8 @@
 		18641D221678AD46003C6E11 /* GSSocksParserPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18641D151678AD04003C6E11 /* GSSocksParserPrivate.m */; };
 		1890B34116F3BC3300187826 /* GSPrivateHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890B34016F3BC3300187826 /* GSPrivateHash.m */; };
 		18D8BEA4164B5FF800942A5D /* NSInvocation.x86_64.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */; };
+		18EA6761172EC6170026AC34 /* GSTypeEncoding.c in Sources */ = {isa = PBXBuildFile; fileRef = 18EA675F172EC6170026AC34 /* GSTypeEncoding.c */; };
+		18EA6764172EC7F70026AC34 /* GSTypeEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 18EA6763172EC7F70026AC34 /* GSTypeEncoding.h */; };
 		18EFCC1F172B0B9A003304CA /* gdnc.m in Sources */ = {isa = PBXBuildFile; fileRef = 1837D9DE1652D0FF00197E53 /* gdnc.m */; };
 		18F8D05D1724534E00420DA5 /* NSKeyValueNestedProperty.h in Headers */ = {isa = PBXBuildFile; fileRef = 18F8D0501724534E00420DA5 /* NSKeyValueNestedProperty.h */; };
 		18F8D05E1724534E00420DA5 /* NSKeyValueNestedProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F8D0511724534E00420DA5 /* NSKeyValueNestedProperty.m */; };
@@ -968,6 +970,8 @@
 		18D882521729B64E0067E486 /* StackCorruption.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = StackCorruption.plist; sourceTree = "<group>"; };
 		18D882531729B64E0067E486 /* test01.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test01.m; sourceTree = "<group>"; };
 		18D8BEA2164B5FF700942A5D /* NSInvocation.x86_64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInvocation.x86_64.m; sourceTree = "<group>"; };
+		18EA675F172EC6170026AC34 /* GSTypeEncoding.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GSTypeEncoding.c; sourceTree = "<group>"; };
+		18EA6763172EC7F70026AC34 /* GSTypeEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSTypeEncoding.h; sourceTree = "<group>"; };
 		18EFCC00172AF0F0003304CA /* ItemInsertion.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ItemInsertion.plist; sourceTree = "<group>"; };
 		18EFCC01172AF0F0003304CA /* ItemRemoval.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ItemRemoval.plist; sourceTree = "<group>"; };
 		18EFCC02172AF0F0003304CA /* ItemReplacement.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = ItemReplacement.plist; sourceTree = "<group>"; };
@@ -2122,6 +2126,7 @@
 				18906EE81610BF3C0003C892 /* GSLock.h */,
 				18906EE91610BF3C0003C892 /* GSMime.h */,
 				18906EEA1610BF3C0003C892 /* GSObjCRuntime.h */,
+				18EA6763172EC7F70026AC34 /* GSTypeEncoding.h */,
 				18906EEB1610BF3C0003C892 /* GSUnion.h */,
 				18906EEC1610BF3C0003C892 /* GSVersionMacros.h */,
 				18906EED1610BF3C0003C892 /* GSXML.h */,
@@ -2181,6 +2186,7 @@
 				18906F111610BF3C0003C892 /* GSLock.m */,
 				18906F121610BF3C0003C892 /* GSMime.m */,
 				18906F131610BF3C0003C892 /* GSObjCRuntime.m */,
+				18EA675F172EC6170026AC34 /* GSTypeEncoding.c */,
 				18906F141610BF3C0003C892 /* GSXML.m */,
 				18906F151610BF3C0003C892 /* Makefile.postamble */,
 				18906F161610BF3C0003C892 /* Makefile.preamble */,
@@ -3668,6 +3674,7 @@
 				18F8D0651724534E00420DA5 /* NSKeyValueProperty.h in Headers */,
 				18F8D0671724534E00420DA5 /* NSKeyValueUnnestedProperty.h in Headers */,
 				18F8D06C1725919A00420DA5 /* NSKVONotifying.h in Headers */,
+				18EA6764172EC7F70026AC34 /* GSTypeEncoding.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3962,6 +3969,7 @@
 				18408FF217271D3E00CFD080 /* NSKeyValueObserving.m in Sources */,
 				18408FF617271EAE00CFD080 /* NSArray+KVO.m in Sources */,
 				18408FFA1727200100CFD080 /* NSSet+KVO.m in Sources */,
+				18EA6761172EC6170026AC34 /* GSTypeEncoding.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
