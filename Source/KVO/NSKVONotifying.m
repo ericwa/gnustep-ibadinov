@@ -44,17 +44,31 @@ static struct objc_super GetSuper(id self)
     return (struct objc_super){ self, class_getSuperclass(object_getClass(self)) };
 }
 
-#define Setter(value)                                                       \
-do {                                                                        \
-    NSString *key = CreateKeyFromSelector(_cmd);                            \
-    [self willChangeValueForKey:key];                                       \
-                                                                            \
-    struct objc_super super = GetSuper(self);                               \
-    typedef void(*ImpType)(struct objc_super *, SEL, __typeof__(value));    \
-    ((ImpType)&objc_msgSendSuper)(&super, _cmd, value);                     \
-                                                                            \
-    [self didChangeValueForKey:key];                                        \
-    [key release];                                                          \
+#if defined (NeXT_RUNTIME)
+#define InvokeSuperSetter(value)                                                \
+    do {                                                                        \
+        typedef void(*ImpType)(struct objc_super *, SEL, __typeof__(value));    \
+        struct objc_super super = GetSuper(self);                               \
+        ((ImpType)&objc_msgSendSuper)(&super, _cmd, value);                     \
+    } while (0)
+#else
+#define InvokeSuperSetter(value)                                                \
+    do {                                                                        \
+        typedef void(*ImpType)(id, SEL, __typeof__(value));                     \
+        ImpType imp = (ImpType)[[self class] instanceMethodForSelector:_cmd];   \
+        imp(self, _cmd, value);                                                 \
+    } while (0)
+#endif
+
+#define Setter(value)                               \
+do {                                                \
+    NSString *key = CreateKeyFromSelector(_cmd);    \
+    [self willChangeValueForKey:key];               \
+                                                    \
+    InvokeSuperSetter(value);                       \
+                                                    \
+    [self didChangeValueForKey:key];                \
+    [key release];                                  \
 } while (0)
 
 
