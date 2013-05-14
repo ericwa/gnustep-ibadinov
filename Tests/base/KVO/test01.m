@@ -239,7 +239,9 @@ int main()
                        [NSNumber numberWithFloat:FLT_MAX],
                        [NSNumber numberWithInt:INT_MAX],
                        [NSNumber numberWithLong:LONG_MAX],
+#if defined (_C_LNG_LNG)
                        [NSNumber numberWithLongLong:LONG_LONG_MAX],
+#endif
                        [NSNumber numberWithShort:SHRT_MAX],
                        [NSValue valueWithRange:NSMakeRange(0, NSUIntegerMax)],
                        [NSValue valueWithPoint:NSMakePoint(0, CGFLOAT_MAX)],
