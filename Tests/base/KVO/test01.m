@@ -240,7 +240,7 @@ int main()
                        [NSNumber numberWithInt:INT_MAX],
                        [NSNumber numberWithLong:LONG_MAX],
 #if defined (_C_LNG_LNG)
-                       [NSNumber numberWithLongLong:LONG_LONG_MAX],
+                       [NSNumber numberWithLongLong:LLONG_MAX],
 #endif
                        [NSNumber numberWithShort:SHRT_MAX],
                        [NSValue valueWithRange:NSMakeRange(0, NSUIntegerMax)],
