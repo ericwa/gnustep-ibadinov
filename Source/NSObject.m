@@ -35,19 +35,20 @@
 
 #import "common.h"
 #include <objc/Protocol.h>
-#import "Foundation/NSMethodSignature.h"
+#import "Foundation/NSArray.h"
+#import "Foundation/NSAutoreleasePool.h"
+#import "Foundation/NSDistantObject.h"
+#import "Foundation/NSException.h"
 #import "Foundation/NSInvocation.h"
 #import "Foundation/NSLock.h"
-#import "Foundation/NSAutoreleasePool.h"
-#import "Foundation/NSArray.h"
-#import "Foundation/NSException.h"
-#import "Foundation/NSPortCoder.h"
-#import "Foundation/NSDistantObject.h"
-#import "Foundation/NSThread.h"
-#import "Foundation/NSNotification.h"
 #import "Foundation/NSMapTable.h"
+#import "Foundation/NSMethodSignature.h"
+#import "Foundation/NSNotification.h"
+#import "Foundation/NSPortCoder.h"
+#import "Foundation/NSThread.h"
 #import "GNUstepBase/GSLocale.h"
 #import "GNUstepBase/NSObject+GNUstepBase.h"
+#import "KVO/NSKeyValueObservingPrivate.h"
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
@@ -1160,6 +1161,7 @@ static id gs_weak_load(id obj)
 	       name: NSWillBecomeMultiThreadedNotification
 	     object: nil];
     }
+  _NSKVOIntialize();
   return;
 }
 

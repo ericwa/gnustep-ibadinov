@@ -38,6 +38,9 @@ static NSMapTable *replacementTable = nil;
 
 void _NSKVOIntialize(void)
 {
+    if (kvoLock) {
+        return;
+    }
     kvoLock = [NSRecursiveLock new];
     kvoTable = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks, NSNonRetainedObjectMapValueCallBacks, 1024);
     propertyTable = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks, NSObjectMapValueCallBacks, 1024);
