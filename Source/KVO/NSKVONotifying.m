@@ -39,26 +39,30 @@ static NSString *CreateKeyFromSelector(SEL selector)
     return [[NSString alloc] initWithBytes:key length:length encoding:NSUTF8StringEncoding];
 }
 
+#if defined (NeXT_RUNTIME)
+
 static struct objc_super GetSuper(id self)
 {
     return (struct objc_super){ self, class_getSuperclass(object_getClass(self)) };
 }
 
-#if defined (NeXT_RUNTIME)
 #define InvokeSuperSetter(value)                                                \
     do {                                                                        \
         typedef void(*ImpType)(struct objc_super *, SEL, __typeof__(value));    \
         struct objc_super super = GetSuper(self);                               \
         ((ImpType)&objc_msgSendSuper)(&super, _cmd, value);                     \
     } while (0)
-#else
+
+#else /* NeXT_RUNTIME */
+
 #define InvokeSuperSetter(value)                                                \
     do {                                                                        \
         typedef void(*ImpType)(id, SEL, __typeof__(value));                     \
         ImpType imp = (ImpType)[[self class] instanceMethodForSelector:_cmd];   \
         imp(self, _cmd, value);                                                 \
     } while (0)
-#endif
+
+#endif /* NeXT_RUNTIME */
 
 #define Setter(value)                               \
 do {                                                \
