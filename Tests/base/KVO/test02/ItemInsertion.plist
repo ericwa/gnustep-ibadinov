@@ -1,0 +1,33 @@
+(
+    {
+        indexes = (
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+        );
+        kind = 2;
+        notificationIsPrior = 1;
+    },
+    {
+        indexes = (
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+        );
+        kind = 2;
+        new = (
+            a,
+            b,
+            c,
+            d,
+            e,
+            f
+        );
+    }
+)

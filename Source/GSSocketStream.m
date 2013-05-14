@@ -1003,21 +1003,6 @@ static NSDictionary *GlobalSOCKSProxyConfiguration = nil;
 
 - (void)parser:(GSSocksParser *)aParser finishedWithAddress:(NSString *)anAddress port:(NSUInteger)aPort
 {
-    BOOL reconnect = NO;
-    void *socketAddress = [istream _address];
-    if (aPort == GSPrivateSockaddrPort(socketAddress)) {
-        anAddress = [[NSHost hostWithName:anAddress] address];
-        reconnect = ![anAddress isEqualToString:GSPrivateSockaddrHost(socketAddress)];
-    } else
-        reconnect = YES;
-    
-    if (reconnect) {
-        [istream close];
-        [ostream close];
-        [self reconfigureStreamsForAddress:anAddress port:aPort];
-        [istream open];
-        [ostream open];
-    }
     [self bye];
 }
 

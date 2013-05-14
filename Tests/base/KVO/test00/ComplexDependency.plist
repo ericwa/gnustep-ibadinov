@@ -1,0 +1,38 @@
+(
+    {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = "John Watson: 1";
+        path = description;
+    },
+        {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = "John Watson";
+        path = fullName;
+    },
+        {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = John;
+        path = firstName;
+    },
+        {
+        kind = 1;
+        new = Emma;
+        old = John;
+        path = firstName;
+    },
+        {
+        kind = 1;
+        new = "Emma Watson";
+        old = "John Watson";
+        path = fullName;
+    },
+        {
+        kind = 1;
+        new = "Emma Watson: 1";
+        old = "John Watson: 1";
+        path = description;
+    }
+)

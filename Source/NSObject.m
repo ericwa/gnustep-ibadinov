@@ -35,19 +35,20 @@
 
 #import "common.h"
 #include <objc/Protocol.h>
-#import "Foundation/NSMethodSignature.h"
+#import "Foundation/NSArray.h"
+#import "Foundation/NSAutoreleasePool.h"
+#import "Foundation/NSDistantObject.h"
+#import "Foundation/NSException.h"
 #import "Foundation/NSInvocation.h"
 #import "Foundation/NSLock.h"
-#import "Foundation/NSAutoreleasePool.h"
-#import "Foundation/NSArray.h"
-#import "Foundation/NSException.h"
-#import "Foundation/NSPortCoder.h"
-#import "Foundation/NSDistantObject.h"
-#import "Foundation/NSThread.h"
-#import "Foundation/NSNotification.h"
 #import "Foundation/NSMapTable.h"
+#import "Foundation/NSMethodSignature.h"
+#import "Foundation/NSNotification.h"
+#import "Foundation/NSPortCoder.h"
+#import "Foundation/NSThread.h"
 #import "GNUstepBase/GSLocale.h"
 #import "GNUstepBase/NSObject+GNUstepBase.h"
+#import "KVO/NSKeyValueObservingPrivate.h"
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
@@ -1160,6 +1161,7 @@ static id gs_weak_load(id obj)
 	       name: NSWillBecomeMultiThreadedNotification
 	     object: nil];
     }
+  _NSKVOIntialize();
   return;
 }
 
@@ -1861,16 +1863,6 @@ static id gs_weak_load(id obj)
   return self;
 }
 
-/*
- * Any malloc() implementation is required to return pointers aligned suitably
- * to be used as a pointer to any posible primitive data type (bigest-possible
- * aligment).
- */
-#define MALLOC_ALIGNMENT (__alignof__(_Complex long double))
-
-#define uintptr_self ((uintptr_t)self)
-#define uintptr_bits (sizeof(uintptr_t) * 8)
-
 /**
  * Returns the hash of the receiver.  Subclasses should ensure that their
  * implementations of this method obey the rule that if the -isEqual: method
@@ -1881,9 +1873,7 @@ static id gs_weak_load(id obj)
  */
 - (NSUInteger) hash
 {
-  static uintptr_t shift = MALLOC_ALIGNMENT == 16 ? 4 : (MALLOC_ALIGNMENT == 8 ? 3 : 2);
-  /* Compiled as "rolq $60, %rdi" or "rol $28, %eax" */
-  return (NSUInteger)((uintptr_self >> shift) | (uintptr_self << (uintptr_bits - shift)));
+  return GSPointerHash((uintptr_t)self);
 }
 
 /**

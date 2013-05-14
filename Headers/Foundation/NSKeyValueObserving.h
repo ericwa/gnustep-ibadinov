@@ -130,13 +130,10 @@ GS_EXPORT NSString *const NSKeyValueChangeNotificationIsPriorKey;
 
 @interface NSObject (NSKeyValueObserverRegistration)
 
-- (void) addObserver: (NSObject*)anObserver
-	  forKeyPath: (NSString*)aPath
-	     options: (NSKeyValueObservingOptions)options
-	     context: (void*)aContext;
+- (void)addObserver:(NSObject*)anObserver forKeyPath:(NSString*)aPath options:(NSKeyValueObservingOptions)options context:(void*)aContext;
 
-- (void) removeObserver: (NSObject*)anObserver
-	     forKeyPath: (NSString*)aPath;
+- (void)removeObserver:(NSObject *)anObserver forKeyPath:(NSString *)keyPath;
+- (void)removeObserver:(NSObject *)anObserver forKeyPath:(NSString *)keyPath context:(void *)context;
 
 @end
 
@@ -209,29 +206,30 @@ GS_EXPORT NSString *const NSKeyValueChangeNotificationIsPriorKey;
  * class receive messages to change the value for the key.<br />
  * The default implementation returns YES.
  */
-+ (BOOL) automaticallyNotifiesObserversForKey: (NSString*)aKey;
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)aKey;
 
-/**
- * Tells the observing system that when NSKeyValueObserverNotification
- * protocol messages are sent for any key in the triggerKeys array,
- * they should also be sent for dependentKey.
- */
-+ (void) setKeys: (NSArray*)triggerKeys
-triggerChangeNotificationsForDependentKey: (NSString*)dependentKey;
++ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)aKey;
 
 /**
  * Returns a reference to the observation information for the receiver
  * as stored using the -setObservationInfo: method.<br />
  * The default implementation returns information from a global table.
  */
-- (void*) observationInfo;
+- (void*)observationInfo;
 
 /**
  * Stores observation information for the receiver.  By default this is
  * done in a global table, but classes may implement storage in an instance
  * variable or some other scheme (for improved performance).
  */
-- (void) setObservationInfo: (void*)observationInfo;
+- (void)setObservationInfo:(void *)observationInfo;
+
+/**
+ * Tells the observing system that when NSKeyValueObserverNotification
+ * protocol messages are sent for any key in the triggerKeys array,
+ * they should also be sent for dependentKey.
+ */
++ (void)setKeys:(NSArray *)triggerKeys triggerChangeNotificationsForDependentKey:(NSString *)dependentKey;
 
 @end
 

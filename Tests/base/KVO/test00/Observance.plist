@@ -1,0 +1,12 @@
+(
+    {
+        kind = 1;
+        new = James;
+        path = firstName;
+    },
+    {
+        kind = 1;
+        new = James;
+        path = firstName;
+    }
+)

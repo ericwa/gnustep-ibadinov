@@ -1,0 +1,14 @@
+(
+    {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = 0;
+        path = "account.uploaded";
+    },
+        {
+        kind = 1;
+        new = 1024;
+        old = 0;
+        path = "account.uploaded";
+    }
+)

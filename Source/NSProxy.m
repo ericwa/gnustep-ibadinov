@@ -296,14 +296,7 @@
  */
 - (NSUInteger) hash
 {
-  /*
-   * Ideally we would shift left to lose any zero bits produced by the
-   * alignment of the object in memory ... but that depends on the
-   * processor architecture and the memory allocatiion implementation.
-   * In the absence of detailed information, pick a reasonable value
-   * assuming the object will be aligned to an eight byte boundary.
-   */
-  return ((NSUInteger)(uintptr_t)self)>>3;
+  return GSPointerHash((uintptr_t)self);
 }
 
 /** <init /> <override-subclass />

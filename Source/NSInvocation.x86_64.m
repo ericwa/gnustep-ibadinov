@@ -1,3 +1,29 @@
+/*
+ * Implementation of NSInvocation logic for x86_64 System V ABI
+ *
+ * Copyright (C) 2012-2013 Free Software Foundation, Inc.
+ *
+ * Written by Marat Ibadinov <ibadinov@me.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 #if defined (NeXT_RUNTIME) && (defined (__x86_64__) || defined (__x86_64))
 
 #import <Foundation/NSException.h>
@@ -36,9 +62,9 @@ typedef struct SmallStructureInfo
  * struct marg_list_layout
  * {
  *    __float128  floatingPointArgs[8];	// xmm0 .. xmm7
- *    long        linkageArea[4];         // r10, rax, ebp, ret
- *    long        registerArgs[6];        // rdi, rsi, rdx, rcx, r8, r9
- *    long        stackArgs[0];           // variable-size
+ *    long        linkageArea[4];       // r10, rax, ebp, ret
+ *    long        registerArgs[6];      // rdi, rsi, rdx, rcx, r8, r9
+ *    long        stackArgs[0];         // variable-size
  * }
  */
 
@@ -503,7 +529,8 @@ NSInvocationForwardHandler_stret();
 
 + (void)initialize
 {
-//  class_replaceMethod(self, @selector(invoke), (IMP)&NSInvocationInvoke, "v@:");
+  // without sendsToSuper support, -invoke may be replaced with NSInvocationInvoke()
+  // class_replaceMethod(self, @selector(invoke), (IMP)&NSInvocationInvoke, "v@:");
   class_replaceMethod(self, @selector(returnResult), (IMP)&NSInvocationReturn, "v@:");
 }
 
@@ -595,169 +622,117 @@ NSInvocationForwardHandler_stret();
 }
 
 /*
- * An internal method used to help NSConnections code invocations
- * to send over the wire 
+ * Used by NSConnection.
+ * If there are any Out parameters, returns YES, otherwise NO is returned.
  */
-- (BOOL)encodeWithDistantCoder:(NSCoder *)coder passPointers:(BOOL)passp
+- (BOOL)encodeWithDistantCoder:(NSCoder *)coder passPointers:(BOOL)passPointers
 {
   BOOL        outParameters = NO;
   const char  *type = [signature methodType];
-  uint32_t    smallBuffer[4];
+  uint64_t    buffer[2]; /* two words should suffice for small structures */
   
   [coder encodeValueOfObjCType:@encode(char*) at:&type];
   
   for (uint8_t argumentIndex = 0; argumentIndex < argumentCount; ++argumentIndex)
     {
-      const char  *type = [signature getArgumentTypeAtIndex:argumentIndex];
-      unsigned    qualifiers = objc_get_type_qualifiers(type);
+      const char *type = [signature getArgumentTypeAtIndex:argumentIndex];
+      unsigned qualifiers = objc_get_type_qualifiers(type);
       type = objc_skip_type_qualifiers(type);
 
-      void *datum;
+      /* arguments that are scattered over registers should be stored into continuous buffer */
+      void *argumentPointer;
       if (argumentInfo[argumentIndex].size != 0)
         {
-          datum = arguments + argumentInfo[argumentIndex].offset;
+          argumentPointer = arguments + argumentInfo[argumentIndex].offset;
         }
       else
         {
-          [self getArgument:smallBuffer atIndex:argumentIndex];
-          datum = smallBuffer;
+          [self getArgument:buffer atIndex:argumentIndex];
+          argumentPointer = buffer;
         }
       
-      /*
-       * Decide how, (or whether or not), to encode the argument
-       * depending on its FLAGS and TYPE.  Only the first two cases
-       * involve parameters that may potentially be passed by
-       * reference, and thus only the first two may change the value
-       * of OUT_PARAMETERS.
-       */
       switch (*type)
         {
           case GSObjCTypeId:
             if (qualifiers & GSObjCQualifierByCopyMask)
               {
-                [coder encodeBycopyObject:*(id*)datum];
+                [coder encodeBycopyObject:*(id*)argumentPointer];
               }
             else if (qualifiers & GSObjCQualifierByRefMask)
               {
-                [coder encodeByrefObject:*(id*)datum];
+                [coder encodeByrefObject:*(id*)argumentPointer];
               }
             else
               {
-                [coder encodeObject:*(id*)datum];
+                [coder encodeObject:*(id*)argumentPointer];
               }
             break;
+          case GSObjCTypePointer:
+            /* if we can't pass pointer itself, pass what it is pointing to */
+            if (!passPointers)
+              {
+                  /* todo: should we explicitly handle void** and void* types? */
+                  type++;
+                  argumentPointer = *(void**)argumentPointer;
+              }
+            /* continue to the part common with char pointers */
           case GSObjCTypeCharPointer:
-            /*
-             * Handle a (char*) argument.
-             * If the char* is qualified as an OUT parameter, or if it
-             * not explicitly qualified as an IN parameter, then we will
-             * have to get this char* again after the method is run,
-             * because the method may have changed it.  Set
-             * OUT_PARAMETERS accordingly.
-             */
+            /* if pointer is not qualified as In parameter, it is an Out parameter */
             if ((qualifiers & GSObjCQualifierOutMask) || !(qualifiers & GSObjCQualifierInMask))
               {
                 outParameters = YES;
               }
-            /*
-             * If the char* is qualified as an IN parameter, or not
-             * explicity qualified as an OUT parameter, then encode
-             * it.
-             */
+            /* if it is In or is not explicitly Out, pass it's value */
             if ((qualifiers & GSObjCQualifierInMask) || !(qualifiers & GSObjCQualifierOutMask))
               {
-                [coder encodeValueOfObjCType:type at:datum];
-              }
-            break;
-          
-          case GSObjCTypePointer:
-            /*
-             * If the pointer's value is qualified as an OUT parameter,
-             * or if it not explicitly qualified as an IN parameter,
-             * then we will have to get the value pointed to again after
-             * the method is run, because the method may have changed
-             * it.  Set OUT_PARAMETERS accordingly.
-             */
-            if ((qualifiers & GSObjCQualifierOutMask) || !(qualifiers & GSObjCQualifierInMask))
-              {
-                outParameters = YES;
-              }
-            if (passp)
-              {
-                if ((qualifiers & GSObjCQualifierInMask) || !(qualifiers & GSObjCQualifierOutMask))
-                  {
-                    [coder encodeValueOfObjCType:type at:datum];
-                  }
-              }
-            else
-              {
-                /*
-                 * Handle an argument that is a pointer to a non-char.  But
-                 * (void*) and (anything**) is not allowed.
-                 * The argument is a pointer to something; increment TYPE
-                 * so we can see what it is a pointer to.
-                 */
-                type++;
-                /*
-                 * If the pointer's value is qualified as an IN parameter,
-                 * or not explicity qualified as an OUT parameter, then
-                 * encode it.
-                 */
-                if ((qualifiers & GSObjCQualifierInMask) || !(qualifiers & GSObjCQualifierOutMask))
-                  {
-                    [coder encodeValueOfObjCType:type at:*(void**)datum];
-                  }
+                [coder encodeValueOfObjCType:type at:argumentPointer];
               }
             break;
           
           default:
-            /* Handle arguments of all other types. */
-            [coder encodeValueOfObjCType: type at: datum];
+            /* no special treatment for other types */
+            [coder encodeValueOfObjCType:type at:argumentPointer];
         }
     }
   
-  /*
-   * Return a BOOL indicating whether or not there are parameters that
-   * were passed by reference; we will need to get those values again
-   * after the method has finished executing because the execution of
-   * the method may have changed them.
-   */
   return outParameters;
 }
 
 @end
 
+/* Forwarding implementation, there should be a place better for this */
+
 #import <Foundation/NSException.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSProxy.h>
 
 static NSMethodSignature *
-GSMethodSignatureForForwarding (id receiver, SEL forward, SEL sel)
+GSMethodSignatureForForwarding(id receiver, SEL forward, SEL selector)
 {
   if (nil == receiver)
     {
       return nil;
     }
   
-  NSMethodSignature *sig = nil;
-  Class             cls  = object_getClass(receiver);
+  NSMethodSignature *signature = nil;
+  Class class  = object_getClass(receiver);
       
-  if (class_respondsToSelector(cls, @selector(methodSignatureForSelector:)))
+  if (class_respondsToSelector(class, @selector(methodSignatureForSelector:)))
     {
-      sig = [receiver methodSignatureForSelector:sel];
+      signature = [receiver methodSignatureForSelector:selector];
     }
-  if (nil == sig)
+  if (nil == signature)
     {
-        [NSException raise: NSInvalidArgumentException
-                    format: @"%c[%s %s]: unrecognized selector sent to instance %p",
-                            (class_isMetaClass(cls) ? '+' : '-'),
-                            class_getName(cls), 
-                            sel_getName(sel), 
-                            receiver];
+        [NSException raise:NSInvalidArgumentException
+                    format:@"%c[%s %s]: unrecognized selector sent to instance %p",
+                           (class_isMetaClass(class) ? '+' : '-'),
+                           class_getName(class), 
+                           sel_getName(selector), 
+                           receiver];
     }
-  return sig;
+  return signature;
 }
 
-#import <Foundation/NSObject.h>
-#import <Foundation/NSProxy.h>
 
 @interface NSObject (InvocationForwarding)
 -(void)forward:(SEL)sel :(marg_list)args;
@@ -766,6 +741,7 @@ GSMethodSignatureForForwarding (id receiver, SEL forward, SEL sel)
 @interface NSProxy (InvocationForwarding)
 -(void)forward:(SEL)sel :(marg_list)args;
 @end
+
 
 @implementation NSObject (InvocationForwarding)
 
@@ -778,6 +754,7 @@ GSMethodSignatureForForwarding (id receiver, SEL forward, SEL sel)
 }
 
 @end
+
 
 @implementation NSProxy (InvocationForwarding)
 

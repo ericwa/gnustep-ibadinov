@@ -120,15 +120,13 @@
 // Accessing Data
 - (void) getValue: (void *)value
 {
-  NSUInteger	size;
   if (!value)
     {
       [NSException raise: NSInvalidArgumentException
 		  format: @"Cannot copy value into NULL buffer"];
 	/* NOT REACHED */
     }
-  NSGetSizeAndAlignment([self objCType], 0, &size);
-  memcpy(value, &data, size);
+  *(__typeof__(data) *)value = data;
 }
 
 - (BOOL) isEqual: (id)other

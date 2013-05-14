@@ -116,6 +116,7 @@ GNUSTEPBASE_HEADERS = \
 GSBlocks.h \
 GSVersionMacros.h \
 GSObjCRuntime.h \
+GSTypeEncoding.h \
 GSUnion.h \
 GSIArray.h \
 GSIMap.h \
@@ -178,6 +179,17 @@ GSSocksParser/GSSocksParser.m \
 GSSocksParser/GSSocksParserPrivate.m \
 GSSocksParser/GSSocks4Parser.m \
 GSSocksParser/GSSocks5Parser.m \
+KVO/NSArray+KVO.m \
+KVO/NSKVONotifying.m \
+KVO/NSKeyValueNestedProperty.m \
+KVO/NSKeyValueObservance.m \
+KVO/NSKeyValueObservationInfo.m \
+KVO/NSKeyValueObserving.m \
+KVO/NSKeyValueObservingPrivate.m \
+KVO/NSKeyValueProperty.m \
+KVO/NSKeyValueUnnestedProperty.m \
+KVO/NSObject+KVO.m \
+KVO/NSSet+KVO.m \
 NSAffineTransform.m \
 NSArchiver.m \
 NSArray.m \
@@ -228,7 +240,6 @@ NSJSONSerialization.m \
 NSKeyedArchiver.m \
 NSKeyedUnarchiver.m \
 NSKeyValueCoding.m \
-NSKeyValueObserving.m \
 NSLocale.m \
 NSLock.m \
 NSLog.m \

@@ -1,0 +1,36 @@
+(
+    {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = "Emma Watson";
+        path = fullName;
+    },
+    {
+        kind = 1;
+        notificationIsPrior = 1;
+        old = Emma;
+        path = firstName;
+    },
+    {
+        kind = 1;
+        notificationIsPrior = 1;
+        path = fullName;
+    },
+    {
+        kind = 1;
+        new = "John Watson";
+        path = fullName;
+    },
+    {
+        kind = 1;
+        new = John;
+        old = Emma;
+        path = firstName;
+    },
+    {
+        kind = 1;
+        new = "John Watson";
+        old = "Emma Watson";
+        path = fullName;
+    }
+)

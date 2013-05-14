@@ -40,6 +40,8 @@
 # define NeXT_RUNTIME
 #endif
 
+#import <GNUstepBase/GSTypeEncoding.h>
+
 #if defined(NeXT_RUNTIME)
 #  include <objc/objc.h>
 #  include <objc/objc-class.h>
@@ -59,7 +61,7 @@
 #  endif
 #endif
 
-#if	OBJC2RUNTIME
+#if OBJC2RUNTIME
 #  /* We have a real ObjC2 runtime. */
 #  include <objc/runtime.h>
 #else
@@ -138,186 +140,13 @@ static inline void gs_consumed(id NS_CONSUMED GS_UNUSED_ARG o) { return; }
 #endif
 
 
-/* type mangling is compiler independent so we can safely this by hand */
-
-typedef enum __GSObjCTypeQualifier
-{
-  GSObjCQualifierConst        = 'r',
-  GSObjCQualifierIn           = 'n',
-  GSObjCQualifierInOut        = 'N',
-  GSObjCQualifierOut          = 'o',
-  GSObjCQualifierByCopy       = 'O',
-  GSObjCQualifierByRef        = 'R',
-  GSObjCQualifierOneWay       = 'V',
-  GSObjCQualifierInvisible    = '!'
-} GSObjCTypeQualifier;
-
-typedef enum __GSObjCType
-{
-  GSObjCTypeId                = '@',
-  GSObjCTypeClass             = '#',
-  GSObjCTypeSelector          = ':',
-  GSObjCTypeChar              = 'c',
-  GSObjCTypeUnsignedChar      = 'C',
-  GSObjCTypeShort             = 's',
-  GSObjCTypeUnsignedShort     = 'S',
-  GSObjCTypeInt               = 'i',
-  GSObjCTypeUnsignedInt       = 'I',
-  GSObjCTypeLong              = 'l',
-  GSObjCTypeUnsignedLong      = 'L',
-  GSObjCTypeLongLong          = 'q',
-  GSObjCTypeUnsignedLongLong  = 'Q',
-  GSObjCTypeFloat             = 'f',
-  GSObjCTypeDouble            = 'd',
-  GSObjCTypeComplex           = 'j',
-  GSObjCTypeBitField          = 'b',
-  GSObjCTypeBool              = 'B',
-  GSObjCTypeVoid              = 'v',
-  GSObjCTypePointer           = '^',
-  GSObjCTypeCharPointer       = '*',
-  GSObjCTypeAtom              = '%',
-  GSObjCTypeArrayBegin        = '[',
-  GSObjCTypeArrayEnd          = ']',
-  GSObjCTypeStructureBegin    = '{',
-  GSObjCTypeStructureEnd      = '}',
-  GSObjCTypeUnionBegin        = '(',
-  GSObjCTypeUnionEnd          = ')',
-  GSObjCTypeUnknown           = '?'
-} GSObjCType;
-
-/* maximum an minimum char values in a type specification */
-typedef enum __GSObjCTypeBound
-{
-  GSObjCTypeMin               = ' ',
-  GSObjCTypeMax               = '~'
-} GSObjCTypeBound;
-
-#if defined (NeXT_RUNTIME)
-  typedef enum __GSObjCTypeQualifierMask
-  {
-    GSObjCQualifierConstMask        = 0x01,
-    GSObjCQualifierInMask           = 0x01,
-    GSObjCQualifierOutMask          = 0x02,
-    GSObjCQualifierInOutMask        = 0x03,
-    GSObjCQualifierByCopyMask       = 0x04,
-    GSObjCQualifierByRefMask        = 0x08,
-    GSObjCQualifierOneWayMask       = 0x10,
-    GSObjCQualifierInvisibleMask    = 0x20
-  } GSObjCTypeQualifierMask;
-#else
-  typedef enum __GSObjCTypeQualifierMask
-  {
-    GSObjCQualifierConstMask        = _F_CONST,
-    GSObjCQualifierInMask           = _F_IN,
-    GSObjCQualifierOutMask          = _F_OUT,
-    GSObjCQualifierInOutMask        = _F_INOUT,
-    GSObjCQualifierByCopyMask       = _F_BYCOPY,
-    GSObjCQualifierByRefMask        = _F_BYREF,
-    GSObjCQualifierOneWayMask       = _F_ONEWAY,
-    GSObjCQualifierInvisibleMask    = _F_GCINVISIBLE
-  } GSObjCTypeQualifierMask;
-#endif
-
-/*
- * parser-related stuff
- */
-
-typedef struct __GSObjCTypeInfo {
-  /* store pointer to allow recursive parsing of pointer types, e.g. ^{^[2*]} */
-  const char  *type;
-  size_t      size;
-  uint8_t     alignment;
-  uint8_t     qualifiers;
-} GSObjCTypeInfo;
-
-typedef void (*GSObjCTypeParserDelegate)(void *context, GSObjCTypeInfo type);
-
-typedef enum __GSObjCParserOptions {
-  GSObjCReportArrayOnceMask = 1
-} GSObjCParserOptions;
-
-const char *
-GSObjCParseTypeSpecification (const char *cursor, 
-                              GSObjCTypeParserDelegate delegate,
-                              void *context,
-                              unsigned options);
-
-NS_INLINE size_t
-GSObjCPadSize (size_t size, uint8_t alignment)
-{
-  return alignment * ((size + alignment - 1) / alignment);
-}
-
-NS_INLINE size_t
-GSObjCGetPadding (size_t size, uint8_t alignment)
-{
-  return (alignment - (size & (alignment - 1))) & (alignment - 1);
-}
-
-const char *
-GSGetSizeAndAlignment (const char *type, size_t *sizep, uint8_t *alignp);
-
-
 #if defined(NeXT_RUNTIME)
     
   NS_INLINE IMP
   GSObjCMethodForSelector(id object, SEL selector)
   {
-    return class_getMethodImplementation (object_getClass(object), 
-                                          selector);
+    return class_getMethodImplementation(object_getClass(object), selector);
   }
-
-  /* and then we wrap parser into freaky API */
-  
-  int
-  objc_sizeof_type (const char* type);
-  int
-  objc_alignof_type (const char* type);
-  int
-  objc_aligned_size (const char* type);
-  int
-  objc_promoted_size (const char* type);
-  
-  unsigned
-  objc_get_type_qualifiers (const char* type);
-  
-  const char *
-  objc_skip_typespec (const char* type);
-  const char *
-  objc_skip_offset (const char* type);
-  const char *
-  objc_skip_argspec (const char* type);
-  const char *
-  objc_skip_type_qualifiers (const char* type);
-  
-  struct objc_struct_layout
-  {
-    GSObjCTypeInfo  *info;
-    long            position;
-    unsigned        count;
-    unsigned        allocated;
-    unsigned        depth;
-    unsigned        offset;
-    unsigned        alignment;
-  };
-  
-  void
-  objc_layout_structure (const char *type,
-                         struct objc_struct_layout *layout);
-  
-  BOOL
-  objc_layout_structure_next_member (struct objc_struct_layout *layout);
-  
-  void
-  objc_layout_structure_get_info (struct objc_struct_layout *layout,
-                                  unsigned int *offset,
-                                  unsigned int *align,
-                                  const char **type);
-  
-  void 
-  objc_layout_finish_structure (struct objc_struct_layout *layout,
-                                unsigned int *size,
-                                unsigned int *align);
   
 #else
     
@@ -342,6 +171,20 @@ GSGetSizeAndAlignment (const char *type, size_t *sizep, uint8_t *alignp);
 @class	NSObject;
 @class	NSString;
 @class	NSValue;
+
+/*
+ * Any malloc() implementation is required to return pointers aligned suitably
+ * to be used as a pointer to any posible primitive data type (bigest-possible
+ * aligment). So the padding size can be easily determined.
+ */
+NS_INLINE NSUInteger GSPointerHash(uintptr_t pointer)
+{
+  #define __MALLOC_ALIGNMENT (__alignof__(_Complex long double))
+
+  static uintptr_t const shift = __MALLOC_ALIGNMENT == 16 ? 4 : (__MALLOC_ALIGNMENT == 8 ? 3 : 2);
+  /* Compiled as "rolq $60, %rdi" or "rol $28, %eax" */
+  return (NSUInteger)((pointer >> shift) | (pointer << (sizeof(uintptr_t) * 8 - shift)));
+}
 
 /*
  * Functions for accessing instance variables directly -
