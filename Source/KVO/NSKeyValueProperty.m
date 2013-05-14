@@ -32,6 +32,11 @@
 
 @implementation NSKeyValueProperty
 
++ (void)load
+{
+    _NSKVOIntialize();
+}
+
 - (id)initWithClass:(Class)aClass keyPath:(NSString *)aPath
 {
     if ([self class] != [NSKeyValueProperty class]) {

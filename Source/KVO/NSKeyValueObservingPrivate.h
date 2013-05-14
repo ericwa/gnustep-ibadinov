@@ -35,7 +35,7 @@ FOUNDATION_EXPORT void NSKeyValueWillChange(id self, NSString *keyPath, NSDictio
 FOUNDATION_EXPORT void NSKeyValueDidChange(id self, NSString *keyPath, NSDictionary *change);
 
 
-FOUNDATION_EXPORT void _NSKVOIntialize(void) __attribute__((constructor));
+FOUNDATION_EXPORT void _NSKVOIntialize(void);
 FOUNDATION_EXPORT NSKeyValueProperty *_NSKVOGetPropertyWithKeyPath(Class class, NSString *keyPath);
 
 FOUNDATION_EXPORT void _NSKVOObjectDeallocate(id self);
