@@ -75,6 +75,7 @@
 {
     [observance lock];
     [observance pushChange:change];
+    [observance unlock];
     
     NSKeyValueObservingOptions options = [observance options];
     NSObject *observer = [observance observer];
@@ -93,15 +94,15 @@
     } else {
         [(NSKeyValueProperty *)observer object:object withObservance:observance willChangeValue:change forKeyPath:aPath];
     }
-    
-    [observance unlock];
 }
 
 - (void)object:(NSObject *)object withObservance:(NSKeyValueObservance *)observance didChangeValue:(NSDictionary *)change forKeyPath:(NSString *)aPath
 {
     [observance lock];
-    NSDictionary *prior;
-    if ((prior = [observance popChange])) {
+    NSDictionary *prior = [observance popChange];
+    [observance unlock];
+    
+    if (prior) {
         NSMutableDictionary *prepared = [[NSMutableDictionary alloc] initWithDictionary:change];
         
         id value;
@@ -124,7 +125,6 @@
         
         [prepared release];
     }   
-    [observance unlock];
 }
 
 @end

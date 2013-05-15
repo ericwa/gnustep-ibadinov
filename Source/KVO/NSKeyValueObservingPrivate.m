@@ -166,13 +166,27 @@ void NSKVODeallocateBreak()
     abort();
 }
 
+/**
+ * WARNING!
+ * KVO is inherently NOT thread safe. Retaining lock on observance mutex while
+ * notifying an observer would interfere with application layer locking strategy
+ * and cause deadlocks.
+ *
+ * Apple's implementation is also NOT thread safe. It can be easy tested by two
+ * infinite loops on multicore machine: one setting any value for some key and
+ * triggering notification process, another one adding/removing observance
+ * and changing observation status accordingly. Observer will be notified
+ * while not observing the key.
+ */
 void NSKeyValueNotifyObserver(id self, NSKeyValueObservance *observance, NSString *keyPath, NSDictionary *change)
 {
     [observance lock];
-    if ([observance isValid]) {
+    BOOL valid = [observance isValid];
+    [observance unlock];
+    
+    if (valid) {
         [[observance observer] observeValueForKeyPath:keyPath ofObject:self change:change context:[observance context]];
     }
-    [observance unlock];
 }
 
 void NSKeyValueWillChange(id self, NSString *keyPath, NSDictionary *change)
