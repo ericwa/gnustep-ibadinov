@@ -76,6 +76,7 @@ GS_PRIVATE_INTERNAL(NSOperation)
 #define	POOL	8
 
 static NSArray	*empty = nil;
+static NSRecursiveLock *dependencyLock = nil;
 
 @interface	NSOperation (Private)
 - (void) _finish;
@@ -92,7 +93,10 @@ static NSArray	*empty = nil;
 
 + (void) initialize
 {
-  empty = [NSObject leakRetained:[NSArray new]];
+    if (!empty) {
+        empty = [NSObject leakRetained:[NSArray new]];
+        dependencyLock = [NSObject leakRetained:[NSRecursiveLock new]];
+    }
 }
 
 - (void) addDependency: (NSOperation *)op
@@ -109,6 +113,7 @@ static NSArray	*empty = nil;
 		  format: @"[%@-%@] attempt to add dependency on self",
 	NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
     }
+  [dependencyLock lock];
   [internal->lock lock];
   if (internal->dependencies == nil)
     {
@@ -152,11 +157,13 @@ static NSArray	*empty = nil;
   NS_HANDLER
     {
       [internal->lock unlock];
+      [dependencyLock unlock];
       NSLog(@"Problem adding dependency: %@", localException);
       return;
     }
   NS_ENDHANDLER
   [internal->lock unlock];
+  [dependencyLock unlock];
 }
 
 - (void) cancel
@@ -328,6 +335,7 @@ static NSArray	*empty = nil;
 
 - (void) removeDependency: (NSOperation *)op
 {
+  [dependencyLock lock];
   [internal->lock lock];
   NS_DURING
     {
@@ -353,11 +361,13 @@ static NSArray	*empty = nil;
   NS_HANDLER
     {
       [internal->lock unlock];
+      [dependencyLock unlock];
       NSLog(@"Problem removing dependency: %@", localException);
       return;
     }
   NS_ENDHANDLER
   [internal->lock unlock];
+  [dependencyLock unlock];
 }
 
 - (void) setCompletionBlock: (GSOperationCompletionBlock)aBlock
@@ -518,6 +528,7 @@ static NSArray	*empty = nil;
    * queue removes and releases us.
    */
   [self retain];
+  [dependencyLock lock];
   [internal->lock lock];
   if (NO == internal->finished)
     {
@@ -542,6 +553,7 @@ static NSArray	*empty = nil;
 	}
     }
   [internal->lock unlock];
+  [dependencyLock unlock];
   [self release];
 }
 
