@@ -621,6 +621,7 @@ static NSOperationQueue *mainQueue = nil;
 		  format: @"[%@-%@] object is not an NSOperation",
 	NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
     }
+  [dependencyLock lock];
   [internal->lock lock];
   if (NSNotFound == [internal->operations indexOfObjectIdenticalTo: op]
     && NO == [op isFinished])
@@ -643,6 +644,7 @@ static NSOperationQueue *mainQueue = nil;
 	}
     }
   [internal->lock unlock];
+  [dependencyLock unlock];
 }
 
 - (void) addOperations: (NSArray *)ops
