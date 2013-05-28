@@ -27,7 +27,7 @@ int main()
   NSAutoreleasePool   *arp = [NSAutoreleasePool new];
 
   test_alloc(@"NSNotification"); 
-  obj = [NSNotification new];
+  obj = [NSNotification notificationWithName:@"" object:nil userInfo:[NSDictionary dictionary]];
   [testObjs addObject: obj];
   test_NSObject(@"NSNotification", testObjs);
   test_NSCoding(testObjs);

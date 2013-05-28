@@ -2052,7 +2052,7 @@ static NSStringEncoding	defaultEncoding;
     {
         return nil;
     }
-  content = [NSMutableArray arrayWithCapacity: 128];
+  content = [[NSMutableArray alloc] initWithCapacity: 128];
   /* We initialize the directory enumerator with justContents == YES,
      which tells the NSDirectoryEnumerator code that we only enumerate
      the contents non-recursively once, and exit.  NSDirectoryEnumerator
@@ -2119,7 +2119,7 @@ static NSStringEncoding	defaultEncoding;
     {
         return nil;
     }
-  content = [NSMutableArray arrayWithCapacity: 128];
+  content = [[NSMutableArray alloc] initWithCapacity: 128];
   direnum = [[NSDirectoryEnumerator alloc] initWithDirectoryPath: path
 				       recurseIntoSubdirectories: YES
 						  followSymlinks: NO

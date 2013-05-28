@@ -160,6 +160,13 @@ copyright 2004 Alexander Malmberg <alexander@malmberg.org>
 }
 @end
 
+@implementation NSNotification (DecodingTests)
++ (NSObject *) createTestInstance
+{
+    return [self notificationWithName:@"TestNotification" object:nil userInfo:[NSDictionary dictionary]];
+}
+@end
+
 
 /*
 If set, we write out new .data files for the current versions for classes
