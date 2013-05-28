@@ -97,7 +97,7 @@
     format: @"[%@%c%@] not implemented",
     NSStringFromClass([self class]), c,
     aSel ? (id)NSStringFromSelector(aSel) : (id)@"(null)"];
-  return nil;
+  return self;	// Not reached
 }
 
 - (id) shouldNotImplement: (SEL)aSel
@@ -109,7 +109,7 @@
     format: @"[%@%c%@] should not be implemented",
     NSStringFromClass([self class]), c,
     aSel ? (id)NSStringFromSelector(aSel) : (id)@"(null)"];
-  return nil;
+  return self;	// Not reached
 }
 
 - (id) subclassResponsibility: (SEL)aSel
@@ -120,7 +120,7 @@
     format: @"[%@%c%@] should be overridden by subclass",
     NSStringFromClass([self class]), c,
     aSel ? (id)NSStringFromSelector(aSel) : (id)@"(null)"];
-  return nil;
+  return self;	// Not reached
 }
 
 @end

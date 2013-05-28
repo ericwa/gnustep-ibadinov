@@ -244,6 +244,7 @@ NSLocale.m \
 NSLock.m \
 NSLog.m \
 NSMapTable.m \
+NSMetadata.m \
 NSMethodSignature.m \
 NSNotification.m \
 NSNotificationCenter.m \

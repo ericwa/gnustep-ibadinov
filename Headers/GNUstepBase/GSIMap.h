@@ -30,11 +30,13 @@
 #if	defined(GNUSTEP_BASE_INTERNAL)
 #import "Foundation/NSObject.h"
 #import "Foundation/NSEnumerator.h"
+#import "Foundation/NSException.h"
 #import "Foundation/NSGarbageCollector.h"
 #import "Foundation/NSZone.h"
 #else
 #import <Foundation/NSObject.h>
 #import <Foundation/NSEnumerator.h>
+#import <Foundation/NSException.h>
 #import <Foundation/NSGarbageCollector.h>
 #import <Foundation/NSZone.h>
 #endif
@@ -484,10 +486,11 @@ GSIMapRemoveAndFreeNode(GSIMapTable map, uintptr_t bkt, GSIMapNode node)
 static INLINE void
 GSIMapRemoveWeak(GSIMapTable map)
 {
-  uintptr_t bucketCount = map->bucketCount;
-  GSIMapBucket bucket = map->buckets;
   if (GSI_MAP_ZEROED(map))
     {
+      uintptr_t bucketCount = map->bucketCount;
+      GSIMapBucket bucket = map->buckets;
+
       while (bucketCount-- > 0)
         {
           GSIMapNode node = bucket->firstNode;
@@ -617,6 +620,14 @@ GSIMapMoreNodes(GSIMapTable map, NSUInteger required)
 	    }
 	  map->freeNodes = newNodes;
 	}
+      else
+	{
+	  [NSException raise: NSMallocException format: @"No memory for nodes"];
+	}
+    }
+  else
+    {
+      [NSException raise: NSMallocException format: @"No memory for chunks"];
     }
 }
 
@@ -627,7 +638,8 @@ GSIMapNodeForKeyInBucket(GSIMapTable map, GSIMapBucket bucket, GSIMapKey key)
 
   if (GSI_MAP_ZEROED(map))
     {
-      while ((node != 0) && GSI_MAP_EQUAL(map, GSI_MAP_READ_KEY(map, &node->key), key) == NO)
+      while ((node != 0)
+	&& GSI_MAP_EQUAL(map, GSI_MAP_READ_KEY(map, &node->key), key) == NO)
 	{
 	  GSIMapNode	tmp = node->nextInBucket;
 
@@ -640,7 +652,8 @@ GSIMapNodeForKeyInBucket(GSIMapTable map, GSIMapBucket bucket, GSIMapKey key)
 	}
       return node;
     }
-  while ((node != 0) && GSI_MAP_EQUAL(map, GSI_MAP_READ_KEY(map, &node->key), key) == NO)
+  while ((node != 0)
+    && GSI_MAP_EQUAL(map, GSI_MAP_READ_KEY(map, &node->key), key) == NO)
     {
       node = node->nextInBucket;
     }
@@ -917,7 +930,8 @@ GSIMapEnumeratorNextNode(GSIMapEnumerator enumerator)
 
   /* Find the frst available non-zeroed node.
    */
-  if (node != 0 && GSI_MAP_ZEROED(map) && GSI_MAP_READ_KEY(map, &node->key).addr == 0)
+  if (node != 0 && GSI_MAP_ZEROED(map)
+    && GSI_MAP_READ_KEY(map, &node->key).addr == 0)
     {
       uintptr_t		bucketCount = map->bucketCount;
       uintptr_t		bucket = ((_GSIE)enumerator)->bucket;
@@ -1053,10 +1067,6 @@ GSIMapAddPair(GSIMapTable map, GSIMapKey key, GSIMapVal value)
     {
       GSIMapMoreNodes(map, map->nodeCount < map->increment ? 0: map->increment);
       node = map->freeNodes;
-      if (node == 0)
-	{
-	  return 0;
-	}
     }
   map->freeNodes = node->nextInBucket;
   GSI_MAP_WRITE_KEY(map, &node->key, key);
@@ -1079,10 +1089,6 @@ GSIMapAddKey(GSIMapTable map, GSIMapKey key)
     {
       GSIMapMoreNodes(map, map->nodeCount < map->increment ? 0: map->increment);
       node = map->freeNodes;
-      if (node == 0)
-	{
-	  return 0;
-	}
     }
   map->freeNodes = node->nextInBucket;
   GSI_MAP_WRITE_KEY(map, &node->key, key);
@@ -1153,8 +1159,10 @@ GSIMapCleanMap(GSIMapTable map)
 	  bucket->firstNode = 0;
 	  bucket++;
 	}
-      
-      prevNode->nextInBucket = map->freeNodes;
+      if (prevNode != 0)
+	{
+          prevNode->nextInBucket = map->freeNodes;
+	}
       map->freeNodes = startNode;
     }
 }

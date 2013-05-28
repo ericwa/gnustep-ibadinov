@@ -238,7 +238,7 @@ static unsigned systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 
 - (id) decodeObject
 {
-  id	o;
+  id	o = nil;
 
   [self decodeValueOfObjCType: @encode(id) at: &o];
   return AUTORELEASE(o);
@@ -247,7 +247,7 @@ static unsigned systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 - (id) decodePropertyList
 {
   id	o;
-  id	d;
+  id	d = nil;
 
   [self decodeValueOfObjCType: @encode(id) at: &d];
   if (d != nil)

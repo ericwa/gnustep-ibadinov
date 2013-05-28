@@ -333,9 +333,12 @@ static char *buildURL(parsedURL *base, parsedURL *rel, BOOL standardize)
 	{
 	  *tmp++ = '/';
 	}
-      l = strlen(base->path);
-      memcpy(tmp, base->path, l);
-      tmp += l;
+      if (base->path)
+	{
+	  l = strlen(base->path);
+	  memcpy(tmp, base->path, l);
+	  tmp += l;
+	}
     }
   else
     {
@@ -1440,7 +1443,7 @@ static NSUInteger	urlAlign;
           memcpy(tmp, myData->path, l + 1);
 	}
     }
-  else if (_baseURL == nil)
+  else if (nil == _baseURL)
     {
       if (myData->path != 0)
 	{
@@ -1448,7 +1451,7 @@ static NSUInteger	urlAlign;
           memcpy(tmp, myData->path, l + 1);
 	}
     }
-  else if (*myData->path == 0)
+  else if (0 == myData->path || 0 == *myData->path)
     {
       if (baseData->hasNoPath == NO)
 	{

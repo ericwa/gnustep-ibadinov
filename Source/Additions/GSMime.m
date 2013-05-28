@@ -429,10 +429,12 @@ decodeWord(unsigned char *dst, const unsigned char *src, const unsigned char *en
 	  NSUInteger	i;
 
 	  for (i = pos; i < 4; i++)
-	    buf[i] = '\0';
+	    {
+	      buf[i] = '\0';
+	    }
 	  pos--;
+	  decodebase64(dst, buf);
 	}
-      decodebase64(dst, buf);
       dst += pos;
       *dst = '\0';
       return dst;
@@ -1445,13 +1447,13 @@ wordData(NSString *word)
  */
 - (BOOL) parse: (NSData*)d
 {
-  if (flags.complete == 1)
+  if (1 == flags.complete || 1 == flags.hadErrors)
     {
-      return NO;	/* Already completely parsed! */
+      return NO;	/* Already completely parsed or failed! */
     }
   if ([d length] > 0)
     {
-      if (flags.inBody == 0)
+      if (0 == flags.inBody)
         {
           if ([self parseHeaders: d remaining: &d] == YES)
             {
@@ -1460,7 +1462,7 @@ wordData(NSString *word)
         }
       if ([d length] > 0)
 	{
-	  if (flags.inBody == 1)
+	  if (1 == flags.inBody)
 	    {
 	      /*
 	       * We can't just re-call -parse: ...
@@ -1473,7 +1475,7 @@ wordData(NSString *word)
 	      return [self parse: d];
 	    }
 	}
-      if (flags.complete == 1)
+      if (1 == flags.complete)
 	{
 	  return NO;
 	}
@@ -1481,11 +1483,11 @@ wordData(NSString *word)
     }
   else
     {
-      if (flags.wantEndOfLine == 1)
+      if (1 == flags.wantEndOfLine)
 	{
 	  [self parse: [NSData dataWithBytes: "\r\n" length: 2]];
 	}
-      else if (flags.inBody == 1)
+      else if (1 == flags.inBody)
 	{
 	  [self _decodeBody: d];
 	}
@@ -1538,7 +1540,7 @@ wordData(NSString *word)
   r = [self _endOfHeaders: d];
   if (r.location == NSNotFound)
     {
-      [data appendData: d];
+      [data appendBytes: [d bytes] length: [d length]];
       bytes = (unsigned char*)[data bytes];
       dataEnd = [data length];
       /* Fall through to parse the headers so far.
@@ -1554,6 +1556,9 @@ wordData(NSString *word)
       dataEnd = [data length];
       if (l > i)
 	{
+          /* NB. Take care ... the data object we create does not own or
+           * free its storage.
+           */
 	  d = [[[NSData alloc] initWithBytesNoCopy: (void*)([d bytes] + i)
 					    length: l - i
 				      freeWhenDone: NO] autorelease];
@@ -1650,7 +1655,12 @@ wordData(NSString *word)
        */
       if ([d length] > 0)
 	{
-          ASSIGNCOPY(boundary, d);
+          /* NB. We must copy the bytes from 'd' as that object doesn't
+           * own its storage.
+           */
+          RELEASE(boundary);
+          boundary = [[NSData alloc] initWithBytes: [d bytes]
+                                            length: [d length]];
 	  flags.excessData = 1;
 	}
     }
@@ -2932,7 +2942,8 @@ unfold(const unsigned char *src, const unsigned char *end, BOOL *folded)
 		}
               if (nil == s)
                 {
-                  NSLog(@"Bad header ... illegal characters");
+                  NSLog(@"Bad header ... illegal characters in %@",
+                    [NSData dataWithBytes: beg length: src - beg]);
                   flags.hadErrors = 1;
                   return nil;
                 }

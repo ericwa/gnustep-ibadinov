@@ -548,7 +548,7 @@
  */
 - (Class) superclass
 {
-  return class_getSuperclass(isa);
+  return class_getSuperclass(object_getClass(self));
 }
 
 /**

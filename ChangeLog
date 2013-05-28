@@ -1,4 +1,159 @@
-2012-03-17  Richard Frith-Macdonald <rfm@gnu.org>
+2013-04-24  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/GSMime.m: ([GSMimeParser-parse:]) fix possible infinite
+        recursion when encountering a bad document.
+
+2013-04-22  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/GSMime.m: Fix memory management error with excess bytes
+        after parsing mime headers.
+
+2013-04-18      Marcus Muller <znek@mulle-kybernetik.com>
+
+        * Source/NSMetadata.m: Fix to expose variables to compiler building
+        with non-fragile ABI.
+
+2013-04-15  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Source/GNUmakefile:
+	* Source/unix/GNUmakefile:
+	* Source/unix/NSMetadata.m:
+	* Source/win32/GNUmakefile:
+	* Source/win32/NSMetadata.m:
+	* Source/NSMetadata.m:
+	* Headers/Foundation/NSMetadata.h:
+	Move identical system specific metadata code to generic area so we
+	can have system specific subclasses inherit common functionality.
+	Fix instance variables so we won't break binrary compatibility in
+	future.
+
+2013-04-15  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* cifframe.m:
+	* GSString.m:
+	* GSTLS.m:
+	* NSArchiver.m:
+	* NSCalendar.m:
+	* NSCoder.m:
+	* NSData.m:
+	* NSDecimal.m:
+	* NSDictionary.m:
+	* NSDistantObject.m:
+	* NSException.m:
+	* NSFileManager.m:
+	* NSHashTable.m:
+	* NSIndexPath.m:
+	* NSLocale.m:
+	* NSMethodSignature.m:
+	* NSNotificationCenter.m:
+	* NSNumberFormatter.m:
+	* NSObject.m:
+	* NSPortCoder.m:
+	* NSProcessInfo.m:
+	* NSProxy.m:
+	* NSRunLoop.m:
+	* NSSocketPort.m:
+	* NSString.m:
+	* NSURL.m:
+	* NSURLProtocol.m:
+	* NSValue.m:
+	* NSXMLDocument.m:
+	* NSXMLNode.m:
+	* NSXMLParser.m:
+	More changes to avoid static analyzer false-positives/non-issues so we
+	can see when real issues arise.  Changes remove around 60 warnings and
+	include about half a dozen minor bugfixes.
+
+2013-04-14  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Headers/GNUstepBase/GSIMap.h:
+	* Headers/GNUstepBase/NSObject+GNUstepBase.h:
+	* Source/Additions/GSObjCRuntime.m:
+	* Source/GSFormat.m:
+	* Source/GSPrivate.h:
+	* Source/GSString.m:
+	* Source/NSBundle.m:
+	* Source/NSJSONSerialization.m:
+	* Source/NSKeyValueObserving.m:
+	* Source/NSScanner.m:
+	* Tools/gdomap.c:
+	Tweaks to keep static analyser happy.
+
+2013-04-13  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Headers/GNUstepBase/GNUstep.h: NSInteger/NSUInteger cleanup.
+	* Source/NSAffineTransform.m: Fix -isEqual: for subclassing.
+	* Source/NSObject.m: Remove previously deprecarted function
+	* Source/NSProxy.m: Avoid compiler warning
+	* Source/NSDistantObject.m: Avoid compiler warning
+
+2013-04-12  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/NSPortCoder.m:
+        Fix bug looking up class version information.
+
+2013-04-10  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/NSScanner.m: improve the algoritm for parsing double values
+        (new algorithm based on public domain pseudo code).. should be more
+        accurate (for bug #38640).
+
+2013-04-08  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/NSNotificationCenter.m: Fix bug #38680
+
+2013-04-05  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * config/pathtls.m4: Try to guess gnutls flags if no config found
+        * configure: regenerate
+        * Tools/AGSHtml.m: Fix error when title index missing.
+
+2013-04-03  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/NSSocketPort.m: Improve/simplify invalidation.
+        * Source/NSXMLParser.m:
+        Fix (implement) parsing of entities inside quoted strings.
+
+2013-03-28  Richard Frith-Macdonald <rfm@gnu.org>
+
+        Make release 1.24.4
+        * Documentation/ReleaseNotes.gsdoc:
+        * Documentation/news.texi:
+        * Headers/Foundation/NSFileManager.h:
+        * Source/NSFileManager.m:
+        Prepare documentation for release
+
+2013-03-26  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Source/NSCalendar.m:
+        * Headers/Foundation/NSCalendar.h:
+        Rewrite NSCalendar instance variable usage to avoid breaking binary
+        compatibility.  Fix methods for setting the first week day and
+        the minimum number of days in the first week of a month.
+
+2013-03-25  Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Source/NSAffineTransform.m:
+        Fix decoding of keyed archive containing identity transform.
+	* Source/NSString.m:
+	* Tests/base/NSString/tilde.m:
+        Fix to standardize string if necessary to determine whether it has
+        the home directory as a prefix.
+
+2013-03-23  Fred Kiefer <FredKiefer@gmx.de>
+
+        * Source/NSXMLNode.m (-XMLStringWithOptions:): Revert change I
+	made on 2012-12-01.
+
+2013-03-20  Richard Frith-Macdonald <rfm@gnu.org>
+
+        * Tests/base/NSCalendar/features-10-7.m:
+        * Source/NSCalendar.m:
+        * Headers/Foundation/NSCalendar.h:
+        New OSX 10.7 methods supplied by Lobos Dolezel and rewritten somewhat
+        to avoid breaking binary compatibility.
+
+2013-03-17  Richard Frith-Macdonald <rfm@gnu.org>
 
         * Source/GSSet.m: Some optimisation for set intersection.
 
@@ -1204,16 +1359,16 @@
 
 2012-04-07 13:54  theraven
 
-	* libs/base/trunk/Source/NSMethodSignature.m: Fix NSMethodSignature
+	* Source/NSMethodSignature.m: Fix NSMethodSignature
 	generating nonsense values when it encounters a type encoding
 	including blocks.
 
 2012-04-07 10:45  theraven
 
-	* libs/base/trunk/Source/GSSocketStream.m,
-	libs/base/trunk/Source/NSAffineTransform.m,
-	libs/base/trunk/Source/NSXMLDTDNode.m,
-	libs/base/trunk/Tools/xmlparse.m: Fix the remaining compiler
+	* Source/GSSocketStream.m:
+	* Source/NSAffineTransform.m:
+	* Source/NSXMLDTDNode.m:
+	* Tools/xmlparse.m: Fix the remaining compiler
 	warnings.
 
 2012-04-07  Fred Kiefer <FredKiefer@gmx.de>
