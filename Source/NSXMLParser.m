@@ -1379,12 +1379,12 @@ NSLog(@"_processTag <%@%@ %@>", flag?@"/": @"", tag, attributes);
           if (sscanf(buf, "x%x;", &val))
             {
               // &#xhh; hex value
-              return [[NSString alloc] initWithFormat: @"%C", val];
+              return [[NSString alloc] initWithFormat: @"%C", (unichar)val];
             }
           else if (sscanf(buf, "%d;", &val))
             {
               // &ddd; decimal value
-              return [[NSString alloc] initWithFormat: @"%C", val];
+              return [[NSString alloc] initWithFormat: @"%C", (unichar)val];
             }
         }
     }

@@ -292,7 +292,6 @@ static Class	NSMutableDataMallocClass;
     }
   else
     {
-      NSAssert(count < UINT32_MAX, @"Archieved array length is limited to 4 billions");
       c = (uint32_t)count;
     }
 

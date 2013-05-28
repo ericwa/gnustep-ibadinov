@@ -36,13 +36,6 @@ GS_ROOT_CLASS @interface NSProxy <NSObject>
 {
 @public
     Class	isa;
-#if !(GS_NONFRAGILE == 1)
-@private
-	/**
-	 * Legacy compatibility ivar.  Remove in the next ABI-breaking release.
-	 */
-    NSUInteger	_retain_count;
-#endif
 }
 
 + (id) alloc;
