@@ -280,10 +280,9 @@ static NSRange GSRangeOfCookie(NSString *string);
   return [this->_properties objectForKey: NSHTTPCookieExpires];
 }
 
-- (BOOL) _isValidProperty: (NSString *)prop
+- (BOOL) _isValidCookieName: (NSString *)name
 {
-  return ([prop length]
-	  && [prop rangeOfString: @"\n"].location == NSNotFound);
+    return [name length] && [name rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\r\n"]].location == NSNotFound;
 }
 
 - (id) initWithProperties: (NSDictionary *)properties
@@ -292,11 +291,8 @@ static NSRange GSRangeOfCookie(NSString *string);
   if ((self = [super init]) == nil)
     return nil;
 
-  /* Check a few values. Based on Mac OS X tests. */
-  if (![self _isValidProperty: [properties objectForKey: NSHTTPCookiePath]] 
-    || ![self _isValidProperty: [properties objectForKey: NSHTTPCookieDomain]]
-    || ![self _isValidProperty: [properties objectForKey: NSHTTPCookieName]]
-    )
+  /* Check cookie name. Based on Mac OS X tests. */
+  if (![self _isValidCookieName: [properties objectForKey: NSHTTPCookieName]])
     {
       [self release];
       return nil;
