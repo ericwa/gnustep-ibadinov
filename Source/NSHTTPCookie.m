@@ -43,6 +43,7 @@
 
 #import "Foundation/NSBundle.h"
 #import "Foundation/NSCalendarDate.h"
+#import "Foundation/NSCharacterSet.h"
 #import "Foundation/NSError.h"
 #import "Foundation/NSSet.h"
 #import "Foundation/NSString.h"
