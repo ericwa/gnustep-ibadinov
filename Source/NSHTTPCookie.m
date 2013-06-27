@@ -293,7 +293,9 @@ static NSRange GSRangeOfCookie(NSString *string);
     return nil;
 
   /* Check cookie name. Based on Mac OS X tests. */
-  if (![self _isValidCookieName: [properties objectForKey: NSHTTPCookieName]])
+  if (![self _isValidCookieName: [properties objectForKey: NSHTTPCookieName]] ||
+      ![properties objectForKey: NSHTTPCookieDomain] ||
+      ![properties objectForKey: NSHTTPCookiePath])
     {
       [self release];
       return nil;
