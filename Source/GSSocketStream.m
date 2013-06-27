@@ -1927,11 +1927,12 @@ setNonBlocking(SOCKET fd)
   [super close];
   _loopID = WSA_INVALID_EVENT;
 #else
-  // read shutdown is ignored, because the other side may shutdown first.
+  shutdown((int)_loopID, SHUT_WR);
+  // close the socket, if sibling is closed
   if (!_sibling || [_sibling streamStatus] == NSStreamStatusClosed)
-    close((int)_loopID);
-  else
-    shutdown((int)_loopID, SHUT_WR);
+    {
+      close((int)_loopID);
+    }
   [super close];
   _loopID = (void*)(intptr_t)-1;
 #endif
