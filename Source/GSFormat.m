@@ -1747,10 +1747,10 @@ NSDictionary *locale)
 	  {
 	    /* This is complicated.  We have to transform the multibyte
 	       string into a unicode string.  */
-	    const char *str = (const char*)string;
-	    NSUInteger blen;
-	    static NSStringEncoding	enc = GSUndefinedEncoding;
-	    static BOOL			byteEncoding = NO;
+	    const char                  *str = (const char*)string;
+	    NSUInteger                  blen;
+	    static NSStringEncoding     enc = GSUndefinedEncoding;
+	    static BOOL                 byteEncoding = NO;
 
 	    if (enc == GSUndefinedEncoding)
 	      {
@@ -1799,8 +1799,8 @@ NSDictionary *locale)
 	     * enough for the unichar version.
 	     */
 	    if (blen < 8192 || ((string = (unichar *)
-	      NSZoneMalloc(s->_zone, blen * sizeof(unichar))) == NULL))
-	      string = (unichar *) alloca (blen * sizeof(unichar));
+	      NSZoneMalloc(s->_zone, (blen + 1) * sizeof(unichar))) == NULL))
+	      string = (unichar *) alloca((blen + 1) * sizeof(unichar));
 	    else
 	      string_malloced = 1;
 

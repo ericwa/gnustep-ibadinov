@@ -111,6 +111,7 @@ static Class	concreteClass = 0;
     [self name], [self object], [self userInfo]];
 }
 
+/* todo: attempt to create an empty notification should result in exception */
 - (id) init
 {
   if ([self class] == abstractClass)
@@ -121,6 +122,27 @@ static Class	concreteClass = 0;
       self = (id)NSAllocateObject (concreteClass, 0, z);
     }
   return self;
+}
+
+/*
+ * Nofications should be considered equal iff:
+ * - names and userInfos are equal and not nil
+ * - objects are equal or nil
+ */
+- (BOOL)isEqual:(id)anObject
+{
+    if (![anObject isKindOfClass:[NSNotification class]]) {
+        return NO;
+    }
+    if (![[self name] isEqualToString:[anObject name]]) {
+        return NO;
+    }
+    if (![[self userInfo] isEqualToDictionary:[anObject userInfo]]) {
+        return NO;
+    }
+    id obj1 = [self object];
+    id obj2 = [anObject object];
+    return (obj1 == nil && obj2 == nil) || [obj1 isEqual:obj2];
 }
 
 /**

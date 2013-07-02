@@ -321,10 +321,6 @@ static Class	GSAttrDictionaryClass = 0;
 static NSFileManager* defaultManager = nil;
 static NSStringEncoding	defaultEncoding;
 
-/**
- * Returns a shared default file manager which may be used throughout an
- * application.
- */
 + (NSFileManager*) defaultManager
 {
     if (defaultManager == nil)
@@ -361,13 +357,6 @@ static NSStringEncoding	defaultEncoding;
     [super dealloc];
 }
 
-/**
- * Changes the current directory used for all subsequent operations.<br />
- * All non-absolute paths are interpreted relative to this directory.<br />
- * The current directory is set on a per-task basis, so the current
- * directory for other file manager instances will also be changed
- * by this method.
- */
 - (BOOL) changeCurrentDirectoryPath: (NSString*)path
 {
     static Class	bundleClass = 0;
@@ -1125,27 +1114,6 @@ static NSStringEncoding	defaultEncoding;
     return YES;
 }
 
-/**
- * Copies the a file or directory specified by the <i>src</i> URL to the 
- * location specified by the <i>dst</i> URL. If the <i>src</i> is a directory,
- * it is copied recursively with all of its contents.<br />
- * Errors are returned in the <i>error</i> variable.
- * Returns YES on success, NO otherwise.
- */
-- (BOOL) copyItemAtURL: (NSURL*)src
-		 toURL: (NSURL*)dst
-		 error: (NSError**)error
-{
-  return [self copyItemAtPath: [src path] toPath: [dst path] error: error];
-}
-
-/**
- * Copies the item specified by the <i>src</i> path to the 
- * location specified by the <i>dst</i> path. If the <i>src</i> is a directory,
- * it is copied recursively with all of its contents.<br />
- * Errors are returned in the <i>error</i> variable.
- * Returns YES on success, NO otherwise.
- */
 - (BOOL) copyItemAtPath: (NSString*)src
                  toPath: (NSString*)dst
                   error: (NSError**)error
@@ -1164,6 +1132,13 @@ static NSStringEncoding	defaultEncoding;
     }
     
     return result;
+}
+
+- (BOOL) copyItemAtURL: (NSURL*)src
+		 toURL: (NSURL*)dst
+		 error: (NSError**)error
+{
+  return [self copyItemAtPath: [src path] toPath: [dst path] error: error];
 }
 
 /**
@@ -1253,25 +1228,6 @@ static NSStringEncoding	defaultEncoding;
     return NO;
 }
 
-/**
- * Moves a file or directory specified by <i>src</i> to 
- * its destination specified by <i>dst</i>, errors are
- * returned in <i>error</i>.<br />
- * Returns YES on success, NO otherwise.
- */
-- (BOOL) moveItemAtURL: (NSURL*)src
-		 toURL: (NSURL*)dst
-		 error: (NSError**)error
-{
-  return [self moveItemAtPath: [src path] toPath: [dst path] error: error];
-}
-
-/**
- * Moves a file or directory specified by <i>src</i> to 
- * its destination specified by <i>dst</i>, errors are
- * returned in <i>error</i>.<br />
- * Returns YES on success, NO otherwise.
- */
 - (BOOL) moveItemAtPath: (NSString*)src
                  toPath: (NSString*)dst
                   error: (NSError**)error
@@ -1290,6 +1246,13 @@ static NSStringEncoding	defaultEncoding;
     }
     
     return result;
+}
+
+- (BOOL) moveItemAtURL: (NSURL*)src
+		 toURL: (NSURL*)dst
+		 error: (NSError**)error
+{
+  return [self moveItemAtPath: [src path] toPath: [dst path] error: error];
 }
 
 /**
@@ -1401,13 +1364,6 @@ static NSStringEncoding	defaultEncoding;
 #endif
 }
 
-/**
- * Removes the file or directory at path, using a
- * handler object which should respond to
- * [NSObject(NSFileManagerHandler)-fileManager:willProcessPath:] and
- * [NSObject(NSFileManagerHandler)-fileManager:shouldProceedAfterError:]
- * messages.
- */
 - (BOOL) removeFileAtPath: (NSString*)path
                   handler: handler
 {
@@ -1515,26 +1471,6 @@ static NSStringEncoding	defaultEncoding;
     }
 }
 
-
-
-/**
- * Removes the file or directory specified by the <i>url</i>
- * to be removed. If the <i>url</i> points to a directory,
- * the directory is deleted recursively.<br />
- * Returns YES on success, otherwise NO.
- */
-- (BOOL) removeItemAtURL: (NSURL*)url
-		   error: (NSError**)error
-{
-  return [self removeItemAtPath: [url path] error: error];
-}
-
-/**
- * Removes the file or directory specified by the <i>path</i>
- * to be removed. If the <i>path</i> points to a directory,
- * the directory is deleted recursively.<br />
- * Returns YES on success, otherwise NO.
- */
 - (BOOL) removeItemAtPath: (NSString*)path
                     error: (NSError**)error
 {
@@ -1554,20 +1490,17 @@ static NSStringEncoding	defaultEncoding;
     return result;
 }
 
-/**
- * Returns YES if a file (or directory etc) exists at the specified path.
- */
+- (BOOL) removeItemAtURL: (NSURL*)url
+		   error: (NSError**)error
+{
+  return [self removeItemAtPath: [url path] error: error];
+}
+
 - (BOOL) fileExistsAtPath: (NSString*)path
 {
     return [self fileExistsAtPath: path isDirectory: 0];
 }
 
-/**
- * Returns YES if a file (or directory etc) exists at the specified path.<br />
- * If the isDirectory argument is not a nul pointer, stores a flag
- * in the location it points to, indicating whether the file is a
- * directory or not.<br />
- */
 - (BOOL) fileExistsAtPath: (NSString*)path isDirectory: (BOOL*)isDirectory
 {
     const _CHAR *lpath = [self fileSystemRepresentationWithPath: path];
@@ -2108,40 +2041,42 @@ static NSStringEncoding	defaultEncoding;
  */
 - (NSArray*) directoryContentsAtPath: (NSString*)path
 {
-    NSDirectoryEnumerator	*direnum;
-    NSMutableArray	*content;
-    IMP			nxtImp;
-    IMP			addImp;
-    BOOL			is_dir;
-    
-    /*
-     * See if this is a directory (don't follow links).
-     */
-    if ([self fileExistsAtPath: path isDirectory: &is_dir] == NO || is_dir == NO)
+  NSDirectoryEnumerator	*direnum;
+  NSMutableArray	*content;
+  BOOL			is_dir;
+
+  /*
+   * See if this is a directory (don't follow links).
+   */
+  if ([self fileExistsAtPath: path isDirectory: &is_dir] == NO || is_dir == NO)
     {
         return nil;
     }
-    /* We initialize the directory enumerator with justContents == YES,
+  content = [[NSMutableArray alloc] initWithCapacity: 128];
+  /* We initialize the directory enumerator with justContents == YES,
      which tells the NSDirectoryEnumerator code that we only enumerate
      the contents non-recursively once, and exit.  NSDirectoryEnumerator
      can perform some optimisations using this assumption. */
-    direnum = [[NSDirectoryEnumerator alloc] initWithDirectoryPath: path
-                                         recurseIntoSubdirectories: NO
-                                                    followSymlinks: NO
-                                                      justContents: YES
-                                                               for: self];
-    content = [[NSMutableArray alloc] initWithCapacity: 128];
-    
-    nxtImp = [direnum methodForSelector: @selector(nextObject)];
-    addImp = [content methodForSelector: @selector(addObject:)];
-    
-    while ((path = (*nxtImp)(direnum, @selector(nextObject))) != nil)
+  direnum = [[NSDirectoryEnumerator alloc] initWithDirectoryPath: path
+				       recurseIntoSubdirectories: NO
+						  followSymlinks: NO
+						    justContents: YES
+							     for: self];
+  if (nil != direnum)
     {
-        (*addImp)(content, @selector(addObject:), path);
+      IMP	nxtImp;
+      IMP	addImp;
+
+      nxtImp = [direnum methodForSelector: @selector(nextObject)];
+      addImp = [content methodForSelector: @selector(addObject:)];
+
+      while ((path = (*nxtImp)(direnum, @selector(nextObject))) != nil)
+	{
+	  (*addImp)(content, @selector(addObject:), path);
+	}
+      RELEASE(direnum);
     }
-    RELEASE(direnum);
-    
-    return [[content makeImmutable] autorelease];
+  return [[content makeImmutable] autorelease];
 }
 
 /**
@@ -2176,34 +2111,35 @@ static NSStringEncoding	defaultEncoding;
  */
 - (NSArray*) subpathsAtPath: (NSString*)path
 {
-    NSDirectoryEnumerator	*direnum;
-    NSMutableArray	*content;
-    BOOL			isDir;
-    IMP			nxtImp;
-    IMP			addImp;
-    
-    if (![self fileExistsAtPath: path isDirectory: &isDir] || !isDir)
+  NSDirectoryEnumerator	*direnum;
+  NSMutableArray	*content;
+  BOOL			isDir;
+
+  if (![self fileExistsAtPath: path isDirectory: &isDir] || !isDir)
     {
         return nil;
     }
-    direnum = [[NSDirectoryEnumerator alloc] initWithDirectoryPath: path
-                                         recurseIntoSubdirectories: YES
-                                                    followSymlinks: NO
-                                                      justContents: NO
-                                                               for: self];
-    content = [[NSMutableArray alloc] initWithCapacity: 128];
-    
-    nxtImp = [direnum methodForSelector: @selector(nextObject)];
-    addImp = [content methodForSelector: @selector(addObject:)];
-    
-    while ((path = (*nxtImp)(direnum, @selector(nextObject))) != nil)
+  content = [[NSMutableArray alloc] initWithCapacity: 128];
+  direnum = [[NSDirectoryEnumerator alloc] initWithDirectoryPath: path
+				       recurseIntoSubdirectories: YES
+						  followSymlinks: NO
+						    justContents: NO
+							     for: self];
+  if (nil != direnum)
     {
-        (*addImp)(content, @selector(addObject:), path);
+      IMP	nxtImp;
+      IMP	addImp;
+
+      nxtImp = [direnum methodForSelector: @selector(nextObject)];
+      addImp = [content methodForSelector: @selector(addObject:)];
+
+      while ((path = (*nxtImp)(direnum, @selector(nextObject))) != nil)
+	{
+	  (*addImp)(content, @selector(addObject:), path);
+	}
+      RELEASE(direnum);
     }
-    
-    RELEASE(direnum);
-    
-    return [[content makeImmutable] autorelease];
+  return [[content makeImmutable] autorelease];
 }
 
 /**

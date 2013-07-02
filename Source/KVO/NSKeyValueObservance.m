@@ -117,14 +117,14 @@ NS_INLINE NSString *BooleanDescription(BOOL value)
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<IBKeyValueObservance 0x%lx: Observer: 0x%lx, Key path: %@, Options: <New: %@, Old: %@, Prior: %@> Context: 0x%lx>",
+    return [NSString stringWithFormat:@"<NSKeyValueObservance 0x%lx: Observer: 0x%lx, Key path: %@, Options: <New: %@, Old: %@, Prior: %@> Context: 0x%lx>",
             (unsigned long)self,
             (unsigned long)observer,
             [property keyPath],
             BooleanDescription(options & NSKeyValueObservingOptionNew),
             BooleanDescription(options & NSKeyValueObservingOptionOld),
             BooleanDescription(options & NSKeyValueObservingOptionPrior),
-            context];
+            (unsigned long)context];
 }
 
 @end

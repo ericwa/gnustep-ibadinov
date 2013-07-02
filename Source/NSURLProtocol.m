@@ -1476,6 +1476,11 @@ PostponeSelector(id self, SEL _cmd, id argument)
                                         sent = YES;
                                     }
                                 }
+                                else
+                                {
+                                    /* from the documentation of -[NSMutableURLRequest setHTTPBodyStream]: "The inputStream should be unopened..." */
+                                    [_body open];
+                                }
                             }
                         }
                     }

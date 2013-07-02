@@ -340,19 +340,19 @@ id __object = (object); (__object != nil) ? [__object autorelease] : nil; })
 /**
  * To be used inside a method for making sure that a range does not specify
  * anything outside the size of an array/string.  Raises exception if range
- * extends beyond [0,size).
+ * extends beyond [0,size]. Size must be an unsigned integer (NSUInteger).
  */
 #define GS_RANGE_CHECK(RANGE, SIZE) \
   if (RANGE.location > SIZE || RANGE.length > (SIZE - RANGE.location)) \
     [NSException raise: NSRangeException \
-                 format: @"in %s, range { %lu, %lu } extends beyond size (%lu)", \
-		 GSNameFromSelector(_cmd), (unsigned long)RANGE.location, (unsigned long)RANGE.length, (unsigned long)SIZE]
+                 format: @"in %s, range { %"PRIuPTR", %"PRIuPTR" } extends beyond size (%"PRIuPTR")", \
+		 GSNameFromSelector(_cmd), RANGE.location, RANGE.length, (NSUInteger)SIZE]
 
 /** Checks whether INDEX is strictly less than OVER (within C array space). */
 #define CHECK_INDEX_RANGE_ERROR(INDEX, OVER) \
-if (INDEX >= OVER) \
+if ((NSUInteger)INDEX >= (NSUInteger)OVER) \
   [NSException raise: NSRangeException \
-               format: @"in %s, index %ld is out of range", \
-               GSNameFromSelector(_cmd), (long)INDEX]
+              format: @"in %s, index %"PRIuPTR" is out of range", \
+              GSNameFromSelector(_cmd), (NSUInteger)INDEX]
 
 #endif /* __GNUSTEP_GNUSTEP_H_INCLUDED_ */

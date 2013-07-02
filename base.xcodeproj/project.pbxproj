@@ -534,6 +534,44 @@
 		185289D31613A1060016729B /* pathxml.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = pathxml.m4; sourceTree = "<group>"; };
 		185289D41613A1060016729B /* procfs-exe-link.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "procfs-exe-link.m4"; sourceTree = "<group>"; };
 		185289D51613A1060016729B /* procfs.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = procfs.m4; sourceTree = "<group>"; };
+		1857833F17551CC200CB7160 /* TestInfo */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestInfo; sourceTree = "<group>"; };
+		1857834017551CC200CB7160 /* basic.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = basic.m; sourceTree = "<group>"; };
+		1857834117551CC200CB7160 /* general.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = general.m; sourceTree = "<group>"; };
+		18578359175525A400CB7160 /* NSArray.1.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSArray.1.32bit; sourceTree = "<group>"; };
+		1857835A175525A400CB7160 /* NSArray.1.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSArray.1.64bit; sourceTree = "<group>"; };
+		1857835B175525A400CB7160 /* NSAttributedString.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSAttributedString.0.32bit; sourceTree = "<group>"; };
+		1857835C175525A400CB7160 /* NSAttributedString.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSAttributedString.0.64bit; sourceTree = "<group>"; };
+		1857835D175525A400CB7160 /* NSCharacterSet.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSCharacterSet.0.32bit; sourceTree = "<group>"; };
+		1857835E175525A400CB7160 /* NSCharacterSet.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSCharacterSet.0.64bit; sourceTree = "<group>"; };
+		1857835F175525A400CB7160 /* NSData.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSData.0.32bit; sourceTree = "<group>"; };
+		18578360175525A400CB7160 /* NSData.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSData.0.64bit; sourceTree = "<group>"; };
+		18578361175525A400CB7160 /* NSDate.1.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSDate.1.32bit; sourceTree = "<group>"; };
+		18578362175525A400CB7160 /* NSDate.1.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSDate.1.64bit; sourceTree = "<group>"; };
+		18578363175525A400CB7160 /* NSDateFormatter.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSDateFormatter.0.32bit; sourceTree = "<group>"; };
+		18578364175525A400CB7160 /* NSDateFormatter.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSDateFormatter.0.64bit; sourceTree = "<group>"; };
+		18578365175525A400CB7160 /* NSDictionary.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSDictionary.0.32bit; sourceTree = "<group>"; };
+		18578366175525A400CB7160 /* NSDictionary.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSDictionary.0.64bit; sourceTree = "<group>"; };
+		18578367175525A400CB7160 /* NSException.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSException.0.32bit; sourceTree = "<group>"; };
+		18578368175525A400CB7160 /* NSException.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSException.0.64bit; sourceTree = "<group>"; };
+		18578369175525A400CB7160 /* NSMutableData.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSMutableData.0.32bit; sourceTree = "<group>"; };
+		1857836A175525A400CB7160 /* NSMutableData.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSMutableData.0.64bit; sourceTree = "<group>"; };
+		1857836B175525A400CB7160 /* NSNotification.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSNotification.0.32bit; sourceTree = "<group>"; };
+		1857836C175525A400CB7160 /* NSNotification.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSNotification.0.64bit; sourceTree = "<group>"; };
+		1857836D175525A400CB7160 /* NSNull.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSNull.0.32bit; sourceTree = "<group>"; };
+		1857836E175525A500CB7160 /* NSNull.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSNull.0.64bit; sourceTree = "<group>"; };
+		1857836F175525A500CB7160 /* NSNumber.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSNumber.0.32bit; sourceTree = "<group>"; };
+		18578370175525A500CB7160 /* NSNumber.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSNumber.0.64bit; sourceTree = "<group>"; };
+		18578371175525A500CB7160 /* NSObject.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSObject.0.32bit; sourceTree = "<group>"; };
+		18578372175525A500CB7160 /* NSObject.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSObject.0.64bit; sourceTree = "<group>"; };
+		18578373175525A500CB7160 /* NSSet.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSSet.0.32bit; sourceTree = "<group>"; };
+		18578374175525A500CB7160 /* NSSet.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSSet.0.64bit; sourceTree = "<group>"; };
+		18578375175525A500CB7160 /* NSString.1.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSString.1.32bit; sourceTree = "<group>"; };
+		18578376175525A500CB7160 /* NSString.1.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSString.1.64bit; sourceTree = "<group>"; };
+		18578377175525A500CB7160 /* NSTableView.3.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSTableView.3.32bit; sourceTree = "<group>"; };
+		18578378175525A500CB7160 /* NSURL.0.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSURL.0.32bit; sourceTree = "<group>"; };
+		18578379175525A500CB7160 /* NSURL.0.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSURL.0.64bit; sourceTree = "<group>"; };
+		1857837A175525A500CB7160 /* NSValue.3.32bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSValue.3.32bit; sourceTree = "<group>"; };
+		1857837B175525A500CB7160 /* NSValue.3.64bit */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSValue.3.64bit; sourceTree = "<group>"; };
 		18641D0E1678AD04003C6E11 /* GSSocks4Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSocks4Parser.h; sourceTree = "<group>"; };
 		18641D0F1678AD04003C6E11 /* GSSocks4Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSocks4Parser.m; sourceTree = "<group>"; };
 		18641D101678AD04003C6E11 /* GSSocks5Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSocks5Parser.h; sourceTree = "<group>"; };
@@ -1355,24 +1393,6 @@
 		18FE1FDB1628550100389A13 /* TestInfo */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestInfo; sourceTree = "<group>"; };
 		18FE1FDD1628550100389A13 /* TestInfo */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestInfo; sourceTree = "<group>"; };
 		18FE1FDE1628550100389A13 /* test00.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = test00.m; sourceTree = "<group>"; };
-		18FE1FE01628550100389A13 /* NSArray.1.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSArray.1.data; sourceTree = "<group>"; };
-		18FE1FE11628550100389A13 /* NSAttributedString.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSAttributedString.0.data; sourceTree = "<group>"; };
-		18FE1FE21628550100389A13 /* NSCharacterSet.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSCharacterSet.0.data; sourceTree = "<group>"; };
-		18FE1FE31628550100389A13 /* NSData.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSData.0.data; sourceTree = "<group>"; };
-		18FE1FE41628550100389A13 /* NSDate.1.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSDate.1.data; sourceTree = "<group>"; };
-		18FE1FE51628550100389A13 /* NSDateFormatter.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSDateFormatter.0.data; sourceTree = "<group>"; };
-		18FE1FE61628550100389A13 /* NSDictionary.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSDictionary.0.data; sourceTree = "<group>"; };
-		18FE1FE71628550100389A13 /* NSException.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSException.0.data; sourceTree = "<group>"; };
-		18FE1FE81628550100389A13 /* NSMutableData.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSMutableData.0.data; sourceTree = "<group>"; };
-		18FE1FE91628550100389A13 /* NSNotification.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSNotification.0.data; sourceTree = "<group>"; };
-		18FE1FEA1628550100389A13 /* NSNull.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSNull.0.data; sourceTree = "<group>"; };
-		18FE1FEB1628550100389A13 /* NSNumber.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSNumber.0.data; sourceTree = "<group>"; };
-		18FE1FEC1628550100389A13 /* NSObject.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSObject.0.data; sourceTree = "<group>"; };
-		18FE1FED1628550100389A13 /* NSSet.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSSet.0.data; sourceTree = "<group>"; };
-		18FE1FEE1628550100389A13 /* NSString.1.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSString.1.data; sourceTree = "<group>"; };
-		18FE1FEF1628550100389A13 /* NSTableView.3.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSTableView.3.data; sourceTree = "<group>"; };
-		18FE1FF01628550100389A13 /* NSURL.0.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSURL.0.data; sourceTree = "<group>"; };
-		18FE1FF11628550100389A13 /* NSValue.3.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = NSValue.3.data; sourceTree = "<group>"; };
 		18FE1FF21628550100389A13 /* TestInfo */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestInfo; sourceTree = "<group>"; };
 		18FE1FF31628550100389A13 /* basictypes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = basictypes.m; sourceTree = "<group>"; };
 		18FE1FF41628550100389A13 /* decoding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = decoding.m; sourceTree = "<group>"; };
@@ -1901,6 +1921,16 @@
 			path = config;
 			sourceTree = SOURCE_ROOT;
 		};
+		1857833D17551CC200CB7160 /* NSNotification */ = {
+			isa = PBXGroup;
+			children = (
+				1857833F17551CC200CB7160 /* TestInfo */,
+				1857834017551CC200CB7160 /* basic.m */,
+				1857834117551CC200CB7160 /* general.m */,
+			);
+			path = NSNotification;
+			sourceTree = "<group>";
+		};
 		18641D0D1678AD04003C6E11 /* GSSocksParser */ = {
 			isa = PBXGroup;
 			children = (
@@ -2388,6 +2418,7 @@
 				18FE1F1A1628550100389A13 /* NSMutableIndexSet */,
 				18FE1F1F1628550100389A13 /* NSMutableSet */,
 				18FE1F221628550100389A13 /* NSMutableString */,
+				1857833D17551CC200CB7160 /* NSNotification */,
 				18FE1F271628550100389A13 /* NSNumber */,
 				18FE1F2C1628550100389A13 /* NSNumberFormatter */,
 				18FE1F301628550100389A13 /* NSObject */,
@@ -3380,24 +3411,41 @@
 		18FE1FDF1628550100389A13 /* coding */ = {
 			isa = PBXGroup;
 			children = (
-				18FE1FE01628550100389A13 /* NSArray.1.data */,
-				18FE1FE11628550100389A13 /* NSAttributedString.0.data */,
-				18FE1FE21628550100389A13 /* NSCharacterSet.0.data */,
-				18FE1FE31628550100389A13 /* NSData.0.data */,
-				18FE1FE41628550100389A13 /* NSDate.1.data */,
-				18FE1FE51628550100389A13 /* NSDateFormatter.0.data */,
-				18FE1FE61628550100389A13 /* NSDictionary.0.data */,
-				18FE1FE71628550100389A13 /* NSException.0.data */,
-				18FE1FE81628550100389A13 /* NSMutableData.0.data */,
-				18FE1FE91628550100389A13 /* NSNotification.0.data */,
-				18FE1FEA1628550100389A13 /* NSNull.0.data */,
-				18FE1FEB1628550100389A13 /* NSNumber.0.data */,
-				18FE1FEC1628550100389A13 /* NSObject.0.data */,
-				18FE1FED1628550100389A13 /* NSSet.0.data */,
-				18FE1FEE1628550100389A13 /* NSString.1.data */,
-				18FE1FEF1628550100389A13 /* NSTableView.3.data */,
-				18FE1FF01628550100389A13 /* NSURL.0.data */,
-				18FE1FF11628550100389A13 /* NSValue.3.data */,
+				18578359175525A400CB7160 /* NSArray.1.32bit */,
+				1857835A175525A400CB7160 /* NSArray.1.64bit */,
+				1857835B175525A400CB7160 /* NSAttributedString.0.32bit */,
+				1857835C175525A400CB7160 /* NSAttributedString.0.64bit */,
+				1857835D175525A400CB7160 /* NSCharacterSet.0.32bit */,
+				1857835E175525A400CB7160 /* NSCharacterSet.0.64bit */,
+				1857835F175525A400CB7160 /* NSData.0.32bit */,
+				18578360175525A400CB7160 /* NSData.0.64bit */,
+				18578361175525A400CB7160 /* NSDate.1.32bit */,
+				18578362175525A400CB7160 /* NSDate.1.64bit */,
+				18578363175525A400CB7160 /* NSDateFormatter.0.32bit */,
+				18578364175525A400CB7160 /* NSDateFormatter.0.64bit */,
+				18578365175525A400CB7160 /* NSDictionary.0.32bit */,
+				18578366175525A400CB7160 /* NSDictionary.0.64bit */,
+				18578367175525A400CB7160 /* NSException.0.32bit */,
+				18578368175525A400CB7160 /* NSException.0.64bit */,
+				18578369175525A400CB7160 /* NSMutableData.0.32bit */,
+				1857836A175525A400CB7160 /* NSMutableData.0.64bit */,
+				1857836B175525A400CB7160 /* NSNotification.0.32bit */,
+				1857836C175525A400CB7160 /* NSNotification.0.64bit */,
+				1857836D175525A400CB7160 /* NSNull.0.32bit */,
+				1857836E175525A500CB7160 /* NSNull.0.64bit */,
+				1857836F175525A500CB7160 /* NSNumber.0.32bit */,
+				18578370175525A500CB7160 /* NSNumber.0.64bit */,
+				18578371175525A500CB7160 /* NSObject.0.32bit */,
+				18578372175525A500CB7160 /* NSObject.0.64bit */,
+				18578373175525A500CB7160 /* NSSet.0.32bit */,
+				18578374175525A500CB7160 /* NSSet.0.64bit */,
+				18578375175525A500CB7160 /* NSString.1.32bit */,
+				18578376175525A500CB7160 /* NSString.1.64bit */,
+				18578377175525A500CB7160 /* NSTableView.3.32bit */,
+				18578378175525A500CB7160 /* NSURL.0.32bit */,
+				18578379175525A500CB7160 /* NSURL.0.64bit */,
+				1857837A175525A500CB7160 /* NSValue.3.32bit */,
+				1857837B175525A500CB7160 /* NSValue.3.64bit */,
 				18FE1FF21628550100389A13 /* TestInfo */,
 				18FE1FF31628550100389A13 /* basictypes.m */,
 				18FE1FF41628550100389A13 /* decoding.m */,

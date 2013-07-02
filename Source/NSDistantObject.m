@@ -926,7 +926,7 @@ GS_ROOT_CLASS @interface GSDistantObjectPlaceHolder
 
 - (Class) classForPortCoder
 {
-  return isa;
+  return object_getClass(self);
 }
 
 - (id) replacementObjectForPortCoder: (NSPortCoder*)aRmc;

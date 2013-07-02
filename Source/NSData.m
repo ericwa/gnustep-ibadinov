@@ -761,7 +761,17 @@ failure:
   NSUInteger	size = [self length];
 
   GS_RANGE_CHECK(aRange, size);
-  memcpy(buffer, [self bytes] + aRange.location, aRange.length);
+  if (aRange.length > 0)
+    {
+      const void	*bytes = [self bytes];
+
+      if (0 == bytes)
+	{
+	  [NSException raise: NSInternalInconsistencyException
+		      format: @"missing bytes in getBytes:range:"];
+	}
+      memcpy(buffer, bytes + aRange.location, aRange.length);
+    }
 }
 
 - (id) replacementObjectForPortCoder: (NSPortCoder*)aCoder
@@ -2018,10 +2028,15 @@ failure:
 	      length: (NSUInteger)bufferSize
 {
   NSUInteger	oldLength = [self length];
-  void*		buffer;
+  void		*buffer;
 
   [self setLength: oldLength + bufferSize];
   buffer = [self mutableBytes];
+  if (0 == buffer)
+    {
+      [NSException raise: NSInternalInconsistencyException
+		  format: @"missing bytes in appendBytes:length:"];
+    }
   memcpy(buffer + oldLength, aBuffer, bufferSize);
 }
 
@@ -2057,11 +2072,18 @@ failure:
     }
   if (aRange.length > 0)
     {
+      void	*buf = [self mutableBytes];
+
+      if (0 == buf)
+	{
+	  [NSException raise: NSInternalInconsistencyException
+	    format: @"missing bytes in replaceBytesInRange:withBytes:"];
+	}
       if (need > size)
 	{
 	  [self setLength: need];
 	}
-      memmove([self mutableBytes] + aRange.location, bytes, aRange.length);
+      memmove(buf + aRange.location, bytes, aRange.length);
     }
 }
 
@@ -2090,6 +2112,11 @@ failure:
       [self setLength: need];
     }
   buf = [self mutableBytes];
+  if (0 == buf)
+    {
+      [NSException raise: NSInternalInconsistencyException
+		  format: @"missing bytes in replaceByteInRange:withBytes:"];
+    }
   if (shift < 0)
     {
       if (length > 0)
@@ -2125,9 +2152,15 @@ failure:
 - (void) resetBytesInRange: (NSRange)aRange
 {
   NSUInteger	size = [self length];
+  void		*bytes = [self mutableBytes];
 
   GS_RANGE_CHECK(aRange, size);
-  memset((char*)[self bytes] + aRange.location, 0, aRange.length);
+  if (0 == bytes)
+    {
+      [NSException raise: NSInternalInconsistencyException
+		  format: @"missing bytes in resetBytesInRange:"];
+    }
+  memset((char*)bytes + aRange.location, 0, aRange.length);
 }
 
 /**
